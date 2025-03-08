@@ -2,12 +2,19 @@ cmake_minimum_required(VERSION 3.10)
 project(MedScheduler)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/SQLite)
-include_directories(/usr/include/readline)
+find_package(PostgreSQL REQUIRED)
+find_package(OpenSSL REQUIRED)
 
-add_executable(MedScheduler main.cpp users.cpp)
+add_executable(medscheduler
+    main.cpp
+    database.cpp
+    auth.cpp
+)
 
-target_link_libraries(MedScheduler readline sqlite3)
+target_include_directories(medscheduler PRIVATE ${PostgreSQL_INCLUDE_DIRS})
+target_link_libraries(medscheduler 
+    PRIVATE 
+    ${PostgreSQL_LIBRARIES}
+    OpenSSL::Crypto
+)
