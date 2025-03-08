@@ -1,195 +1,269 @@
-#include "users.hpp"
-
+#include "auth.hpp"
+#include "database.hpp"
 #include <iostream>
-#include <string>
-#include <sstream>
-#include <cstdlib>
-#include <cctype>
 
-#include <readline.h>
-#include <history.h>
+/**
+ * @brief Отображает записи пациента, полученные из базы данных.
+ * @param db Объект для работы с базой данных.
+ * @param patient_id Идентификатор пациента.
+ */
+void showPatientCabinet(DatabaseHandler &db, int patient_id) {
+  std::cout << "\n=== Личный кабинет ===" << std::endl;
 
-// Читает строку с консоли с использованием readline и проверяет отсутствие пробелов
-std::string get_validated_input(const std::string &prompt, bool forbid_spaces = true) {
-    char* input_c_str = readline(prompt.c_str());
-    std::string input_str = input_c_str ? input_c_str : "";
-    free(input_c_str);
-
-    // Проверяем наличие пробелов
-    if (forbid_spaces && input_str.find(' ') != std::string::npos) {
-        std::cerr << "Ошибка: пробелы недопустимы. Повторите ввод.\n";
-        return get_validated_input(prompt, forbid_spaces);
-    }
-
-    if (input_str.empty()) {
-        std::cerr << "Ошибка: поле не должно быть пустым. Повторите ввод.\n";
-        return get_validated_input(prompt, forbid_spaces);
-    }
-
-    return input_str;
+  // Получаем записи пациента из БД
+  std::string records = db.getPatientRecords(patient_id);
+  if (records.empty()) {
+    std::cout << "У вас пока нет записей" << std::endl;
+  } else {
+    std::cout << "Ваши записи:\n" << records << std::endl;
+  }
 }
 
-// Проверяет корректность даты рождения в формате DD-MM-YYYY и возвращает строку, если формат верный
-std::string get_validated_birth_date(const std::string &prompt) {
-    std::string date_str = get_validated_input(prompt, false);
+/**
+ * @brief Позволяет пользователю отредактировать свою личную информацию.
+ * 
+ * Запрашивает новые значения для фамилии, имени, отчества и номера телефона,
+ * проверяет корректность ввода и вызывает обновление в базе данных.
+ *
+ * @param db Объект для работы с базой данных.
+ * @param patient_id Идентификатор пользователя.
+ */
+void editProfile(DatabaseHandler &db, int patient_id) {
+  std::string new_last_name, new_first_name, new_patronymic, new_phone;
 
-    if (date_str.length() != 10 || date_str[2] != '-' || date_str[5] != '-') {
-        std::cerr << "Ошибка: неверный формат даты. Используйте формат DD-MM-YYYY.\n";
-        return get_validated_birth_date(prompt);
+  std::cout << "\n=== Редактирование личной информации ===" << std::endl;
+
+  // Запрос нового значения фамилии
+  std::cout << "Введите новую фамилию: ";
+  std::getline(std::cin, new_last_name);
+  new_last_name = Auth::trimWhitespace(new_last_name);
+
+  // Запрос нового значения имени
+  std::cout << "Введите новое имя: ";
+  std::getline(std::cin, new_first_name);
+  new_first_name = Auth::trimWhitespace(new_first_name);
+
+  // Запрос нового значения отчества
+  std::cout << "Введите новое отчество: ";
+  std::getline(std::cin, new_patronymic);
+  new_patronymic = Auth::trimWhitespace(new_patronymic);
+
+  // Запрос нового номера телефона с проверкой формата
+  while (true) {
+    std::cout << "Введите новый телефон (с +): ";
+    std::getline(std::cin, new_phone);
+    new_phone = Auth::trimWhitespace(new_phone);
+    if (!Auth::validatePhone(new_phone)) {
+      std::cout << "Ошибка: неверный формат телефона!\n";
+      continue;
     }
+    break;
+  }
 
-    // Извлекаем день, месяц и год
-    int day, month, year;
-    try {
-        day = std::stoi(date_str.substr(0, 2));
-        month = std::stoi(date_str.substr(3, 2));
-        year = std::stoi(date_str.substr(6, 4));
-    } catch (...) {
-        std::cerr << "Ошибка: неверный формат чисел в дате. Повторите ввод.\n";
-        return get_validated_birth_date(prompt);
-    }
+  // Если хотя бы одно поле содержит пробелы, выводим ошибку
+  if (new_last_name.find(' ') != std::string::npos ||
+      new_first_name.find(' ') != std::string::npos ||
+      new_patronymic.find(' ') != std::string::npos ||
+      new_phone.find(' ') != std::string::npos) {
+    std::cout << "Ошибка: пробелы недопустимы во входных данных.\n";
+    return;
+  }
 
-    if (day < 1 || day > 31) {
-        std::cerr << "Ошибка: день должен быть в диапазоне от 1 до 31.\n";
-        return get_validated_birth_date(prompt);
-    }
-
-    if (month < 1 || month > 12) {
-        std::cerr << "Ошибка: месяц должен быть в диапазоне от 1 до 12.\n";
-        return get_validated_birth_date(prompt);
-    }
-
-    return date_str;
+  // Пытаемся обновить информацию в базе данных
+  if (db.updateUserInfo(patient_id, new_last_name, new_first_name,
+                        new_patronymic, new_phone)) {
+    std::cout << "Личная информация успешно обновлена.\n";
+  } else {
+    std::cout << "Ошибка при обновлении информации.\n";
+  }
 }
 
-// Читает целое число, проверяя, что оно находится в заданном диапазоне
-int get_validated_integer(const std::string &prompt, int min_val, int max_val) {
-    std::string user_input = get_validated_input(prompt, true);
-    int number;
-    std::istringstream iss(user_input);
-
-    if (!(iss >> number) || number < min_val || number > max_val) {
-        std::cerr << "Ошибка: введите число от " << min_val << " до " << max_val << ".\n";
-        return get_validated_integer(prompt, min_val, max_val);
-    }
-
-    return number;
-}
-
-// Запрашивает ввод данных пользователя и возвращает заполненную структуру User
-User get_user_input() {
-    std::cout << "\nВнимание: Не используйте пробелы в полях и убедитесь, что номер телефона начинается с '+'\n";
-    User new_user;
-
-    new_user.last_name = get_validated_input("Введите Фамилию: ");
-    new_user.first_name = get_validated_input("Введите Имя: ");
-    new_user.patronymic = get_validated_input("Введите Отчество: ");
-    new_user.role = get_validated_input("Введите роль (пациент, врач, администратор): ");
-    new_user.password_hash = get_validated_input("Введите хеш пароля: ");
-    new_user.birth_date = get_validated_birth_date("Введите дату рождения (DD-MM-YYYY): ");
-    new_user.email = get_validated_input("Введите email: ");
-    
-    while (true) {
-        new_user.phone = get_validated_input("Введите номер телефона (начинается с '+'): ");
-        if (new_user.phone[0] != '+') {
-            std::cerr << "Ошибка: номер телефона должен начинаться с '+'. Повторите ввод.\n";
-        } else {
-            break;
-        }
-    }
-
-    return new_user;
-}
-
-// Выводит на экран меню операций
-void display_menu() {
-    std::cout << "\nВыберите операцию:\n";
-    std::cout << "1. Создать таблицу Users\n";
-    std::cout << "2. Вставить нового пользователя\n";
-    std::cout << "3. Обновить данные пользователя\n";
-    std::cout << "4. Удалить пользователя\n";
-    std::cout << "5. Выход\n";
-    std::cout << "Ваш выбор: ";
-}
-
-// Главная функция, обеспечивающая взаимодействие с пользователем
+/**
+ * @brief Основная функция, реализующая меню регистрации, авторизации и работы личного кабинета.
+ */
 int main() {
-    UserDatabase database("MedScheduler.db");  // Открываем или создаем базу данных
-    int user_choice;
-    bool is_running = true;
+  // Строка подключения к базе данных
+  const std::string conninfo = "dbname=medscheduler user=meduser "
+                               "password=3671920119 host=localhost port=5432";
+  DatabaseHandler db(conninfo);
 
-    while(is_running) {
-        display_menu();
-        std::string input_line = get_validated_input("", false);
-        
-        try {
-            user_choice = std::stoi(input_line);
-        } catch (...) {
-            std::cerr << "Неверный выбор. Попробуйте снова.\n";
-            continue;
+  // Пытаемся установить соединение с БД
+  if (!db.connect()) {
+    std::cerr << "Ошибка подключения к БД" << std::endl;
+    return 1;
+  }
+
+  // Главное меню приложения
+  while (true) {
+    std::cout << "\n1. Регистрация\n2. Вход\n3. Выход\nВыберите действие: ";
+    int choice;
+    std::cin >> choice;
+    std::cin.ignore(); // Очистка буфера ввода
+
+    if (choice == 3)
+      break;
+
+    if (choice == 1) { // Регистрация нового пользователя
+      std::string last_name, first_name, patronymic, phone, pass1, pass2;
+      std::cout << "Внимание: пробелы недопустимы во входных данных!\n";
+
+      // Ввод фамилии
+      while (true) {
+        std::cout << "Фамилия: ";
+        std::getline(std::cin, last_name);
+        last_name = Auth::trimWhitespace(last_name);
+        if (last_name.empty()) {
+          std::cout << "Ошибка: поле обязательно для заполнения!\n";
+          continue;
         }
-
-        switch(user_choice) {
-            case 1: {
-                if(database.createTable()) {
-                    std::cout << "Таблица Users успешно создана.\n";
-                }
-                break;
-            }
-
-            case 2: {
-                User new_user = get_user_input();
-                if(database.insertUser(new_user)) {
-                    std::cout << "Пользователь успешно добавлен.\n";
-                }
-                break;
-            }
-
-            case 3: {
-                std::string id_input = get_validated_input("Введите id пользователя для обновления: ");
-                int user_id;
-                try {
-                    user_id = std::stoi(id_input);
-                } catch (...) {
-                    std::cerr << "Неверный id. Попробуйте снова.\n";
-                    break;
-                }
-                if (!database.userExists(user_id)) {
-                    std::cerr << "Ошибка: Пользователь с id = " << user_id << " не существует. Обновление отменено.\n";
-                    break;
-                }
-                User updated_user = get_user_input();
-                if(database.updateUser(user_id, updated_user)) {
-                    std::cout << "Пользователь успешно обновлён.\n";
-                }
-                break;
-            }
-
-            case 4: {
-                std::string id_input = get_validated_input("Введите id пользователя для удаления: ");
-                int user_id;
-                try {
-                    user_id = std::stoi(id_input);
-                } catch (...) {
-                    std::cerr << "Неверный id. Попробуйте снова.\n";
-                    break;
-                }
-                if(database.deleteUser(user_id)) {
-                    std::cout << "Пользователь успешно удалён.\n";
-                }
-                break;
-            }
-
-            case 5: {
-                is_running = false;
-                break;
-            }
-
-            default:
-                std::cout << "Неверный выбор. Попробуйте снова.\n";
+        if (last_name.find(' ') != std::string::npos) {
+          std::cout << "Ошибка: пробелы недопустимы во входных данных!\n";
+          continue;
         }
+        break;
+      }
+
+      // Ввод имени
+      while (true) {
+        std::cout << "Имя: ";
+        std::getline(std::cin, first_name);
+        first_name = Auth::trimWhitespace(first_name);
+        if (first_name.empty()) {
+          std::cout << "Ошибка: поле обязательно для заполнения!\n";
+          continue;
+        }
+        if (first_name.find(' ') != std::string::npos) {
+          std::cout << "Ошибка: пробелы недопустимы во входных данных!\n";
+          continue;
+        }
+        break;
+      }
+
+      // Ввод отчества (необязательное поле)
+      std::cout << "Отчество (необязательно): ";
+      std::getline(std::cin, patronymic);
+      patronymic = Auth::trimWhitespace(patronymic);
+      if (!patronymic.empty() && patronymic.find(' ') != std::string::npos) {
+        std::cout << "Ошибка: пробелы недопустимы во входных данных!\n";
+        // Предлагаем повторный ввод, если отчество содержит пробелы
+        while (patronymic.find(' ') != std::string::npos) {
+          std::cout << "Отчество (необязательно, без пробелов): ";
+          std::getline(std::cin, patronymic);
+          patronymic = Auth::trimWhitespace(patronymic);
+        }
+      }
+
+      // Ввод номера телефона
+      while (true) {
+        std::cout << "Телефон (с +): ";
+        std::getline(std::cin, phone);
+        phone = Auth::trimWhitespace(phone);
+        if (!Auth::validatePhone(phone)) {
+          std::cout << "Ошибка: неверный формат телефона!\n";
+          continue;
+        }
+        if (phone.find(' ') != std::string::npos) {
+          std::cout << "Ошибка: пробелы недопустимы во входных данных!\n";
+          continue;
+        }
+        if (db.userExists(phone)) {
+          std::cout << "Ошибка: телефон уже зарегистрирован!\n";
+          continue;
+        }
+        break;
+      }
+
+      // Ввод пароля и его подтверждения
+      while (true) {
+        std::cout << "Пароль: ";
+        std::getline(std::cin, pass1);
+        pass1 = Auth::trimWhitespace(pass1);
+        if (pass1.empty()) {
+          std::cout << "Ошибка: пароль не может быть пустым!\n";
+          continue;
+        }
+        if (pass1.find(' ') != std::string::npos) {
+          std::cout << "Ошибка: пробелы недопустимы во входных данных!\n";
+          continue;
+        }
+        std::cout << "Повторите пароль: ";
+        std::getline(std::cin, pass2);
+        pass2 = Auth::trimWhitespace(pass2);
+        if (pass2.find(' ') != std::string::npos) {
+          std::cout << "Ошибка: пробелы недопустимы во входных данных!\n";
+          continue;
+        }
+        if (pass1 != pass2) {
+          std::cout << "Ошибка: пароли не совпадают!\n";
+          continue;
+        }
+        break;
+      }
+
+      // Регистрация пользователя
+      if (db.registerUser(last_name, first_name, patronymic, phone, pass1)) {
+        std::cout << "Регистрация прошла успешно!\n";
+      } else {
+        std::cout << "Ошибка регистрации!\n";
+      }
+    } else if (choice == 2) { // Авторизация пользователя
+      std::string phone, password;
+
+      // Ввод номера телефона с проверкой
+      while (true) {
+        std::cout << "Телефон (с +): ";
+        std::getline(std::cin, phone);
+        phone = Auth::trimWhitespace(phone);
+
+        if (!Auth::validatePhone(phone)) {
+          std::cout << "Ошибка: неверный формат телефона!\n";
+          continue;
+        }
+        if (phone.find(' ') != std::string::npos) {
+          std::cout << "Ошибка: пробелы недопустимы во входных данных!\n";
+          continue;
+        }
+        break;
+      }
+
+      // Ввод пароля с проверкой
+      while (true) {
+        std::cout << "Пароль: ";
+        std::getline(std::cin, password);
+        password = Auth::trimWhitespace(password);
+
+        if (password.find(' ') != std::string::npos) {
+          std::cout << "Ошибка: пробелы недопустимы во входных данных!\n";
+          continue;
+        }
+        break;
+      }
+
+      // Проводим аутентификацию пользователя
+      std::string login_result = db.loginUser(phone, password);
+      if (login_result.empty()) {
+        std::cout << "Неверные данные!\n";
+      } else if (login_result.rfind("patient:", 0) == 0) {
+        // Если аутентификация успешна и пользователь - пациент,
+        // извлекаем идентификатор и показываем меню личного кабинета
+        int patient_id = std::stoi(login_result.substr(8));
+        int patient_choice = 0;
+        do {
+          std::cout << "\n=== Личный кабинет ===\n";
+          std::cout << "1. Просмотр записей\n2. Редактировать личную информацию\n3. Выход\nВыберите действие: ";
+          std::cin >> patient_choice;
+          std::cin.ignore(); // Очистка буфера ввода
+          if (patient_choice == 1) {
+            showPatientCabinet(db, patient_id);
+          } else if (patient_choice == 2) {
+            editProfile(db, patient_id);
+          }
+        } while (patient_choice != 3);
+      } else {
+        std::cout << "Вход выполнен!\n";
+      }
     }
+  }
 
-    std::cout << "Работа завершена.\n";
-    return 0;
+  return 0;
 }
