@@ -1,40 +1,49 @@
-#Output-dir ignore
-**/build/
-**/out/
-**/bin/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+*.sln
+*.vcxproj
+*.vcxproj.filters
 
+# Prerequisites
+*.d
 
-#Cmake-build-artifacts-igonore
-**/CMakeCache.txt
-**/CMakeFiles/
-**/CMakeScripts/
-**/Makefile
-**/cmake-build-debug/
-**/cmake_install.cmake
-**/install_manifest.txt
-**/compile_commands.json
-**/CTestTestfile.cmake
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
 
+# Precompiled Headers
+*.gch
+*.pch
 
-#bin-file igonore
-**/*.o
-**/*.a
-**/*.so
-**/*.exe
-**/*.out
-**/*.bin
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
 
+# Fortran module files
+*.mod
+*.smod
 
-#IDE-files ignore
-**/.idea/
-**/.vscode/
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
 
+# Executables
+*.exe
+*.out
+*.app
 
-#Logs/cache ignore
-**/*.log
-**/*.cache
+# Visual C++ intermediate and debug files
+*.ilk
+*.pdb
 
+# Macos files
+*.DS_Store
 
-#my mac local file mongocxx
-main-server/mongo-cxx-driver/
-
+/github-access-token.txt
