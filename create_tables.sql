@@ -20,7 +20,7 @@ CREATE TABLE users (
 -- Создание таблицы больниц
 CREATE TABLE hospitals (
     hospital_id SERIAL PRIMARY KEY,            -- Уникальный идентификатор больницы
-    address TEXT NOT NULL,                       -- Адрес больницы
+    address TEXT NOT NULL UNIQUE,                       -- Адрес больницы
     administrator_id INT NOT NULL REFERENCES users(id)  -- Идентификатор администратора (ссылка на таблицу пользователей)
 );
 
