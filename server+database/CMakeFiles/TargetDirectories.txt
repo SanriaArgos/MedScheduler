@@ -1,0 +1,3 @@
+/home/victoria/http-server-cpp/CMakeFiles/boost_api_server.dir
+/home/victoria/http-server-cpp/CMakeFiles/edit_cache.dir
+/home/victoria/http-server-cpp/CMakeFiles/rebuild_cache.dir
