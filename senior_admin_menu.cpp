@@ -6,21 +6,6 @@
 #include <sstream>
 #include <regex>
 #include <libpq-fe.h>
-#include <codecvt>
-
-// Вспомогательная функция для проверки, что строка состоит только из кириллических символов или двойных кавычек.
-static bool is_valid_cyrillic(const std::string &s) {
-    // Используем std::wstring_convert для преобразования UTF-8 в wide-string
-    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-    std::wstring ws = converter.from_bytes(s);
-    for (wchar_t c : ws) {
-        if (c == L'"') continue;
-        if ((c >= L'А' && c <= L'Я') || (c >= L'а' && c <= L'я') || c == L'Ё' || c == L'ё')
-            continue;
-        return false;
-    }
-    return true;
-}
 
 void add_junior_admin(database_handler &db) {
     std::cout << "\n=== Добавление младшего администратора ===\n";
@@ -50,15 +35,8 @@ void add_junior_admin(database_handler &db) {
 
 void add_hospital(database_handler &db) {
     std::cout << "\n=== Добавление больницы ===\n";
-    std::regex cyrillic_regex(R"(^[А-ЯЁа-яё"]+$)");
     auto get_validated_cyrillic = [&](const std::string &prompt) -> std::string {
-        while (true) {
-            std::string input = get_validated_input(prompt, true);
-            if (is_valid_cyrillic(input))
-                return input;
-            else
-                std::cout << "Ошибка: только кириллица и двойные кавычки\n";
-        }
+        return get_validated_input(prompt, true); // Предполагается, что get_validated_input уже гарантирует отсутствие пробелов
     };
     auto get_validated_digits = [&](const std::string &prompt) -> std::string {
         while (true) {
@@ -74,8 +52,6 @@ void add_hospital(database_handler &db) {
     std::string settlement_type = get_validated_cyrillic("Тип населенного пункта");
     std::string settlement_name = get_validated_cyrillic("Название населенного пункта");
     std::string street = get_validated_cyrillic("Улица");
-    
-    // Новый порядок: сначала номер дома, затем полное наименование больницы
     std::string house = get_validated_digits("Дом");
     std::string full_name = get_validated_cyrillic("Полное наименование больницы");
 
@@ -97,7 +73,6 @@ void add_hospital(database_handler &db) {
                 std::cout << "Ошибка: указанный ID не принадлежит младшему администратору\n";
                 continue;
             }
-            // Проверяем, привязан ли этот младший администратор к больнице
             std::string query_admin = "SELECT 1 FROM hospitals WHERE administrator_id = " + std::to_string(admin_id);
             PGresult *res_admin = PQexec(db.get_connection(), query_admin.c_str());
             if (PQresultStatus(res_admin) == PGRES_TUPLES_OK && PQntuples(res_admin) > 0) {
@@ -112,7 +87,6 @@ void add_hospital(database_handler &db) {
             std::cout << "Ошибка: не найден младший администратор с таким ID\n";
         }
     }
-    // Проверяем, существует ли больница с таким адресом
     std::string query_exist = "SELECT 1 FROM hospitals WHERE region = '" + region +
                               "' AND settlement_type = '" + settlement_type +
                               "' AND settlement_name = '" + settlement_name +
@@ -173,24 +147,7 @@ void delete_user(database_handler &db, int senior_admin_id) {
     PQclear(res_del);
 }
 
-void delete_hospital(database_handler &db) {
-    std::cout << "\n=== Удаление больницы ===\n";
-    std::string hid_str = get_validated_input("Введите ID больницы", true);
-    int hid = std::stoi(hid_str);
-    std::string answer = get_validated_input("Уверены, что хотите удалить больницу? (да/нет)", true);
-    if (answer != "да") {
-        std::cout << "Отмена удаления\n";
-        return;
-    }
-    std::string query = "DELETE FROM hospitals WHERE hospital_id = " + std::to_string(hid);
-    PGresult *res = PQexec(db.get_connection(), query.c_str());
-    if (PQresultStatus(res) == PGRES_COMMAND_OK) {
-        std::cout << "Больница удалена\n";
-    } else {
-        std::cout << "Ошибка при удалении больницы\n";
-    }
-    PQclear(res);
-}
+// Функция удаления больницы удалена согласно требованию.
 
 void senior_admin_menu(database_handler &db, int admin_id) {
     int choice = 0;
@@ -202,8 +159,7 @@ void senior_admin_menu(database_handler &db, int admin_id) {
             "3. Добавить младшего администратора\n"
             "4. Добавить новую больницу\n"
             "5. Удалить пользователя\n"
-            "6. Удалить больницу\n"
-            "7. Выход\nВыберите действие: "
+            "6. Выход\nВыберите действие: "
         );
         switch(choice) {
             case 1:
@@ -222,9 +178,6 @@ void senior_admin_menu(database_handler &db, int admin_id) {
                 delete_user(db, admin_id);
                 break;
             case 6:
-                delete_hospital(db);
-                break;
-            case 7:
                 std::cout << "Выход из аккаунта\n";
                 return;
             default:

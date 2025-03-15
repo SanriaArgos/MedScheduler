@@ -12,14 +12,12 @@
 #include <limits>
 
 int main() {
-    // Инициализация системы: создание пользователя meduser, базы данных medscheduler и старшего администратора, если их не существует.
     const std::string superuser_connect_info = "dbname=postgres user=postgres password=123 host=localhost port=5432";
     if (!initialize_system(superuser_connect_info)) {
         std::cerr << "Ошибка инициализации системы\n";
         return 1;
     }
 
-    // Подключение к базе данных medscheduler от имени meduser
     const std::string connect_information = "dbname=medscheduler user=meduser password=3671920119 host=localhost port=5432";
     database_handler db(connect_information);
     if (!db.connect()) {

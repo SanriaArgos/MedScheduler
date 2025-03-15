@@ -1,12 +1,12 @@
 #include "utils.hpp"
-#include <cctype>
-#include <codecvt>
-#include <iostream>
-#include <limits>
-#include <locale>
-#include <regex>
-#include <string>
 #include "auth.hpp"
+#include <iostream>
+#include <string>
+#include <limits>
+#include <regex>
+#include <locale>
+#include <codecvt>
+#include <cctype>
 
 std::string get_input(const std::string &prompt) {
     std::string input;
@@ -33,15 +33,19 @@ std::string get_validated_input(const std::string &prompt, bool required) {
 }
 
 bool is_cyrillic(const std::string &s) {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-    std::wstring ws = converter.from_bytes(s);
-    for (wchar_t wc : ws) {
-        if (!((wc >= L'А' && wc <= L'Я') || (wc >= L'а' && wc <= L'я') ||
-              wc == L'Ё' || wc == L'ё')) {
-            return false;
+    try {
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        std::wstring ws = converter.from_bytes(s);
+        for (wchar_t wc : ws) {
+            if (!((wc >= L'А' && wc <= L'Я') || (wc >= L'а' && wc <= L'я') ||
+                  wc == L'Ё' || wc == L'ё')) {
+                return false;
+            }
         }
+        return true;
+    } catch (const std::range_error &) {
+        return false;
     }
-    return true;
 }
 
 std::string get_validated_name(const std::string &prompt, bool required) {
@@ -55,11 +59,25 @@ std::string get_validated_name(const std::string &prompt, bool required) {
     }
 }
 
+bool validate_phone(const std::string &phone) {
+    if (phone.empty() || phone[0] != '+')
+        return false;
+    std::string digits = phone.substr(1);
+    if (digits.size() != 11)
+        return false;
+    if (digits[0] != '7')
+        return false;
+    for (char c : digits) {
+        if (!std::isdigit(static_cast<unsigned char>(c)))
+            return false;
+    }
+    return true;
+}
+
 std::string get_validated_phone() {
     while (true) {
-        std::string phone =
-            get_validated_input("Телефон (с +, ровно 11 цифр, первая 7)", true);
-        if (!Auth::validate_phone(phone)) {
+        std::string phone = get_validated_input("Телефон (с +, ровно 11 цифр, первая 7)", true);
+        if (!validate_phone(phone)) {
             std::cout << "Ошибка: неверный формат телефона\n";
             continue;
         }
@@ -69,20 +87,15 @@ std::string get_validated_phone() {
 
 bool validate_password_characters(const std::string &password) {
     for (char c : password) {
-        if (!(std::isalnum(static_cast<unsigned char>(c)) ||
-              std::ispunct(static_cast<unsigned char>(c)))) {
+        if (!(std::isalnum(static_cast<unsigned char>(c)) || std::ispunct(static_cast<unsigned char>(c))))
             return false;
-        }
     }
     return true;
 }
 
 std::string get_validated_password() {
     while (true) {
-        std::string password = get_validated_input(
-            "Пароль (не менее 8 символов, только латиница, цифры и символы)",
-            true
-        );
+        std::string password = get_validated_input("Пароль (не менее 8 символов, только латиница, цифры и символы)", true);
         if (password.size() < 8) {
             std::cout << "Ошибка: не короче 8 символов\n";
             continue;

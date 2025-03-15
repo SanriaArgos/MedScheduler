@@ -1,8 +1,8 @@
 #ifndef REGISTRATION_HPP_
 #define REGISTRATION_HPP_
 
-#include <string>
 #include "database.hpp"
+#include <string>
 
 void registration(database_handler &db);
 

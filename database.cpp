@@ -1,5 +1,4 @@
 #include "database.hpp"
-#include "auth.hpp"  // для вызова Auth::trim_whitespace
 #include <openssl/sha.h>
 #include <ctime>
 #include <fstream>
@@ -29,7 +28,7 @@ std::string database_handler::prepare_query(const std::string &query) {
     size_t position = 0;
     while ((position = cleaned.find("'", position)) != std::string::npos) {
         cleaned.replace(position, 1, "''");
-        position += 2;  // смещаем позицию на длину заменённой подстроки
+        position += 2;
     }
     return cleaned;
 }
@@ -62,25 +61,22 @@ std::string database_handler::hash_password(const std::string &password,
     return ss.str();
 }
 
+// Исправлено: теперь проверяем наличие номера телефона во всей таблице
 bool database_handler::user_exists(const std::string &phone) const {
-    std::string query = "SELECT 1 FROM users WHERE phone = '" + prepare_query(phone) +
-                        "' AND user_type = 'patient'";
+    std::string query = "SELECT 1 FROM users WHERE phone = '" + prepare_query(phone) + "'";
     PGresult *res = PQexec(connection_, query.c_str());
     bool exists = (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0);
     PQclear(res);
     return exists;
 }
 
-bool database_handler::register_user(const std::string &last_name,
-                                       const std::string &first_name,
-                                       const std::string &patronymic,
-                                       const std::string &phone,
+bool database_handler::register_user(const std::string &last_name, const std::string &first_name,
+                                       const std::string &patronymic, const std::string &phone,
                                        const std::string &password) {
     std::string salt = generate_salt(16);
     std::string hashed_pass = hash_password(password, salt);
     std::string query =
-        "INSERT INTO users (last_name, first_name, patronymic, phone, "
-        "hashed_password, salt, user_type) "
+        "INSERT INTO users (last_name, first_name, patronymic, phone, hashed_password, salt, user_type) "
         "VALUES ('" +
         prepare_query(last_name) + "', '" + prepare_query(first_name) + "', '" +
         prepare_query(patronymic) + "', '" + prepare_query(phone) + "', '" +
@@ -106,8 +102,6 @@ std::string database_handler::login_user(const std::string &phone,
     }
     std::string user_id = PQgetvalue(res, 0, 0);
     std::string user_type = PQgetvalue(res, 0, 1);
-    // Обрезаем пробельные символы в user_type
-    user_type = Auth::trim_whitespace(user_type);
     std::string db_hash = PQgetvalue(res, 0, 2);
     std::string db_salt = PQgetvalue(res, 0, 3);
     PQclear(res);
@@ -145,36 +139,10 @@ std::string database_handler::get_patient_records(int patient_id) const {
     return result;
 }
 
-bool database_handler::update_user_info(int user_id, const std::string &last_name,
-                                          const std::string &first_name,
-                                          const std::string &patronymic,
-                                          const std::string &phone) {
-    std::string query_check = "SELECT id FROM users WHERE phone = '" + prepare_query(phone) +
-                              "' AND user_type = 'patient'";
-    PGresult *res_check = PQexec(connection_, query_check.c_str());
-    if (PQresultStatus(res_check) == PGRES_TUPLES_OK && PQntuples(res_check) > 0) {
-        std::string existing_id = PQgetvalue(res_check, 0, 0);
-        if (std::to_string(user_id) != existing_id) {
-            PQclear(res_check);
-            return false;
-        }
-    }
-    PQclear(res_check);
-    std::string query = "UPDATE users SET last_name = '" + prepare_query(last_name) +
-                        "', first_name = '" + prepare_query(first_name) +
-                        "', patronymic = '" + prepare_query(patronymic) +
-                        "', phone = '" + prepare_query(phone) +
-                        "' WHERE id = " + std::to_string(user_id);
-    PGresult *res = PQexec(connection_, query.c_str());
-    bool success = (PQresultStatus(res) == PGRES_COMMAND_OK);
-    PQclear(res);
-    return success;
-}
-
 bool database_handler::initialize_database() {
     std::ifstream file("create_tables.sql");
     if (!file.is_open()) {
-        std::cerr << "Не удалось открыть create_tables.sql\n";
+        std::cerr << "не удалось открыть create_tables.sql\n";
         return false;
     }
     std::stringstream buffer;
@@ -182,7 +150,7 @@ bool database_handler::initialize_database() {
     const std::string sql = buffer.str();
     PGresult *res = PQexec(connection_, sql.c_str());
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-        std::cerr << "Ошибка инициализации базы: " << PQerrorMessage(connection_) << "\n";
+        std::cerr << "ошибка инициализации базы: " << PQerrorMessage(connection_) << "\n";
         PQclear(res);
         return false;
     }

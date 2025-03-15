@@ -1,16 +1,11 @@
 #ifndef HANDLERS_HPP_
 #define HANDLERS_HPP_
 
-#include <string>
 #include "database.hpp"
+#include <string>
 
-std::string registration_handler(
-    const database_handler &db,
-    const std::string &request_data
-);
-std::string
-login_handler(const database_handler &db, const std::string &request_data);
-std::string
-records_handler(const database_handler &db, const std::string &request_data);
+std::string registration_handler(database_handler &db);
+std::string login_handler(database_handler &db);
+std::string records_handler(database_handler &db);
 
 #endif  // HANDLERS_HPP_

@@ -8,7 +8,6 @@
 #include <openssl/sha.h>
 #include <fstream>
 
-// Локальная функция для выполнения SQL-запроса
 static bool execute_sql(PGconn *conn, const std::string &sql) {
     PGresult *res = PQexec(conn, sql.c_str());
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
@@ -38,7 +37,6 @@ static bool check_database_exists(PGconn *conn, const std::string &dbname) {
     return exists;
 }
 
-// Локальная функция генерации соли
 static std::string generate_salt(size_t length = 16) {
     static const char char_set[] =
         "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -53,7 +51,6 @@ static std::string generate_salt(size_t length = 16) {
     return salt;
 }
 
-// Локальная функция хеширования пароля с солью
 static std::string hash_password(const std::string &password, const std::string &salt) {
     std::string to_hash = password + salt;
     unsigned char hash[SHA256_DIGEST_LENGTH] = {0};
@@ -68,7 +65,6 @@ static std::string hash_password(const std::string &password, const std::string 
 }
 
 bool initialize_system(const std::string &superuser_connect_info) {
-    // Подключаемся к базе postgres для создания пользователя и базы данных
     PGconn *conn = PQconnectdb(superuser_connect_info.c_str());
     if (PQstatus(conn) != CONNECTION_OK) {
         std::cerr << "Ошибка подключения (superuser): " << PQerrorMessage(conn) << "\n";
@@ -99,7 +95,6 @@ bool initialize_system(const std::string &superuser_connect_info) {
     }
     PQfinish(conn);
 
-    // Подключаемся к базе medscheduler от суперпользователя
     const std::string medscheduler_conn_info = "dbname=medscheduler user=postgres password=123 host=localhost port=5432";
     PGconn *conn2 = PQconnectdb(medscheduler_conn_info.c_str());
     if (PQstatus(conn2) != CONNECTION_OK) {
@@ -107,7 +102,6 @@ bool initialize_system(const std::string &superuser_connect_info) {
         PQfinish(conn2);
         return false;
     }
-    // Выполняем скрипт создания таблиц
     std::ifstream file("create_tables.sql");
     if (file.is_open()) {
         std::stringstream buffer;
@@ -124,12 +118,10 @@ bool initialize_system(const std::string &superuser_connect_info) {
     } else {
         std::cerr << "Не удалось открыть create_tables.sql\n";
     }
-    // Изменяем владельца таблиц на meduser
     execute_sql(conn2, "ALTER TABLE users OWNER TO meduser");
     execute_sql(conn2, "ALTER TABLE hospitals OWNER TO meduser");
     execute_sql(conn2, "ALTER TABLE records OWNER TO meduser");
 
-    // Проверяем наличие старшего администратора
     std::string check_sql = "SELECT 1 FROM users WHERE user_type = 'старший администратор'";
     PGresult *res = PQexec(conn2, check_sql.c_str());
     bool senior_exists = (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0);

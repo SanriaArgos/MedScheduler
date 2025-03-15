@@ -1,6 +1,6 @@
 #include "login.hpp"
-#include <iostream>
 #include "utils.hpp"
+#include <iostream>
 
 std::string login(database_handler &db) {
     std::cout << "Вход в личный кабинет:\n";

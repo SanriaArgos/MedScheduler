@@ -1,8 +1,8 @@
 #ifndef LOGIN_HPP_
 #define LOGIN_HPP_
 
-#include <string>
 #include "database.hpp"
+#include <string>
 
 std::string login(database_handler &db);
 

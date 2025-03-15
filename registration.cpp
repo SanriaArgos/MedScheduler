@@ -1,6 +1,6 @@
 #include "registration.hpp"
-#include <iostream>
 #include "utils.hpp"
+#include <iostream>
 
 void registration(database_handler &db) {
     std::cout << "Регистрация пользователя:\n";
@@ -10,7 +10,7 @@ void registration(database_handler &db) {
     if (!patronymic.empty()) {
         while (!is_cyrillic(patronymic)) {
             std::cout << "Ошибка: используйте только кириллицу\n";
-            patronymic = get_input("отчество");
+            patronymic = get_input("Отчество:");
         }
     }
     std::string phone = get_validated_phone();
@@ -19,9 +19,8 @@ void registration(database_handler &db) {
         phone = get_validated_phone();
     }
     std::string password = get_validated_password();
-    if (db.register_user(last_name, first_name, patronymic, phone, password)) {
+    if (db.register_user(last_name, first_name, patronymic, phone, password))
         std::cout << "Регистрация прошла успешно\n";
-    } else {
+    else
         std::cout << "Ошибка регистрации\n";
-    }
 }
