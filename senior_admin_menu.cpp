@@ -36,7 +36,7 @@ void add_junior_admin(database_handler &db) {
 void add_hospital(database_handler &db) {
     std::cout << "\n=== Добавление больницы ===\n";
     auto get_validated_cyrillic = [&](const std::string &prompt) -> std::string {
-        return get_validated_input(prompt, true); // Предполагается, что get_validated_input уже гарантирует отсутствие пробелов
+        return get_validated_input(prompt, true);
     };
     auto get_validated_digits = [&](const std::string &prompt) -> std::string {
         while (true) {
@@ -112,54 +112,16 @@ void add_hospital(database_handler &db) {
     PQclear(res_ins);
 }
 
-void delete_user(database_handler &db, int senior_admin_id) {
-    std::cout << "\n=== Удаление пользователя ===\n";
-    std::string input_id = get_validated_input("Введите ID пользователя", true);
-    int user_id = std::stoi(input_id);
-    if (user_id == senior_admin_id) {
-        std::cout << "Удалить старшего администратора нельзя\n";
-        return;
-    }
-    std::string answer = get_validated_input("Уверены, что хотите удалить пользователя? (да/нет)", true);
-    if (answer != "да") {
-        std::cout << "Отмена удаления\n";
-        return;
-    }
-    std::string query_type = "SELECT user_type FROM users WHERE id = " + std::to_string(user_id);
-    PGresult *res = PQexec(db.get_connection(), query_type.c_str());
-    if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
-        std::string user_type = PQgetvalue(res, 0, 0);
-        PQclear(res);
-        if (user_type == "младший администратор") {
-            std::string del_hosp = "DELETE FROM hospitals WHERE administrator_id = " + std::to_string(user_id);
-            PQexec(db.get_connection(), del_hosp.c_str());
-        }
-    } else {
-        if (res) PQclear(res);
-    }
-    std::string query_del = "DELETE FROM users WHERE id = " + std::to_string(user_id);
-    PGresult *res_del = PQexec(db.get_connection(), query_del.c_str());
-    if (PQresultStatus(res_del) == PGRES_COMMAND_OK) {
-        std::cout << "Пользователь удалён\n";
-    } else {
-        std::cout << "Ошибка при удалении пользователя\n";
-    }
-    PQclear(res_del);
-}
-
-// Функция удаления больницы удалена согласно требованию.
-
 void senior_admin_menu(database_handler &db, int admin_id) {
     int choice = 0;
     do {
         choice = get_menu_choice(
             "\n=== Личный кабинет старшего администратора ===\n"
             "1. Посмотреть таблицу users\n"
-            "2. Посмотреть таблицу hospitals\n"
+            "2. Посмотреть таблицу больниц\n"
             "3. Добавить младшего администратора\n"
             "4. Добавить новую больницу\n"
-            "5. Удалить пользователя\n"
-            "6. Выход\nВыберите действие: "
+            "5. Выход\nВыберите действие: "
         );
         switch(choice) {
             case 1:
@@ -175,9 +137,6 @@ void senior_admin_menu(database_handler &db, int admin_id) {
                 add_hospital(db);
                 break;
             case 5:
-                delete_user(db, admin_id);
-                break;
-            case 6:
                 std::cout << "Выход из аккаунта\n";
                 return;
             default:
