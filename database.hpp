@@ -19,8 +19,7 @@ public:
         const std::string &phone,
         const std::string &password
     );
-    std::string
-    login_user(const std::string &phone, const std::string &password) const;
+    std::string login_user(const std::string &phone, const std::string &password) const;
     std::string get_patient_records(int patient_id) const;
     bool update_user_info(
         int user_id,
@@ -33,14 +32,16 @@ public:
     // Функция инициализации базы данных (DDL)
     bool initialize_database();
 
+    // Новый метод для получения указателя на соединение
+    PGconn* get_connection() const;
+
 private:
     PGconn *connection_ = nullptr;
     const std::string connect_information_;
 
     static std::string prepare_query(const std::string &query);
     static std::string generate_salt(size_t length = 16);
-    static std::string
-    hash_password(const std::string &password, const std::string &salt);
+    static std::string hash_password(const std::string &password, const std::string &salt);
 };
 
 #endif  // DATABASE_HANDLER_HPP_

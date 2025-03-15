@@ -16,6 +16,9 @@ add_executable(medscheduler
     utils.cpp
     handlers.cpp
     system_init.cpp
+    senior_admin_menu.cpp
+    display_users.cpp
+    display_hospitals.cpp
 )
 
 target_include_directories(medscheduler PRIVATE ${PostgreSQL_INCLUDE_DIRS})
