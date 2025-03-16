@@ -21,7 +21,7 @@ add_executable(medscheduler
     add_hospital.cpp
     doctor_hospital_management.cpp
     add_record_slot.cpp
-    view_doctor_schedule.cpp
+    junior_admin_schedule.cpp
     display_users.cpp
     display_hospitals.cpp
     display_doctors.cpp
@@ -29,6 +29,7 @@ add_executable(medscheduler
     doctor_menu.cpp
     doctor_schedule.cpp
     add_doctor.cpp
+    patient_schedule.cpp
 )
 
 target_include_directories(medscheduler PRIVATE ${PostgreSQL_INCLUDE_DIRS})

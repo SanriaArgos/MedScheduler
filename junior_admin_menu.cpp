@@ -4,7 +4,7 @@
 #include "display_doctors.hpp"
 #include "doctor_hospital_management.hpp"  
 #include "add_record_slot.hpp"
-#include "view_doctor_schedule.hpp"
+#include "junior_admin_schedule.hpp"
 #include "add_doctor.hpp"
 #include <iostream>
 
@@ -41,7 +41,7 @@ void junior_admin_menu(database_handler &db, int admin_id) {
                 add_record_slot(db, admin_id);
                 break;
             case 7:
-                view_doctor_schedule(db, admin_id);
+                junior_admin_schedule(db, admin_id);
                 break;
             case 8:
                 std::cout << "Exiting cabinet\n";
