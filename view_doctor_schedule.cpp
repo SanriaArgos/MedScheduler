@@ -55,7 +55,7 @@ void view_doctor_schedule(database_handler &db, int junior_admin_id) {
     }
     PQclear(res_check);
     std::stringstream ss;
-    ss << "SELECT record_id, appointment_date, appointment_time, office_number, patient_id "
+    ss << "SELECT record_id, appointment_date, appointment_time, cabinet_number, patient_id "
        << "FROM records WHERE doctor_id = " << doctor_id
        << " AND hospital_id = " << my_hospital_id
        << " AND appointment_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + INTERVAL '14 day') "
@@ -79,12 +79,12 @@ void view_doctor_schedule(database_handler &db, int junior_admin_id) {
             }
             std::string record_id = PQgetvalue(res, i, 0);
             std::string time = PQgetvalue(res, i, 2);
-            std::string office = PQgetvalue(res, i, 3);
+            std::string cabinet = PQgetvalue(res, i, 3);
             std::string patient_id = PQgetvalue(res, i, 4);
             if (patient_id.empty() || patient_id == "0")
                 std::cout << time << ": -\n";
             else
-                std::cout << time << ": (" << record_id << ") office_" << office
+                std::cout << time << ": (" << record_id << ") cabinet_" << cabinet
                           << ", patient_id_" << patient_id << "\n";
         }
     }

@@ -71,13 +71,13 @@ void add_record_slot(database_handler &db, int junior_admin_id) {
         PQclear(res);
         break;
     }
-    int office;
+    int cabinet;
     while (true) {
-        std::string office_str = get_validated_input("Enter Office Number (>=1)", true);
+        std::string cabinet_str = get_validated_input("Enter Cabinet Number (>=1)", true);
         try {
-            office = static_cast<int>(std::stoi(office_str));
-            if (office < 1) {
-                std::cout << "Error: Office number must be >= 1\n";
+            cabinet = static_cast<int>(std::stoi(cabinet_str));
+            if (cabinet < 1) {
+                std::cout << "Error: Cabinet number must be >= 1\n";
                 continue;
             }
         } catch (...) {
@@ -102,8 +102,8 @@ void add_record_slot(database_handler &db, int junior_admin_id) {
     }
     PQclear(res_check);
     std::stringstream ss;
-    ss << "INSERT INTO records (doctor_id, appointment_date, appointment_time, hospital_id, office_number, patient_id) VALUES ("
-       << doctor_id << ", '" << date << "', '" << time << "', " << hosp_id << ", " << office << ", NULL)";
+    ss << "INSERT INTO records (doctor_id, appointment_date, appointment_time, hospital_id, cabinet_number, patient_id) VALUES ("
+       << doctor_id << ", '" << date << "', '" << time << "', " << hosp_id << ", " << cabinet << ", NULL)";
     PGresult *res = PQexec(db.get_connection(), ss.str().c_str());
     if (PQresultStatus(res) == PGRES_COMMAND_OK) {
         std::cout << "Appointment slot added\n";

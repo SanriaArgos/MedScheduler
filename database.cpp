@@ -134,6 +134,17 @@ std::string database_handler::login_user(const std::string &phone,
         return "senior:" + user_id;
     } else if (user_type == "junior administrator") {
         return "junior:" + user_id;
+    } else if (user_type == "doctor") {
+        // Get corresponding doctor_id from doctors table using user_id.
+        std::string query2 = "SELECT doctor_id FROM doctors WHERE user_id = " + user_id;
+        PGresult *res2 = PQexec(connection_, query2.c_str());
+        if (!res2 || PQresultStatus(res2) != PGRES_TUPLES_OK || PQntuples(res2) == 0) {
+            if (res2) PQclear(res2);
+            return "";
+        }
+        std::string doctor_id = PQgetvalue(res2, 0, 0);
+        PQclear(res2);
+        return "doctor:" + doctor_id;
     }
     return "success";
 }

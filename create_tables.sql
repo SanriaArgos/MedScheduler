@@ -40,6 +40,6 @@ CREATE TABLE IF NOT EXISTS records (
     appointment_date DATE NOT NULL CHECK (EXTRACT(YEAR FROM appointment_date) >= 2025),
     appointment_time TIME NOT NULL CHECK (EXTRACT(HOUR FROM appointment_time) BETWEEN 0 AND 23 AND EXTRACT(MINUTE FROM appointment_time) BETWEEN 0 AND 59),
     hospital_id INT NOT NULL REFERENCES hospitals(hospital_id),
-    office_number INT NOT NULL CHECK (office_number >= 1),
+    cabinet_number INT NOT NULL CHECK (cabinet_number >= 1),
     patient_id INT REFERENCES users(id)
 );
