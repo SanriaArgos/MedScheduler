@@ -3,24 +3,24 @@
 #include <iostream>
 
 void registration(database_handler &db) {
-    std::cout << "Регистрация пользователя:\n";
-    std::string last_name = get_validated_name("Фамилия", true);
-    std::string first_name = get_validated_name("Имя", true);
-    std::string patronymic = get_input("Отчество (необязательно): ");
+    std::cout << "\n=== Registration ===\n";
+    std::string last_name = get_validated_name("Last Name", true);
+    std::string first_name = get_validated_name("First Name", true);
+    std::string patronymic = get_input("Patronymic (optional): ");
     if (!patronymic.empty()) {
-        while (!is_cyrillic(patronymic)) {
-            std::cout << "Ошибка: используйте только кириллицу\n";
-            patronymic = get_input("Отчество:");
+        while (!is_latin_or_dash(patronymic)) {
+            std::cout << "Error: Use only Latin letters and '-'\n";
+            patronymic = get_input("Patronymic (optional): ");
         }
     }
     std::string phone = get_validated_phone();
     while (db.user_exists(phone)) {
-        std::cout << "Ошибка: телефон уже зарегистрирован\n";
+        std::cout << "Error: Phone already registered\n";
         phone = get_validated_phone();
     }
     std::string password = get_validated_password();
     if (db.register_user(last_name, first_name, patronymic, phone, password))
-        std::cout << "Регистрация прошла успешно\n";
+        std::cout << "Registration successful\n";
     else
-        std::cout << "Ошибка регистрации\n";
+        std::cout << "Registration error\n";
 }

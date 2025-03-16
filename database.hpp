@@ -4,7 +4,7 @@
 #include <libpq-fe.h>
 #include <string>
 
-// базовый класс для работы с базой данных
+// Base class for database operations
 class database_handler {
 public:
     explicit database_handler(const std::string &connect_information);
@@ -12,21 +12,16 @@ public:
 
     bool connect();
     bool user_exists(const std::string &phone) const;
-    bool register_user(
-        const std::string &last_name,
-        const std::string &first_name,
-        const std::string &patronymic,
-        const std::string &phone,
-        const std::string &password
-    );
-    std::string
-    login_user(const std::string &phone, const std::string &password) const;
+    bool register_user(const std::string &last_name, const std::string &first_name,
+                       const std::string &patronymic, const std::string &phone,
+                       const std::string &password);
+    std::string login_user(const std::string &phone, const std::string &password) const;
     std::string get_patient_records(int patient_id) const;
 
-    // Функция инициализации базы данных (DDL)
+    // Initialize database (DDL)
     bool initialize_database();
 
-    PGconn *get_connection() const;
+    PGconn* get_connection() const;
 
 private:
     PGconn *connection_ = nullptr;
@@ -34,8 +29,7 @@ private:
 
     static std::string prepare_query(const std::string &query);
     static std::string generate_salt(size_t length = 16);
-    static std::string
-    hash_password(const std::string &password, const std::string &salt);
+    static std::string hash_password(const std::string &password, const std::string &salt);
 };
 
 #endif  // DATABASE_HANDLER_HPP_

@@ -1,3 +1,4 @@
+-- Users table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     last_name VARCHAR(100) NOT NULL,
@@ -9,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     salt TEXT NOT NULL
 );
 
+-- Hospitals table
 CREATE TABLE IF NOT EXISTS hospitals (
     hospital_id SERIAL PRIMARY KEY,
     region TEXT NOT NULL,
@@ -21,10 +23,23 @@ CREATE TABLE IF NOT EXISTS hospitals (
     UNIQUE (region, settlement_type, settlement_name, street, house)
 );
 
+-- Doctors table
+CREATE TABLE IF NOT EXISTS doctors (
+    doctor_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    education TEXT NOT NULL,
+    specialty TEXT NOT NULL,
+    experience INT NOT NULL,
+    hospital_ids INTEGER[]
+);
+
+-- Records table
 CREATE TABLE IF NOT EXISTS records (
     record_id SERIAL PRIMARY KEY,
-    patient_id INT NOT NULL REFERENCES users(id),
-    doctor_id INT NOT NULL REFERENCES users(id),
+    doctor_id INT NOT NULL REFERENCES doctors(doctor_id),
+    appointment_date DATE NOT NULL CHECK (EXTRACT(YEAR FROM appointment_date) >= 2025),
+    appointment_time TIME NOT NULL CHECK (EXTRACT(HOUR FROM appointment_time) BETWEEN 0 AND 23 AND EXTRACT(MINUTE FROM appointment_time) BETWEEN 0 AND 59),
     hospital_id INT NOT NULL REFERENCES hospitals(hospital_id),
-    time_and_date TIMESTAMP NOT NULL
+    office_number INT NOT NULL CHECK (office_number >= 1),
+    patient_id INT REFERENCES users(id)
 );

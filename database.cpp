@@ -1,6 +1,5 @@
 #include "database.hpp"
 #include <openssl/sha.h>
-#include <ctime>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -51,7 +50,7 @@ std::string database_handler::hash_password(const std::string &password,
                                               const std::string &salt) {
     std::string to_hash = password + salt;
     unsigned char hash[SHA256_DIGEST_LENGTH] = {0};
-    SHA256(reinterpret_cast<const unsigned char *>(to_hash.c_str()),
+    SHA256(reinterpret_cast<const unsigned char*>(to_hash.c_str()),
            static_cast<size_t>(to_hash.size()), hash);
     std::stringstream ss;
     for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
@@ -61,10 +60,16 @@ std::string database_handler::hash_password(const std::string &password,
     return ss.str();
 }
 
-// Исправлено: теперь проверяем наличие номера телефона во всей таблице
 bool database_handler::user_exists(const std::string &phone) const {
-    std::string query = "SELECT 1 FROM users WHERE phone = '" + prepare_query(phone) + "'";
-    PGresult *res = PQexec(connection_, query.c_str());
+    const char* paramValues[1] = { phone.c_str() };
+    PGresult *res = PQexecParams(connection_,
+        "SELECT 1 FROM users WHERE phone = $1 AND user_type = 'patient'",
+        1,          // one parameter
+        NULL,       // let libpq infer parameter types
+        paramValues,
+        NULL,
+        NULL,
+        0);         // text format
     bool exists = (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0);
     PQclear(res);
     return exists;
@@ -75,16 +80,25 @@ bool database_handler::register_user(const std::string &last_name, const std::st
                                        const std::string &password) {
     std::string salt = generate_salt(16);
     std::string hashed_pass = hash_password(password, salt);
-    std::string query =
+    const char* paramValues[6];
+    paramValues[0] = last_name.c_str();
+    paramValues[1] = first_name.c_str();
+    paramValues[2] = patronymic.c_str();
+    paramValues[3] = phone.c_str();
+    paramValues[4] = hashed_pass.c_str();
+    paramValues[5] = salt.c_str();
+    PGresult *res = PQexecParams(connection_,
         "INSERT INTO users (last_name, first_name, patronymic, phone, hashed_password, salt, user_type) "
-        "VALUES ('" +
-        prepare_query(last_name) + "', '" + prepare_query(first_name) + "', '" +
-        prepare_query(patronymic) + "', '" + prepare_query(phone) + "', '" +
-        prepare_query(hashed_pass) + "', '" + prepare_query(salt) + "', 'patient')";
-    PGresult *res = PQexec(connection_, query.c_str());
+        "VALUES ($1, $2, $3, $4, $5, $6, 'patient')",
+        6,
+        NULL,
+        paramValues,
+        NULL,
+        NULL,
+        0);
     bool success = (PQresultStatus(res) == PGRES_COMMAND_OK);
     if (!success) {
-        std::cerr << "Ошибка регистрации: " << PQerrorMessage(connection_) << "\n";
+        std::cerr << "Registration error: " << PQerrorMessage(connection_) << "\n";
     }
     PQclear(res);
     return success;
@@ -92,12 +106,17 @@ bool database_handler::register_user(const std::string &last_name, const std::st
 
 std::string database_handler::login_user(const std::string &phone,
                                            const std::string &password) const {
-    std::string query = "SELECT id, user_type, hashed_password, salt FROM users WHERE phone = '" +
-                        prepare_query(phone) + "'";
-    PGresult *res = PQexec(connection_, query.c_str());
+    const char* paramValues[1] = { phone.c_str() };
+    PGresult *res = PQexecParams(connection_,
+        "SELECT id, user_type, hashed_password, salt FROM users WHERE phone = $1",
+        1,
+        NULL,
+        paramValues,
+        NULL,
+        NULL,
+        0);
     if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
-        if (res)
-            PQclear(res);
+        if (res) PQclear(res);
         return "";
     }
     std::string user_id = PQgetvalue(res, 0, 0);
@@ -111,28 +130,35 @@ std::string database_handler::login_user(const std::string &phone,
     }
     if (user_type == "patient") {
         return "patient:" + user_id;
-    } else if (user_type == "старший администратор") {
+    } else if (user_type == "senior administrator") {
         return "senior:" + user_id;
-    } else if (user_type == "младший администратор") {
+    } else if (user_type == "junior administrator") {
         return "junior:" + user_id;
     }
     return "success";
 }
 
 std::string database_handler::get_patient_records(int patient_id) const {
-    std::string query = "SELECT r.time_and_date, h.address FROM records r "
-                        "JOIN hospitals h ON r.hospital_id = h.hospital_id "
-                        "WHERE r.patient_id = " + std::to_string(patient_id);
-    PGresult *res = PQexec(connection_, query.c_str());
+    std::string patient_id_str = std::to_string(patient_id);
+    const char* paramValues[1] = { patient_id_str.c_str() };
+    PGresult *res = PQexecParams(connection_,
+         "SELECT r.time_and_date, h.address FROM records r "
+         "JOIN hospitals h ON r.hospital_id = h.hospital_id "
+         "WHERE r.patient_id = $1",
+         1,
+         NULL,
+         paramValues,
+         NULL,
+         NULL,
+         0);
     if (!res || PQresultStatus(res) != PGRES_TUPLES_OK) {
-        if (res)
-            PQclear(res);
+        if (res) PQclear(res);
         return "";
     }
     std::string result;
     int rows = PQntuples(res);
     for (int i = 0; i < rows; ++i) {
-        result += std::string(PQgetvalue(res, i, 0)) + " | " +
+        result += std::string(PQgetvalue(res, i, 0)) + " _ " +
                   PQgetvalue(res, i, 1) + "\n";
     }
     PQclear(res);
@@ -142,7 +168,7 @@ std::string database_handler::get_patient_records(int patient_id) const {
 bool database_handler::initialize_database() {
     std::ifstream file("create_tables.sql");
     if (!file.is_open()) {
-        std::cerr << "не удалось открыть create_tables.sql\n";
+        std::cerr << "Failed to open create_tables.sql\n";
         return false;
     }
     std::stringstream buffer;
@@ -150,7 +176,7 @@ bool database_handler::initialize_database() {
     const std::string sql = buffer.str();
     PGresult *res = PQexec(connection_, sql.c_str());
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-        std::cerr << "ошибка инициализации базы: " << PQerrorMessage(connection_) << "\n";
+        std::cerr << "Database initialization error: " << PQerrorMessage(connection_) << "\n";
         PQclear(res);
         return false;
     }
