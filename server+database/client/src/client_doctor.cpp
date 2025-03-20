@@ -1,12 +1,15 @@
 #include "doctor_client.hpp"
 #include "common_for_all.hpp"
 #include <iostream>
-#include <curl/curl.h>
-#include "json.hpp"
+#include <nlohmann/json.hpp>
+
+namespace doctor {
 
 using json = nlohmann::json;
 
-void display_doctor_schedule(int doctor_id) {
+doctor_client::doctor_client(int doctor_id) : doctor_id(doctor_id) {}
+
+void doctor_client::display_schedule() {
     std::string url = "http://localhost:3000/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
@@ -43,3 +46,29 @@ void display_doctor_schedule(int doctor_id) {
         std::cerr << "Error parsing JSON: " << e.what() << std::endl;
     }
 }
+
+void doctor_client::run_menu() {
+    int choice = 0;
+
+    while (true) {
+        std::cout << "\n=== Doctor Menu ===\n";
+        std::cout << "1. View Schedule\n";
+        std::cout << "2. Exit\n";
+        std::cout << "Choose an option: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                display_schedule();
+                break;
+            case 2:
+                std::cout << "Exiting Doctor Menu.\n";
+                return;
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+                break;
+        }
+    }
+}
+
+} // namespace doctor

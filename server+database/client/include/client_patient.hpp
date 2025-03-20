@@ -4,12 +4,16 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+namespace patient {
+
 using json = nlohmann::json;
 
-void registration();
+class patient_client {
+public:
+    void view_doctor_schedule();
+    void run_menu(); // Метод для запуска меню
+};
 
-std::string login();
-
-void view_doctor_schedule();
+} // namespace patient
 
 #endif // CLIENT_PATIENT_HPP
