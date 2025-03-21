@@ -145,7 +145,7 @@ void junior_admin_client::run_menu() {
                 std::cout << "Enter doctor ID: ";
                 std::cin >> doctor_id;
 
-                json schedule = get_doctor_schedule(doctor_id, admin_id);
+                json schedule = get_doctor_schedule(doctor_id);
                 if (!schedule.empty()) {
                     std::cout << "\n=== Doctor's Schedule ===\n";
                     for (const auto& entry : schedule) {
@@ -168,7 +168,7 @@ void junior_admin_client::run_menu() {
 
             case 8: { 
                 std::cout << "Exiting the program.\n";
-                return 0;
+                return;
             }
 
             default: {

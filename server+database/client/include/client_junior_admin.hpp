@@ -22,8 +22,8 @@ public:
     json get_users_table();
     json get_doctor_schedule(int doctor_id);
 
-    bool junior_admin_client::is_doctor_attached_to_hospital(int doctor_id, int hospital_id);
-
+    bool is_doctor_attached_to_hospital(int doctor_id, int hospital_id);
+    
     void run_menu(); // Добавляем метод для запуска меню
     
 private:

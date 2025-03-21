@@ -43,7 +43,7 @@ int main() {
                             senior_admin::senior_admin_client senior_admin(user.id);
                             senior_admin.run_menu();
                         } else if (user.user_type == "patient") {
-                            patient::patient_client patient;
+                            patient::patient_client patient(user.id);
                             patient.run_menu();
                         } else {
                             std::cerr << "Unknown user type.\n";
