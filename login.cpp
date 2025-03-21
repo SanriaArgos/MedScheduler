@@ -2,9 +2,7 @@
 #include "utils.hpp"
 #include <iostream>
 
-std::string login(database_handler &db) {
-    std::cout << "\n=== Login ===\n";
-    std::string phone = get_validated_phone();
-    std::string password = get_validated_input("Password", false);
-    return db.login_user(phone, password);
+std::string login() {
+    std::cerr << "Login function is not available in JSON mode. Use the JSON interface instead.\n";
+    return "";
 }

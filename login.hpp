@@ -4,6 +4,8 @@
 #include "database.hpp"
 #include <string>
 
-std::string login(database_handler &db);
+// Функция логина теперь является заглушкой для JSON-интерфейса.
+// Клиентская логика удалена.
+std::string login();
 
 #endif  // LOGIN_HPP_

@@ -4,6 +4,14 @@
 #include "database.hpp"
 #include <string>
 
-void add_doctor(database_handler &db, int junior_admin_id);
+// Новая функция для добавления врача; данные передаются в виде параметров,
+// а доступ к базе осуществляется через глобальный объект.
+bool add_doctor(const std::string &last_name,
+                const std::string &first_name,
+                const std::string &patronymic,
+                const std::string &phone,
+                const std::string &education,
+                const std::string &specialty,
+                int experience);
 
 #endif  // ADD_DOCTOR_HPP_

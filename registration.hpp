@@ -4,6 +4,8 @@
 #include "database.hpp"
 #include <string>
 
-void registration(database_handler &db);
+// Функция регистрации теперь является заглушкой для JSON-интерфейса.
+// Клиентская логика удалена.
+bool registration();
 
 #endif  // REGISTRATION_HPP_

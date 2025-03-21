@@ -4,79 +4,81 @@
 #include <sstream>
 #include <libpq-fe.h>
 #include <regex>
-#include <locale>
-#include <codecvt>
 
-// Функция-обёртка для проверки поля с ограничением: только латинские буквы и '-'
-static std::string get_validated_latin_field(const std::string &prompt) {
-    while (true) {
-        std::string input = get_validated_input(prompt, true);
-        if (!is_latin_or_dash(input)) {
-            std::cout << "Error: Field must contain only Latin letters and '-'" << std::endl;
-            continue;
-        }
-        return input;
+extern database_handler* global_db;
+
+bool add_hospital(const std::string &region,
+                  const std::string &settlement_type,
+                  const std::string &settlement_name,
+                  const std::string &street,
+                  const std::string &house,
+                  const std::string &full_name,
+                  int admin_id) {
+    std::regex latin_regex("^[A-Za-z\\-]+$");
+    if (!std::regex_match(region, latin_regex)) {
+        std::cerr << "Error: Region must contain only Latin letters and '-'\n";
+        return false;
     }
-}
-
-static std::string get_validated_numeric_field(const std::string &prompt) {
-    while (true) {
-        std::string input = get_validated_input(prompt, true);
-        if (!std::all_of(input.begin(), input.end(), ::isdigit)) {
-            std::cout << "Error: Field must contain only digits" << std::endl;
-            continue;
-        }
-        return input;
+    if (!std::regex_match(settlement_type, latin_regex)) {
+        std::cerr << "Error: Settlement_Type must contain only Latin letters and '-'\n";
+        return false;
     }
-}
-
-void add_hospital(database_handler &db) {
-    std::cout << "\n=== Add New Hospital ===\n";
-    std::string region = get_validated_latin_field("Region");
-    std::string settlement_type = get_validated_latin_field("Settlement_Type");
-    std::string settlement_name = get_validated_latin_field("Settlement_Name");
-    std::string street = get_validated_latin_field("Street");
-    std::string house = get_validated_numeric_field("House");
-    std::string full_name = get_validated_input("Full_Name", true);
-    
-    std::stringstream ss_exist;
-    ss_exist << "SELECT 1 FROM hospitals WHERE region = '" << region << "' AND settlement_type = '"
-             << settlement_type << "' AND settlement_name = '" << settlement_name
-             << "' AND street = '" << street << "' AND house = '" << house << "'";
-    PGresult *res_exist = PQexec(db.get_connection(), ss_exist.str().c_str());
+    if (!std::regex_match(settlement_name, latin_regex)) {
+        std::cerr << "Error: Settlement_Name must contain only Latin letters and '-'\n";
+        return false;
+    }
+    if (!std::regex_match(street, latin_regex)) {
+        std::cerr << "Error: Street must contain only Latin letters and '-'\n";
+        return false;
+    }
+    if (!std::all_of(house.begin(), house.end(), ::isdigit)) {
+        std::cerr << "Error: House must contain only digits\n";
+        return false;
+    }
+    // Проверяем наличие адреса с помощью параметризованного запроса.
+    const char* params_exist[5] = { region.c_str(), settlement_type.c_str(), settlement_name.c_str(), street.c_str(), house.c_str() };
+    PGresult *res_exist = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM hospitals WHERE region = $1 AND settlement_type = $2 AND settlement_name = $3 AND street = $4 AND house = $5",
+        5, NULL, params_exist, NULL, NULL, 0);
     if (PQresultStatus(res_exist) == PGRES_TUPLES_OK && PQntuples(res_exist) > 0) {
-        std::cout << "Error: Address already in use" << std::endl;
+        std::cerr << "Error: Address already in use\n";
         PQclear(res_exist);
-        return;
+        return false;
     }
     PQclear(res_exist);
     
-    std::string admin_id_str = get_validated_numeric_field("ID of Junior Administrator");
-    int admin_id = static_cast<int>(std::stoi(admin_id_str));
-    std::stringstream ss_check_admin;
-    ss_check_admin << "SELECT user_type FROM users WHERE id = " << admin_id;
-    PGresult *res_admin = PQexec(db.get_connection(), ss_check_admin.str().c_str());
+    // Проверяем администратора с помощью параметризованного запроса.
+    std::string admin_id_str = std::to_string(admin_id);
+    const char* params_admin[1] = { admin_id_str.c_str() };
+    PGresult *res_admin = PQexecParams(global_db->get_connection(),
+        "SELECT user_type FROM users WHERE id = $1",
+        1, NULL, params_admin, NULL, NULL, 0);
     if (!(PQresultStatus(res_admin) == PGRES_TUPLES_OK && PQntuples(res_admin) > 0)) {
-        std::cout << "Error: Administrator ID not found" << std::endl;
+        std::cerr << "Error: Administrator ID not found\n";
         PQclear(res_admin);
-        return;
+        return false;
     }
     std::string user_type = PQgetvalue(res_admin, 0, 0);
     PQclear(res_admin);
     if (user_type != "junior administrator") {
-        std::cout << "Error: ID does not belong to a junior administrator" << std::endl;
-        return;
+        std::cerr << "Error: ID does not belong to a junior administrator\n";
+        return false;
     }
     
-    std::stringstream ss;
-    ss << "INSERT INTO hospitals (region, settlement_type, settlement_name, street, house, full_name, administrator_id) VALUES ('"
-       << region << "', '" << settlement_type << "', '" << settlement_name << "', '" << street << "', '"
-       << house << "', '" << full_name << "', " << admin_id << ")";
-    PGresult *res_ins = PQexec(db.get_connection(), ss.str().c_str());
+    // Вставляем данные больницы с помощью параметризованного запроса.
+    const char* params_ins[7] = { region.c_str(), settlement_type.c_str(), settlement_name.c_str(),
+                                  street.c_str(), house.c_str(), full_name.c_str(), admin_id_str.c_str() };
+    PGresult *res_ins = PQexecParams(global_db->get_connection(),
+        "INSERT INTO hospitals (region, settlement_type, settlement_name, street, house, full_name, administrator_id) "
+        "VALUES ($1, $2, $3, $4, $5, $6, $7)",
+        7, NULL, params_ins, NULL, NULL, 0);
     if (PQresultStatus(res_ins) == PGRES_COMMAND_OK) {
-        std::cout << "Hospital added" << std::endl;
+        std::cerr << "Hospital added\n";
+        PQclear(res_ins);
+        return true;
     } else {
-        std::cout << "Error adding hospital" << std::endl;
+        std::cerr << "Error adding hospital\n";
+        PQclear(res_ins);
+        return false;
     }
-    PQclear(res_ins);
 }

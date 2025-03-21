@@ -3,6 +3,8 @@
 
 #include "database.hpp"
 
-void user_menu(database_handler &db, int patient_id);
+// Меню пациента удалено – клиентская логика убрана.
+// Функция возвращает false при вызове.
+bool user_menu();
 
 #endif  // USER_MENU_HPP_

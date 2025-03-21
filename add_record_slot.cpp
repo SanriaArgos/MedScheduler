@@ -6,11 +6,16 @@
 #include <libpq-fe.h>
 #include <algorithm>
 
-static int get_junior_admin_hospital_id(database_handler &db, int junior_admin_id) {
+extern database_handler* global_db;
+
+// Вспомогательная функция для получения hospital_id младшего администратора.
+static int get_junior_admin_hospital_id(int junior_admin_id) {
     int hospital_id = -1;
-    std::stringstream ss;
-    ss << "SELECT hospital_id FROM hospitals WHERE administrator_id = " << junior_admin_id << " LIMIT 1";
-    PGresult *res = PQexec(db.get_connection(), ss.str().c_str());
+    std::string admin_id_str = std::to_string(junior_admin_id);
+    const char* params[1] = { admin_id_str.c_str() };
+    PGresult *res = PQexecParams(global_db->get_connection(),
+        "SELECT hospital_id FROM hospitals WHERE administrator_id = $1 LIMIT 1",
+        1, NULL, params, NULL, NULL, 0);
     if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
         hospital_id = static_cast<int>(std::stoi(PQgetvalue(res, 0, 0)));
     }
@@ -18,97 +23,59 @@ static int get_junior_admin_hospital_id(database_handler &db, int junior_admin_i
     return hospital_id;
 }
 
-void add_record_slot(database_handler &db, int junior_admin_id) {
-    std::cout << "\n=== Add Appointment Slot ===\n";
-    int doctor_id;
-    while (true) {
-        std::string doctor_id_str = get_validated_input("Enter Doctor ID", true);
-        try {
-            doctor_id = static_cast<int>(std::stoi(doctor_id_str));
-        } catch (...) {
-            std::cout << "Error: Enter a number\n";
-            continue;
-        }
-        std::string query_doc = "SELECT 1 FROM doctors WHERE doctor_id = " + std::to_string(doctor_id);
-        PGresult *res = PQexec(db.get_connection(), query_doc.c_str());
-        if (!(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0)) {
-            std::cout << "Error: Doctor not found\n";
-            PQclear(res);
-            continue;
-        }
+bool add_record_slot(int doctor_id,
+                     const std::string &date,
+                     const std::string &time,
+                     int hospital_id,
+                     int cabinet,
+                     int junior_admin_id) {
+    // Проверка: hospital_id принадлежит младшему администратору.
+    std::string admin_id_str = std::to_string(junior_admin_id);
+    std::string hosp_id_str = std::to_string(hospital_id);
+    const char* params_check[2] = { hosp_id_str.c_str(), admin_id_str.c_str() };
+    PGresult *res = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM hospitals WHERE hospital_id = $1 AND administrator_id = $2",
+        2, NULL, params_check, NULL, NULL, 0);
+    if (!(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0)) {
+        std::cerr << "Error: Hospital ID does not match yours\n";
         PQclear(res);
-        break;
-    }
-    std::string date = get_validated_input("Enter Date (YYYY-MM-DD)", true);
-    std::regex date_regex(R"(^20[2-9]\d-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$)");
-    while (!std::regex_match(date, date_regex)) {
-        std::cout << "Error: Date must be in format YYYY-MM-DD, year >= 2025\n";
-        date = get_validated_input("Enter Date (YYYY-MM-DD)", true);
-    }
-    std::string time = get_validated_input("Enter Time (HH:MM)", true);
-    std::regex time_regex(R"(^([01]\d|2[0-3]):([0-5]\d)$)");
-    while (!std::regex_match(time, time_regex)) {
-        std::cout << "Error: Time must be in format HH:MM\n";
-        time = get_validated_input("Enter Time (HH:MM)", true);
-    }
-    int hosp_id;
-    while (true) {
-        std::string hospital_id_str = get_validated_input("Enter Hospital ID", true);
-        try {
-            hosp_id = static_cast<int>(std::stoi(hospital_id_str));
-        } catch (...) {
-            std::cout << "Error: Enter a number\n";
-            continue;
-        }
-        std::string check_sql = "SELECT 1 FROM hospitals WHERE hospital_id = " + std::to_string(hosp_id)
-                                + " AND administrator_id = " + std::to_string(junior_admin_id);
-        PGresult *res = PQexec(db.get_connection(), check_sql.c_str());
-        if (!(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0)) {
-            std::cout << "Error: Hospital ID does not match yours\n";
-            PQclear(res);
-            continue;
-        }
-        PQclear(res);
-        break;
-    }
-    int cabinet;
-    while (true) {
-        std::string cabinet_str = get_validated_input("Enter Cabinet Number (>=1)", true);
-        try {
-            cabinet = static_cast<int>(std::stoi(cabinet_str));
-            if (cabinet < 1) {
-                std::cout << "Error: Cabinet number must be >= 1\n";
-                continue;
-            }
-        } catch (...) {
-            std::cout << "Error: Enter a number\n";
-            continue;
-        }
-        break;
-    }
-    int my_hospital_id = get_junior_admin_hospital_id(db, junior_admin_id);
-    if (my_hospital_id == -1) {
-        std::cout << "Error: Your hospital not found\n";
-        return;
-    }
-    std::stringstream ss_check;
-    ss_check << "SELECT 1 FROM doctors WHERE doctor_id = " << doctor_id
-             << " AND " << my_hospital_id << " = ANY(hospital_ids)";
-    PGresult *res_check = PQexec(db.get_connection(), ss_check.str().c_str());
-    if (!(PQresultStatus(res_check) == PGRES_TUPLES_OK && PQntuples(res_check) > 0)) {
-        std::cout << "Error: Doctor is not associated with your hospital\n";
-        PQclear(res_check);
-        return;
-    }
-    PQclear(res_check);
-    std::stringstream ss;
-    ss << "INSERT INTO records (doctor_id, appointment_date, appointment_time, hospital_id, cabinet_number, patient_id) VALUES ("
-       << doctor_id << ", '" << date << "', '" << time << "', " << hosp_id << ", " << cabinet << ", NULL)";
-    PGresult *res = PQexec(db.get_connection(), ss.str().c_str());
-    if (PQresultStatus(res) == PGRES_COMMAND_OK) {
-        std::cout << "Appointment slot added\n";
-    } else {
-        std::cout << "Error adding appointment slot\n";
+        return false;
     }
     PQclear(res);
+    
+    int my_hospital_id = get_junior_admin_hospital_id(junior_admin_id);
+    if (my_hospital_id == -1) {
+        std::cerr << "Error: Your hospital not found\n";
+        return false;
+    }
+    std::string my_hosp_id_str = std::to_string(my_hospital_id);
+    std::string doctor_id_str = std::to_string(doctor_id);
+    const char* params_check_doc[2] = { doctor_id_str.c_str(), my_hosp_id_str.c_str() };
+    PGresult *res_check = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM doctors WHERE doctor_id = $1 AND $2 = ANY(hospital_ids)",
+        2, NULL, params_check_doc, NULL, NULL, 0);
+    if (!(PQresultStatus(res_check) == PGRES_TUPLES_OK && PQntuples(res_check) > 0)) {
+        std::cerr << "Error: Doctor is not associated with your hospital\n";
+        PQclear(res_check);
+        return false;
+    }
+    PQclear(res_check);
+    
+    // Вставка записи с использованием параметризованного запроса.
+    std::string doctor_id_str2 = std::to_string(doctor_id);
+    std::string cabinet_str = std::to_string(cabinet);
+    const char* params_ins[5] = { doctor_id_str2.c_str(), date.c_str(), time.c_str(), hosp_id_str.c_str(), cabinet_str.c_str() };
+    PGresult *res_ins = PQexecParams(global_db->get_connection(),
+        "INSERT INTO records (doctor_id, appointment_date, appointment_time, hospital_id, cabinet_number, patient_id) "
+        "VALUES ($1, $2, $3, $4, $5, NULL)",
+        5, NULL, params_ins, NULL, NULL, 0);
+    if (PQresultStatus(res_ins) == PGRES_COMMAND_OK) {
+        std::cerr << "Appointment slot added\n";
+        PQclear(res_ins);
+        return true;
+    } else {
+        std::cerr << "Error adding appointment slot\n";
+        PQclear(res_ins);
+        return false;
+    }
 }

@@ -4,7 +4,7 @@
 #include <libpq-fe.h>
 #include <string>
 
-// Base class for database operations
+// Базовый класс для операций с базой данных
 class database_handler {
 public:
     explicit database_handler(const std::string &connect_information);
@@ -18,7 +18,7 @@ public:
     std::string login_user(const std::string &phone, const std::string &password) const;
     std::string get_patient_records(int patient_id) const;
 
-    // Initialize database (DDL)
+    // Инициализация базы данных (DDL)
     bool initialize_database();
 
     PGconn* get_connection() const;

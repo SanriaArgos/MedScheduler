@@ -4,6 +4,8 @@
 #include "database.hpp"
 #include <string>
 
-void view_doctor_schedule_for_patient(database_handler &db);
+// Показывает расписание врача для пациента через JSON-интерфейс.
+// Клиентская интерактивная логика удалена; функция возвращает false (заглушка).
+bool view_doctor_schedule_for_patient(database_handler &db);
 
 #endif  // PATIENT_SCHEDULE_HPP_

@@ -4,6 +4,8 @@
 #include "database.hpp"
 #include <string>
 
-void doctor_menu(database_handler &db, int doctor_id);
+// Меню врача удалено – клиентская логика убрана.
+// Функция возвращает false при вызове.
+bool doctor_menu();
 
 #endif  // DOCTOR_MENU_HPP_

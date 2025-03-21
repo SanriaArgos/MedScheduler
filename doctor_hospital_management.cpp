@@ -1,3 +1,4 @@
+#include "database.hpp"
 #include "doctor_hospital_management.hpp"
 #include "utils.hpp"
 #include <iostream>
@@ -5,147 +6,135 @@
 #include <libpq-fe.h>
 #include <algorithm>
 #include <regex>
+#include <string>
 
-// Helper: get the hospital ID of the junior administrator (assumes one hospital per admin)
-static int get_junior_admin_hospital_id(database_handler &db, int junior_admin_id) {
-    int hospital_id = -1;
-    std::stringstream ss;
-    ss << "SELECT hospital_id FROM hospitals WHERE administrator_id = " << junior_admin_id << " LIMIT 1";
-    PGresult *res = PQexec(db.get_connection(), ss.str().c_str());
+// Глобальный указатель на объект базы данных, инициализируется в main.cpp.
+extern database_handler* global_db;
+
+// Вспомогательная функция для получения hospital_id младшего администратора
+// через параметризованный запрос.
+static bool get_junior_admin_hospital_id(int junior_admin_id, int &out_hospital_id) {
+    std::string admin_id_str = std::to_string(junior_admin_id);
+    const char* params[1] = { admin_id_str.c_str() };
+    PGresult *res = PQexecParams(global_db->get_connection(),
+        "SELECT hospital_id FROM hospitals WHERE administrator_id = $1 LIMIT 1",
+        1, NULL, params, NULL, NULL, 0);
     if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
-        hospital_id = static_cast<int>(std::stoi(PQgetvalue(res, 0, 0)));
+        out_hospital_id = std::stoi(PQgetvalue(res, 0, 0));
+        PQclear(res);
+        return true;
     }
     PQclear(res);
-    return hospital_id;
+    std::cerr << "Error: Could not retrieve hospital for junior administrator\n";
+    return false;
 }
 
-void add_hospital_to_doctor(database_handler &db, int junior_admin_id) {
-    std::cout << "\n=== Add Your Hospital ID to Doctor's List ===\n";
-    int doctor_id;
-    while (true) {
-        std::string doctor_id_str = get_validated_input("Enter Doctor ID", true);
-        try {
-            doctor_id = static_cast<int>(std::stoi(doctor_id_str));
-        } catch (...) {
-            std::cout << "Error: Enter a number\n";
-            continue;
-        }
-        std::string query_doc = "SELECT 1 FROM doctors WHERE doctor_id = " + std::to_string(doctor_id);
-        PGresult *res = PQexec(db.get_connection(), query_doc.c_str());
-        if (!(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0)) {
-            std::cout << "Error: Doctor not found\n";
-            PQclear(res);
-            continue;
-        }
-        PQclear(res);
-        break;
+bool add_hospital_to_doctor(int doctor_id, int hospital_id, int junior_admin_id) {
+    // Проверяем, что врач существует.
+    std::string doctor_id_str = std::to_string(doctor_id);
+    const char* params_doc[1] = { doctor_id_str.c_str() };
+    PGresult *res_doc = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM doctors WHERE doctor_id = $1",
+        1, NULL, params_doc, NULL, NULL, 0);
+    if (!(PQresultStatus(res_doc) == PGRES_TUPLES_OK && PQntuples(res_doc) > 0)) {
+        std::cerr << "Error: Doctor not found\n";
+        if (res_doc) PQclear(res_doc);
+        return false;
     }
-    int hosp_id;
-    while (true) {
-        std::string hospital_id_str = get_validated_input("Enter Hospital ID", true);
-        try {
-            hosp_id = static_cast<int>(std::stoi(hospital_id_str));
-        } catch (...) {
-            std::cout << "Error: Enter a number\n";
-            continue;
-        }
-        std::string check_sql = "SELECT 1 FROM hospitals WHERE hospital_id = " + std::to_string(hosp_id)
-                                + " AND administrator_id = " + std::to_string(junior_admin_id);
-        PGresult *res = PQexec(db.get_connection(), check_sql.c_str());
-        if (!(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0)) {
-            std::cout << "Error: Hospital ID does not match yours\n";
-            PQclear(res);
-            continue;
-        }
-        PQclear(res);
-        break;
+    PQclear(res_doc);
+
+    // Проверяем, что заданная больница принадлежит данному младшему администратору.
+    std::string hospital_id_str = std::to_string(hospital_id);
+    std::string junior_admin_id_str = std::to_string(junior_admin_id);
+    const char* params_hosp[2] = { hospital_id_str.c_str(), junior_admin_id_str.c_str() };
+    PGresult *res_hosp = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM hospitals WHERE hospital_id = $1 AND administrator_id = $2",
+        2, NULL, params_hosp, NULL, NULL, 0);
+    if (!(PQresultStatus(res_hosp) == PGRES_TUPLES_OK && PQntuples(res_hosp) > 0)) {
+        std::cerr << "Error: Hospital ID does not match your junior administrator\n";
+        PQclear(res_hosp);
+        return false;
     }
-    std::stringstream ss_check;
-    ss_check << "SELECT 1 FROM doctors WHERE doctor_id = " << doctor_id
-             << " AND " << hosp_id << " = ANY(hospital_ids)";
-    PGresult *res_check = PQexec(db.get_connection(), ss_check.str().c_str());
+    PQclear(res_hosp);
+
+    // Проверяем, не добавлена ли уже данная больница в список врача.
+    const char* params_check[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
+    PGresult *res_check = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM doctors WHERE doctor_id = $1 AND $2 = ANY(hospital_ids)",
+        2, NULL, params_check, NULL, NULL, 0);
     if (PQresultStatus(res_check) == PGRES_TUPLES_OK && PQntuples(res_check) > 0) {
-        std::cout << "Error: Hospital ID already exists in doctor's list\n";
+        std::cerr << "Error: Hospital ID already exists in doctor's list\n";
         PQclear(res_check);
-        return;
+        return false;
     }
     PQclear(res_check);
-    std::stringstream ss;
-    ss << "UPDATE doctors SET hospital_ids = array_append(hospital_ids, " << hosp_id 
-       << ") WHERE doctor_id = " << doctor_id;
-    PGresult *res = PQexec(db.get_connection(), ss.str().c_str());
-    if (PQresultStatus(res) == PGRES_COMMAND_OK) {
-        std::cout << "Hospital ID added to doctor's list\n";
-    } else {
-        std::cout << "Error adding Hospital ID\n";
+
+    // Выполняем обновление – добавляем hospital_id в массив hospital_ids.
+    const char* params_update[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
+    PGresult *res_update = PQexecParams(global_db->get_connection(),
+        "UPDATE doctors SET hospital_ids = array_append(hospital_ids, $2) WHERE doctor_id = $1",
+        2, NULL, params_update, NULL, NULL, 0);
+    if (PQresultStatus(res_update) != PGRES_COMMAND_OK) {
+        std::cerr << "Error adding Hospital ID: " << PQerrorMessage(global_db->get_connection()) << "\n";
+        PQclear(res_update);
+        return false;
     }
-    PQclear(res);
+    PQclear(res_update);
+    std::cerr << "Hospital ID added to doctor's list\n";
+    return true;
 }
 
-void remove_hospital_from_doctor(database_handler &db, int junior_admin_id) {
-    std::cout << "\n=== Remove Your Hospital ID from Doctor's List ===\n";
-    int doctor_id;
-    while (true) {
-        std::string doctor_id_str = get_validated_input("Enter Doctor ID", true);
-        try {
-            doctor_id = static_cast<int>(std::stoi(doctor_id_str));
-        } catch (...) {
-            std::cout << "Error: Enter a number\n";
-            continue;
-        }
-        std::string query_doc = "SELECT 1 FROM doctors WHERE doctor_id = " + std::to_string(doctor_id);
-        PGresult *res = PQexec(db.get_connection(), query_doc.c_str());
-        if (!(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0)) {
-            std::cout << "Error: Doctor not found\n";
-            PQclear(res);
-            continue;
-        }
-        PQclear(res);
-        break;
+bool remove_hospital_from_doctor(int doctor_id, int hospital_id, int junior_admin_id) {
+    // Проверяем, что врач существует.
+    std::string doctor_id_str = std::to_string(doctor_id);
+    const char* params_doc[1] = { doctor_id_str.c_str() };
+    PGresult *res_doc = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM doctors WHERE doctor_id = $1",
+        1, NULL, params_doc, NULL, NULL, 0);
+    if (!(PQresultStatus(res_doc) == PGRES_TUPLES_OK && PQntuples(res_doc) > 0)) {
+        std::cerr << "Error: Doctor not found\n";
+        if (res_doc) PQclear(res_doc);
+        return false;
     }
-    int hosp_id;
-    while (true) {
-        std::string hospital_id_str = get_validated_input("Enter Hospital ID", true);
-        try {
-            hosp_id = static_cast<int>(std::stoi(hospital_id_str));
-        } catch (...) {
-            std::cout << "Error: Enter a number\n";
-            continue;
-        }
-        std::string check_sql = "SELECT 1 FROM hospitals WHERE hospital_id = " + std::to_string(hosp_id)
-                                + " AND administrator_id = " + std::to_string(junior_admin_id);
-        PGresult *res = PQexec(db.get_connection(), check_sql.c_str());
-        if (!(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0)) {
-            std::cout << "Error: Hospital ID does not match yours\n";
-            PQclear(res);
-            continue;
-        }
-        PQclear(res);
-        break;
+    PQclear(res_doc);
+
+    // Проверяем, что заданная больница принадлежит данному младшему администратору.
+    std::string hospital_id_str = std::to_string(hospital_id);
+    std::string junior_admin_id_str = std::to_string(junior_admin_id);
+    const char* params_hosp[2] = { hospital_id_str.c_str(), junior_admin_id_str.c_str() };
+    PGresult *res_hosp = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM hospitals WHERE hospital_id = $1 AND administrator_id = $2",
+        2, NULL, params_hosp, NULL, NULL, 0);
+    if (!(PQresultStatus(res_hosp) == PGRES_TUPLES_OK && PQntuples(res_hosp) > 0)) {
+        std::cerr << "Error: Hospital ID does not match your junior administrator\n";
+        PQclear(res_hosp);
+        return false;
     }
-    std::stringstream ss_check;
-    ss_check << "SELECT 1 FROM doctors WHERE doctor_id = " << doctor_id
-             << " AND " << hosp_id << " = ANY(hospital_ids)";
-    PGresult *res_check = PQexec(db.get_connection(), ss_check.str().c_str());
+    PQclear(res_hosp);
+
+    // Проверяем, что больница действительно присутствует в списке врача.
+    const char* params_check[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
+    PGresult *res_check = PQexecParams(global_db->get_connection(),
+        "SELECT 1 FROM doctors WHERE doctor_id = $1 AND $2 = ANY(hospital_ids)",
+        2, NULL, params_check, NULL, NULL, 0);
     if (!(PQresultStatus(res_check) == PGRES_TUPLES_OK && PQntuples(res_check) > 0)) {
-        std::cout << "Error: Hospital ID not found in doctor's list\n";
+        std::cerr << "Error: Hospital ID not found in doctor's list\n";
         PQclear(res_check);
-        return;
+        return false;
     }
     PQclear(res_check);
-    std::string answer = get_validated_input("Are you sure? (Yes/No)", true);
-    if (answer != "Yes") {
-        std::cout << "Deletion canceled\n";
-        return;
+
+    // Удаляем hospital_id из массива hospital_ids.
+    const char* params_update[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
+    PGresult *res_update = PQexecParams(global_db->get_connection(),
+        "UPDATE doctors SET hospital_ids = array_remove(hospital_ids, $2) WHERE doctor_id = $1",
+        2, NULL, params_update, NULL, NULL, 0);
+    if (PQresultStatus(res_update) != PGRES_COMMAND_OK) {
+        std::cerr << "Error removing Hospital ID: " << PQerrorMessage(global_db->get_connection()) << "\n";
+        PQclear(res_update);
+        return false;
     }
-    std::stringstream ss;
-    ss << "UPDATE doctors SET hospital_ids = array_remove(hospital_ids, " << hosp_id
-       << ") WHERE doctor_id = " << doctor_id;
-    PGresult *res = PQexec(db.get_connection(), ss.str().c_str());
-    if (PQresultStatus(res) == PGRES_COMMAND_OK) {
-        std::cout << "Hospital ID removed from doctor's list\n";
-    } else {
-        std::cout << "Error removing Hospital ID\n";
-    }
-    PQclear(res);
+    PQclear(res_update);
+    std::cerr << "Hospital ID removed from doctor's list\n";
+    return true;
 }

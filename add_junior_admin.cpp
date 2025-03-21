@@ -3,32 +3,31 @@
 #include <iostream>
 #include <libpq-fe.h>
 
-void add_junior_admin(database_handler &db) {
-    std::cout << "\n=== Add Junior Administrator ===\n";
-    std::string last_name = get_validated_name("Last Name", true);
-    std::string first_name = get_validated_name("First Name", true);
-    std::string patronymic = get_input("Patronymic (optional): ");
-    if (!patronymic.empty()) {
-        while (!is_latin_or_dash(patronymic)) {
-            std::cout << "Error: Use only Latin letters and dash\n";
-            patronymic = get_input("Patronymic (optional): ");
-        }
-    }
-    std::string phone = get_validated_phone();
-    if (db.user_exists(phone)) {
-        std::cout << "Error: Phone already registered\n";
-        return;
+extern database_handler* global_db;
+
+bool add_junior_admin(const std::string &last_name,
+                      const std::string &first_name,
+                      const std::string &patronymic,
+                      const std::string &phone) {
+    if (global_db->user_exists(phone)) {
+        std::cerr << "Error: Phone already registered\n";
+        return false;
     }
     const std::string default_password = "0987654321";
-    if (!db.register_user(last_name, first_name, patronymic, phone, default_password)) {
-        std::cout << "Error adding junior administrator\n";
-        return;
+    if (!global_db->register_user(last_name, first_name, patronymic, phone, default_password)) {
+        std::cerr << "Error adding junior administrator\n";
+        return false;
     }
-    std::string query = "UPDATE users SET user_type = 'junior administrator' WHERE phone = '" + phone + "'";
-    PGresult *res = PQexec(db.get_connection(), query.c_str());
+    const char* paramValues[1] = { phone.c_str() };
+    PGresult *res = PQexecParams(global_db->get_connection(),
+        "UPDATE users SET user_type = 'junior administrator' WHERE phone = $1",
+        1, NULL, paramValues, NULL, NULL, 0);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
-        std::cerr << "Error updating user type: " << PQerrorMessage(db.get_connection()) << "\n";
+        std::cerr << "Error updating user type: " << PQerrorMessage(global_db->get_connection()) << "\n";
+        PQclear(res);
+        return false;
     }
     PQclear(res);
-    std::cout << "Junior administrator added\n";
+    std::cerr << "Junior administrator added\n";
+    return true;
 }

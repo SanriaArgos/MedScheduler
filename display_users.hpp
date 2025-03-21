@@ -3,6 +3,7 @@
 
 #include "database.hpp"
 
+// Клиентская функция отображения таблицы пользователей убрана.
 void display_users_table(database_handler &db);
 
 #endif  // DISPLAY_USERS_HPP_

@@ -4,6 +4,8 @@
 #include "database.hpp"
 #include <string>
 
-void senior_admin_menu(database_handler &db, int admin_id);
+// Меню старшего администратора убрано – клиентская логика удалена.
+// Функция возвращает false при вызове.
+bool senior_admin_menu();
 
 #endif  // SENIOR_ADMIN_MENU_HPP_

@@ -64,12 +64,12 @@ bool database_handler::user_exists(const std::string &phone) const {
     const char* paramValues[1] = { phone.c_str() };
     PGresult *res = PQexecParams(connection_,
         "SELECT 1 FROM users WHERE phone = $1 AND user_type = 'patient'",
-        1,          // one parameter
-        NULL,       // let libpq infer parameter types
+        1,          // один параметр
+        NULL,       // libpq сам определит тип
         paramValues,
         NULL,
         NULL,
-        0);         // text format
+        0);         // текстовый формат
     bool exists = (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0);
     PQclear(res);
     return exists;
@@ -135,7 +135,7 @@ std::string database_handler::login_user(const std::string &phone,
     } else if (user_type == "junior administrator") {
         return "junior:" + user_id;
     } else if (user_type == "doctor") {
-        // Get corresponding doctor_id from doctors table using user_id.
+        // Получение doctor_id из таблицы doctors по user_id.
         std::string query2 = "SELECT doctor_id FROM doctors WHERE user_id = " + user_id;
         PGresult *res2 = PQexec(connection_, query2.c_str());
         if (!res2 || PQresultStatus(res2) != PGRES_TUPLES_OK || PQntuples(res2) == 0) {

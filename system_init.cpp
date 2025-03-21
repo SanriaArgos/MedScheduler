@@ -20,18 +20,16 @@ static bool execute_sql(PGconn *conn, const std::string &sql) {
 }
 
 static bool check_user_exists(PGconn *conn, const std::string &username) {
-    std::stringstream ss;
-    ss << "SELECT 1 FROM pg_catalog.pg_user WHERE usename = '" << username << "'";
-    PGresult *res = PQexec(conn, ss.str().c_str());
+    const char* paramValues[1] = { username.c_str() };
+    PGresult *res = PQexecParams(conn, "SELECT 1 FROM pg_catalog.pg_user WHERE usename = $1", 1, NULL, paramValues, NULL, NULL, 0);
     bool exists = (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0);
     PQclear(res);
     return exists;
 }
 
 static bool check_database_exists(PGconn *conn, const std::string &dbname) {
-    std::stringstream ss;
-    ss << "SELECT 1 FROM pg_database WHERE datname = '" << dbname << "'";
-    PGresult *res = PQexec(conn, ss.str().c_str());
+    const char* paramValues[1] = { dbname.c_str() };
+    PGresult *res = PQexecParams(conn, "SELECT 1 FROM pg_database WHERE datname = $1", 1, NULL, paramValues, NULL, NULL, 0);
     bool exists = (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0);
     PQclear(res);
     return exists;
@@ -71,8 +69,7 @@ bool initialize_system(const std::string &superuser_connect_info) {
         return false;
     }
     if (!check_user_exists(conn, "meduser")) {
-        std::string create_user_sql = "CREATE USER meduser WITH PASSWORD '3671920119'";
-        if (!execute_sql(conn, create_user_sql)) {
+        if (!execute_sql(conn, "CREATE USER meduser WITH PASSWORD '3671920119'")) {
             std::cerr << "Failed to create Meduser\n";
             PQfinish(conn);
             return false;
@@ -82,8 +79,7 @@ bool initialize_system(const std::string &superuser_connect_info) {
         std::cout << "Meduser already exists\n";
     }
     if (!check_database_exists(conn, "medscheduler")) {
-        std::string create_db_sql = "CREATE DATABASE medscheduler WITH OWNER = meduser";
-        if (!execute_sql(conn, create_db_sql)) {
+        if (!execute_sql(conn, "CREATE DATABASE medscheduler WITH OWNER = meduser")) {
             std::cerr << "Failed to create Medscheduler database\n";
             PQfinish(conn);
             return false;
@@ -130,23 +126,33 @@ bool initialize_system(const std::string &superuser_connect_info) {
         PQfinish(conn3);
         return false;
     }
-    std::string check_sql = "SELECT 1 FROM users WHERE user_type = 'senior administrator'";
-    PGresult *res = PQexec(conn3, check_sql.c_str());
+    const char* paramValues[1] = { "senior administrator" };
+    PGresult *res = PQexecParams(conn3, "SELECT 1 FROM users WHERE user_type = $1", 1, NULL, paramValues, NULL, NULL, 0);
     bool senior_exists = (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0);
     PQclear(res);
     if (!senior_exists) {
         std::string salt = generate_salt(16);
         std::string hashed_pass = hash_password("1234567890", salt);
-        std::string insert_sql =
+        const char* paramValues2[7];
+        paramValues2[0] = "";
+        paramValues2[1] = "";
+        paramValues2[2] = "";
+        paramValues2[3] = "+71234567890";
+        paramValues2[4] = "senior administrator";
+        paramValues2[5] = hashed_pass.c_str();
+        paramValues2[6] = salt.c_str();
+        PGresult *res_ins = PQexecParams(conn3,
             "INSERT INTO users (last_name, first_name, patronymic, phone, user_type, hashed_password, salt) "
-            "VALUES ('', '', '', '+71234567890', 'senior administrator', '" +
-            hashed_pass + "', '" + salt + "')";
-        if (!execute_sql(conn3, insert_sql)) {
+            "VALUES ($1, $2, $3, $4, $5, $6, $7)",
+            7, NULL, paramValues2, NULL, NULL, 0);
+        if (PQresultStatus(res_ins) != PGRES_COMMAND_OK) {
             std::cerr << "Failed to create senior administrator\n";
+            PQclear(res_ins);
             PQfinish(conn3);
             return false;
         }
         std::cout << "Senior administrator created\n";
+        PQclear(res_ins);
     } else {
         std::cout << "Senior administrator already exists\n";
     }
