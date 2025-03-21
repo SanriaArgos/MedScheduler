@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/victoria/http-server-cpp
+CMAKE_SOURCE_DIR = /home/victoria/MedScheduler/server+database
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/victoria/http-server-cpp
+CMAKE_BINARY_DIR = /home/victoria/MedScheduler/server+database
 
 # Include any dependencies generated for this target.
 include CMakeFiles/boost_api_server.dir/depend.make
@@ -69,194 +69,322 @@ include CMakeFiles/boost_api_server.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/boost_api_server.dir/flags.make
 
-CMakeFiles/boost_api_server.dir/src/auth.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/auth.cpp.o: src/auth.cpp
-CMakeFiles/boost_api_server.dir/src/auth.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/boost_api_server.dir/src/auth.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/auth.cpp.o -MF CMakeFiles/boost_api_server.dir/src/auth.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/auth.cpp.o -c /home/victoria/http-server-cpp/src/auth.cpp
+CMakeFiles/boost_api_server.dir/server/src/database.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/database.cpp.o: server/src/database.cpp
+CMakeFiles/boost_api_server.dir/server/src/database.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/database.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/database.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/database.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/database.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/database.cpp
 
-CMakeFiles/boost_api_server.dir/src/auth.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/auth.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/auth.cpp > CMakeFiles/boost_api_server.dir/src/auth.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/database.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/database.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/database.cpp > CMakeFiles/boost_api_server.dir/server/src/database.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/auth.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/auth.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/auth.cpp -o CMakeFiles/boost_api_server.dir/src/auth.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/database.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/database.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/database.cpp -o CMakeFiles/boost_api_server.dir/server/src/database.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/common.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/common.cpp.o: src/common.cpp
-CMakeFiles/boost_api_server.dir/src/common.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/boost_api_server.dir/src/common.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/common.cpp.o -MF CMakeFiles/boost_api_server.dir/src/common.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/common.cpp.o -c /home/victoria/http-server-cpp/src/common.cpp
+CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o: server/src/handler_request.cpp
+CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handler_request.cpp
 
-CMakeFiles/boost_api_server.dir/src/common.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/common.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/common.cpp > CMakeFiles/boost_api_server.dir/src/common.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handler_request.cpp > CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/common.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/common.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/common.cpp -o CMakeFiles/boost_api_server.dir/src/common.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handler_request.cpp -o CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o: src/handler_request.cpp
-CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o -MF CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o -c /home/victoria/http-server-cpp/src/handler_request.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o: server/src/handlers/add_doctor.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/add_doctor.cpp
 
-CMakeFiles/boost_api_server.dir/src/handler_request.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/handler_request.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/handler_request.cpp > CMakeFiles/boost_api_server.dir/src/handler_request.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/add_doctor.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/handler_request.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/handler_request.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/handler_request.cpp -o CMakeFiles/boost_api_server.dir/src/handler_request.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/add_doctor.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/handlers.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/handlers.cpp.o: src/handlers.cpp
-CMakeFiles/boost_api_server.dir/src/handlers.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/boost_api_server.dir/src/handlers.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/handlers.cpp.o -MF CMakeFiles/boost_api_server.dir/src/handlers.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/handlers.cpp.o -c /home/victoria/http-server-cpp/src/handlers.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o: server/src/handlers/add_hospital.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/add_hospital.cpp
 
-CMakeFiles/boost_api_server.dir/src/handlers.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/handlers.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/handlers.cpp > CMakeFiles/boost_api_server.dir/src/handlers.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/add_hospital.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/handlers.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/handlers.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/handlers.cpp -o CMakeFiles/boost_api_server.dir/src/handlers.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/add_hospital.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o: src/input_utils.cpp
-CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o -MF CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o -c /home/victoria/http-server-cpp/src/input_utils.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o: server/src/handlers/add_junior_admin.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/add_junior_admin.cpp
 
-CMakeFiles/boost_api_server.dir/src/input_utils.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/input_utils.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/input_utils.cpp > CMakeFiles/boost_api_server.dir/src/input_utils.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/add_junior_admin.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/input_utils.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/input_utils.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/input_utils.cpp -o CMakeFiles/boost_api_server.dir/src/input_utils.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/add_junior_admin.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/main.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/main.cpp.o: src/main.cpp
-CMakeFiles/boost_api_server.dir/src/main.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/boost_api_server.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/main.cpp.o -MF CMakeFiles/boost_api_server.dir/src/main.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/main.cpp.o -c /home/victoria/http-server-cpp/src/main.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o: server/src/handlers/add_record_slot.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/add_record_slot.cpp
 
-CMakeFiles/boost_api_server.dir/src/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/main.cpp > CMakeFiles/boost_api_server.dir/src/main.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/add_record_slot.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/main.cpp -o CMakeFiles/boost_api_server.dir/src/main.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/add_record_slot.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o: src/password_utils.cpp
-CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o -MF CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o -c /home/victoria/http-server-cpp/src/password_utils.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o: server/src/handlers/display_doctors.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/display_doctors.cpp
 
-CMakeFiles/boost_api_server.dir/src/password_utils.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/password_utils.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/password_utils.cpp > CMakeFiles/boost_api_server.dir/src/password_utils.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/display_doctors.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/password_utils.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/password_utils.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/password_utils.cpp -o CMakeFiles/boost_api_server.dir/src/password_utils.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/display_doctors.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o: src/patient_menu.cpp
-CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o -MF CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o -c /home/victoria/http-server-cpp/src/patient_menu.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o: server/src/handlers/display_hospitals.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/display_hospitals.cpp
 
-CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/patient_menu.cpp > CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/display_hospitals.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/patient_menu.cpp -o CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/display_hospitals.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/server.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/server.cpp.o: src/server.cpp
-CMakeFiles/boost_api_server.dir/src/server.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/boost_api_server.dir/src/server.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/server.cpp.o -MF CMakeFiles/boost_api_server.dir/src/server.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/server.cpp.o -c /home/victoria/http-server-cpp/src/server.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o: server/src/handlers/display_users.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/display_users.cpp
 
-CMakeFiles/boost_api_server.dir/src/server.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/server.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/server.cpp > CMakeFiles/boost_api_server.dir/src/server.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/display_users.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/server.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/server.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/server.cpp -o CMakeFiles/boost_api_server.dir/src/server.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/display_users.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/session.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/session.cpp.o: src/session.cpp
-CMakeFiles/boost_api_server.dir/src/session.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/boost_api_server.dir/src/session.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/session.cpp.o -MF CMakeFiles/boost_api_server.dir/src/session.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/session.cpp.o -c /home/victoria/http-server-cpp/src/session.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o: server/src/handlers/doctor_hospital_managment.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/doctor_hospital_managment.cpp
 
-CMakeFiles/boost_api_server.dir/src/session.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/session.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/session.cpp > CMakeFiles/boost_api_server.dir/src/session.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/doctor_hospital_managment.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/session.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/session.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/session.cpp -o CMakeFiles/boost_api_server.dir/src/session.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/doctor_hospital_managment.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.s
 
-CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
-CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o: src/super_admin_menu.cpp
-CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o -MF CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o.d -o CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o -c /home/victoria/http-server-cpp/src/super_admin_menu.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o: server/src/handlers/doctor_schedule.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/doctor_schedule.cpp
 
-CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/http-server-cpp/src/super_admin_menu.cpp > CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.i
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/doctor_schedule.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.i
 
-CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/http-server-cpp/src/super_admin_menu.cpp -o CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.s
+CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/doctor_schedule.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.s
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o: server/src/handlers/junior_admin_schedule.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/junior_admin_schedule.cpp
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/junior_admin_schedule.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.i
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/junior_admin_schedule.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.s
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o: server/src/handlers/login.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/login.cpp
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/login.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.i
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/login.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.s
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o: server/src/handlers/patient_schedule.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/patient_schedule.cpp
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/patient_schedule.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.i
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/patient_schedule.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.s
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o: server/src/handlers/registration.cpp
+CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/handlers/registration.cpp
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/handlers/registration.cpp > CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.i
+
+CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/handlers/registration.cpp -o CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.s
+
+CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: server/src/main.cpp
+CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/main.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/main.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/main.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/main.cpp
+
+CMakeFiles/boost_api_server.dir/server/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/main.cpp > CMakeFiles/boost_api_server.dir/server/src/main.cpp.i
+
+CMakeFiles/boost_api_server.dir/server/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/main.cpp -o CMakeFiles/boost_api_server.dir/server/src/main.cpp.s
+
+CMakeFiles/boost_api_server.dir/server/src/server.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/server.cpp.o: server/src/server.cpp
+CMakeFiles/boost_api_server.dir/server/src/server.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/server.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/server.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/server.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/server.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/server.cpp
+
+CMakeFiles/boost_api_server.dir/server/src/server.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/server.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/server.cpp > CMakeFiles/boost_api_server.dir/server/src/server.cpp.i
+
+CMakeFiles/boost_api_server.dir/server/src/server.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/server.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/server.cpp -o CMakeFiles/boost_api_server.dir/server/src/server.cpp.s
+
+CMakeFiles/boost_api_server.dir/server/src/session.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/session.cpp.o: server/src/session.cpp
+CMakeFiles/boost_api_server.dir/server/src/session.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/session.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/session.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/session.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/session.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/session.cpp
+
+CMakeFiles/boost_api_server.dir/server/src/session.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/session.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/session.cpp > CMakeFiles/boost_api_server.dir/server/src/session.cpp.i
+
+CMakeFiles/boost_api_server.dir/server/src/session.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/session.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/session.cpp -o CMakeFiles/boost_api_server.dir/server/src/session.cpp.s
+
+CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o: CMakeFiles/boost_api_server.dir/flags.make
+CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o: server/src/system_init.cpp
+CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o: CMakeFiles/boost_api_server.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o -MF CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o.d -o CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o -c /home/victoria/MedScheduler/server+database/server/src/system_init.cpp
+
+CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/server/src/system_init.cpp > CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.i
+
+CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/server/src/system_init.cpp -o CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.s
 
 # Object files for target boost_api_server
 boost_api_server_OBJECTS = \
-"CMakeFiles/boost_api_server.dir/src/auth.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/common.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/handlers.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/main.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/server.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/session.cpp.o" \
-"CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o"
+"CMakeFiles/boost_api_server.dir/server/src/database.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/main.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/server.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/session.cpp.o" \
+"CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o"
 
 # External object files for target boost_api_server
 boost_api_server_EXTERNAL_OBJECTS =
 
-boost_api_server: CMakeFiles/boost_api_server.dir/src/auth.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/common.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/handlers.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/main.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/server.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/session.cpp.o
-boost_api_server: CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/database.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/main.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/server.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/session.cpp.o
+boost_api_server: CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o
 boost_api_server: CMakeFiles/boost_api_server.dir/build.make
 boost_api_server: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.74.0
 boost_api_server: /usr/lib/x86_64-linux-gnu/libpq.so
 boost_api_server: /usr/lib/x86_64-linux-gnu/libcrypto.so
 boost_api_server: CMakeFiles/boost_api_server.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/victoria/http-server-cpp/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable boost_api_server"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/victoria/MedScheduler/server+database/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Linking CXX executable boost_api_server"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/boost_api_server.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -268,6 +396,6 @@ CMakeFiles/boost_api_server.dir/clean:
 .PHONY : CMakeFiles/boost_api_server.dir/clean
 
 CMakeFiles/boost_api_server.dir/depend:
-	cd /home/victoria/http-server-cpp && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/victoria/http-server-cpp /home/victoria/http-server-cpp /home/victoria/http-server-cpp /home/victoria/http-server-cpp /home/victoria/http-server-cpp/CMakeFiles/boost_api_server.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/victoria/MedScheduler/server+database && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/victoria/MedScheduler/server+database /home/victoria/MedScheduler/server+database /home/victoria/MedScheduler/server+database /home/victoria/MedScheduler/server+database /home/victoria/MedScheduler/server+database/CMakeFiles/boost_api_server.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/boost_api_server.dir/depend
 

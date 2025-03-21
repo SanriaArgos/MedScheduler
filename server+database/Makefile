@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/victoria/http-server-cpp
+CMAKE_SOURCE_DIR = /home/victoria/MedScheduler/server+database
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/victoria/http-server-cpp
+CMAKE_BINARY_DIR = /home/victoria/MedScheduler/server+database
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/victoria/http-server-cpp/CMakeFiles /home/victoria/http-server-cpp//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/victoria/MedScheduler/server+database/CMakeFiles /home/victoria/MedScheduler/server+database//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/victoria/http-server-cpp/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/victoria/MedScheduler/server+database/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,269 +129,461 @@ boost_api_server/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/build
 .PHONY : boost_api_server/fast
 
-src/auth.o: src/auth.cpp.o
-.PHONY : src/auth.o
+server/src/database.o: server/src/database.cpp.o
+.PHONY : server/src/database.o
 
 # target to build an object file
-src/auth.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/auth.cpp.o
-.PHONY : src/auth.cpp.o
+server/src/database.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/database.cpp.o
+.PHONY : server/src/database.cpp.o
 
-src/auth.i: src/auth.cpp.i
-.PHONY : src/auth.i
+server/src/database.i: server/src/database.cpp.i
+.PHONY : server/src/database.i
 
 # target to preprocess a source file
-src/auth.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/auth.cpp.i
-.PHONY : src/auth.cpp.i
+server/src/database.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/database.cpp.i
+.PHONY : server/src/database.cpp.i
 
-src/auth.s: src/auth.cpp.s
-.PHONY : src/auth.s
+server/src/database.s: server/src/database.cpp.s
+.PHONY : server/src/database.s
 
 # target to generate assembly for a file
-src/auth.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/auth.cpp.s
-.PHONY : src/auth.cpp.s
+server/src/database.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/database.cpp.s
+.PHONY : server/src/database.cpp.s
 
-src/common.o: src/common.cpp.o
-.PHONY : src/common.o
+server/src/handler_request.o: server/src/handler_request.cpp.o
+.PHONY : server/src/handler_request.o
 
 # target to build an object file
-src/common.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/common.cpp.o
-.PHONY : src/common.cpp.o
+server/src/handler_request.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o
+.PHONY : server/src/handler_request.cpp.o
 
-src/common.i: src/common.cpp.i
-.PHONY : src/common.i
+server/src/handler_request.i: server/src/handler_request.cpp.i
+.PHONY : server/src/handler_request.i
 
 # target to preprocess a source file
-src/common.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/common.cpp.i
-.PHONY : src/common.cpp.i
+server/src/handler_request.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.i
+.PHONY : server/src/handler_request.cpp.i
 
-src/common.s: src/common.cpp.s
-.PHONY : src/common.s
+server/src/handler_request.s: server/src/handler_request.cpp.s
+.PHONY : server/src/handler_request.s
 
 # target to generate assembly for a file
-src/common.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/common.cpp.s
-.PHONY : src/common.cpp.s
+server/src/handler_request.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.s
+.PHONY : server/src/handler_request.cpp.s
 
-src/handler_request.o: src/handler_request.cpp.o
-.PHONY : src/handler_request.o
+server/src/handlers/add_doctor.o: server/src/handlers/add_doctor.cpp.o
+.PHONY : server/src/handlers/add_doctor.o
 
 # target to build an object file
-src/handler_request.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/handler_request.cpp.o
-.PHONY : src/handler_request.cpp.o
+server/src/handlers/add_doctor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.o
+.PHONY : server/src/handlers/add_doctor.cpp.o
 
-src/handler_request.i: src/handler_request.cpp.i
-.PHONY : src/handler_request.i
+server/src/handlers/add_doctor.i: server/src/handlers/add_doctor.cpp.i
+.PHONY : server/src/handlers/add_doctor.i
 
 # target to preprocess a source file
-src/handler_request.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/handler_request.cpp.i
-.PHONY : src/handler_request.cpp.i
+server/src/handlers/add_doctor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.i
+.PHONY : server/src/handlers/add_doctor.cpp.i
 
-src/handler_request.s: src/handler_request.cpp.s
-.PHONY : src/handler_request.s
+server/src/handlers/add_doctor.s: server/src/handlers/add_doctor.cpp.s
+.PHONY : server/src/handlers/add_doctor.s
 
 # target to generate assembly for a file
-src/handler_request.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/handler_request.cpp.s
-.PHONY : src/handler_request.cpp.s
+server/src/handlers/add_doctor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_doctor.cpp.s
+.PHONY : server/src/handlers/add_doctor.cpp.s
 
-src/handlers.o: src/handlers.cpp.o
-.PHONY : src/handlers.o
+server/src/handlers/add_hospital.o: server/src/handlers/add_hospital.cpp.o
+.PHONY : server/src/handlers/add_hospital.o
 
 # target to build an object file
-src/handlers.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/handlers.cpp.o
-.PHONY : src/handlers.cpp.o
+server/src/handlers/add_hospital.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.o
+.PHONY : server/src/handlers/add_hospital.cpp.o
 
-src/handlers.i: src/handlers.cpp.i
-.PHONY : src/handlers.i
+server/src/handlers/add_hospital.i: server/src/handlers/add_hospital.cpp.i
+.PHONY : server/src/handlers/add_hospital.i
 
 # target to preprocess a source file
-src/handlers.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/handlers.cpp.i
-.PHONY : src/handlers.cpp.i
+server/src/handlers/add_hospital.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.i
+.PHONY : server/src/handlers/add_hospital.cpp.i
 
-src/handlers.s: src/handlers.cpp.s
-.PHONY : src/handlers.s
+server/src/handlers/add_hospital.s: server/src/handlers/add_hospital.cpp.s
+.PHONY : server/src/handlers/add_hospital.s
 
 # target to generate assembly for a file
-src/handlers.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/handlers.cpp.s
-.PHONY : src/handlers.cpp.s
+server/src/handlers/add_hospital.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_hospital.cpp.s
+.PHONY : server/src/handlers/add_hospital.cpp.s
 
-src/input_utils.o: src/input_utils.cpp.o
-.PHONY : src/input_utils.o
+server/src/handlers/add_junior_admin.o: server/src/handlers/add_junior_admin.cpp.o
+.PHONY : server/src/handlers/add_junior_admin.o
 
 # target to build an object file
-src/input_utils.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/input_utils.cpp.o
-.PHONY : src/input_utils.cpp.o
+server/src/handlers/add_junior_admin.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.o
+.PHONY : server/src/handlers/add_junior_admin.cpp.o
 
-src/input_utils.i: src/input_utils.cpp.i
-.PHONY : src/input_utils.i
+server/src/handlers/add_junior_admin.i: server/src/handlers/add_junior_admin.cpp.i
+.PHONY : server/src/handlers/add_junior_admin.i
 
 # target to preprocess a source file
-src/input_utils.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/input_utils.cpp.i
-.PHONY : src/input_utils.cpp.i
+server/src/handlers/add_junior_admin.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.i
+.PHONY : server/src/handlers/add_junior_admin.cpp.i
 
-src/input_utils.s: src/input_utils.cpp.s
-.PHONY : src/input_utils.s
+server/src/handlers/add_junior_admin.s: server/src/handlers/add_junior_admin.cpp.s
+.PHONY : server/src/handlers/add_junior_admin.s
 
 # target to generate assembly for a file
-src/input_utils.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/input_utils.cpp.s
-.PHONY : src/input_utils.cpp.s
+server/src/handlers/add_junior_admin.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_junior_admin.cpp.s
+.PHONY : server/src/handlers/add_junior_admin.cpp.s
 
-src/main.o: src/main.cpp.o
-.PHONY : src/main.o
+server/src/handlers/add_record_slot.o: server/src/handlers/add_record_slot.cpp.o
+.PHONY : server/src/handlers/add_record_slot.o
 
 # target to build an object file
-src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/main.cpp.o
-.PHONY : src/main.cpp.o
+server/src/handlers/add_record_slot.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.o
+.PHONY : server/src/handlers/add_record_slot.cpp.o
 
-src/main.i: src/main.cpp.i
-.PHONY : src/main.i
+server/src/handlers/add_record_slot.i: server/src/handlers/add_record_slot.cpp.i
+.PHONY : server/src/handlers/add_record_slot.i
 
 # target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
+server/src/handlers/add_record_slot.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.i
+.PHONY : server/src/handlers/add_record_slot.cpp.i
 
-src/main.s: src/main.cpp.s
-.PHONY : src/main.s
+server/src/handlers/add_record_slot.s: server/src/handlers/add_record_slot.cpp.s
+.PHONY : server/src/handlers/add_record_slot.s
 
 # target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
+server/src/handlers/add_record_slot.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/add_record_slot.cpp.s
+.PHONY : server/src/handlers/add_record_slot.cpp.s
 
-src/password_utils.o: src/password_utils.cpp.o
-.PHONY : src/password_utils.o
+server/src/handlers/display_doctors.o: server/src/handlers/display_doctors.cpp.o
+.PHONY : server/src/handlers/display_doctors.o
 
 # target to build an object file
-src/password_utils.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/password_utils.cpp.o
-.PHONY : src/password_utils.cpp.o
+server/src/handlers/display_doctors.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.o
+.PHONY : server/src/handlers/display_doctors.cpp.o
 
-src/password_utils.i: src/password_utils.cpp.i
-.PHONY : src/password_utils.i
+server/src/handlers/display_doctors.i: server/src/handlers/display_doctors.cpp.i
+.PHONY : server/src/handlers/display_doctors.i
 
 # target to preprocess a source file
-src/password_utils.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/password_utils.cpp.i
-.PHONY : src/password_utils.cpp.i
+server/src/handlers/display_doctors.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.i
+.PHONY : server/src/handlers/display_doctors.cpp.i
 
-src/password_utils.s: src/password_utils.cpp.s
-.PHONY : src/password_utils.s
+server/src/handlers/display_doctors.s: server/src/handlers/display_doctors.cpp.s
+.PHONY : server/src/handlers/display_doctors.s
 
 # target to generate assembly for a file
-src/password_utils.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/password_utils.cpp.s
-.PHONY : src/password_utils.cpp.s
+server/src/handlers/display_doctors.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_doctors.cpp.s
+.PHONY : server/src/handlers/display_doctors.cpp.s
 
-src/patient_menu.o: src/patient_menu.cpp.o
-.PHONY : src/patient_menu.o
+server/src/handlers/display_hospitals.o: server/src/handlers/display_hospitals.cpp.o
+.PHONY : server/src/handlers/display_hospitals.o
 
 # target to build an object file
-src/patient_menu.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.o
-.PHONY : src/patient_menu.cpp.o
+server/src/handlers/display_hospitals.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.o
+.PHONY : server/src/handlers/display_hospitals.cpp.o
 
-src/patient_menu.i: src/patient_menu.cpp.i
-.PHONY : src/patient_menu.i
+server/src/handlers/display_hospitals.i: server/src/handlers/display_hospitals.cpp.i
+.PHONY : server/src/handlers/display_hospitals.i
 
 # target to preprocess a source file
-src/patient_menu.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.i
-.PHONY : src/patient_menu.cpp.i
+server/src/handlers/display_hospitals.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.i
+.PHONY : server/src/handlers/display_hospitals.cpp.i
 
-src/patient_menu.s: src/patient_menu.cpp.s
-.PHONY : src/patient_menu.s
+server/src/handlers/display_hospitals.s: server/src/handlers/display_hospitals.cpp.s
+.PHONY : server/src/handlers/display_hospitals.s
 
 # target to generate assembly for a file
-src/patient_menu.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/patient_menu.cpp.s
-.PHONY : src/patient_menu.cpp.s
+server/src/handlers/display_hospitals.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_hospitals.cpp.s
+.PHONY : server/src/handlers/display_hospitals.cpp.s
 
-src/server.o: src/server.cpp.o
-.PHONY : src/server.o
+server/src/handlers/display_users.o: server/src/handlers/display_users.cpp.o
+.PHONY : server/src/handlers/display_users.o
 
 # target to build an object file
-src/server.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/server.cpp.o
-.PHONY : src/server.cpp.o
+server/src/handlers/display_users.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.o
+.PHONY : server/src/handlers/display_users.cpp.o
 
-src/server.i: src/server.cpp.i
-.PHONY : src/server.i
+server/src/handlers/display_users.i: server/src/handlers/display_users.cpp.i
+.PHONY : server/src/handlers/display_users.i
 
 # target to preprocess a source file
-src/server.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/server.cpp.i
-.PHONY : src/server.cpp.i
+server/src/handlers/display_users.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.i
+.PHONY : server/src/handlers/display_users.cpp.i
 
-src/server.s: src/server.cpp.s
-.PHONY : src/server.s
+server/src/handlers/display_users.s: server/src/handlers/display_users.cpp.s
+.PHONY : server/src/handlers/display_users.s
 
 # target to generate assembly for a file
-src/server.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/server.cpp.s
-.PHONY : src/server.cpp.s
+server/src/handlers/display_users.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/display_users.cpp.s
+.PHONY : server/src/handlers/display_users.cpp.s
 
-src/session.o: src/session.cpp.o
-.PHONY : src/session.o
+server/src/handlers/doctor_hospital_managment.o: server/src/handlers/doctor_hospital_managment.cpp.o
+.PHONY : server/src/handlers/doctor_hospital_managment.o
 
 # target to build an object file
-src/session.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/session.cpp.o
-.PHONY : src/session.cpp.o
+server/src/handlers/doctor_hospital_managment.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.o
+.PHONY : server/src/handlers/doctor_hospital_managment.cpp.o
 
-src/session.i: src/session.cpp.i
-.PHONY : src/session.i
+server/src/handlers/doctor_hospital_managment.i: server/src/handlers/doctor_hospital_managment.cpp.i
+.PHONY : server/src/handlers/doctor_hospital_managment.i
 
 # target to preprocess a source file
-src/session.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/session.cpp.i
-.PHONY : src/session.cpp.i
+server/src/handlers/doctor_hospital_managment.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.i
+.PHONY : server/src/handlers/doctor_hospital_managment.cpp.i
 
-src/session.s: src/session.cpp.s
-.PHONY : src/session.s
+server/src/handlers/doctor_hospital_managment.s: server/src/handlers/doctor_hospital_managment.cpp.s
+.PHONY : server/src/handlers/doctor_hospital_managment.s
 
 # target to generate assembly for a file
-src/session.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/session.cpp.s
-.PHONY : src/session.cpp.s
+server/src/handlers/doctor_hospital_managment.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_hospital_managment.cpp.s
+.PHONY : server/src/handlers/doctor_hospital_managment.cpp.s
 
-src/super_admin_menu.o: src/super_admin_menu.cpp.o
-.PHONY : src/super_admin_menu.o
+server/src/handlers/doctor_schedule.o: server/src/handlers/doctor_schedule.cpp.o
+.PHONY : server/src/handlers/doctor_schedule.o
 
 # target to build an object file
-src/super_admin_menu.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.o
-.PHONY : src/super_admin_menu.cpp.o
+server/src/handlers/doctor_schedule.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.o
+.PHONY : server/src/handlers/doctor_schedule.cpp.o
 
-src/super_admin_menu.i: src/super_admin_menu.cpp.i
-.PHONY : src/super_admin_menu.i
+server/src/handlers/doctor_schedule.i: server/src/handlers/doctor_schedule.cpp.i
+.PHONY : server/src/handlers/doctor_schedule.i
 
 # target to preprocess a source file
-src/super_admin_menu.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.i
-.PHONY : src/super_admin_menu.cpp.i
+server/src/handlers/doctor_schedule.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.i
+.PHONY : server/src/handlers/doctor_schedule.cpp.i
 
-src/super_admin_menu.s: src/super_admin_menu.cpp.s
-.PHONY : src/super_admin_menu.s
+server/src/handlers/doctor_schedule.s: server/src/handlers/doctor_schedule.cpp.s
+.PHONY : server/src/handlers/doctor_schedule.s
 
 # target to generate assembly for a file
-src/super_admin_menu.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/src/super_admin_menu.cpp.s
-.PHONY : src/super_admin_menu.cpp.s
+server/src/handlers/doctor_schedule.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/doctor_schedule.cpp.s
+.PHONY : server/src/handlers/doctor_schedule.cpp.s
+
+server/src/handlers/junior_admin_schedule.o: server/src/handlers/junior_admin_schedule.cpp.o
+.PHONY : server/src/handlers/junior_admin_schedule.o
+
+# target to build an object file
+server/src/handlers/junior_admin_schedule.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.o
+.PHONY : server/src/handlers/junior_admin_schedule.cpp.o
+
+server/src/handlers/junior_admin_schedule.i: server/src/handlers/junior_admin_schedule.cpp.i
+.PHONY : server/src/handlers/junior_admin_schedule.i
+
+# target to preprocess a source file
+server/src/handlers/junior_admin_schedule.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.i
+.PHONY : server/src/handlers/junior_admin_schedule.cpp.i
+
+server/src/handlers/junior_admin_schedule.s: server/src/handlers/junior_admin_schedule.cpp.s
+.PHONY : server/src/handlers/junior_admin_schedule.s
+
+# target to generate assembly for a file
+server/src/handlers/junior_admin_schedule.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/junior_admin_schedule.cpp.s
+.PHONY : server/src/handlers/junior_admin_schedule.cpp.s
+
+server/src/handlers/login.o: server/src/handlers/login.cpp.o
+.PHONY : server/src/handlers/login.o
+
+# target to build an object file
+server/src/handlers/login.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.o
+.PHONY : server/src/handlers/login.cpp.o
+
+server/src/handlers/login.i: server/src/handlers/login.cpp.i
+.PHONY : server/src/handlers/login.i
+
+# target to preprocess a source file
+server/src/handlers/login.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.i
+.PHONY : server/src/handlers/login.cpp.i
+
+server/src/handlers/login.s: server/src/handlers/login.cpp.s
+.PHONY : server/src/handlers/login.s
+
+# target to generate assembly for a file
+server/src/handlers/login.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/login.cpp.s
+.PHONY : server/src/handlers/login.cpp.s
+
+server/src/handlers/patient_schedule.o: server/src/handlers/patient_schedule.cpp.o
+.PHONY : server/src/handlers/patient_schedule.o
+
+# target to build an object file
+server/src/handlers/patient_schedule.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.o
+.PHONY : server/src/handlers/patient_schedule.cpp.o
+
+server/src/handlers/patient_schedule.i: server/src/handlers/patient_schedule.cpp.i
+.PHONY : server/src/handlers/patient_schedule.i
+
+# target to preprocess a source file
+server/src/handlers/patient_schedule.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.i
+.PHONY : server/src/handlers/patient_schedule.cpp.i
+
+server/src/handlers/patient_schedule.s: server/src/handlers/patient_schedule.cpp.s
+.PHONY : server/src/handlers/patient_schedule.s
+
+# target to generate assembly for a file
+server/src/handlers/patient_schedule.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/patient_schedule.cpp.s
+.PHONY : server/src/handlers/patient_schedule.cpp.s
+
+server/src/handlers/registration.o: server/src/handlers/registration.cpp.o
+.PHONY : server/src/handlers/registration.o
+
+# target to build an object file
+server/src/handlers/registration.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.o
+.PHONY : server/src/handlers/registration.cpp.o
+
+server/src/handlers/registration.i: server/src/handlers/registration.cpp.i
+.PHONY : server/src/handlers/registration.i
+
+# target to preprocess a source file
+server/src/handlers/registration.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.i
+.PHONY : server/src/handlers/registration.cpp.i
+
+server/src/handlers/registration.s: server/src/handlers/registration.cpp.s
+.PHONY : server/src/handlers/registration.s
+
+# target to generate assembly for a file
+server/src/handlers/registration.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/handlers/registration.cpp.s
+.PHONY : server/src/handlers/registration.cpp.s
+
+server/src/main.o: server/src/main.cpp.o
+.PHONY : server/src/main.o
+
+# target to build an object file
+server/src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/main.cpp.o
+.PHONY : server/src/main.cpp.o
+
+server/src/main.i: server/src/main.cpp.i
+.PHONY : server/src/main.i
+
+# target to preprocess a source file
+server/src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/main.cpp.i
+.PHONY : server/src/main.cpp.i
+
+server/src/main.s: server/src/main.cpp.s
+.PHONY : server/src/main.s
+
+# target to generate assembly for a file
+server/src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/main.cpp.s
+.PHONY : server/src/main.cpp.s
+
+server/src/server.o: server/src/server.cpp.o
+.PHONY : server/src/server.o
+
+# target to build an object file
+server/src/server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/server.cpp.o
+.PHONY : server/src/server.cpp.o
+
+server/src/server.i: server/src/server.cpp.i
+.PHONY : server/src/server.i
+
+# target to preprocess a source file
+server/src/server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/server.cpp.i
+.PHONY : server/src/server.cpp.i
+
+server/src/server.s: server/src/server.cpp.s
+.PHONY : server/src/server.s
+
+# target to generate assembly for a file
+server/src/server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/server.cpp.s
+.PHONY : server/src/server.cpp.s
+
+server/src/session.o: server/src/session.cpp.o
+.PHONY : server/src/session.o
+
+# target to build an object file
+server/src/session.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/session.cpp.o
+.PHONY : server/src/session.cpp.o
+
+server/src/session.i: server/src/session.cpp.i
+.PHONY : server/src/session.i
+
+# target to preprocess a source file
+server/src/session.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/session.cpp.i
+.PHONY : server/src/session.cpp.i
+
+server/src/session.s: server/src/session.cpp.s
+.PHONY : server/src/session.s
+
+# target to generate assembly for a file
+server/src/session.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/session.cpp.s
+.PHONY : server/src/session.cpp.s
+
+server/src/system_init.o: server/src/system_init.cpp.o
+.PHONY : server/src/system_init.o
+
+# target to build an object file
+server/src/system_init.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.o
+.PHONY : server/src/system_init.cpp.o
+
+server/src/system_init.i: server/src/system_init.cpp.i
+.PHONY : server/src/system_init.i
+
+# target to preprocess a source file
+server/src/system_init.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.i
+.PHONY : server/src/system_init.cpp.i
+
+server/src/system_init.s: server/src/system_init.cpp.s
+.PHONY : server/src/system_init.s
+
+# target to generate assembly for a file
+server/src/system_init.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/boost_api_server.dir/build.make CMakeFiles/boost_api_server.dir/server/src/system_init.cpp.s
+.PHONY : server/src/system_init.cpp.s
 
 # Help Target
 help:
@@ -402,39 +594,63 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... boost_api_server"
-	@echo "... src/auth.o"
-	@echo "... src/auth.i"
-	@echo "... src/auth.s"
-	@echo "... src/common.o"
-	@echo "... src/common.i"
-	@echo "... src/common.s"
-	@echo "... src/handler_request.o"
-	@echo "... src/handler_request.i"
-	@echo "... src/handler_request.s"
-	@echo "... src/handlers.o"
-	@echo "... src/handlers.i"
-	@echo "... src/handlers.s"
-	@echo "... src/input_utils.o"
-	@echo "... src/input_utils.i"
-	@echo "... src/input_utils.s"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
-	@echo "... src/password_utils.o"
-	@echo "... src/password_utils.i"
-	@echo "... src/password_utils.s"
-	@echo "... src/patient_menu.o"
-	@echo "... src/patient_menu.i"
-	@echo "... src/patient_menu.s"
-	@echo "... src/server.o"
-	@echo "... src/server.i"
-	@echo "... src/server.s"
-	@echo "... src/session.o"
-	@echo "... src/session.i"
-	@echo "... src/session.s"
-	@echo "... src/super_admin_menu.o"
-	@echo "... src/super_admin_menu.i"
-	@echo "... src/super_admin_menu.s"
+	@echo "... server/src/database.o"
+	@echo "... server/src/database.i"
+	@echo "... server/src/database.s"
+	@echo "... server/src/handler_request.o"
+	@echo "... server/src/handler_request.i"
+	@echo "... server/src/handler_request.s"
+	@echo "... server/src/handlers/add_doctor.o"
+	@echo "... server/src/handlers/add_doctor.i"
+	@echo "... server/src/handlers/add_doctor.s"
+	@echo "... server/src/handlers/add_hospital.o"
+	@echo "... server/src/handlers/add_hospital.i"
+	@echo "... server/src/handlers/add_hospital.s"
+	@echo "... server/src/handlers/add_junior_admin.o"
+	@echo "... server/src/handlers/add_junior_admin.i"
+	@echo "... server/src/handlers/add_junior_admin.s"
+	@echo "... server/src/handlers/add_record_slot.o"
+	@echo "... server/src/handlers/add_record_slot.i"
+	@echo "... server/src/handlers/add_record_slot.s"
+	@echo "... server/src/handlers/display_doctors.o"
+	@echo "... server/src/handlers/display_doctors.i"
+	@echo "... server/src/handlers/display_doctors.s"
+	@echo "... server/src/handlers/display_hospitals.o"
+	@echo "... server/src/handlers/display_hospitals.i"
+	@echo "... server/src/handlers/display_hospitals.s"
+	@echo "... server/src/handlers/display_users.o"
+	@echo "... server/src/handlers/display_users.i"
+	@echo "... server/src/handlers/display_users.s"
+	@echo "... server/src/handlers/doctor_hospital_managment.o"
+	@echo "... server/src/handlers/doctor_hospital_managment.i"
+	@echo "... server/src/handlers/doctor_hospital_managment.s"
+	@echo "... server/src/handlers/doctor_schedule.o"
+	@echo "... server/src/handlers/doctor_schedule.i"
+	@echo "... server/src/handlers/doctor_schedule.s"
+	@echo "... server/src/handlers/junior_admin_schedule.o"
+	@echo "... server/src/handlers/junior_admin_schedule.i"
+	@echo "... server/src/handlers/junior_admin_schedule.s"
+	@echo "... server/src/handlers/login.o"
+	@echo "... server/src/handlers/login.i"
+	@echo "... server/src/handlers/login.s"
+	@echo "... server/src/handlers/patient_schedule.o"
+	@echo "... server/src/handlers/patient_schedule.i"
+	@echo "... server/src/handlers/patient_schedule.s"
+	@echo "... server/src/handlers/registration.o"
+	@echo "... server/src/handlers/registration.i"
+	@echo "... server/src/handlers/registration.s"
+	@echo "... server/src/main.o"
+	@echo "... server/src/main.i"
+	@echo "... server/src/main.s"
+	@echo "... server/src/server.o"
+	@echo "... server/src/server.i"
+	@echo "... server/src/server.s"
+	@echo "... server/src/session.o"
+	@echo "... server/src/session.i"
+	@echo "... server/src/session.s"
+	@echo "... server/src/system_init.o"
+	@echo "... server/src/system_init.i"
+	@echo "... server/src/system_init.s"
 .PHONY : help
 
 

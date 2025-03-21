@@ -7,7 +7,7 @@
 #include <curl/curl.h>
 
 size_t write_callback(void* contents, size_t size, size_t nmemb, std::string* s);
-std::string send_post_request(const std::string& url, const std::string& post_data);
+std::string send_post_request(const std::string& url, const nlohmann::json& json_data);
 std::string send_get_request(const std::string& url);
 
 

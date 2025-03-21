@@ -1,4 +1,4 @@
-# Install script for directory: /home/victoria/http-server-cpp
+# Install script for directory: /home/victoria/MedScheduler/server+database
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/victoria/http-server-cpp/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/victoria/MedScheduler/server+database/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
