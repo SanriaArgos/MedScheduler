@@ -64,7 +64,6 @@ font: 14pt &quot;Franklin Gothic&quot;;</string>
      <property name="styleSheet">
       <string notr="true">border-radius: 5px;
   background-color: rgb(172, 172, 172);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 color:rgb(0, 0, 0);
 font-size: 12px;</string>
      </property>
@@ -94,7 +93,6 @@ font-size: 12px;</string>
      <property name="styleSheet">
       <string notr="true">border-radius: 5px;
   background-color: rgb(172, 172, 172);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 color:rgb(0, 0, 0);
 font-size: 12px;</string>
      </property>
@@ -124,7 +122,6 @@ font-size: 12px;</string>
      <property name="styleSheet">
       <string notr="true">border-radius: 5px;
   background-color: rgb(172, 172, 172);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 color:rgb(0, 0, 0);
 font-size: 12px;</string>
      </property>
@@ -154,7 +151,7 @@ font-size: 12px;</string>
      <property name="styleSheet">
       <string notr="true">border-radius: 5px;
   background-color: rgb(172, 172, 172);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
 color:rgb(0, 0, 0);
 font-size: 12px;</string>
      </property>
@@ -184,7 +181,6 @@ font-size: 12px;</string>
      <property name="styleSheet">
       <string notr="true">border-radius: 5px;
   background-color: rgb(172, 172, 172);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 color:rgb(0, 0, 0);
 font-size: 12px;</string>
      </property>
@@ -213,8 +209,7 @@ font-size: 12px;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">border-radius: 5px;
-  background-color: rgb(172, 172, 172);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+ background-color: rgb(172, 172, 172);
 color:rgb(0, 0, 0);
 font-size: 12px;</string>
      </property>
@@ -261,10 +256,6 @@ font-size: 12px;</string>
     color: #fff;
     
 	background-color: rgb(39, 53, 83);
-}
-
-QPushButton:hover {
-    box-shadow: 0px 1px 1px #cfcfcf, 0px 2px 5px #cfcfcf;
 }
 
 QPushButton:pressed {

@@ -64,20 +64,30 @@ background-color: rgb(31, 31, 39);</string>
         <string>MedScheduler</string>
        </property>
       </widget>
-      <widget class="QLabel" name="picture">
+      <widget class="QPushButton" name="junior_button">
        <property name="geometry">
         <rect>
-         <x>-180</x>
-         <y>160</y>
-         <width>731</width>
-         <height>1111</height>
+         <x>120</x>
+         <y>470</y>
+         <width>83</width>
+         <height>29</height>
         </rect>
        </property>
        <property name="text">
-        <string/>
+        <string>junior</string>
        </property>
-       <property name="pixmap">
-        <pixmap>../../Users/аюр/Downloads/png-clipart-physician-medicine-graphy-health-care-medical-billing-others-miscellaneous-white (1).png</pixmap>
+      </widget>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>470</y>
+         <width>83</width>
+         <height>29</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>senior</string>
        </property>
       </widget>
      </widget>
@@ -136,7 +146,6 @@ color: rgb(0, 0, 0);</string>
          <property name="styleSheet">
           <string notr="true">border-radius: 15px;
   background-color: rgb(172, 172, 172);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 color:rgb(0, 0, 0);
 font-size: 12px;</string>
          </property>
@@ -173,7 +182,6 @@ color: rgb(0, 0, 0);</string>
          <property name="styleSheet">
           <string notr="true">border-radius: 15px;
   background-color: rgb(172, 172, 172);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 color:rgb(0, 0, 0);
 font-size: 12px;</string>
          </property>
@@ -236,10 +244,6 @@ color: rgb(255, 0, 0);</string>
     color: #fff;
     
 	background-color: rgb(39, 53, 83);
-}
-
-QPushButton:hover {
-    box-shadow: 0px 1px 1px #cfcfcf, 0px 2px 5px #cfcfcf;
 }
 
 QPushButton:pressed {

@@ -1,16 +1,11 @@
 #ifndef UTILS_H
 #define UTILS_H
-#include <string>
+#include <QString>
 
-std::string read_line_with_backspace(const std::string &prompt);
-std::string get_input_backspace(const std::string &prompt);
-bool is_latin_for_mail(const std::string &s);
-std::string get_input(const std::string &prompt);
-std::string get_validated_input(const std::string &prompt, bool required = true);
-bool is_latin_or_dash(const std::string &s);
-std::string get_validated_name(const std::string &prompt, bool required = true);
-bool is_validated_phone(const std::string &s);
-bool validate_password_characters(const std::string &password);
-std::string get_validated_password();
-int get_menu_choice(const std::string &menu);
+bool is_valid_password(const QString &str);
+bool is_latin_or_dash(const QString &str);
+bool is_validated_phone(const QString &str);
+bool is_number(const QString &str);
+bool is_valid_date(const QString &str);
+bool is_valid_time(const QString &str);
 #endif // UTILS_H
