@@ -2,15 +2,10 @@
 #define ADD_HOSPITAL_HPP_
 
 #include "database.hpp"
-#include <string>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Функция для добавления новой больницы. Данные передаются в виде параметров.
-bool add_hospital(const std::string &region,
-                  const std::string &settlement_type,
-                  const std::string &settlement_name,
-                  const std::string &street,
-                  const std::string &house,
-                  const std::string &full_name,
-                  int admin_id);
+// Функция добавления больницы принимает JSON с полями: region, settlement_type, settlement_name, street, house, full_name, admin_id.
+bool add_hospital(const nlohmann::json &data);
 
 #endif  // ADD_HOSPITAL_HPP_

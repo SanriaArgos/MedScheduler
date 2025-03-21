@@ -7,12 +7,11 @@
 #include <algorithm>
 #include <regex>
 #include <string>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Глобальный указатель на объект базы данных, инициализируется в main.cpp.
 extern database_handler* global_db;
 
-// Вспомогательная функция для получения hospital_id младшего администратора
-// через параметризованный запрос.
 static bool get_junior_admin_hospital_id(int junior_admin_id, int &out_hospital_id) {
     std::string admin_id_str = std::to_string(junior_admin_id);
     const char* params[1] = { admin_id_str.c_str() };
@@ -29,7 +28,15 @@ static bool get_junior_admin_hospital_id(int junior_admin_id, int &out_hospital_
     return false;
 }
 
-bool add_hospital_to_doctor(int doctor_id, int hospital_id, int junior_admin_id) {
+bool add_hospital_to_doctor(const json &data) {
+    if (!data.contains("doctor_id") || !data.contains("hospital_id") || !data.contains("junior_admin_id")) {
+        std::cerr << "Error: Missing required fields for add_hospital_to_doctor\n";
+        return false;
+    }
+    int doctor_id = data["doctor_id"];
+    int hospital_id = data["hospital_id"];
+    int junior_admin_id = data["junior_admin_id"];
+    
     // Проверяем, что врач существует.
     std::string doctor_id_str = std::to_string(doctor_id);
     const char* params_doc[1] = { doctor_id_str.c_str() };
@@ -57,7 +64,7 @@ bool add_hospital_to_doctor(int doctor_id, int hospital_id, int junior_admin_id)
     }
     PQclear(res_hosp);
 
-    // Проверяем, не добавлена ли уже данная больница в список врача.
+    // Проверяем, что данная больница ещё не добавлена в список врача.
     const char* params_check[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
     PGresult *res_check = PQexecParams(global_db->get_connection(),
         "SELECT 1 FROM doctors WHERE doctor_id = $1 AND $2 = ANY(hospital_ids)",
@@ -69,7 +76,6 @@ bool add_hospital_to_doctor(int doctor_id, int hospital_id, int junior_admin_id)
     }
     PQclear(res_check);
 
-    // Выполняем обновление – добавляем hospital_id в массив hospital_ids.
     const char* params_update[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
     PGresult *res_update = PQexecParams(global_db->get_connection(),
         "UPDATE doctors SET hospital_ids = array_append(hospital_ids, $2) WHERE doctor_id = $1",
@@ -84,8 +90,15 @@ bool add_hospital_to_doctor(int doctor_id, int hospital_id, int junior_admin_id)
     return true;
 }
 
-bool remove_hospital_from_doctor(int doctor_id, int hospital_id, int junior_admin_id) {
-    // Проверяем, что врач существует.
+bool remove_hospital_from_doctor(const json &data) {
+    if (!data.contains("doctor_id") || !data.contains("hospital_id") || !data.contains("junior_admin_id")) {
+        std::cerr << "Error: Missing required fields for remove_hospital_from_doctor\n";
+        return false;
+    }
+    int doctor_id = data["doctor_id"];
+    int hospital_id = data["hospital_id"];
+    int junior_admin_id = data["junior_admin_id"];
+    
     std::string doctor_id_str = std::to_string(doctor_id);
     const char* params_doc[1] = { doctor_id_str.c_str() };
     PGresult *res_doc = PQexecParams(global_db->get_connection(),
@@ -97,8 +110,7 @@ bool remove_hospital_from_doctor(int doctor_id, int hospital_id, int junior_admi
         return false;
     }
     PQclear(res_doc);
-
-    // Проверяем, что заданная больница принадлежит данному младшему администратору.
+    
     std::string hospital_id_str = std::to_string(hospital_id);
     std::string junior_admin_id_str = std::to_string(junior_admin_id);
     const char* params_hosp[2] = { hospital_id_str.c_str(), junior_admin_id_str.c_str() };
@@ -111,8 +123,7 @@ bool remove_hospital_from_doctor(int doctor_id, int hospital_id, int junior_admi
         return false;
     }
     PQclear(res_hosp);
-
-    // Проверяем, что больница действительно присутствует в списке врача.
+    
     const char* params_check[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
     PGresult *res_check = PQexecParams(global_db->get_connection(),
         "SELECT 1 FROM doctors WHERE doctor_id = $1 AND $2 = ANY(hospital_ids)",
@@ -123,8 +134,7 @@ bool remove_hospital_from_doctor(int doctor_id, int hospital_id, int junior_admi
         return false;
     }
     PQclear(res_check);
-
-    // Удаляем hospital_id из массива hospital_ids.
+    
     const char* params_update[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
     PGresult *res_update = PQexecParams(global_db->get_connection(),
         "UPDATE doctors SET hospital_ids = array_remove(hospital_ids, $2) WHERE doctor_id = $1",

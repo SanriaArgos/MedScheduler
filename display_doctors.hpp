@@ -2,9 +2,9 @@
 #define DISPLAY_DOCTORS_HPP_
 
 #include "database.hpp"
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Клиентская функция отображения таблицы врачей убрана.
-// Для тестирования вывод ошибок остаётся.
-void display_doctors_table(database_handler &db);
+json display_doctors_table(const json &data);
 
 #endif  // DISPLAY_DOCTORS_HPP_

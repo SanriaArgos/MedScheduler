@@ -2,8 +2,9 @@
 #define DISPLAY_HOSPITALS_HPP_
 
 #include "database.hpp"
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Клиентская функция отображения таблицы больниц убрана.
-void display_hospitals_table(database_handler &db);
+json display_hospitals_table(const json &data);
 
 #endif  // DISPLAY_HOSPITALS_HPP_

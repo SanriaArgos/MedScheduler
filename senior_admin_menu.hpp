@@ -2,10 +2,10 @@
 #define SENIOR_ADMIN_MENU_HPP_
 
 #include "database.hpp"
-#include <string>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Меню старшего администратора убрано – клиентская логика удалена.
-// Функция возвращает false при вызове.
-bool senior_admin_menu();
+// Функция меню старшего администратора принимает JSON с необходимыми параметрами.
+bool senior_admin_menu(const nlohmann::json &data);
 
 #endif  // SENIOR_ADMIN_MENU_HPP_

@@ -1,9 +1,9 @@
 #include "user_menu.hpp"
-#include "utils.hpp"
-#include "patient_schedule.hpp"  // Функция для показа расписания врачей для пациента
+#include "patient_schedule.hpp"
 #include <iostream>
 
-bool user_menu() {
-    std::cerr << "User menu is not available in JSON mode. Use the JSON interface instead.\n";
+// Клиентская логика полностью удалена – оставлена заглушка.
+bool user_menu(const nlohmann::json &data) {
+    std::cerr << "user_menu: client-side menu removed. Use JSON interface instead.\n";
     return false;
 }

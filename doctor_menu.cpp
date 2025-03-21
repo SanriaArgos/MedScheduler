@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-bool doctor_menu() {
-    std::cerr << "Doctor menu is not available in JSON mode. Use JSON interface instead.\n";
+bool doctor_menu(const nlohmann::json &data) {
+    std::cerr << "doctor_menu: client-side menu removed. Use JSON interface instead.\n";
     return false;
 }

@@ -1,7 +1,6 @@
 #ifndef HANDLERS_HPP_
 #define HANDLERS_HPP_
 
-// Клиентские обработчики (registration, login, ...) удалены,
-// так как теперь система получает JSON и работает напрямую с базой.
+// Обработчики больше не используются, так как registration и login вызываются напрямую через JSON-интерфейс.
 
 #endif  // HANDLERS_HPP_

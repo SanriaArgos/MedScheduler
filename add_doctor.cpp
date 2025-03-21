@@ -5,16 +5,26 @@
 #include <libpq-fe.h>
 #include <regex>
 #include <cstdlib>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 extern database_handler* global_db;
 
-bool add_doctor(const std::string &last_name,
-                const std::string &first_name,
-                const std::string &patronymic,
-                const std::string &phone,
-                const std::string &education,
-                const std::string &specialty,
-                int experience) {
+bool add_doctor(const json &data) {
+    if (!data.contains("last_name") || !data.contains("first_name") ||
+        !data.contains("phone") || !data.contains("education") ||
+        !data.contains("specialty") || !data.contains("experience")) {
+        std::cerr << "Error: Missing required fields for add_doctor\n";
+        return false;
+    }
+    std::string last_name = data["last_name"];
+    std::string first_name = data["first_name"];
+    std::string patronymic = data.value("patronymic", "");
+    std::string phone = data["phone"];
+    std::string education = data["education"];
+    std::string specialty = data["specialty"];
+    int experience = data["experience"];
+    
     if (global_db->user_exists(phone)) {
         std::cerr << "Error: Phone already registered\n";
         return false;

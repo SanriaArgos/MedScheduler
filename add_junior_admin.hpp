@@ -2,12 +2,10 @@
 #define ADD_JUNIOR_ADMIN_HPP_
 
 #include "database.hpp"
-#include <string>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Функция для добавления младшего администратора. Данные передаются в виде параметров.
-bool add_junior_admin(const std::string &last_name,
-                      const std::string &first_name,
-                      const std::string &patronymic,
-                      const std::string &phone);
+// Функция добавления младшего администратора принимает JSON с полями: last_name, first_name, [patronymic], phone.
+bool add_junior_admin(const nlohmann::json &data);
 
 #endif  // ADD_JUNIOR_ADMIN_HPP_

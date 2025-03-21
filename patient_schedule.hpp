@@ -2,10 +2,11 @@
 #define PATIENT_SCHEDULE_HPP_
 
 #include "database.hpp"
-#include <string>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Показывает расписание врача для пациента через JSON-интерфейс.
-// Клиентская интерактивная логика удалена; функция возвращает false (заглушка).
-bool view_doctor_schedule_for_patient(database_handler &db);
+// Функция для просмотра расписания врача для пациента возвращает JSON.
+// Ожидается, что входной JSON содержит поля: region, settlement_type, settlement_name, specialty, hospital_id и doctor_id.
+json view_doctor_schedule_for_patient(const json &data);
 
 #endif  // PATIENT_SCHEDULE_HPP_

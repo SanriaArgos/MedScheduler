@@ -2,15 +2,11 @@
 #define ADD_RECORD_SLOT_HPP_
 
 #include "database.hpp"
-#include <string>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Функция для добавления слота записи (приёма).
-// Параметры: идентификатор врача, дата, время, идентификатор больницы, номер кабинета и ID младшего администратора.
-bool add_record_slot(int doctor_id,
-                     const std::string &date,
-                     const std::string &time,
-                     int hospital_id,
-                     int cabinet,
-                     int junior_admin_id);
+// Функция добавления слота записи принимает JSON с полями:
+// doctor_id, date, time, hospital_id, cabinet, junior_admin_id.
+bool add_record_slot(const nlohmann::json &data);
 
 #endif  // ADD_RECORD_SLOT_HPP_

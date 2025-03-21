@@ -2,10 +2,10 @@
 #define DOCTOR_MENU_HPP_
 
 #include "database.hpp"
-#include <string>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Меню врача удалено – клиентская логика убрана.
-// Функция возвращает false при вызове.
-bool doctor_menu();
+// Функция меню врача принимает JSON с необходимыми параметрами.
+bool doctor_menu(const nlohmann::json &data);
 
 #endif  // DOCTOR_MENU_HPP_

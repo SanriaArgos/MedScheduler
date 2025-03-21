@@ -5,10 +5,15 @@
 
 extern database_handler* global_db;
 
-bool add_junior_admin(const std::string &last_name,
-                      const std::string &first_name,
-                      const std::string &patronymic,
-                      const std::string &phone) {
+bool add_junior_admin(const nlohmann::json &data) {
+    if (!data.contains("last_name") || !data.contains("first_name") || !data.contains("phone")) {
+        std::cerr << "Error: Missing required fields for adding junior admin\n";
+        return false;
+    }
+    std::string last_name = data["last_name"];
+    std::string first_name = data["first_name"];
+    std::string patronymic = data.value("patronymic", "");
+    std::string phone = data["phone"];
     if (global_db->user_exists(phone)) {
         std::cerr << "Error: Phone already registered\n";
         return false;
@@ -18,10 +23,10 @@ bool add_junior_admin(const std::string &last_name,
         std::cerr << "Error adding junior administrator\n";
         return false;
     }
-    const char* paramValues[1] = { phone.c_str() };
+    const char* params[1] = { phone.c_str() };
     PGresult *res = PQexecParams(global_db->get_connection(),
         "UPDATE users SET user_type = 'junior administrator' WHERE phone = $1",
-        1, NULL, paramValues, NULL, NULL, 0);
+        1, NULL, params, NULL, NULL, 0);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         std::cerr << "Error updating user type: " << PQerrorMessage(global_db->get_connection()) << "\n";
         PQclear(res);
