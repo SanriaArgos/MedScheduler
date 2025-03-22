@@ -101,20 +101,20 @@ void senior_admin_client::run_menu() {
 
 void senior_admin_client::add_junior_admin(const json& data) {
     std::string json_data = data.dump();
-    std::string url = "http://localhost:3000/add_junior_admin";
+    std::string url = "http://localhost:8080/add_junior_admin";
     std::string response = send_post_request(url, json_data);
     std::cout << "Server response: " << response << std::endl;
 }
 
 void senior_admin_client::add_hospital(const json& data) {
     std::string json_data = data.dump();
-    std::string url = "http://localhost:3000/add_hospital";
+    std::string url = "http://localhost:8080/add_hospital";
     std::string response = send_post_request(url, json_data);
     std::cout << "Server response: " << response << std::endl;
 }
 
 void senior_admin_client::display_hospitals_table() {
-    std::string url = "http://localhost:3000/hospitals";
+    std::string url = "http://localhost:8080/hospitals";
     std::string response = send_get_request(url);
 
     try {
@@ -136,7 +136,7 @@ void senior_admin_client::display_hospitals_table() {
 }
 
 void senior_admin_client::display_users_table() {
-    std::string url = "http://localhost:3000/users";
+    std::string url = "http://localhost:8080/users";
     std::string response = send_get_request(url);
 
     try {

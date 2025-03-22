@@ -34,7 +34,6 @@ static bool check_database_exists(PGconn *conn, const std::string &dbname) {
     PQclear(res);
     return exists;
 }
-
 static std::string generate_salt(size_t length = 16) {
     static const char char_set[] =
         "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -44,7 +43,7 @@ static std::string generate_salt(size_t length = 16) {
     std::string salt;
     salt.reserve(length);
     for (size_t i = 0; i < length; ++i) {
-        salt.push_back(static_cast<char>(dist(engine)));
+        salt.push_back(char_set(dist(engine)));
     }
     return salt;
 }
@@ -62,7 +61,6 @@ static std::string hash_password(const std::string &password, const std::string 
 }
 
 bool initialize_system(const std::string &superuser_connect_info) {
-    // Подключаемся под суперпользователем postgres для создания meduser
     PGconn *conn = PQconnectdb(superuser_connect_info.c_str());
     if (PQstatus(conn) != CONNECTION_OK) {
         std::cerr << "Superuser connection error: " << PQerrorMessage(conn) << "\n";
@@ -70,7 +68,6 @@ bool initialize_system(const std::string &superuser_connect_info) {
         return false;
     }
     if (!check_user_exists(conn, "meduser")) {
-        // Создаём meduser с правом создавать базы данных
         if (!execute_sql(conn, "CREATE USER meduser WITH PASSWORD '3671920119' CREATEDB")) {
             std::cerr << "Failed to create meduser\n";
             PQfinish(conn);
@@ -82,8 +79,7 @@ bool initialize_system(const std::string &superuser_connect_info) {
     }
     PQfinish(conn);
 
-    // Подключаемся под meduser (используя базу postgres) для создания базы данных medscheduler
-    const std::string meduser_conn_info = "dbname=postgres user=meduser password=3671920119 host=db port=5432";
+    const std::string meduser_conn_info = "dbname=postgres user=postgres password=123 host=localhost port=5432";
     PGconn *conn_meduser = PQconnectdb(meduser_conn_info.c_str());
     if (PQstatus(conn_meduser) != CONNECTION_OK) {
         std::cerr << "Meduser connection error: " << PQerrorMessage(conn_meduser) << "\n";
@@ -102,8 +98,7 @@ bool initialize_system(const std::string &superuser_connect_info) {
     }
     PQfinish(conn_meduser);
 
-    // Подключаемся к базе medscheduler под meduser для создания таблиц и начальных данных
-    const std::string medscheduler_conn_info = "dbname=medscheduler user=meduser password=3671920119 host=db port=5432";
+    const std::string medscheduler_conn_info = "dbname=medscheduler user=postgres password=123 host=localhost port=5432";
     PGconn *conn2 = PQconnectdb(medscheduler_conn_info.c_str());
     if (PQstatus(conn2) != CONNECTION_OK) {
         std::cerr << "Medscheduler connection error (meduser): " << PQerrorMessage(conn2) << "\n";
@@ -111,10 +106,9 @@ bool initialize_system(const std::string &superuser_connect_info) {
         return false;
     }
     
-    // Открываем файл create_tables.sql по абсолютному пути (например, /app/create_tables.sql)
-    std::ifstream file("/app/create_tables.sql");
+    std::ifstream file("create_tables.sql");
     if (!file.is_open()) {
-        std::cerr << "Failed to open /app/create_tables.sql\n";
+        std::cerr << "Failed to open /create_tables.sql\n";
         PQfinish(conn2);
         return false;
     }

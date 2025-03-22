@@ -93,6 +93,10 @@ void handle_request(
             else if (req.target() == "/registration") {
                 registration(body, res, db_handler);
             } 
+            else if (req.target() == "/add_doctor") {
+                json body = json::parse(req.body());
+                add_doctor(body, res, db_handler);
+            }
             else if (req.target() == "/add_hospital") {
                 add_hospital(body, res, db_handler);
             } else if (req.target() == "/add_junior_admin") {
@@ -107,10 +111,7 @@ void handle_request(
                 handle_not_found(res);
             }
         } else if (req.method() == http::verb::get) {
-            if (req.target() == "/add_doctor") {
-                json body = json::parse(req.body());
-                add_doctor(body, res, db_handler);
-            } else if (req.target() == "/display_doctors") {
+            if (req.target() == "/display_doctors") {
                 display_doctors_table(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются
             } else if (req.target() == "/display_hospitals") {
                 display_hospitals_table(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются

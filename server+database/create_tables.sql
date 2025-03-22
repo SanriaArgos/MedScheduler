@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
     patronymic VARCHAR(100),
     phone VARCHAR(20) NOT NULL UNIQUE,
     user_type VARCHAR(30) NOT NULL DEFAULT 'patient',
-    hashed_password TEXT NOT NULL,
+    hashed_password  TEXT NOT NULL,
     salt TEXT NOT NULL
 );
 

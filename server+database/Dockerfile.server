@@ -19,11 +19,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
 
 # Устанавливаем Boost.Beast через Boost (отдельно не нужен)
 
-# (Не нужно качать json.hpp вручную — пакет выше уже всё сделал)
-# ЭТА СТРОКА БОЛЬШЕ НЕ НУЖНА:
-# RUN mkdir -p /usr/local/include/nlohmann && \
-#     wget -q https://github.com/nlohmann/json/releases/download/v3.11.2/json.hpp -O /usr/local/include/nlohmann/json.hpp
-
 # Устанавливаем рабочую директорию
 WORKDIR /app
 

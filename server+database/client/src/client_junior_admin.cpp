@@ -181,20 +181,20 @@ void junior_admin_client::run_menu() {
 
 void junior_admin_client::add_doctor(const json& data) {
     std::string json_data = data.dump();
-    std::string url = "http://localhost:3000/add_doctor";
+    std::string url = "http://localhost:8080/add_doctor";
     std::string response = send_post_request(url, json_data);
     std::cout << "Server response: " << response << std::endl;
 }
 
 void junior_admin_client::add_record_slot(const json& data) {
     std::string json_data = data.dump();
-    std::string url = "http://localhost:3000/add_record_slot";
+    std::string url = "http://localhost:8080/add_record_slot";
     std::string response = send_post_request(url, json_data);
     std::cout << "Server response: " << response << std::endl;
 }
 
 bool junior_admin_client::check_doctor_exists(int doctor_id) {
-    std::string url = "http://localhost:3000/doctors/" + std::to_string(doctor_id);
+    std::string url = "http://localhost:8080/doctors/" + std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
     try {
@@ -209,7 +209,7 @@ bool junior_admin_client::check_doctor_exists(int doctor_id) {
 }
 
 bool junior_admin_client::check_hospital_exists(int hospital_id) {
-    std::string url = "http://localhost:3000/hospitals/" + std::to_string(hospital_id);
+    std::string url = "http://localhost:8080/hospitals/" + std::to_string(hospital_id);
     std::string response = send_get_request(url);
 
     try {
@@ -224,7 +224,7 @@ bool junior_admin_client::check_hospital_exists(int hospital_id) {
 }
 
 bool junior_admin_client::is_doctor_attached_to_hospital(int doctor_id, int hospital_id) {
-    std::string url = "http://localhost:3000/doctors/" + std::to_string(doctor_id) + "/hospitals";
+    std::string url = "http://localhost:8080/doctors/" + std::to_string(doctor_id) + "/hospitals";
     std::string response = send_get_request(url);
 
     try {
@@ -260,7 +260,7 @@ void junior_admin_client::attach_doctor_to_hospital(const json& data) {
     }
 
     std::string json_data = data.dump();
-    std::string url = "http://localhost:3000/attach_doctor_to_hospital";
+    std::string url = "http://localhost:8080/attach_doctor_to_hospital";
     std::string response = send_post_request(url, json_data);
     std::cout << "Server response: " << response << std::endl;
 }
@@ -280,13 +280,13 @@ void junior_admin_client::detach_doctor_from_hospital(const json& data) {
     }
 
     std::string json_data = data.dump();
-    std::string url = "http://localhost:3000/detach_doctor_from_hospital";
+    std::string url = "http://localhost:8080/detach_doctor_from_hospital";
     std::string response = send_post_request(url, json_data);
     std::cout << "Server response: " << response << std::endl;
 }
 
 json junior_admin_client::get_doctors_table() {
-    std::string url = "http://localhost:3000/doctors";
+    std::string url = "http://localhost:8080/doctors";
     std::string response = send_get_request(url);
 
     try {
@@ -299,7 +299,7 @@ json junior_admin_client::get_doctors_table() {
 }
 
 json junior_admin_client::get_users_table() {
-    std::string url = "http://localhost:3000/users";
+    std::string url = "http://localhost:8080/users";
     std::string response = send_get_request(url);
 
     try {
@@ -312,7 +312,7 @@ json junior_admin_client::get_users_table() {
 }
 
 json junior_admin_client::get_doctor_schedule(int doctor_id) {
-    std::string check_url = "http://localhost:3000/check_doctor_admin_hospital?doctor_id=" 
+    std::string check_url = "http://localhost:8080/check_doctor_admin_hospital?doctor_id=" 
                             + std::to_string(doctor_id) + "&admin_id=" + std::to_string(admin_id);
     std::string check_response = send_get_request(check_url);
 
@@ -327,7 +327,7 @@ json junior_admin_client::get_doctor_schedule(int doctor_id) {
         return json();
     }
 
-    std::string schedule_url = "http://localhost:3000/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
+    std::string schedule_url = "http://localhost:8080/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
     std::string schedule_response = send_get_request(schedule_url);
 
     try {

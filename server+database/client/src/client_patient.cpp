@@ -39,7 +39,7 @@ void patient_client::run_menu() {
 }
 
 void patient_client::view_doctor_schedule() {
-    std::string url = "http://localhost:3000/doctor_schedule";
+    std::string url = "http://localhost:8080/doctor_schedule";
     std::string response = send_get_request(url);
 
     try {

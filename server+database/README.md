@@ -1,4 +1,4 @@
-Как запускать:
+<!-- Как запускать:
 
 ```bash
 docker build -t boost_api_server .
@@ -16,4 +16,4 @@ container_id = $(docker run -p 5432:5432 -e A=B ... --rm -d postgres:16)
 docker logs $(container_id)
 run_db.sh
 $sqlconnect localhost:5432
-```
+``` -->

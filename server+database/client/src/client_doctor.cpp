@@ -34,7 +34,7 @@ void doctor_client::run_menu() {
 }
 
 void doctor_client::display_schedule() {
-    std::string url = "http://localhost:3000/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
+    std::string url = "http://localhost:8080/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
     try {

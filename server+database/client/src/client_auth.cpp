@@ -14,7 +14,7 @@ user_info login(const std::string& phone, const std::string& password) {
     };
 
     std::string json_data = login_data.dump();
-    std::string url = "http://localhost:3000/login";
+    std::string url = "http://localhost:8080/login";
     std::string response = send_post_request(url, json_data);
 
     try {
@@ -31,15 +31,18 @@ user_info login(const std::string& phone, const std::string& password) {
     return {-1, ""}; // Возвращаем пустые данные в случае ошибки
 }
 
-user_info register_user(const std::string& phone, const std::string& password, const std::string& user_type) {
+user_info register_user(const std::string& phone, const std::string& password, const std::string& first_name, const std::string& last_name, const std::string& patronymic) {
     json register_data = {
         {"phone", phone},
         {"password", password},
-        {"user_type", user_type}
+        {"first_name", first_name},
+        {"last_name", last_name},
+        {"patronymic", patronymic},
+        {"user_type", "patient"}
     };
 
     std::string json_data = register_data.dump();
-    std::string url = "http://localhost:3000/register";
+    std::string url = "http://localhost:8080/registration";
     std::string response = send_post_request(url, json_data);
 
     try {

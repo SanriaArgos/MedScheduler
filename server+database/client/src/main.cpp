@@ -57,15 +57,19 @@ int main() {
             }
 
             case 2: { 
-                std::string phone, password, user_type;
+                std::string phone, password, first_name, last_name, patronymic;
                 std::cout << "Enter phone: ";
                 std::cin >> phone;
                 std::cout << "Enter password: ";
                 std::cin >> password;
-                std::cout << "Enter user type (doctor/junior_admin/senior_admin/patient): ";
-                std::cin >> user_type;
+                std::cout << "Enter first name: ";
+                std::cin >> first_name;
+                std::cout << "Enter last name: ";
+                std::cin >> last_name;
+                std::cout << "Enter patronymic: ";
+                std::cin >> patronymic;
 
-                auth::user_info user = auth::register_user(phone, password, user_type);
+                auth::user_info user = auth::register_user(phone, password, first_name, last_name, patronymic);
                 if (user.id != -1) {
                     std::cout << "Registration successful! User ID: " << user.id << "\n";
                 } else {
