@@ -1,0 +1,3 @@
+/home/victoria/MedScheduler/server+database/CMakeFiles/boost_api_server.dir
+/home/victoria/MedScheduler/server+database/CMakeFiles/edit_cache.dir
+/home/victoria/MedScheduler/server+database/CMakeFiles/rebuild_cache.dir

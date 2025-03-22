@@ -1,0 +1,30 @@
+services:
+  db:
+    build:
+      context: .  # Указываем корневую директорию
+      dockerfile: Dockerfile.db  # Указываем имя Dockerfile для базы данных
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"  # Пробрасываем порт 5432 на хост
+    volumes:
+      - db-data:/var/lib/postgresql/data  # Том для хранения данных
+
+  server:
+    build:
+      context: .  # Указываем корневую директорию
+      dockerfile: Dockerfile.server  # Указываем имя Dockerfile для сервера
+    ports:
+      - "8080:8080"  # Пробрасываем порт сервера
+    environment:
+      DB_HOST: db  # Имя сервиса базы данных (внутри Docker Compose)
+      DB_USER: meduser  # Имя пользователя для подключения из приложения
+      DB_PASSWORD: 3671920119  # Пароль
+      DB_NAME: medscheduler  # Имя базы данных
+    depends_on:
+      - db  # Сервер зависит от базы данных
+
+volumes:
+  db-data:  # Том для хранения данных PostgreSQL
