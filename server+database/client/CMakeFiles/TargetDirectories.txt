@@ -1,3 +1,0 @@
-/home/victoria/MedScheduler/server+database/client/CMakeFiles/med_client.dir
-/home/victoria/MedScheduler/server+database/client/CMakeFiles/edit_cache.dir
-/home/victoria/MedScheduler/server+database/client/CMakeFiles/rebuild_cache.dir

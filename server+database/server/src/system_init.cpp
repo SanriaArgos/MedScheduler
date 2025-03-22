@@ -43,7 +43,7 @@ static std::string generate_salt(size_t length = 16) {
     std::string salt;
     salt.reserve(length);
     for (size_t i = 0; i < length; ++i) {
-        salt.push_back(char_set(dist(engine)));
+        salt.push_back(char_set[dist(engine)]);
     }
     return salt;
 }
