@@ -1,32 +1,41 @@
--- Удаление существующих таблиц, если они уже существуют
-DROP TABLE IF EXISTS records;
-DROP TABLE IF EXISTS hospitals;
-DROP TABLE IF EXISTS users;
-
--- Создание таблицы пользователей
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,                   -- Уникальный идентификатор пользователя
-    last_name VARCHAR(100) NOT NULL,           -- Фамилия (обязательное поле)
-    first_name VARCHAR(100) NOT NULL,          -- Имя (обязательное поле)
-    patronymic VARCHAR(100),                   -- Отчество (необязательное поле)
-    phone VARCHAR(20) NOT NULL UNIQUE,         -- Номер телефона (обязательное поле, должен быть уникальным)
-    user_type VARCHAR(40) NOT NULL DEFAULT 'patient',  -- Тип пользователя (по умолчанию 'patient')
-    hashed_password TEXT NOT NULL,             -- Хеш пароля
-    salt TEXT NOT NULL                         -- Соль для хеширования пароля
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    last_name VARCHAR(100) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    patronymic VARCHAR(100),
+    phone VARCHAR(20) NOT NULL UNIQUE,
+    user_type VARCHAR(30) NOT NULL DEFAULT 'patient',
+    hashed_password TEXT NOT NULL,
+    salt TEXT NOT NULL
 );
 
--- Создание таблицы больниц
-CREATE TABLE hospitals (
-    hospital_id SERIAL PRIMARY KEY,            -- Уникальный идентификатор больницы
-    address TEXT NOT NULL UNIQUE,              -- Адрес больницы
-    administrator_id INT NOT NULL REFERENCES users(id)  -- Идентификатор администратора
+CREATE TABLE IF NOT EXISTS hospitals (
+    hospital_id SERIAL PRIMARY KEY,
+    region TEXT NOT NULL,
+    settlement_type TEXT NOT NULL,
+    settlement_name TEXT NOT NULL,
+    street TEXT NOT NULL,
+    house TEXT NOT NULL,
+    full_name TEXT NOT NULL,
+    administrator_id INT NOT NULL REFERENCES users(id),
+    UNIQUE (region, settlement_type, settlement_name, street, house)
 );
 
--- Создание таблицы записей на приём
-CREATE TABLE records (
-    record_id SERIAL PRIMARY KEY,              -- Уникальный идентификатор записи
-    patient_id INT NOT NULL REFERENCES users(id),    -- Идентификатор пациента
-    doctor_id INT NOT NULL REFERENCES users(id),     -- Идентификатор врача
-    hospital_id INT NOT NULL REFERENCES hospitals(hospital_id), -- Идентификатор больницы
-    time_and_date TIMESTAMP NOT NULL            -- Дата и время приёма
+CREATE TABLE IF NOT EXISTS doctors (
+    doctor_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    education TEXT NOT NULL,
+    specialty TEXT NOT NULL,
+    experience INT NOT NULL,
+    hospital_ids INTEGER[]
+);
+
+CREATE TABLE IF NOT EXISTS records (
+    record_id SERIAL PRIMARY KEY,
+    doctor_id INT NOT NULL REFERENCES doctors(doctor_id),
+    appointment_date DATE NOT NULL CHECK (EXTRACT(YEAR FROM appointment_date) >= 2025),
+    appointment_time TIME NOT NULL CHECK (EXTRACT(HOUR FROM appointment_time) BETWEEN 0 AND 23 AND EXTRACT(MINUTE FROM appointment_time) BETWEEN 0 AND 59),
+    hospital_id INT NOT NULL REFERENCES hospitals(hospital_id),
+    cabinet_number INT NOT NULL CHECK (cabinet_number >= 1),
+    patient_id INT REFERENCES users(id)
 );

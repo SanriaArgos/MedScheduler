@@ -1,5 +1,5 @@
 # Используем официальный образ PostgreSQL
-FROM postgres:13
+FROM postgres:14
 
 # Копируем SQL-файл для создания таблиц
 COPY create_tables.sql /docker-entrypoint-initdb.d/

@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   db:
     build:
@@ -7,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: medscheduler
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"  # Пробрасываем порт 5432 на хост
     volumes:
@@ -21,8 +20,8 @@ services:
       - "8080:8080"  # Пробрасываем порт сервера
     environment:
       DB_HOST: db  # Имя сервиса базы данных (внутри Docker Compose)
-      DB_USER: postgres  # Имя пользователя
-      DB_PASSWORD: 123    # Пароль
+      DB_USER: meduser  # Имя пользователя для подключения из приложения
+      DB_PASSWORD: 3671920119  # Пароль
       DB_NAME: medscheduler  # Имя базы данных
     depends_on:
       - db  # Сервер зависит от базы данных
