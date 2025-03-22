@@ -3,10 +3,12 @@
 
 #include <nlohmann/json.hpp>
 #include "../database.hpp"
+#include <boost/beast/http.hpp>
 
+namespace http = boost::beast::http;
 using json = nlohmann::json;
 
 // Функция для получения данных о пользователях в формате JSON
-json display_users_table(database_handler &db);
+void display_users_table(const json &data, http::response<http::string_body> &res, database_handler &db_handler);
 
 #endif  // DISPLAY_USERS_HPP_

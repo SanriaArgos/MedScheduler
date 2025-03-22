@@ -284,14 +284,9 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/nlohmann/ordered_map.hpp \
  /usr/include/nlohmann/detail/macro_unscope.hpp \
  /usr/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
- /home/victoria/MedScheduler/server+database/server/src/../include/handlers/login.hpp \
- /home/victoria/MedScheduler/server+database/server/src/../include/system_init.hpp \
- /home/victoria/MedScheduler/server+database/server/src/../include/server.hpp \
- /home/victoria/MedScheduler/server+database/server/src/../include/database.hpp \
- /usr/include/boost/asio.hpp \
- /usr/include/boost/asio/associated_allocator.hpp \
- /usr/include/boost/asio/detail/config.hpp /usr/include/boost/config.hpp \
- /usr/include/boost/config/user.hpp \
+ /usr/include/boost/beast/http.hpp \
+ /usr/include/boost/beast/core/detail/config.hpp \
+ /usr/include/boost/config.hpp /usr/include/boost/config/user.hpp \
  /usr/include/boost/config/detail/select_compiler_config.hpp \
  /usr/include/boost/config/compiler/gcc.hpp \
  /usr/include/boost/config/detail/select_stdlib_config.hpp \
@@ -309,16 +304,363 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/config/detail/posix_features.hpp \
  /usr/include/boost/config/detail/suffix.hpp \
  /usr/include/boost/config/helper_macros.hpp \
- /usr/include/boost/version.hpp /usr/include/linux/version.h \
+ /usr/include/boost/version.hpp /usr/include/boost/core/ignore_unused.hpp \
+ /usr/include/boost/static_assert.hpp \
+ /usr/include/boost/detail/workaround.hpp \
+ /usr/include/boost/config/workaround.hpp \
+ /usr/include/boost/beast/http/basic_dynamic_body.hpp \
+ /usr/include/boost/beast/core/buffer_traits.hpp \
+ /usr/include/boost/beast/core/detail/buffer_traits.hpp \
+ /usr/include/boost/asio/buffer.hpp \
+ /usr/include/boost/asio/detail/config.hpp /usr/include/linux/version.h \
+ /usr/include/boost/asio/detail/array_fwd.hpp \
+ /usr/include/boost/asio/detail/memory.hpp \
+ /usr/include/boost/asio/detail/string_view.hpp \
+ /usr/include/boost/asio/detail/throw_exception.hpp \
+ /usr/include/boost/throw_exception.hpp \
+ /usr/include/boost/assert/source_location.hpp \
+ /usr/include/boost/current_function.hpp /usr/include/boost/cstdint.hpp \
+ /usr/include/boost/exception/exception.hpp \
  /usr/include/boost/asio/detail/type_traits.hpp \
  /usr/include/boost/asio/detail/push_options.hpp \
  /usr/include/boost/asio/detail/pop_options.hpp \
- /usr/include/boost/asio/associated_executor.hpp \
+ /usr/include/boost/asio/detail/is_buffer_sequence.hpp \
+ /usr/include/boost/type_traits/make_void.hpp \
+ /usr/include/boost/beast/core/detail/static_const.hpp \
+ /usr/include/boost/mp11/function.hpp \
+ /usr/include/boost/mp11/integral.hpp /usr/include/boost/mp11/version.hpp \
+ /usr/include/boost/mp11/utility.hpp \
+ /usr/include/boost/mp11/detail/mp_list.hpp \
+ /usr/include/boost/mp11/detail/mp_fold.hpp \
+ /usr/include/boost/mp11/detail/config.hpp \
+ /usr/include/boost/mp11/detail/mp_count.hpp \
+ /usr/include/boost/mp11/detail/mp_plus.hpp \
+ /usr/include/boost/mp11/detail/mp_min_element.hpp \
+ /usr/include/boost/mp11/list.hpp \
+ /usr/include/boost/mp11/detail/mp_is_list.hpp \
+ /usr/include/boost/mp11/detail/mp_append.hpp \
+ /usr/include/boost/mp11/detail/mp_void.hpp \
+ /usr/include/boost/beast/core/detail/buffer.hpp \
+ /usr/include/boost/beast/core/error.hpp \
+ /usr/include/boost/system/error_code.hpp \
+ /usr/include/boost/system/api_config.hpp \
+ /usr/include/boost/system/detail/config.hpp \
+ /usr/include/boost/cerrno.hpp \
+ /usr/include/boost/system/detail/generic_category.hpp \
+ /usr/include/boost/system/detail/system_category_posix.hpp \
+ /usr/include/boost/system/detail/std_interoperability.hpp \
+ /usr/include/c++/11/mutex /usr/include/c++/11/bits/std_mutex.h \
+ /usr/include/c++/11/bits/unique_lock.h \
+ /usr/include/boost/system/system_error.hpp \
+ /usr/include/boost/beast/core/impl/error.hpp \
+ /usr/include/boost/beast/core/impl/error.ipp \
+ /usr/include/boost/optional.hpp /usr/include/boost/optional/optional.hpp \
+ /usr/include/boost/assert.hpp /usr/include/boost/core/addressof.hpp \
+ /usr/include/boost/core/enable_if.hpp \
+ /usr/include/boost/core/explicit_operator_bool.hpp \
+ /usr/include/boost/core/swap.hpp \
+ /usr/include/boost/optional/bad_optional_access.hpp \
+ /usr/include/boost/type.hpp \
+ /usr/include/boost/type_traits/alignment_of.hpp \
+ /usr/include/boost/type_traits/intrinsics.hpp \
+ /usr/include/boost/type_traits/detail/config.hpp \
+ /usr/include/boost/type_traits/integral_constant.hpp \
+ /usr/include/boost/type_traits/conditional.hpp \
+ /usr/include/boost/type_traits/has_nothrow_constructor.hpp \
+ /usr/include/boost/type_traits/is_default_constructible.hpp \
+ /usr/include/boost/type_traits/is_complete.hpp \
+ /usr/include/boost/type_traits/declval.hpp \
+ /usr/include/boost/type_traits/add_rvalue_reference.hpp \
+ /usr/include/boost/type_traits/is_void.hpp \
+ /usr/include/boost/type_traits/is_reference.hpp \
+ /usr/include/boost/type_traits/is_lvalue_reference.hpp \
+ /usr/include/boost/type_traits/is_rvalue_reference.hpp \
+ /usr/include/boost/type_traits/remove_reference.hpp \
+ /usr/include/boost/type_traits/is_function.hpp \
+ /usr/include/boost/type_traits/detail/is_function_cxx_11.hpp \
+ /usr/include/boost/type_traits/detail/yes_no_type.hpp \
+ /usr/include/boost/type_traits/type_with_alignment.hpp \
+ /usr/include/boost/type_traits/is_pod.hpp \
+ /usr/include/boost/type_traits/is_scalar.hpp \
+ /usr/include/boost/type_traits/is_arithmetic.hpp \
+ /usr/include/boost/type_traits/is_integral.hpp \
+ /usr/include/boost/type_traits/is_floating_point.hpp \
+ /usr/include/boost/type_traits/is_enum.hpp \
+ /usr/include/boost/type_traits/is_pointer.hpp \
+ /usr/include/boost/type_traits/is_member_pointer.hpp \
+ /usr/include/boost/type_traits/is_member_function_pointer.hpp \
+ /usr/include/boost/type_traits/detail/is_member_function_pointer_cxx_11.hpp \
+ /usr/include/boost/type_traits/remove_const.hpp \
+ /usr/include/boost/type_traits/decay.hpp \
+ /usr/include/boost/type_traits/is_array.hpp \
+ /usr/include/boost/type_traits/remove_bounds.hpp \
+ /usr/include/boost/type_traits/remove_extent.hpp \
+ /usr/include/boost/type_traits/add_pointer.hpp \
+ /usr/include/boost/type_traits/remove_cv.hpp \
+ /usr/include/boost/type_traits/is_base_of.hpp \
+ /usr/include/boost/type_traits/is_base_and_derived.hpp \
+ /usr/include/boost/type_traits/is_same.hpp \
+ /usr/include/boost/type_traits/is_class.hpp \
+ /usr/include/boost/type_traits/is_const.hpp \
+ /usr/include/boost/type_traits/is_constructible.hpp \
+ /usr/include/boost/type_traits/is_destructible.hpp \
+ /usr/include/boost/type_traits/is_nothrow_move_assignable.hpp \
+ /usr/include/boost/type_traits/has_trivial_move_assign.hpp \
+ /usr/include/boost/type_traits/is_assignable.hpp \
+ /usr/include/boost/type_traits/is_volatile.hpp \
+ /usr/include/boost/type_traits/has_nothrow_assign.hpp \
+ /usr/include/boost/type_traits/enable_if.hpp \
+ /usr/include/boost/type_traits/is_nothrow_move_constructible.hpp \
+ /usr/include/boost/move/utility.hpp \
+ /usr/include/boost/move/detail/config_begin.hpp \
+ /usr/include/boost/move/detail/workaround.hpp \
+ /usr/include/boost/move/utility_core.hpp \
+ /usr/include/boost/move/core.hpp \
+ /usr/include/boost/move/detail/config_end.hpp \
+ /usr/include/boost/move/detail/meta_utils.hpp \
+ /usr/include/boost/move/detail/meta_utils_core.hpp \
+ /usr/include/boost/move/traits.hpp \
+ /usr/include/boost/move/detail/type_traits.hpp \
+ /usr/include/boost/none.hpp /usr/include/boost/none_t.hpp \
+ /usr/include/boost/utility/compare_pointees.hpp \
+ /usr/include/boost/utility/result_of.hpp \
+ /usr/include/boost/preprocessor/cat.hpp \
+ /usr/include/boost/preprocessor/config/config.hpp \
+ /usr/include/boost/preprocessor/iteration/iterate.hpp \
+ /usr/include/boost/preprocessor/arithmetic/dec.hpp \
+ /usr/include/boost/preprocessor/arithmetic/inc.hpp \
+ /usr/include/boost/preprocessor/array/elem.hpp \
+ /usr/include/boost/preprocessor/array/data.hpp \
+ /usr/include/boost/preprocessor/tuple/elem.hpp \
+ /usr/include/boost/preprocessor/facilities/expand.hpp \
+ /usr/include/boost/preprocessor/facilities/overload.hpp \
+ /usr/include/boost/preprocessor/variadic/size.hpp \
+ /usr/include/boost/preprocessor/tuple/rem.hpp \
+ /usr/include/boost/preprocessor/tuple/detail/is_single_return.hpp \
+ /usr/include/boost/preprocessor/variadic/elem.hpp \
+ /usr/include/boost/preprocessor/array/size.hpp \
+ /usr/include/boost/preprocessor/slot/slot.hpp \
+ /usr/include/boost/preprocessor/slot/detail/def.hpp \
+ /usr/include/boost/preprocessor/repetition/enum_params.hpp \
+ /usr/include/boost/preprocessor/punctuation/comma_if.hpp \
+ /usr/include/boost/preprocessor/control/if.hpp \
+ /usr/include/boost/preprocessor/control/iif.hpp \
+ /usr/include/boost/preprocessor/logical/bool.hpp \
+ /usr/include/boost/preprocessor/facilities/empty.hpp \
+ /usr/include/boost/preprocessor/punctuation/comma.hpp \
+ /usr/include/boost/preprocessor/repetition/repeat.hpp \
+ /usr/include/boost/preprocessor/debug/error.hpp \
+ /usr/include/boost/preprocessor/detail/auto_rec.hpp \
+ /usr/include/boost/preprocessor/tuple/eat.hpp \
+ /usr/include/boost/preprocessor/repetition/enum_trailing_params.hpp \
+ /usr/include/boost/preprocessor/repetition/enum_binary_params.hpp \
+ /usr/include/boost/preprocessor/repetition/enum_shifted_params.hpp \
+ /usr/include/boost/preprocessor/facilities/intercept.hpp \
+ /usr/include/boost/type_traits/type_identity.hpp \
+ /usr/include/boost/preprocessor/iteration/detail/iter/forward1.hpp \
+ /usr/include/boost/preprocessor/iteration/detail/bounds/lower1.hpp \
+ /usr/include/boost/preprocessor/slot/detail/shared.hpp \
+ /usr/include/boost/preprocessor/iteration/detail/bounds/upper1.hpp \
+ /usr/include/boost/utility/detail/result_of_iterate.hpp \
+ /usr/include/boost/optional/optional_fwd.hpp \
+ /usr/include/boost/optional/detail/optional_config.hpp \
+ /usr/include/boost/optional/detail/optional_factory_support.hpp \
+ /usr/include/boost/optional/detail/optional_aligned_storage.hpp \
+ /usr/include/boost/optional/detail/optional_trivially_copyable_base.hpp \
+ /usr/include/boost/optional/detail/optional_reference_spec.hpp \
+ /usr/include/boost/optional/detail/optional_relops.hpp \
+ /usr/include/boost/optional/detail/optional_swap.hpp \
+ /usr/include/boost/beast/core/detail/clamp.hpp \
+ /usr/include/boost/beast/http/error.hpp \
+ /usr/include/boost/beast/http/impl/error.hpp \
+ /usr/include/boost/beast/http/impl/error.ipp \
+ /usr/include/boost/beast/http/message.hpp \
+ /usr/include/boost/beast/http/fields.hpp \
+ /usr/include/boost/beast/core/string.hpp \
+ /usr/include/boost/beast/core/string_type.hpp \
+ /usr/include/boost/utility/string_view.hpp \
+ /usr/include/boost/io/ostream_put.hpp \
+ /usr/include/boost/io/detail/buffer_fill.hpp \
+ /usr/include/boost/io/detail/ostream_guard.hpp \
+ /usr/include/boost/utility/string_view_fwd.hpp \
+ /usr/include/boost/container_hash/hash_fwd.hpp \
+ /usr/include/boost/beast/core/impl/string.ipp \
+ /usr/include/boost/beast/core/detail/string.hpp \
+ /usr/include/boost/beast/core/detail/allocator.hpp \
+ /usr/include/boost/beast/http/field.hpp \
+ /usr/include/boost/beast/http/impl/field.ipp \
+ /usr/include/boost/core/empty_value.hpp \
+ /usr/include/boost/intrusive/list.hpp \
+ /usr/include/boost/intrusive/detail/config_begin.hpp \
+ /usr/include/boost/intrusive/intrusive_fwd.hpp \
+ /usr/include/boost/intrusive/link_mode.hpp \
+ /usr/include/boost/intrusive/detail/workaround.hpp \
+ /usr/include/boost/intrusive/detail/assert.hpp \
+ /usr/include/boost/intrusive/list_hook.hpp \
+ /usr/include/boost/intrusive/detail/list_node.hpp \
+ /usr/include/boost/intrusive/pointer_rebind.hpp \
+ /usr/include/boost/intrusive/circular_list_algorithms.hpp \
+ /usr/include/boost/intrusive/detail/algo_type.hpp \
+ /usr/include/boost/core/no_exceptions_support.hpp \
+ /usr/include/boost/intrusive/detail/config_end.hpp \
+ /usr/include/boost/intrusive/options.hpp \
+ /usr/include/boost/intrusive/pack_options.hpp \
+ /usr/include/boost/intrusive/detail/generic_hook.hpp \
+ /usr/include/boost/intrusive/pointer_traits.hpp \
+ /usr/include/boost/move/detail/pointer_element.hpp \
+ /usr/include/boost/intrusive/detail/mpl.hpp \
+ /usr/include/boost/intrusive/detail/node_holder.hpp \
+ /usr/include/boost/intrusive/detail/get_value_traits.hpp \
+ /usr/include/boost/intrusive/detail/hook_traits.hpp \
+ /usr/include/boost/intrusive/detail/parent_from_member.hpp \
+ /usr/include/boost/move/detail/to_raw_pointer.hpp \
+ /usr/include/boost/intrusive/detail/is_stateful_value_traits.hpp \
+ /usr/include/boost/intrusive/detail/function_detector.hpp \
+ /usr/include/boost/intrusive/detail/default_header_holder.hpp \
+ /usr/include/boost/intrusive/detail/reverse_iterator.hpp \
+ /usr/include/boost/intrusive/detail/iterator.hpp \
+ /usr/include/boost/intrusive/detail/std_fwd.hpp \
+ /usr/include/boost/move/detail/std_ns_begin.hpp \
+ /usr/include/boost/move/detail/std_ns_end.hpp \
+ /usr/include/boost/move/detail/iterator_traits.hpp \
+ /usr/include/boost/intrusive/detail/uncast.hpp \
+ /usr/include/boost/intrusive/detail/list_iterator.hpp \
+ /usr/include/boost/intrusive/detail/iiterator.hpp \
+ /usr/include/boost/intrusive/detail/array_initializer.hpp \
+ /usr/include/boost/intrusive/detail/exception_disposer.hpp \
+ /usr/include/boost/intrusive/detail/equal_to_value.hpp \
+ /usr/include/boost/intrusive/detail/key_nodeptr_comp.hpp \
+ /usr/include/boost/intrusive/detail/ebo_functor_holder.hpp \
+ /usr/include/boost/intrusive/detail/tree_value_compare.hpp \
+ /usr/include/boost/intrusive/detail/simple_disposers.hpp \
+ /usr/include/boost/intrusive/detail/size_holder.hpp \
+ /usr/include/boost/intrusive/detail/algorithm.hpp \
+ /usr/include/boost/intrusive/detail/minimal_less_equal_header.hpp \
+ /usr/include/boost/intrusive/set.hpp \
+ /usr/include/boost/intrusive/rbtree.hpp \
+ /usr/include/boost/intrusive/detail/minimal_pair_header.hpp \
+ /usr/include/boost/intrusive/set_hook.hpp \
+ /usr/include/boost/intrusive/detail/rbtree_node.hpp \
+ /usr/include/boost/intrusive/rbtree_algorithms.hpp \
+ /usr/include/boost/intrusive/bstree_algorithms.hpp \
+ /usr/include/boost/intrusive/detail/bstree_algorithms_base.hpp \
+ /usr/include/boost/intrusive/detail/math.hpp /usr/include/c++/11/climits \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h \
+ /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+ /usr/include/linux/limits.h \
+ /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
+ /usr/include/boost/intrusive/pointer_plus_bits.hpp \
+ /usr/include/boost/intrusive/detail/tree_node.hpp \
+ /usr/include/boost/intrusive/bstree.hpp \
+ /usr/include/boost/intrusive/bs_set_hook.hpp \
+ /usr/include/boost/intrusive/detail/tree_iterator.hpp \
+ /usr/include/boost/intrusive/detail/empty_node_checker.hpp \
+ /usr/include/boost/intrusive/detail/node_cloner_disposer.hpp \
+ /usr/include/boost/intrusive/parent_from_member.hpp \
+ /usr/include/boost/move/adl_move_swap.hpp \
+ /usr/include/boost/beast/http/impl/fields.hpp \
+ /usr/include/boost/beast/core/buffers_cat.hpp \
+ /usr/include/boost/beast/core/detail/tuple.hpp \
+ /usr/include/boost/mp11/integer_sequence.hpp \
+ /usr/include/boost/mp11/algorithm.hpp /usr/include/boost/mp11/set.hpp \
+ /usr/include/boost/mp11/detail/mp_copy_if.hpp \
+ /usr/include/boost/mp11/detail/mp_remove_if.hpp \
+ /usr/include/boost/mp11/detail/mp_map_find.hpp \
+ /usr/include/boost/mp11/detail/mp_with_index.hpp \
+ /usr/include/boost/type_traits/copy_cv.hpp \
+ /usr/include/boost/type_traits/add_const.hpp \
+ /usr/include/boost/type_traits/add_volatile.hpp \
+ /usr/include/boost/beast/core/detail/type_traits.hpp \
+ /usr/include/boost/beast/core/impl/buffers_cat.hpp \
+ /usr/include/boost/beast/core/detail/variant.hpp \
+ /usr/include/boost/beast/core/detail/buffers_ref.hpp \
+ /usr/include/boost/beast/core/detail/static_string.hpp \
+ /usr/include/boost/beast/core/detail/temporary_buffer.hpp \
+ /usr/include/boost/beast/core/detail/impl/temporary_buffer.ipp \
+ /usr/include/boost/core/exchange.hpp \
+ /usr/include/boost/beast/core/static_string.hpp \
+ /usr/include/boost/beast/core/impl/static_string.hpp \
+ /usr/include/boost/beast/http/verb.hpp \
+ /usr/include/boost/beast/http/impl/verb.ipp \
+ /usr/include/boost/beast/http/rfc7230.hpp \
+ /usr/include/boost/beast/http/detail/rfc7230.hpp \
+ /usr/include/boost/beast/http/detail/rfc7230.ipp \
+ /usr/include/boost/beast/http/detail/basic_parsed_list.hpp \
+ /usr/include/boost/beast/http/impl/rfc7230.hpp \
+ /usr/include/boost/beast/http/impl/rfc7230.ipp \
+ /usr/include/boost/beast/http/status.hpp \
+ /usr/include/boost/beast/http/impl/status.ipp \
+ /usr/include/boost/beast/http/chunk_encode.hpp \
+ /usr/include/boost/beast/http/type_traits.hpp \
+ /usr/include/boost/beast/http/detail/type_traits.hpp \
+ /usr/include/boost/beast/http/detail/chunk_encode.hpp \
+ /usr/include/boost/beast/http/impl/chunk_encode.hpp \
+ /usr/include/boost/beast/core/detail/varint.hpp \
+ /usr/include/boost/beast/http/impl/fields.ipp \
+ /usr/include/boost/beast/http/impl/message.hpp \
+ /usr/include/boost/beast/http/basic_file_body.hpp \
+ /usr/include/boost/beast/core/file_base.hpp \
+ /usr/include/boost/beast/http/basic_parser.hpp \
+ /usr/include/boost/beast/http/detail/basic_parser.hpp \
+ /usr/include/boost/beast/core/detail/char_buffer.hpp \
+ /usr/include/boost/beast/http/detail/basic_parser.ipp \
+ /usr/include/boost/beast/http/impl/basic_parser.hpp \
+ /usr/include/boost/make_unique.hpp \
+ /usr/include/boost/smart_ptr/make_unique.hpp \
+ /usr/include/boost/type_traits/is_unbounded_array.hpp \
+ /usr/include/boost/beast/http/impl/basic_parser.ipp \
+ /usr/include/boost/beast/http/buffer_body.hpp \
+ /usr/include/boost/beast/http/dynamic_body.hpp \
+ /usr/include/boost/beast/core/multi_buffer.hpp \
+ /usr/include/boost/beast/core/impl/multi_buffer.hpp \
+ /usr/include/boost/beast/http/empty_body.hpp \
+ /usr/include/boost/beast/http/file_body.hpp \
+ /usr/include/boost/beast/core/file.hpp \
+ /usr/include/boost/beast/core/file_posix.hpp \
+ /usr/include/boost/beast/core/impl/file_posix.ipp /usr/include/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl.h \
+ /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
+ /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/bits/stat.h \
+ /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
+ /usr/include/x86_64-linux-gnu/sys/uio.h \
+ /usr/include/x86_64-linux-gnu/bits/uio-ext.h \
+ /usr/include/x86_64-linux-gnu/sys/stat.h \
+ /usr/include/x86_64-linux-gnu/bits/statx.h /usr/include/linux/stat.h \
+ /usr/include/linux/types.h /usr/include/x86_64-linux-gnu/asm/types.h \
+ /usr/include/asm-generic/types.h /usr/include/asm-generic/int-ll64.h \
+ /usr/include/x86_64-linux-gnu/asm/bitsperlong.h \
+ /usr/include/asm-generic/bitsperlong.h /usr/include/linux/posix_types.h \
+ /usr/include/linux/stddef.h \
+ /usr/include/x86_64-linux-gnu/asm/posix_types.h \
+ /usr/include/x86_64-linux-gnu/asm/posix_types_64.h \
+ /usr/include/asm-generic/posix_types.h \
+ /usr/include/x86_64-linux-gnu/bits/statx-generic.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_statx_timestamp.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_statx.h \
+ /usr/include/boost/beast/core/file_stdio.hpp \
+ /usr/include/boost/beast/core/impl/file_stdio.ipp \
+ /usr/include/boost/beast/core/detail/win32_unicode_path.hpp \
+ /usr/include/boost/beast/core/file_win32.hpp \
+ /usr/include/boost/beast/http/impl/file_body_win32.hpp \
+ /usr/include/boost/beast/http/parser.hpp \
+ /usr/include/boost/beast/http/impl/parser.hpp \
+ /usr/include/boost/beast/http/read.hpp \
+ /usr/include/boost/beast/core/stream_traits.hpp \
+ /usr/include/boost/beast/core/detail/stream_traits.hpp \
+ /usr/include/boost/asio/basic_socket.hpp \
+ /usr/include/boost/asio/any_io_executor.hpp \
+ /usr/include/boost/asio/execution.hpp \
+ /usr/include/boost/asio/execution/allocator.hpp \
  /usr/include/boost/asio/execution/executor.hpp \
  /usr/include/boost/asio/execution/execute.hpp \
  /usr/include/boost/asio/execution/detail/as_invocable.hpp \
  /usr/include/boost/asio/detail/atomic_count.hpp \
- /usr/include/c++/11/atomic /usr/include/boost/asio/detail/memory.hpp \
+ /usr/include/c++/11/atomic \
  /usr/include/boost/asio/execution/receiver_invocation_error.hpp \
  /usr/include/boost/asio/execution/impl/receiver_invocation_error.ipp \
  /usr/include/boost/asio/execution/set_done.hpp \
@@ -336,11 +678,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/traits/execute_free.hpp \
  /usr/include/boost/asio/execution/invocable_archetype.hpp \
  /usr/include/boost/asio/traits/equality_comparable.hpp \
- /usr/include/boost/asio/is_executor.hpp \
- /usr/include/boost/asio/detail/is_executor.hpp \
- /usr/include/boost/asio/system_executor.hpp \
- /usr/include/boost/asio/execution.hpp \
- /usr/include/boost/asio/execution/allocator.hpp \
  /usr/include/boost/asio/execution/scheduler.hpp \
  /usr/include/boost/asio/execution/schedule.hpp \
  /usr/include/boost/asio/traits/schedule_member.hpp \
@@ -360,38 +697,24 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/traits/query_static_constexpr_member.hpp \
  /usr/include/boost/asio/traits/static_query.hpp \
  /usr/include/boost/asio/execution/any_executor.hpp \
- /usr/include/boost/asio/detail/assert.hpp /usr/include/boost/assert.hpp \
+ /usr/include/boost/asio/detail/assert.hpp \
  /usr/include/boost/asio/detail/cstddef.hpp \
  /usr/include/boost/asio/detail/executor_function.hpp \
  /usr/include/boost/asio/detail/handler_alloc_helpers.hpp \
  /usr/include/boost/asio/detail/noncopyable.hpp \
  /usr/include/boost/asio/detail/recycling_allocator.hpp \
  /usr/include/boost/asio/detail/thread_context.hpp \
- /usr/include/c++/11/climits \
- /usr/lib/gcc/x86_64-linux-gnu/11/include/limits.h \
- /usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h \
- /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
- /usr/include/x86_64-linux-gnu/bits/local_lim.h \
- /usr/include/linux/limits.h \
- /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
- /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
- /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
  /usr/include/boost/asio/detail/call_stack.hpp \
  /usr/include/boost/asio/detail/tss_ptr.hpp \
  /usr/include/boost/asio/detail/keyword_tss_ptr.hpp \
  /usr/include/boost/asio/detail/thread_info_base.hpp \
  /usr/include/boost/asio/multiple_exceptions.hpp \
  /usr/include/boost/asio/impl/multiple_exceptions.ipp \
+ /usr/include/boost/asio/associated_allocator.hpp \
  /usr/include/boost/asio/handler_alloc_hook.hpp \
  /usr/include/boost/asio/impl/handler_alloc_hook.ipp \
  /usr/include/boost/asio/detail/non_const_lvalue.hpp \
  /usr/include/boost/asio/detail/scoped_ptr.hpp \
- /usr/include/boost/asio/detail/throw_exception.hpp \
- /usr/include/boost/throw_exception.hpp \
- /usr/include/boost/assert/source_location.hpp \
- /usr/include/boost/current_function.hpp /usr/include/boost/cstdint.hpp \
- /usr/include/boost/config/workaround.hpp \
- /usr/include/boost/exception/exception.hpp \
  /usr/include/boost/asio/execution/bad_executor.hpp \
  /usr/include/boost/asio/execution/impl/bad_executor.ipp \
  /usr/include/boost/asio/execution/blocking.hpp \
@@ -410,31 +733,14 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/detail/posix_event.hpp \
  /usr/include/boost/asio/detail/impl/posix_event.ipp \
  /usr/include/boost/asio/detail/throw_error.hpp \
- /usr/include/boost/system/error_code.hpp \
- /usr/include/boost/system/api_config.hpp \
- /usr/include/boost/system/detail/config.hpp \
- /usr/include/boost/cerrno.hpp \
- /usr/include/boost/system/detail/generic_category.hpp \
- /usr/include/boost/system/detail/system_category_posix.hpp \
- /usr/include/boost/system/detail/std_interoperability.hpp \
- /usr/include/c++/11/mutex /usr/include/c++/11/bits/std_mutex.h \
- /usr/include/c++/11/bits/unique_lock.h \
  /usr/include/boost/asio/detail/impl/throw_error.ipp \
- /usr/include/boost/system/system_error.hpp \
  /usr/include/boost/asio/error.hpp /usr/include/netdb.h \
  /usr/include/netinet/in.h /usr/include/x86_64-linux-gnu/sys/socket.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
  /usr/include/x86_64-linux-gnu/bits/socket.h \
  /usr/include/x86_64-linux-gnu/bits/socket_type.h \
  /usr/include/x86_64-linux-gnu/bits/sockaddr.h \
  /usr/include/x86_64-linux-gnu/asm/socket.h \
- /usr/include/asm-generic/socket.h /usr/include/linux/posix_types.h \
- /usr/include/linux/stddef.h \
- /usr/include/x86_64-linux-gnu/asm/posix_types.h \
- /usr/include/x86_64-linux-gnu/asm/posix_types_64.h \
- /usr/include/asm-generic/posix_types.h \
- /usr/include/x86_64-linux-gnu/asm/bitsperlong.h \
- /usr/include/asm-generic/bitsperlong.h \
+ /usr/include/asm-generic/socket.h \
  /usr/include/x86_64-linux-gnu/asm/sockios.h \
  /usr/include/asm-generic/sockios.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h \
@@ -463,6 +769,22 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/execution/detail/submit_receiver.hpp \
  /usr/include/boost/asio/traits/submit_member.hpp \
  /usr/include/boost/asio/traits/submit_free.hpp \
+ /usr/include/boost/asio/execution_context.hpp \
+ /usr/include/boost/asio/impl/execution_context.hpp \
+ /usr/include/boost/asio/detail/handler_type_requirements.hpp \
+ /usr/include/boost/asio/async_result.hpp \
+ /usr/include/boost/asio/detail/service_registry.hpp \
+ /usr/include/boost/asio/detail/impl/service_registry.hpp \
+ /usr/include/boost/asio/detail/impl/service_registry.ipp \
+ /usr/include/boost/asio/impl/execution_context.ipp \
+ /usr/include/boost/asio/detail/io_object_impl.hpp \
+ /usr/include/boost/asio/io_context.hpp \
+ /usr/include/boost/asio/detail/wrapped_handler.hpp \
+ /usr/include/boost/asio/detail/bind_handler.hpp \
+ /usr/include/boost/asio/associated_executor.hpp \
+ /usr/include/boost/asio/is_executor.hpp \
+ /usr/include/boost/asio/detail/is_executor.hpp \
+ /usr/include/boost/asio/system_executor.hpp \
  /usr/include/boost/asio/impl/system_executor.hpp \
  /usr/include/boost/asio/detail/executor_op.hpp \
  /usr/include/boost/asio/detail/fenced_block.hpp \
@@ -477,14 +799,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/detail/posix_global.hpp \
  /usr/include/boost/asio/system_context.hpp \
  /usr/include/boost/asio/detail/scheduler.hpp \
- /usr/include/boost/asio/execution_context.hpp \
- /usr/include/boost/asio/impl/execution_context.hpp \
- /usr/include/boost/asio/detail/handler_type_requirements.hpp \
- /usr/include/boost/asio/async_result.hpp \
- /usr/include/boost/asio/detail/service_registry.hpp \
- /usr/include/boost/asio/detail/impl/service_registry.hpp \
- /usr/include/boost/asio/detail/impl/service_registry.ipp \
- /usr/include/boost/asio/impl/execution_context.ipp \
  /usr/include/boost/asio/detail/conditionally_enabled_event.hpp \
  /usr/include/boost/asio/detail/conditionally_enabled_mutex.hpp \
  /usr/include/boost/asio/detail/null_event.hpp \
@@ -504,18 +818,7 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/detail/select_interrupter.hpp \
  /usr/include/boost/asio/detail/eventfd_select_interrupter.hpp \
  /usr/include/boost/asio/detail/impl/eventfd_select_interrupter.ipp \
- /usr/include/x86_64-linux-gnu/sys/stat.h \
- /usr/include/x86_64-linux-gnu/bits/stat.h \
- /usr/include/x86_64-linux-gnu/bits/struct_stat.h \
- /usr/include/x86_64-linux-gnu/bits/statx.h /usr/include/linux/stat.h \
- /usr/include/linux/types.h /usr/include/x86_64-linux-gnu/asm/types.h \
- /usr/include/asm-generic/types.h /usr/include/asm-generic/int-ll64.h \
- /usr/include/x86_64-linux-gnu/bits/statx-generic.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_statx_timestamp.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_statx.h \
- /usr/include/fcntl.h /usr/include/x86_64-linux-gnu/bits/fcntl.h \
- /usr/include/x86_64-linux-gnu/bits/fcntl-linux.h \
- /usr/include/linux/falloc.h /usr/include/x86_64-linux-gnu/sys/eventfd.h \
+ /usr/include/x86_64-linux-gnu/sys/eventfd.h \
  /usr/include/x86_64-linux-gnu/bits/eventfd.h \
  /usr/include/boost/asio/detail/cstdint.hpp \
  /usr/include/boost/asio/detail/socket_types.hpp \
@@ -529,8 +832,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/sys/ttydefaults.h /usr/include/poll.h \
  /usr/include/x86_64-linux-gnu/sys/poll.h \
  /usr/include/x86_64-linux-gnu/bits/poll.h \
- /usr/include/x86_64-linux-gnu/sys/uio.h \
- /usr/include/x86_64-linux-gnu/bits/uio-ext.h \
  /usr/include/x86_64-linux-gnu/sys/un.h /usr/include/netinet/tcp.h \
  /usr/include/arpa/inet.h /usr/include/net/if.h \
  /usr/include/boost/asio/detail/timer_queue_base.hpp \
@@ -569,14 +870,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/detail/thread_group.hpp \
  /usr/include/boost/asio/impl/system_context.hpp \
  /usr/include/boost/asio/impl/system_context.ipp \
- /usr/include/boost/asio/awaitable.hpp \
- /usr/include/boost/asio/basic_datagram_socket.hpp \
- /usr/include/boost/asio/basic_socket.hpp \
- /usr/include/boost/asio/any_io_executor.hpp \
- /usr/include/boost/asio/detail/io_object_impl.hpp \
- /usr/include/boost/asio/io_context.hpp \
- /usr/include/boost/asio/detail/wrapped_handler.hpp \
- /usr/include/boost/asio/detail/bind_handler.hpp \
  /usr/include/boost/asio/detail/handler_cont_helpers.hpp \
  /usr/include/boost/asio/handler_continuation_hook.hpp \
  /usr/include/boost/asio/detail/chrono.hpp \
@@ -591,11 +884,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/detail/io_control.hpp \
  /usr/include/boost/asio/detail/socket_option.hpp \
  /usr/include/boost/asio/detail/reactive_socket_service.hpp \
- /usr/include/boost/asio/buffer.hpp \
- /usr/include/boost/asio/detail/array_fwd.hpp \
- /usr/include/boost/asio/detail/string_view.hpp \
- /usr/include/boost/detail/workaround.hpp \
- /usr/include/boost/asio/detail/is_buffer_sequence.hpp \
  /usr/include/boost/asio/detail/buffer_sequence_adapter.hpp \
  /usr/include/boost/asio/detail/impl/buffer_sequence_adapter.ipp \
  /usr/include/boost/asio/detail/reactive_null_buffers_op.hpp \
@@ -612,6 +900,155 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/detail/reactive_socket_send_op.hpp \
  /usr/include/boost/asio/detail/reactive_wait_op.hpp \
  /usr/include/boost/asio/detail/impl/reactive_socket_service_base.ipp \
+ /usr/include/boost/beast/http/impl/read.hpp \
+ /usr/include/boost/beast/core/async_base.hpp \
+ /usr/include/boost/beast/core/bind_handler.hpp \
+ /usr/include/boost/beast/core/detail/bind_handler.hpp \
+ /usr/include/boost/is_placeholder.hpp \
+ /usr/include/boost/beast/core/detail/async_base.hpp \
+ /usr/include/boost/beast/core/detail/work_guard.hpp \
+ /usr/include/boost/asio/bind_executor.hpp \
+ /usr/include/boost/asio/uses_executor.hpp \
+ /usr/include/boost/beast/core/impl/async_base.hpp \
+ /usr/include/boost/beast/core/detail/read.hpp \
+ /usr/include/boost/beast/core/detail/is_invocable.hpp \
+ /usr/include/boost/beast/core/detail/impl/read.hpp \
+ /usr/include/boost/beast/core/flat_static_buffer.hpp \
+ /usr/include/boost/beast/core/impl/flat_static_buffer.hpp \
+ /usr/include/boost/beast/core/impl/flat_static_buffer.ipp \
+ /usr/include/boost/beast/core/read_size.hpp \
+ /usr/include/boost/beast/core/impl/read_size.hpp \
+ /usr/include/boost/asio/basic_stream_socket.hpp \
+ /usr/include/boost/asio/coroutine.hpp \
+ /usr/include/boost/asio/compose.hpp \
+ /usr/include/boost/asio/impl/compose.hpp \
+ /usr/include/boost/beast/http/serializer.hpp \
+ /usr/include/boost/beast/core/buffers_prefix.hpp \
+ /usr/include/boost/beast/core/impl/buffers_prefix.hpp \
+ /usr/include/boost/beast/core/buffers_suffix.hpp \
+ /usr/include/boost/beast/core/impl/buffers_suffix.hpp \
+ /usr/include/boost/type_traits.hpp \
+ /usr/include/boost/type_traits/add_cv.hpp \
+ /usr/include/boost/type_traits/add_lvalue_reference.hpp \
+ /usr/include/boost/type_traits/add_reference.hpp \
+ /usr/include/boost/type_traits/aligned_storage.hpp \
+ /usr/include/boost/type_traits/common_type.hpp \
+ /usr/include/boost/type_traits/detail/mp_defer.hpp \
+ /usr/include/boost/type_traits/conjunction.hpp \
+ /usr/include/boost/type_traits/copy_cv_ref.hpp \
+ /usr/include/boost/type_traits/copy_reference.hpp \
+ /usr/include/boost/type_traits/disjunction.hpp \
+ /usr/include/boost/type_traits/extent.hpp \
+ /usr/include/boost/type_traits/floating_point_promotion.hpp \
+ /usr/include/boost/type_traits/function_traits.hpp \
+ /usr/include/boost/type_traits/has_bit_and.hpp \
+ /usr/include/boost/type_traits/detail/has_binary_operator.hpp \
+ /usr/include/boost/type_traits/is_convertible.hpp \
+ /usr/include/boost/type_traits/is_abstract.hpp \
+ /usr/include/boost/type_traits/has_bit_and_assign.hpp \
+ /usr/include/boost/type_traits/has_bit_or.hpp \
+ /usr/include/boost/type_traits/has_bit_or_assign.hpp \
+ /usr/include/boost/type_traits/has_bit_xor.hpp \
+ /usr/include/boost/type_traits/has_bit_xor_assign.hpp \
+ /usr/include/boost/type_traits/has_complement.hpp \
+ /usr/include/boost/type_traits/detail/has_prefix_operator.hpp \
+ /usr/include/boost/type_traits/has_dereference.hpp \
+ /usr/include/boost/type_traits/has_divides.hpp \
+ /usr/include/boost/type_traits/has_divides_assign.hpp \
+ /usr/include/boost/type_traits/has_equal_to.hpp \
+ /usr/include/boost/type_traits/has_greater.hpp \
+ /usr/include/boost/type_traits/has_greater_equal.hpp \
+ /usr/include/boost/type_traits/has_left_shift.hpp \
+ /usr/include/boost/type_traits/has_left_shift_assign.hpp \
+ /usr/include/boost/type_traits/has_less.hpp \
+ /usr/include/boost/type_traits/has_less_equal.hpp \
+ /usr/include/boost/type_traits/has_logical_and.hpp \
+ /usr/include/boost/type_traits/has_logical_not.hpp \
+ /usr/include/boost/type_traits/has_logical_or.hpp \
+ /usr/include/boost/type_traits/has_minus.hpp \
+ /usr/include/boost/type_traits/remove_pointer.hpp \
+ /usr/include/boost/type_traits/has_minus_assign.hpp \
+ /usr/include/boost/type_traits/has_modulus.hpp \
+ /usr/include/boost/type_traits/has_modulus_assign.hpp \
+ /usr/include/boost/type_traits/has_multiplies.hpp \
+ /usr/include/boost/type_traits/has_multiplies_assign.hpp \
+ /usr/include/boost/type_traits/has_negate.hpp \
+ /usr/include/boost/type_traits/has_new_operator.hpp \
+ /usr/include/boost/type_traits/has_not_equal_to.hpp \
+ /usr/include/boost/type_traits/has_nothrow_copy.hpp \
+ /usr/include/boost/type_traits/is_copy_constructible.hpp \
+ /usr/include/boost/type_traits/has_nothrow_destructor.hpp \
+ /usr/include/boost/type_traits/has_trivial_destructor.hpp \
+ /usr/include/boost/type_traits/has_plus.hpp \
+ /usr/include/boost/type_traits/has_plus_assign.hpp \
+ /usr/include/boost/type_traits/has_post_decrement.hpp \
+ /usr/include/boost/type_traits/detail/has_postfix_operator.hpp \
+ /usr/include/boost/type_traits/has_post_increment.hpp \
+ /usr/include/boost/type_traits/has_pre_decrement.hpp \
+ /usr/include/boost/type_traits/has_pre_increment.hpp \
+ /usr/include/boost/type_traits/has_right_shift.hpp \
+ /usr/include/boost/type_traits/has_right_shift_assign.hpp \
+ /usr/include/boost/type_traits/has_trivial_assign.hpp \
+ /usr/include/boost/type_traits/has_trivial_constructor.hpp \
+ /usr/include/boost/type_traits/has_trivial_copy.hpp \
+ /usr/include/boost/type_traits/has_trivial_move_constructor.hpp \
+ /usr/include/boost/type_traits/has_unary_minus.hpp \
+ /usr/include/boost/type_traits/has_unary_plus.hpp \
+ /usr/include/boost/type_traits/has_virtual_destructor.hpp \
+ /usr/include/boost/type_traits/is_complex.hpp \
+ /usr/include/c++/11/complex \
+ /usr/include/boost/type_traits/is_compound.hpp \
+ /usr/include/boost/type_traits/is_fundamental.hpp \
+ /usr/include/boost/type_traits/is_copy_assignable.hpp \
+ /usr/include/boost/type_traits/is_noncopyable.hpp \
+ /usr/include/boost/type_traits/is_empty.hpp \
+ /usr/include/boost/type_traits/is_final.hpp \
+ /usr/include/boost/type_traits/is_float.hpp \
+ /usr/include/boost/type_traits/is_list_constructible.hpp \
+ /usr/include/boost/type_traits/is_member_object_pointer.hpp \
+ /usr/include/boost/type_traits/is_nothrow_swappable.hpp \
+ /usr/include/boost/type_traits/is_object.hpp \
+ /usr/include/boost/type_traits/is_polymorphic.hpp \
+ /usr/include/boost/type_traits/is_scoped_enum.hpp \
+ /usr/include/boost/type_traits/negation.hpp \
+ /usr/include/boost/type_traits/is_signed.hpp \
+ /usr/include/boost/type_traits/is_stateless.hpp \
+ /usr/include/boost/type_traits/is_trivially_copyable.hpp \
+ /usr/include/boost/type_traits/is_union.hpp \
+ /usr/include/boost/type_traits/is_unscoped_enum.hpp \
+ /usr/include/boost/type_traits/is_unsigned.hpp \
+ /usr/include/boost/type_traits/is_virtual_base_of.hpp \
+ /usr/include/boost/type_traits/make_signed.hpp \
+ /usr/include/boost/type_traits/make_unsigned.hpp \
+ /usr/include/boost/type_traits/rank.hpp \
+ /usr/include/boost/type_traits/remove_all_extents.hpp \
+ /usr/include/boost/type_traits/remove_cv_ref.hpp \
+ /usr/include/boost/type_traits/remove_volatile.hpp \
+ /usr/include/boost/type_traits/integral_promotion.hpp \
+ /usr/include/boost/type_traits/promote.hpp \
+ /usr/include/boost/beast/http/impl/serializer.hpp \
+ /usr/include/boost/beast/http/span_body.hpp \
+ /usr/include/boost/beast/core/span.hpp \
+ /usr/include/boost/beast/http/string_body.hpp \
+ /usr/include/boost/beast/core/buffers_range.hpp \
+ /usr/include/boost/beast/core/detail/buffers_range_adaptor.hpp \
+ /usr/include/boost/beast/http/vector_body.hpp \
+ /usr/include/boost/beast/http/write.hpp \
+ /usr/include/boost/beast/http/impl/write.hpp \
+ /usr/include/boost/beast/core/make_printable.hpp \
+ /usr/include/boost/asio/write.hpp \
+ /usr/include/boost/asio/basic_streambuf_fwd.hpp \
+ /usr/include/boost/asio/impl/write.hpp \
+ /usr/include/boost/asio/completion_condition.hpp \
+ /usr/include/boost/asio/detail/base_from_completion_cond.hpp \
+ /usr/include/boost/asio/detail/consuming_buffers.hpp \
+ /usr/include/boost/asio/detail/dependent_type.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/login.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/system_init.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/server.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/database.hpp \
+ /usr/include/boost/asio.hpp /usr/include/boost/asio/awaitable.hpp \
+ /usr/include/boost/asio/basic_datagram_socket.hpp \
  /usr/include/boost/asio/basic_deadline_timer.hpp \
  /usr/include/boost/asio/detail/deadline_timer_service.hpp \
  /usr/include/boost/asio/detail/timer_queue.hpp \
@@ -637,7 +1074,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/smart_ptr/detail/sp_noexcept.hpp \
  /usr/include/boost/checked_delete.hpp \
  /usr/include/boost/core/checked_delete.hpp \
- /usr/include/boost/core/addressof.hpp \
  /usr/include/boost/smart_ptr/detail/sp_disable_deprecated.hpp \
  /usr/include/boost/smart_ptr/detail/sp_convertible.hpp \
  /usr/include/boost/smart_ptr/detail/sp_nullptr_t.hpp \
@@ -657,12 +1093,9 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/date_time/posix_time/posix_time_config.hpp \
  /usr/include/boost/config/no_tr1/cmath.hpp \
  /usr/include/boost/date_time/time_duration.hpp \
- /usr/include/boost/core/enable_if.hpp \
  /usr/include/boost/date_time/special_defs.hpp \
  /usr/include/boost/date_time/time_defs.hpp \
- /usr/include/boost/operators.hpp /usr/include/boost/static_assert.hpp \
- /usr/include/boost/type_traits/is_integral.hpp \
- /usr/include/boost/type_traits/integral_constant.hpp \
+ /usr/include/boost/operators.hpp \
  /usr/include/boost/date_time/time_resolution_traits.hpp \
  /usr/include/boost/date_time/int_adapter.hpp \
  /usr/include/boost/date_time/gregorian/gregorian_types.hpp \
@@ -672,14 +1105,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/date_time/gregorian/greg_calendar.hpp \
  /usr/include/boost/date_time/gregorian/greg_weekday.hpp \
  /usr/include/boost/date_time/constrained_value.hpp \
- /usr/include/boost/type_traits/conditional.hpp \
- /usr/include/boost/type_traits/is_base_of.hpp \
- /usr/include/boost/type_traits/is_base_and_derived.hpp \
- /usr/include/boost/type_traits/intrinsics.hpp \
- /usr/include/boost/type_traits/detail/config.hpp \
- /usr/include/boost/type_traits/remove_cv.hpp \
- /usr/include/boost/type_traits/is_same.hpp \
- /usr/include/boost/type_traits/is_class.hpp \
  /usr/include/boost/date_time/date_defs.hpp \
  /usr/include/boost/date_time/gregorian/greg_day_of_year.hpp \
  /usr/include/boost/date_time/gregorian_calendar.hpp \
@@ -704,12 +1129,9 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/date_time/posix_time/date_duration_operators.hpp \
  /usr/include/boost/date_time/posix_time/posix_time_duration.hpp \
  /usr/include/boost/numeric/conversion/cast.hpp \
- /usr/include/boost/type.hpp \
  /usr/include/boost/numeric/conversion/converter.hpp \
  /usr/include/boost/numeric/conversion/conversion_traits.hpp \
  /usr/include/boost/numeric/conversion/detail/conversion_traits.hpp \
- /usr/include/boost/type_traits/is_arithmetic.hpp \
- /usr/include/boost/type_traits/is_floating_point.hpp \
  /usr/include/boost/numeric/conversion/detail/meta.hpp \
  /usr/include/boost/mpl/if.hpp /usr/include/boost/mpl/aux_/value_wknd.hpp \
  /usr/include/boost/mpl/aux_/static_cast.hpp \
@@ -736,8 +1158,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/mpl/aux_/nttp_decl.hpp \
  /usr/include/boost/mpl/aux_/config/nttp.hpp \
  /usr/include/boost/mpl/aux_/integral_wrapper.hpp \
- /usr/include/boost/preprocessor/cat.hpp \
- /usr/include/boost/preprocessor/config/config.hpp \
  /usr/include/boost/mpl/aux_/lambda_arity_param.hpp \
  /usr/include/boost/mpl/aux_/template_arity_fwd.hpp \
  /usr/include/boost/mpl/aux_/arity.hpp \
@@ -745,19 +1165,8 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/mpl/aux_/preprocessor/params.hpp \
  /usr/include/boost/mpl/aux_/config/preprocessor.hpp \
  /usr/include/boost/preprocessor/comma_if.hpp \
- /usr/include/boost/preprocessor/punctuation/comma_if.hpp \
- /usr/include/boost/preprocessor/control/if.hpp \
- /usr/include/boost/preprocessor/control/iif.hpp \
- /usr/include/boost/preprocessor/logical/bool.hpp \
- /usr/include/boost/preprocessor/facilities/empty.hpp \
- /usr/include/boost/preprocessor/punctuation/comma.hpp \
  /usr/include/boost/preprocessor/repeat.hpp \
- /usr/include/boost/preprocessor/repetition/repeat.hpp \
- /usr/include/boost/preprocessor/debug/error.hpp \
- /usr/include/boost/preprocessor/detail/auto_rec.hpp \
- /usr/include/boost/preprocessor/tuple/eat.hpp \
  /usr/include/boost/preprocessor/inc.hpp \
- /usr/include/boost/preprocessor/arithmetic/inc.hpp \
  /usr/include/boost/mpl/aux_/preprocessor/enum.hpp \
  /usr/include/boost/mpl/aux_/preprocessor/def_params_tail.hpp \
  /usr/include/boost/mpl/limits/arity.hpp \
@@ -767,7 +1176,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/preprocessor/facilities/identity.hpp \
  /usr/include/boost/preprocessor/empty.hpp \
  /usr/include/boost/preprocessor/arithmetic/add.hpp \
- /usr/include/boost/preprocessor/arithmetic/dec.hpp \
  /usr/include/boost/preprocessor/control/while.hpp \
  /usr/include/boost/preprocessor/list/fold_left.hpp \
  /usr/include/boost/preprocessor/list/detail/fold_left.hpp \
@@ -780,13 +1188,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/preprocessor/list/detail/fold_right.hpp \
  /usr/include/boost/preprocessor/list/reverse.hpp \
  /usr/include/boost/preprocessor/control/detail/while.hpp \
- /usr/include/boost/preprocessor/tuple/elem.hpp \
- /usr/include/boost/preprocessor/facilities/expand.hpp \
- /usr/include/boost/preprocessor/facilities/overload.hpp \
- /usr/include/boost/preprocessor/variadic/size.hpp \
- /usr/include/boost/preprocessor/tuple/rem.hpp \
- /usr/include/boost/preprocessor/tuple/detail/is_single_return.hpp \
- /usr/include/boost/preprocessor/variadic/elem.hpp \
  /usr/include/boost/preprocessor/arithmetic/sub.hpp \
  /usr/include/boost/mpl/aux_/config/overload_resolution.hpp \
  /usr/include/boost/mpl/aux_/lambda_support.hpp \
@@ -802,11 +1203,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/mpl/aux_/config/arrays.hpp \
  /usr/include/boost/mpl/aux_/config/has_xxx.hpp \
  /usr/include/boost/mpl/aux_/config/msvc_typename.hpp \
- /usr/include/boost/preprocessor/array/elem.hpp \
- /usr/include/boost/preprocessor/array/data.hpp \
- /usr/include/boost/preprocessor/array/size.hpp \
- /usr/include/boost/preprocessor/repetition/enum_params.hpp \
- /usr/include/boost/preprocessor/repetition/enum_trailing_params.hpp \
  /usr/include/boost/mpl/aux_/config/has_apply.hpp \
  /usr/include/boost/mpl/aux_/msvc_never_true.hpp \
  /usr/include/boost/mpl/aux_/config/use_preprocessed.hpp \
@@ -893,15 +1289,11 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/basic_socket_acceptor.hpp \
  /usr/include/boost/asio/basic_socket_iostream.hpp \
  /usr/include/boost/asio/basic_socket_streambuf.hpp \
- /usr/include/boost/asio/basic_stream_socket.hpp \
  /usr/include/boost/asio/steady_timer.hpp \
  /usr/include/boost/asio/basic_waitable_timer.hpp \
  /usr/include/boost/asio/detail/chrono_time_traits.hpp \
  /usr/include/boost/asio/wait_traits.hpp \
  /usr/include/boost/asio/basic_streambuf.hpp \
- /usr/include/boost/asio/basic_streambuf_fwd.hpp \
- /usr/include/boost/asio/bind_executor.hpp \
- /usr/include/boost/asio/uses_executor.hpp \
  /usr/include/boost/asio/buffered_read_stream_fwd.hpp \
  /usr/include/boost/asio/buffered_read_stream.hpp \
  /usr/include/boost/asio/detail/buffer_resize_guard.hpp \
@@ -911,18 +1303,10 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/buffered_stream.hpp \
  /usr/include/boost/asio/buffered_write_stream.hpp \
  /usr/include/boost/asio/buffered_write_stream_fwd.hpp \
- /usr/include/boost/asio/completion_condition.hpp \
- /usr/include/boost/asio/write.hpp /usr/include/boost/asio/impl/write.hpp \
- /usr/include/boost/asio/detail/base_from_completion_cond.hpp \
- /usr/include/boost/asio/detail/consuming_buffers.hpp \
- /usr/include/boost/asio/detail/dependent_type.hpp \
  /usr/include/boost/asio/impl/buffered_write_stream.hpp \
  /usr/include/boost/asio/buffers_iterator.hpp \
- /usr/include/boost/asio/co_spawn.hpp /usr/include/boost/asio/compose.hpp \
- /usr/include/boost/asio/impl/compose.hpp \
- /usr/include/boost/asio/connect.hpp \
+ /usr/include/boost/asio/co_spawn.hpp /usr/include/boost/asio/connect.hpp \
  /usr/include/boost/asio/impl/connect.hpp \
- /usr/include/boost/asio/coroutine.hpp \
  /usr/include/boost/asio/deadline_timer.hpp \
  /usr/include/boost/asio/defer.hpp /usr/include/boost/asio/impl/defer.hpp \
  /usr/include/boost/asio/detached.hpp \
@@ -1007,7 +1391,6 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/c++/11/bits/atomic_futex.h \
  /usr/include/c++/11/bits/std_thread.h \
  /usr/include/boost/asio/placeholders.hpp /usr/include/boost/bind/arg.hpp \
- /usr/include/boost/is_placeholder.hpp \
  /usr/include/boost/asio/posix/basic_descriptor.hpp \
  /usr/include/boost/asio/posix/basic_stream_descriptor.hpp \
  /usr/include/boost/asio/posix/descriptor.hpp \
@@ -1186,140 +1569,19 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/asio/windows/stream_handle.hpp \
  /usr/include/boost/asio/write_at.hpp \
  /usr/include/boost/asio/impl/write_at.hpp /usr/include/boost/beast.hpp \
- /usr/include/boost/beast/core/detail/config.hpp \
- /usr/include/boost/core/ignore_unused.hpp \
  /usr/include/boost/beast/core.hpp \
- /usr/include/boost/beast/core/async_base.hpp \
- /usr/include/boost/beast/core/bind_handler.hpp \
- /usr/include/boost/beast/core/detail/bind_handler.hpp \
- /usr/include/boost/beast/core/error.hpp \
- /usr/include/boost/beast/core/impl/error.hpp \
- /usr/include/boost/beast/core/impl/error.ipp \
- /usr/include/boost/beast/core/detail/tuple.hpp \
- /usr/include/boost/mp11/integer_sequence.hpp \
- /usr/include/boost/mp11/version.hpp \
- /usr/include/boost/mp11/algorithm.hpp /usr/include/boost/mp11/list.hpp \
- /usr/include/boost/mp11/integral.hpp \
- /usr/include/boost/mp11/detail/mp_list.hpp \
- /usr/include/boost/mp11/detail/mp_is_list.hpp \
- /usr/include/boost/mp11/detail/mp_append.hpp \
- /usr/include/boost/mp11/utility.hpp \
- /usr/include/boost/mp11/detail/mp_fold.hpp \
- /usr/include/boost/mp11/detail/config.hpp \
- /usr/include/boost/mp11/set.hpp /usr/include/boost/mp11/function.hpp \
- /usr/include/boost/mp11/detail/mp_count.hpp \
- /usr/include/boost/mp11/detail/mp_plus.hpp \
- /usr/include/boost/mp11/detail/mp_min_element.hpp \
- /usr/include/boost/mp11/detail/mp_void.hpp \
- /usr/include/boost/mp11/detail/mp_copy_if.hpp \
- /usr/include/boost/mp11/detail/mp_remove_if.hpp \
- /usr/include/boost/mp11/detail/mp_map_find.hpp \
- /usr/include/boost/mp11/detail/mp_with_index.hpp \
- /usr/include/boost/type_traits/copy_cv.hpp \
- /usr/include/boost/type_traits/is_const.hpp \
- /usr/include/boost/type_traits/is_volatile.hpp \
- /usr/include/boost/type_traits/add_const.hpp \
- /usr/include/boost/type_traits/add_volatile.hpp \
- /usr/include/boost/beast/core/detail/allocator.hpp \
- /usr/include/boost/beast/core/detail/async_base.hpp \
- /usr/include/boost/core/exchange.hpp \
- /usr/include/boost/beast/core/detail/work_guard.hpp \
- /usr/include/boost/optional.hpp /usr/include/boost/optional/optional.hpp \
- /usr/include/boost/core/explicit_operator_bool.hpp \
- /usr/include/boost/core/swap.hpp \
- /usr/include/boost/optional/bad_optional_access.hpp \
- /usr/include/boost/type_traits/alignment_of.hpp \
- /usr/include/boost/type_traits/has_nothrow_constructor.hpp \
- /usr/include/boost/type_traits/is_default_constructible.hpp \
- /usr/include/boost/type_traits/is_complete.hpp \
- /usr/include/boost/type_traits/declval.hpp \
- /usr/include/boost/type_traits/add_rvalue_reference.hpp \
- /usr/include/boost/type_traits/is_void.hpp \
- /usr/include/boost/type_traits/is_reference.hpp \
- /usr/include/boost/type_traits/is_lvalue_reference.hpp \
- /usr/include/boost/type_traits/is_rvalue_reference.hpp \
- /usr/include/boost/type_traits/remove_reference.hpp \
- /usr/include/boost/type_traits/is_function.hpp \
- /usr/include/boost/type_traits/detail/is_function_cxx_11.hpp \
- /usr/include/boost/type_traits/detail/yes_no_type.hpp \
- /usr/include/boost/type_traits/type_with_alignment.hpp \
- /usr/include/boost/type_traits/is_pod.hpp \
- /usr/include/boost/type_traits/is_scalar.hpp \
- /usr/include/boost/type_traits/is_enum.hpp \
- /usr/include/boost/type_traits/is_pointer.hpp \
- /usr/include/boost/type_traits/is_member_pointer.hpp \
- /usr/include/boost/type_traits/is_member_function_pointer.hpp \
- /usr/include/boost/type_traits/detail/is_member_function_pointer_cxx_11.hpp \
- /usr/include/boost/type_traits/remove_const.hpp \
- /usr/include/boost/type_traits/decay.hpp \
- /usr/include/boost/type_traits/is_array.hpp \
- /usr/include/boost/type_traits/remove_bounds.hpp \
- /usr/include/boost/type_traits/remove_extent.hpp \
- /usr/include/boost/type_traits/add_pointer.hpp \
- /usr/include/boost/type_traits/is_constructible.hpp \
- /usr/include/boost/type_traits/is_destructible.hpp \
- /usr/include/boost/type_traits/is_nothrow_move_assignable.hpp \
- /usr/include/boost/type_traits/has_trivial_move_assign.hpp \
- /usr/include/boost/type_traits/is_assignable.hpp \
- /usr/include/boost/type_traits/has_nothrow_assign.hpp \
- /usr/include/boost/type_traits/enable_if.hpp \
- /usr/include/boost/type_traits/is_nothrow_move_constructible.hpp \
- /usr/include/boost/move/utility.hpp \
- /usr/include/boost/move/detail/config_begin.hpp \
- /usr/include/boost/move/detail/workaround.hpp \
- /usr/include/boost/move/utility_core.hpp \
- /usr/include/boost/move/core.hpp \
- /usr/include/boost/move/detail/config_end.hpp \
- /usr/include/boost/move/detail/meta_utils.hpp \
- /usr/include/boost/move/detail/meta_utils_core.hpp \
- /usr/include/boost/move/traits.hpp \
- /usr/include/boost/move/detail/type_traits.hpp \
- /usr/include/boost/none.hpp /usr/include/boost/none_t.hpp \
- /usr/include/boost/utility/compare_pointees.hpp \
- /usr/include/boost/utility/result_of.hpp \
- /usr/include/boost/preprocessor/iteration/iterate.hpp \
- /usr/include/boost/preprocessor/slot/slot.hpp \
- /usr/include/boost/preprocessor/slot/detail/def.hpp \
- /usr/include/boost/preprocessor/repetition/enum_binary_params.hpp \
- /usr/include/boost/preprocessor/repetition/enum_shifted_params.hpp \
- /usr/include/boost/preprocessor/facilities/intercept.hpp \
- /usr/include/boost/type_traits/type_identity.hpp \
- /usr/include/boost/preprocessor/iteration/detail/iter/forward1.hpp \
- /usr/include/boost/preprocessor/iteration/detail/bounds/lower1.hpp \
- /usr/include/boost/preprocessor/slot/detail/shared.hpp \
- /usr/include/boost/preprocessor/iteration/detail/bounds/upper1.hpp \
- /usr/include/boost/utility/detail/result_of_iterate.hpp \
- /usr/include/boost/optional/optional_fwd.hpp \
- /usr/include/boost/optional/detail/optional_config.hpp \
- /usr/include/boost/optional/detail/optional_factory_support.hpp \
- /usr/include/boost/optional/detail/optional_aligned_storage.hpp \
- /usr/include/boost/optional/detail/optional_trivially_copyable_base.hpp \
- /usr/include/boost/optional/detail/optional_reference_spec.hpp \
- /usr/include/boost/optional/detail/optional_relops.hpp \
- /usr/include/boost/optional/detail/optional_swap.hpp \
- /usr/include/boost/core/empty_value.hpp \
- /usr/include/boost/beast/core/impl/async_base.hpp \
  /usr/include/boost/beast/core/basic_stream.hpp \
  /usr/include/boost/beast/core/detail/stream_base.hpp \
  /usr/include/boost/beast/core/rate_policy.hpp \
  /usr/include/boost/beast/core/role.hpp \
- /usr/include/boost/beast/core/stream_traits.hpp \
- /usr/include/boost/beast/core/detail/static_const.hpp \
- /usr/include/boost/beast/core/detail/stream_traits.hpp \
- /usr/include/boost/type_traits/make_void.hpp \
  /usr/include/boost/enable_shared_from_this.hpp \
  /usr/include/boost/smart_ptr/enable_shared_from_this.hpp \
  /usr/include/boost/smart_ptr/weak_ptr.hpp \
  /usr/include/boost/beast/core/impl/basic_stream.hpp \
- /usr/include/boost/beast/core/buffer_traits.hpp \
- /usr/include/boost/beast/core/detail/buffer_traits.hpp \
- /usr/include/boost/beast/core/buffers_prefix.hpp \
- /usr/include/boost/beast/core/impl/buffers_prefix.hpp \
  /usr/include/boost/beast/websocket/teardown.hpp \
  /usr/include/boost/beast/websocket/impl/teardown.hpp \
  /usr/include/boost/beast/core/detail/bind_continuation.hpp \
  /usr/include/boost/beast/core/detail/remap_post_to_defer.hpp \
- /usr/include/boost/beast/core/detail/is_invocable.hpp \
  /usr/include/boost/make_shared.hpp \
  /usr/include/boost/smart_ptr/make_shared.hpp \
  /usr/include/boost/smart_ptr/make_shared_object.hpp \
@@ -1332,188 +1594,19 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/core/alloc_construct.hpp \
  /usr/include/boost/core/noinit_adaptor.hpp \
  /usr/include/boost/core/first_scalar.hpp \
- /usr/include/boost/type_traits/extent.hpp \
  /usr/include/boost/type_traits/is_bounded_array.hpp \
- /usr/include/boost/type_traits/is_unbounded_array.hpp \
  /usr/include/boost/beast/core/buffered_read_stream.hpp \
- /usr/include/boost/beast/core/multi_buffer.hpp \
- /usr/include/boost/intrusive/list.hpp \
- /usr/include/boost/intrusive/detail/config_begin.hpp \
- /usr/include/boost/intrusive/intrusive_fwd.hpp \
- /usr/include/boost/intrusive/link_mode.hpp \
- /usr/include/boost/intrusive/detail/workaround.hpp \
- /usr/include/boost/intrusive/detail/assert.hpp \
- /usr/include/boost/intrusive/list_hook.hpp \
- /usr/include/boost/intrusive/detail/list_node.hpp \
- /usr/include/boost/intrusive/pointer_rebind.hpp \
- /usr/include/boost/intrusive/circular_list_algorithms.hpp \
- /usr/include/boost/intrusive/detail/algo_type.hpp \
- /usr/include/boost/core/no_exceptions_support.hpp \
- /usr/include/boost/intrusive/detail/config_end.hpp \
- /usr/include/boost/intrusive/options.hpp \
- /usr/include/boost/intrusive/pack_options.hpp \
- /usr/include/boost/intrusive/detail/generic_hook.hpp \
- /usr/include/boost/intrusive/pointer_traits.hpp \
- /usr/include/boost/move/detail/pointer_element.hpp \
- /usr/include/boost/intrusive/detail/mpl.hpp \
- /usr/include/boost/intrusive/detail/node_holder.hpp \
- /usr/include/boost/intrusive/detail/get_value_traits.hpp \
- /usr/include/boost/intrusive/detail/hook_traits.hpp \
- /usr/include/boost/intrusive/detail/parent_from_member.hpp \
- /usr/include/boost/move/detail/to_raw_pointer.hpp \
- /usr/include/boost/intrusive/detail/is_stateful_value_traits.hpp \
- /usr/include/boost/intrusive/detail/function_detector.hpp \
- /usr/include/boost/intrusive/detail/default_header_holder.hpp \
- /usr/include/boost/intrusive/detail/reverse_iterator.hpp \
- /usr/include/boost/intrusive/detail/iterator.hpp \
- /usr/include/boost/intrusive/detail/std_fwd.hpp \
- /usr/include/boost/move/detail/std_ns_begin.hpp \
- /usr/include/boost/move/detail/std_ns_end.hpp \
- /usr/include/boost/move/detail/iterator_traits.hpp \
- /usr/include/boost/intrusive/detail/uncast.hpp \
- /usr/include/boost/intrusive/detail/list_iterator.hpp \
- /usr/include/boost/intrusive/detail/iiterator.hpp \
- /usr/include/boost/intrusive/detail/array_initializer.hpp \
- /usr/include/boost/intrusive/detail/exception_disposer.hpp \
- /usr/include/boost/intrusive/detail/equal_to_value.hpp \
- /usr/include/boost/intrusive/detail/key_nodeptr_comp.hpp \
- /usr/include/boost/intrusive/detail/ebo_functor_holder.hpp \
- /usr/include/boost/intrusive/detail/tree_value_compare.hpp \
- /usr/include/boost/intrusive/detail/simple_disposers.hpp \
- /usr/include/boost/intrusive/detail/size_holder.hpp \
- /usr/include/boost/intrusive/detail/algorithm.hpp \
- /usr/include/boost/intrusive/detail/minimal_less_equal_header.hpp \
- /usr/include/boost/beast/core/impl/multi_buffer.hpp \
  /usr/include/boost/beast/core/impl/buffered_read_stream.hpp \
- /usr/include/boost/beast/core/read_size.hpp \
- /usr/include/boost/beast/core/impl/read_size.hpp \
  /usr/include/boost/beast/core/buffers_adaptor.hpp \
  /usr/include/boost/beast/core/impl/buffers_adaptor.hpp \
- /usr/include/boost/beast/core/buffers_cat.hpp \
- /usr/include/boost/beast/core/detail/type_traits.hpp \
- /usr/include/boost/beast/core/impl/buffers_cat.hpp \
- /usr/include/boost/beast/core/detail/variant.hpp \
- /usr/include/boost/beast/core/buffers_range.hpp \
- /usr/include/boost/beast/core/detail/buffers_range_adaptor.hpp \
- /usr/include/boost/beast/core/buffers_suffix.hpp \
- /usr/include/boost/beast/core/impl/buffers_suffix.hpp \
- /usr/include/boost/type_traits.hpp \
- /usr/include/boost/type_traits/add_cv.hpp \
- /usr/include/boost/type_traits/add_lvalue_reference.hpp \
- /usr/include/boost/type_traits/add_reference.hpp \
- /usr/include/boost/type_traits/aligned_storage.hpp \
- /usr/include/boost/type_traits/common_type.hpp \
- /usr/include/boost/type_traits/detail/mp_defer.hpp \
- /usr/include/boost/type_traits/conjunction.hpp \
- /usr/include/boost/type_traits/copy_cv_ref.hpp \
- /usr/include/boost/type_traits/copy_reference.hpp \
- /usr/include/boost/type_traits/disjunction.hpp \
- /usr/include/boost/type_traits/floating_point_promotion.hpp \
- /usr/include/boost/type_traits/function_traits.hpp \
- /usr/include/boost/type_traits/has_bit_and.hpp \
- /usr/include/boost/type_traits/detail/has_binary_operator.hpp \
- /usr/include/boost/type_traits/is_convertible.hpp \
- /usr/include/boost/type_traits/is_abstract.hpp \
- /usr/include/boost/type_traits/has_bit_and_assign.hpp \
- /usr/include/boost/type_traits/has_bit_or.hpp \
- /usr/include/boost/type_traits/has_bit_or_assign.hpp \
- /usr/include/boost/type_traits/has_bit_xor.hpp \
- /usr/include/boost/type_traits/has_bit_xor_assign.hpp \
- /usr/include/boost/type_traits/has_complement.hpp \
- /usr/include/boost/type_traits/detail/has_prefix_operator.hpp \
- /usr/include/boost/type_traits/has_dereference.hpp \
- /usr/include/boost/type_traits/has_divides.hpp \
- /usr/include/boost/type_traits/has_divides_assign.hpp \
- /usr/include/boost/type_traits/has_equal_to.hpp \
- /usr/include/boost/type_traits/has_greater.hpp \
- /usr/include/boost/type_traits/has_greater_equal.hpp \
- /usr/include/boost/type_traits/has_left_shift.hpp \
- /usr/include/boost/type_traits/has_left_shift_assign.hpp \
- /usr/include/boost/type_traits/has_less.hpp \
- /usr/include/boost/type_traits/has_less_equal.hpp \
- /usr/include/boost/type_traits/has_logical_and.hpp \
- /usr/include/boost/type_traits/has_logical_not.hpp \
- /usr/include/boost/type_traits/has_logical_or.hpp \
- /usr/include/boost/type_traits/has_minus.hpp \
- /usr/include/boost/type_traits/remove_pointer.hpp \
- /usr/include/boost/type_traits/has_minus_assign.hpp \
- /usr/include/boost/type_traits/has_modulus.hpp \
- /usr/include/boost/type_traits/has_modulus_assign.hpp \
- /usr/include/boost/type_traits/has_multiplies.hpp \
- /usr/include/boost/type_traits/has_multiplies_assign.hpp \
- /usr/include/boost/type_traits/has_negate.hpp \
- /usr/include/boost/type_traits/has_new_operator.hpp \
- /usr/include/boost/type_traits/has_not_equal_to.hpp \
- /usr/include/boost/type_traits/has_nothrow_copy.hpp \
- /usr/include/boost/type_traits/is_copy_constructible.hpp \
- /usr/include/boost/type_traits/has_nothrow_destructor.hpp \
- /usr/include/boost/type_traits/has_trivial_destructor.hpp \
- /usr/include/boost/type_traits/has_plus.hpp \
- /usr/include/boost/type_traits/has_plus_assign.hpp \
- /usr/include/boost/type_traits/has_post_decrement.hpp \
- /usr/include/boost/type_traits/detail/has_postfix_operator.hpp \
- /usr/include/boost/type_traits/has_post_increment.hpp \
- /usr/include/boost/type_traits/has_pre_decrement.hpp \
- /usr/include/boost/type_traits/has_pre_increment.hpp \
- /usr/include/boost/type_traits/has_right_shift.hpp \
- /usr/include/boost/type_traits/has_right_shift_assign.hpp \
- /usr/include/boost/type_traits/has_trivial_assign.hpp \
- /usr/include/boost/type_traits/has_trivial_constructor.hpp \
- /usr/include/boost/type_traits/has_trivial_copy.hpp \
- /usr/include/boost/type_traits/has_trivial_move_constructor.hpp \
- /usr/include/boost/type_traits/has_unary_minus.hpp \
- /usr/include/boost/type_traits/has_unary_plus.hpp \
- /usr/include/boost/type_traits/has_virtual_destructor.hpp \
- /usr/include/boost/type_traits/is_complex.hpp \
- /usr/include/c++/11/complex \
- /usr/include/boost/type_traits/is_compound.hpp \
- /usr/include/boost/type_traits/is_fundamental.hpp \
- /usr/include/boost/type_traits/is_copy_assignable.hpp \
- /usr/include/boost/type_traits/is_noncopyable.hpp \
- /usr/include/boost/type_traits/is_empty.hpp \
- /usr/include/boost/type_traits/is_final.hpp \
- /usr/include/boost/type_traits/is_float.hpp \
- /usr/include/boost/type_traits/is_list_constructible.hpp \
- /usr/include/boost/type_traits/is_member_object_pointer.hpp \
- /usr/include/boost/type_traits/is_nothrow_swappable.hpp \
- /usr/include/boost/type_traits/is_object.hpp \
- /usr/include/boost/type_traits/is_polymorphic.hpp \
- /usr/include/boost/type_traits/is_scoped_enum.hpp \
- /usr/include/boost/type_traits/negation.hpp \
- /usr/include/boost/type_traits/is_signed.hpp \
- /usr/include/boost/type_traits/is_stateless.hpp \
- /usr/include/boost/type_traits/is_trivially_copyable.hpp \
- /usr/include/boost/type_traits/is_union.hpp \
- /usr/include/boost/type_traits/is_unscoped_enum.hpp \
- /usr/include/boost/type_traits/is_unsigned.hpp \
- /usr/include/boost/type_traits/is_virtual_base_of.hpp \
- /usr/include/boost/type_traits/make_signed.hpp \
- /usr/include/boost/type_traits/make_unsigned.hpp \
- /usr/include/boost/type_traits/rank.hpp \
- /usr/include/boost/type_traits/remove_all_extents.hpp \
- /usr/include/boost/type_traits/remove_cv_ref.hpp \
- /usr/include/boost/type_traits/remove_volatile.hpp \
- /usr/include/boost/type_traits/integral_promotion.hpp \
- /usr/include/boost/type_traits/promote.hpp \
  /usr/include/boost/beast/core/buffers_to_string.hpp \
  /usr/include/boost/beast/core/detect_ssl.hpp \
  /usr/include/boost/logic/tribool.hpp \
  /usr/include/boost/logic/tribool_fwd.hpp \
  /usr/include/boost/asio/yield.hpp /usr/include/boost/asio/coroutine.hpp \
  /usr/include/boost/asio/unyield.hpp \
- /usr/include/boost/beast/core/file.hpp \
- /usr/include/boost/beast/core/file_base.hpp \
- /usr/include/boost/beast/core/file_posix.hpp \
- /usr/include/boost/beast/core/impl/file_posix.ipp \
- /usr/include/boost/beast/core/file_stdio.hpp \
- /usr/include/boost/beast/core/impl/file_stdio.ipp \
- /usr/include/boost/beast/core/detail/win32_unicode_path.hpp \
- /usr/include/boost/beast/core/file_win32.hpp \
  /usr/include/boost/beast/core/flat_buffer.hpp \
  /usr/include/boost/beast/core/impl/flat_buffer.hpp \
- /usr/include/boost/beast/core/flat_static_buffer.hpp \
- /usr/include/boost/beast/core/impl/flat_static_buffer.hpp \
- /usr/include/boost/beast/core/impl/flat_static_buffer.ipp \
  /usr/include/boost/beast/core/flat_stream.hpp \
  /usr/include/boost/beast/core/detail/flat_stream.hpp \
  /usr/include/boost/beast/core/impl/flat_stream.hpp \
@@ -1521,105 +1614,12 @@ CMakeFiles/boost_api_server.dir/server/src/main.cpp.o: \
  /usr/include/boost/beast/core/detail/buffers_pair.hpp \
  /usr/include/boost/beast/core/impl/static_buffer.hpp \
  /usr/include/boost/beast/core/impl/static_buffer.ipp \
- /usr/include/boost/beast/core/make_printable.hpp \
  /usr/include/boost/beast/core/ostream.hpp \
  /usr/include/boost/beast/core/detail/ostream.hpp \
  /usr/include/boost/beast/core/saved_handler.hpp \
  /usr/include/boost/beast/core/impl/saved_handler.hpp \
  /usr/include/boost/beast/core/impl/saved_handler.ipp \
- /usr/include/boost/beast/core/span.hpp \
- /usr/include/boost/beast/core/static_string.hpp \
- /usr/include/boost/beast/core/string.hpp \
- /usr/include/boost/beast/core/string_type.hpp \
- /usr/include/boost/utility/string_view.hpp \
- /usr/include/boost/io/ostream_put.hpp \
- /usr/include/boost/io/detail/buffer_fill.hpp \
- /usr/include/boost/io/detail/ostream_guard.hpp \
- /usr/include/boost/utility/string_view_fwd.hpp \
- /usr/include/boost/container_hash/hash_fwd.hpp \
- /usr/include/boost/beast/core/impl/string.ipp \
- /usr/include/boost/beast/core/detail/string.hpp \
- /usr/include/boost/beast/core/detail/static_string.hpp \
- /usr/include/boost/beast/core/impl/static_string.hpp \
  /usr/include/boost/beast/core/tcp_stream.hpp \
- /usr/include/boost/beast/http.hpp \
- /usr/include/boost/beast/http/basic_dynamic_body.hpp \
- /usr/include/boost/beast/core/detail/buffer.hpp \
- /usr/include/boost/beast/core/detail/clamp.hpp \
- /usr/include/boost/beast/http/error.hpp \
- /usr/include/boost/beast/http/impl/error.hpp \
- /usr/include/boost/beast/http/impl/error.ipp \
- /usr/include/boost/beast/http/message.hpp \
- /usr/include/boost/beast/http/fields.hpp \
- /usr/include/boost/beast/http/field.hpp \
- /usr/include/boost/beast/http/impl/field.ipp \
- /usr/include/boost/intrusive/set.hpp \
- /usr/include/boost/intrusive/rbtree.hpp \
- /usr/include/boost/intrusive/detail/minimal_pair_header.hpp \
- /usr/include/boost/intrusive/set_hook.hpp \
- /usr/include/boost/intrusive/detail/rbtree_node.hpp \
- /usr/include/boost/intrusive/rbtree_algorithms.hpp \
- /usr/include/boost/intrusive/bstree_algorithms.hpp \
- /usr/include/boost/intrusive/detail/bstree_algorithms_base.hpp \
- /usr/include/boost/intrusive/detail/math.hpp \
- /usr/include/boost/intrusive/pointer_plus_bits.hpp \
- /usr/include/boost/intrusive/detail/tree_node.hpp \
- /usr/include/boost/intrusive/bstree.hpp \
- /usr/include/boost/intrusive/bs_set_hook.hpp \
- /usr/include/boost/intrusive/detail/tree_iterator.hpp \
- /usr/include/boost/intrusive/detail/empty_node_checker.hpp \
- /usr/include/boost/intrusive/detail/node_cloner_disposer.hpp \
- /usr/include/boost/intrusive/parent_from_member.hpp \
- /usr/include/boost/move/adl_move_swap.hpp \
- /usr/include/boost/beast/http/impl/fields.hpp \
- /usr/include/boost/beast/core/detail/buffers_ref.hpp \
- /usr/include/boost/beast/core/detail/temporary_buffer.hpp \
- /usr/include/boost/beast/core/detail/impl/temporary_buffer.ipp \
- /usr/include/boost/beast/http/verb.hpp \
- /usr/include/boost/beast/http/impl/verb.ipp \
- /usr/include/boost/beast/http/rfc7230.hpp \
- /usr/include/boost/beast/http/detail/rfc7230.hpp \
- /usr/include/boost/beast/http/detail/rfc7230.ipp \
- /usr/include/boost/beast/http/detail/basic_parsed_list.hpp \
- /usr/include/boost/beast/http/impl/rfc7230.hpp \
- /usr/include/boost/beast/http/impl/rfc7230.ipp \
- /usr/include/boost/beast/http/status.hpp \
- /usr/include/boost/beast/http/impl/status.ipp \
- /usr/include/boost/beast/http/chunk_encode.hpp \
- /usr/include/boost/beast/http/type_traits.hpp \
- /usr/include/boost/beast/http/detail/type_traits.hpp \
- /usr/include/boost/beast/http/detail/chunk_encode.hpp \
- /usr/include/boost/beast/http/impl/chunk_encode.hpp \
- /usr/include/boost/beast/core/detail/varint.hpp \
- /usr/include/boost/beast/http/impl/fields.ipp \
- /usr/include/boost/beast/http/impl/message.hpp \
- /usr/include/boost/beast/http/basic_file_body.hpp \
- /usr/include/boost/beast/http/basic_parser.hpp \
- /usr/include/boost/beast/http/detail/basic_parser.hpp \
- /usr/include/boost/beast/core/detail/char_buffer.hpp \
- /usr/include/boost/beast/http/detail/basic_parser.ipp \
- /usr/include/boost/beast/http/impl/basic_parser.hpp \
- /usr/include/boost/make_unique.hpp \
- /usr/include/boost/smart_ptr/make_unique.hpp \
- /usr/include/boost/beast/http/impl/basic_parser.ipp \
- /usr/include/boost/beast/http/buffer_body.hpp \
- /usr/include/boost/beast/http/dynamic_body.hpp \
- /usr/include/boost/beast/http/empty_body.hpp \
- /usr/include/boost/beast/http/file_body.hpp \
- /usr/include/boost/beast/http/impl/file_body_win32.hpp \
- /usr/include/boost/beast/http/parser.hpp \
- /usr/include/boost/beast/http/impl/parser.hpp \
- /usr/include/boost/beast/http/read.hpp \
- /usr/include/boost/beast/http/impl/read.hpp \
- /usr/include/boost/beast/core/detail/read.hpp \
- /usr/include/boost/beast/core/detail/impl/read.hpp \
- /usr/include/boost/beast/http/serializer.hpp \
- /usr/include/boost/beast/http/impl/serializer.hpp \
- /usr/include/boost/beast/http/span_body.hpp \
- /usr/include/boost/beast/http/string_body.hpp \
- /usr/include/boost/beast/http/vector_body.hpp \
- /usr/include/boost/beast/http/write.hpp \
- /usr/include/boost/beast/http/impl/write.hpp \
  /usr/include/boost/beast/version.hpp \
  /usr/include/boost/beast/websocket.hpp \
  /usr/include/boost/beast/websocket/error.hpp \

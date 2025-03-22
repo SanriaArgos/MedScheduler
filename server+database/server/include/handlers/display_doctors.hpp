@@ -3,8 +3,11 @@
 
 #include "../database.hpp"
 #include <nlohmann/json.hpp>
+#include <boost/beast/http.hpp>
+
+namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-json display_doctors_table(const json &data);
+void display_doctors_table(const json &data, http::response<http::string_body> &res, database_handler &db_handler);
 
 #endif  // DISPLAY_DOCTORS_HPP_

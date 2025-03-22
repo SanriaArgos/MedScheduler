@@ -2,24 +2,40 @@
 #include "../../include/database.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <boost/beast/http.hpp>
 
-extern database_handler* global_db;  // Добавляем объявление глобального указателя
+namespace http = boost::beast::http;
 
-nlohmann::json login(const nlohmann::json &data) {
+extern database_handler* global_db;  // Объявляем глобальный указатель, определённый в main.cpp
+
+void login(const nlohmann::json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     nlohmann::json response;
+
     if (!data.contains("phone") || !data.contains("password")) {
         std::cerr << "Login error: missing required fields\n";
-        response["success"] = false;
-        return response;
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = R"({"error": "Missing phone or password"})";
+        return;
     }
+
     std::string phone = data["phone"];
     std::string password = data["password"];
-    std::string login_result = global_db->login_user(phone, password);
+
+    std::string login_result = db_handler.login_user(phone, password);
     bool success = !login_result.empty();
+
     response["success"] = success;
     response["action"] = "login";
+
     if (success) {
         response["result"] = login_result;
+        res.result(http::status::ok);
+    } else {
+        response["error"] = "Invalid credentials";
+        res.result(http::status::unauthorized);
     }
-    return response;
+
+    res.set(http::field::content_type, "application/json");
+    res.body() = response.dump(); //тут устанавливам возврат джейсона
 }

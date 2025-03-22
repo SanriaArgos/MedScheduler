@@ -1595,4 +1595,18 @@ CMakeFiles/boost_api_server.dir/server/src/handler_request.cpp.o: \
  /usr/include/boost/algorithm/string/formatter.hpp \
  /usr/include/boost/algorithm/string/detail/formatter.hpp \
  /usr/include/boost/algorithm/string/erase.hpp \
- /home/victoria/MedScheduler/server+database/server/src/../include/database.hpp
+ /home/victoria/MedScheduler/server+database/server/src/../include/database.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/login.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/../database.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/registration.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/add_hospital.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/add_junior_admin.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/add_doctor.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/add_record_slot.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/display_doctors.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/display_hospitals.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/display_users.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/doctor_hospital_managment.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/doctor_schedule.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/junior_admin_schedule.hpp \
+ /home/victoria/MedScheduler/server+database/server/src/../include/handlers/patient_schedule.hpp
