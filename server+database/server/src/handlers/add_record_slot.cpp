@@ -27,18 +27,49 @@ void add_record_slot(const json &data, http::response<http::string_body> &res, d
     json response;
 
     // Проверка на наличие обязательных полей
-    if (!data.contains("doctor_id") || !data.contains("date") ||
-        !data.contains("time") || !data.contains("hospital_id") ||
-        !data.contains("cabinet") || !data.contains("junior_admin_id")) {
-        std::cerr << "Error: Missing required fields for add_record_slot\n";
-        response["success"] = false;
-        response["error"] = "Missing required fields";
+    bool has_error = false;
 
-        res.result(http::status::bad_request);  // 400 Bad Request
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
+if (!data.contains("doctor_id")) {
+    std::cerr << "Error: Missing field 'doctor_id'\n";
+    response["missing_fields"].push_back("doctor_id");
+    has_error = true;
+}
+if (!data.contains("date")) {
+    std::cerr << "Error: Missing field 'date'\n";
+    response["missing_fields"].push_back("date");
+    has_error = true;
+}
+if (!data.contains("time")) {
+    std::cerr << "Error: Missing field 'time'\n";
+    response["missing_fields"].push_back("time");
+    has_error = true;
+}
+if (!data.contains("hospital_id")) {
+    std::cerr << "Error: Missing field 'hospital_id'\n";
+    response["missing_fields"].push_back("hospital_id");
+    has_error = true;
+}
+if (!data.contains("cabinet")) {
+    std::cerr << "Error: Missing field 'cabinet'\n";
+    response["missing_fields"].push_back("cabinet");
+    has_error = true;
+}
+if (!data.contains("junior_admin_id")) {
+    std::cerr << "Error: Missing field 'junior_admin_id'\n";
+    response["missing_fields"].push_back("junior_admin_id");
+    has_error = true;
+}
+
+if (has_error) {
+    response["success"] = false;
+    response["error"] = "Missing required fields";
+
+    res.result(http::status::bad_request);  // 400 Bad Request
+    res.set(http::field::content_type, "application/json");
+    res.body() = response.dump();
+    return;
+}
+
 
     int doctor_id = data["doctor_id"];
     std::string date = data["date"];

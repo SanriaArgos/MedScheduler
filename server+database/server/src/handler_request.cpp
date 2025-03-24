@@ -29,6 +29,7 @@ using json = nlohmann::json;
 #include "../include/handlers/doctor_schedule.hpp"
 #include "../include/handlers/junior_admin_schedule.hpp"
 #include "../include/handlers/patient_schedule.hpp"
+#include "../include/database.hpp"
 
 std::string base64_decode(const std::string &encoded) {
     const std::string base64_chars =
@@ -93,7 +94,6 @@ void handle_request(
                 registration(body, res, db_handler);
             } 
             else if (req.target() == "/add_doctor") {
-                json body = json::parse(req.body());
                 add_doctor(body, res, db_handler);
             }
             else if (req.target() == "/add_hospital") {
@@ -116,7 +116,12 @@ void handle_request(
                 display_hospitals_table(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются
             } else if (req.target() == "/display_users") {
                 display_users_table(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются
-            } else if (req.target() == "/display_doctor_schedule") {
+            } else if (req.target().starts_with("/doctors/")) {
+                std::string target = std::string(req.target());  // например, "/doctors/123"
+                std::string id_str = target.substr(std::string("/doctors/").length());  // "123"
+                db_handler.doctor_exists(std::stoi(id_str));
+            }
+            else if (req.target() == "/display_doctor_schedule") {
                 display_doctor_schedule(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются
             } else if (req.target() == "/junior_admin_schedule") {
                 junior_admin_schedule(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются

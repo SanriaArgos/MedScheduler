@@ -180,17 +180,13 @@ void junior_admin_client::run_menu() {
 }
 
 void junior_admin_client::add_doctor(const json& data) {
-    std::string json_data = data.dump();
     std::string url = "http://localhost:8080/add_doctor";
-    std::string response = send_post_request(url, json_data);
-    std::cout << "Server response: " << response << std::endl;
+    std::string response = send_post_request(url, data);
 }
 
 void junior_admin_client::add_record_slot(const json& data) {
-    std::string json_data = data.dump();
     std::string url = "http://localhost:8080/add_record_slot";
-    std::string response = send_post_request(url, json_data);
-    std::cout << "Server response: " << response << std::endl;
+    std::string response = send_post_request(url, data);
 }
 
 bool junior_admin_client::check_doctor_exists(int doctor_id) {
@@ -244,6 +240,11 @@ void junior_admin_client::attach_doctor_to_hospital(const json& data) {
     int doctor_id = data.value("doctor_id", -1);
     int hospital_id = data.value("hospital_id", -1);
 
+    if (doctor_id == -1 || hospital_id == -1) {
+        std::cerr << "Invalid JSON: missing or wrong type for doctor_id / hospital_id\n";
+        return;
+    }
+
     if (!check_doctor_exists(doctor_id)) {
         std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
         return;
@@ -262,7 +263,6 @@ void junior_admin_client::attach_doctor_to_hospital(const json& data) {
     std::string json_data = data.dump();
     std::string url = "http://localhost:8080/attach_doctor_to_hospital";
     std::string response = send_post_request(url, json_data);
-    std::cout << "Server response: " << response << std::endl;
 }
 
 void junior_admin_client::detach_doctor_from_hospital(const json& data) {
@@ -279,14 +279,13 @@ void junior_admin_client::detach_doctor_from_hospital(const json& data) {
         return;
     }
 
-    std::string json_data = data.dump();
+    // std::string json_data = data.dump();
     std::string url = "http://localhost:8080/detach_doctor_from_hospital";
-    std::string response = send_post_request(url, json_data);
-    std::cout << "Server response: " << response << std::endl;
+    std::string response = send_post_request(url, data);
 }
 
 json junior_admin_client::get_doctors_table() {
-    std::string url = "http://localhost:8080/doctors";
+    std::string url = "http://localhost:8080/display_doctors";
     std::string response = send_get_request(url);
 
     try {
@@ -299,7 +298,7 @@ json junior_admin_client::get_doctors_table() {
 }
 
 json junior_admin_client::get_users_table() {
-    std::string url = "http://localhost:8080/users";
+    std::string url = "http://localhost:8080/display_users";
     std::string response = send_get_request(url);
 
     try {

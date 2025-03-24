@@ -6,8 +6,6 @@
 
 namespace http = boost::beast::http;
 
-// extern database_handler* global_db;  // Объявляем глобальный указатель, определённый в main.cpp
-
 void login(const nlohmann::json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     nlohmann::json response;
 

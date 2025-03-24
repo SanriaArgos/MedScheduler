@@ -47,7 +47,7 @@ void senior_admin_client::run_menu() {
 
             case 2: {
                 std::string region, settlement_type, settlement_name, street, house, full_name;
-                int administrator_id;
+                std::string administrator_id;
                 std::cout << "Enter region: ";
                 std::cin >> region;
                 std::cout << "Enter settlement type: ";
@@ -72,6 +72,8 @@ void senior_admin_client::run_menu() {
                     {"full_name", full_name},
                     {"administrator_id", administrator_id}
                 };
+                std::cerr << hospital_data["region"] << " " << hospital_data["settlement_type"] << " " << hospital_data["settlement_name"] << " ";
+                std::cerr << hospital_data["street"] << " " << hospital_data["house"] << " " << hospital_data["full_name"] << hospital_data["administrator_id"] << std::endl;
                 add_hospital(hospital_data);
                 break;
             }
@@ -99,26 +101,23 @@ void senior_admin_client::run_menu() {
     }
 }
 
-void senior_admin_client::add_junior_admin(const json& data) {
-    std::string json_data = data.dump();
+void senior_admin_client::add_junior_admin(const json& json_data) {
     std::string url = "http://localhost:8080/add_junior_admin";
     std::string response = send_post_request(url, json_data);
-    std::cout << "Server response: " << response << std::endl;
 }
 
-void senior_admin_client::add_hospital(const json& data) {
-    std::string json_data = data.dump();
+void senior_admin_client::add_hospital(const json& json_data) {
     std::string url = "http://localhost:8080/add_hospital";
     std::string response = send_post_request(url, json_data);
-    std::cout << "Server response: " << response << std::endl;
 }
 
 void senior_admin_client::display_hospitals_table() {
-    std::string url = "http://localhost:8080/hospitals";
+    std::string url = "http://localhost:8080/display_hospitals";
     std::string response = send_get_request(url);
 
     try {
-        json hospitals = json::parse(response);
+        json result = json::parse(response);
+        const auto& hospitals = result["hospitals"];
         std::cout << "\n=== Hospitals Table ===\n";
         for (const auto& hospital : hospitals) {
             std::cout << "(" << hospital["hospital_id"] << ") "
@@ -136,11 +135,12 @@ void senior_admin_client::display_hospitals_table() {
 }
 
 void senior_admin_client::display_users_table() {
-    std::string url = "http://localhost:8080/users";
+    std::string url = "http://localhost:8080/display_users";
     std::string response = send_get_request(url);
 
     try {
-        json users = json::parse(response);
+        json result = json::parse(response);
+        const auto& users = result["users"];
         std::cout << "\n=== Users Table ===\n";
         for (const auto& user : users) {
             std::cout << "(" << user["id"] << ") "

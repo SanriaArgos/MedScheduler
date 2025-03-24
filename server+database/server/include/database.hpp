@@ -25,6 +25,7 @@ public:
     std::string get_patient_records(int patient_id) const;
     int get_user_id_by_phone(const std::string &phone) const;
     std::string get_user_type_by_phone(const std::string &phone) const;
+    bool doctor_exists(int doctor_id) const;
 
     // Функция инициализации базы данных (DDL)
     bool initialize_database();

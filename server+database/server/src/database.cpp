@@ -61,7 +61,6 @@ std::string database_handler::hash_password(const std::string &password,
     return ss.str();
 }
 
-// Исправлено: теперь проверяем наличие номера телефона во всей таблице
 bool database_handler::user_exists(const std::string &phone) const {
     std::string query = "SELECT 1 FROM users WHERE phone = '" + prepare_query(phone) + "'";
     PGresult *res = PQexec(connection_, query.c_str());
@@ -190,7 +189,7 @@ std::string database_handler::login_user(const std::string &phone,
         return "";
     }
     if (user_type == "patient") {
-        return "patient:" + user_id;
+        return "patient:" + user_id; //тут вроде айди не приклеивается, но оно выводится до этого так что норм
     } else if (user_type == "senior administrator") {
         return "senior:" + user_id;
     } else if (user_type == "junior administrator") {
@@ -209,6 +208,18 @@ std::string database_handler::login_user(const std::string &phone,
     }
     return "success";
 }
+
+bool database_handler::doctor_exists(int doctor_id) const {
+    const char* paramValues[1] = { std::to_string(doctor_id).c_str() };
+    PGresult *res = PQexecParams(connection_,
+        "SELECT 1 FROM doctors WHERE id = $1",
+        1, nullptr, paramValues, nullptr, nullptr, 0);
+
+    bool exists = res && PQntuples(res) > 0;
+    PQclear(res);
+    return exists;
+}
+
 
 PGconn* database_handler::get_connection() const {
     return connection_;

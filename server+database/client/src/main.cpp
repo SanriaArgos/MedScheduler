@@ -71,7 +71,7 @@ int main() {
 
                 auth::user_info user = auth::register_user(phone, password, first_name, last_name, patronymic);
                 if (user.id != -1) {
-                    std::cout << "Registration successful! User ID: " << user.id << "\n";
+                    std::cout << "Registration successful!\n";
                 } else {
                     std::cerr << "Registration failed. Please try again.\n";
                 }

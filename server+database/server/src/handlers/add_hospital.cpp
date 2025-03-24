@@ -14,11 +14,10 @@ extern database_handler* global_db;
 void add_hospital(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     nlohmann::json response;
 
-    // Проверка на наличие обязательных полей
     if (!data.contains("region") || !data.contains("settlement_type") ||
         !data.contains("settlement_name") || !data.contains("street") ||
         !data.contains("house") || !data.contains("full_name") ||
-        !data.contains("admin_id")) {
+        !data.contains("administrator_id")) {
         std::cerr << "Error: Missing required fields for adding hospital\n";
         response["success"] = false;
         response["error"] = "Missing required fields";
@@ -35,7 +34,7 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
     std::string street = data["street"];
     std::string house = data["house"];
     std::string full_name = data["full_name"];
-    int admin_id = data["admin_id"];
+    std::string admin_id = data["administrator_id"];
 
     // Проверка, если такой адрес уже существует в базе
     const char* params_exist[5] = { region.c_str(), settlement_type.c_str(), settlement_name.c_str(), street.c_str(), house.c_str() };
@@ -56,7 +55,7 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
     PQclear(res_exist);
 
     // Вставка нового госпиталя в базу
-    std::string admin_id_str = std::to_string(admin_id);
+    std::string admin_id_str = admin_id;
     const char* params_ins[7] = { region.c_str(), settlement_type.c_str(), settlement_name.c_str(), street.c_str(), house.c_str(), full_name.c_str(), admin_id_str.c_str() };
     PGresult *res_ins = PQexecParams(db_handler.get_connection(),
         "INSERT INTO hospitals (region, settlement_type, settlement_name, street, house, full_name, administrator_id) VALUES ($1, $2, $3, $4, $5, $6, $7)",
