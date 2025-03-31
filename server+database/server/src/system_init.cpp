@@ -79,7 +79,7 @@ bool initialize_system(const std::string &superuser_connect_info) {
     }
     PQfinish(conn);
 
-    const std::string meduser_conn_info = "dbname=postgres user=postgres password=123 host=localhost port=5432";
+    const std::string meduser_conn_info = "dbname=postgres user=postgres password=123 host=db port=5432";
     PGconn *conn_meduser = PQconnectdb(meduser_conn_info.c_str());
     if (PQstatus(conn_meduser) != CONNECTION_OK) {
         std::cerr << "Meduser connection error: " << PQerrorMessage(conn_meduser) << "\n";
@@ -98,7 +98,7 @@ bool initialize_system(const std::string &superuser_connect_info) {
     }
     PQfinish(conn_meduser);
 
-    const std::string medscheduler_conn_info = "dbname=medscheduler user=postgres password=123 host=localhost port=5432";
+    const std::string medscheduler_conn_info = "dbname=medscheduler user=postgres password=123 host=db port=5432";
     PGconn *conn2 = PQconnectdb(medscheduler_conn_info.c_str());
     if (PQstatus(conn2) != CONNECTION_OK) {
         std::cerr << "Medscheduler connection error (meduser): " << PQerrorMessage(conn2) << "\n";
