@@ -57,12 +57,12 @@ void display_doctor_schedule(const json &data, http::response<http::string_body>
         json record;
         record["appointment_date"] = PQgetvalue(res_query, i, 0);
         record["appointment_time"] = PQgetvalue(res_query, i, 1);
-        record["hospital_full_name"] = PQgetvalue(res_query, i, 2);
+        record["full_name"] = PQgetvalue(res_query, i, 2);
         record["cabinet_number"] = PQgetvalue(res_query, i, 3);
-        record["patient_last_name"] = PQgetvalue(res_query, i, 4);
-        record["patient_first_name"] = PQgetvalue(res_query, i, 5);
-        record["patient_patronymic"] = PQgetvalue(res_query, i, 6);
-        record["patient_phone"] = PQgetvalue(res_query, i, 7);
+        record["last_name"] = PQgetvalue(res_query, i, 4);
+        record["first_name"] = PQgetvalue(res_query, i, 5);
+        record["patronymic"] = PQgetvalue(res_query, i, 6);
+        record["phone"] = PQgetvalue(res_query, i, 7);
         schedule.push_back(record);
     }
 

@@ -209,17 +209,16 @@ std::string database_handler::login_user(const std::string &phone,
     return "success";
 }
 
-bool database_handler::doctor_exists(int doctor_id) const {
-    const char* paramValues[1] = { std::to_string(doctor_id).c_str() };
-    PGresult *res = PQexecParams(connection_,
-        "SELECT 1 FROM doctors WHERE id = $1",
-        1, nullptr, paramValues, nullptr, nullptr, 0);
+// bool database_handler::doctor_exists(int doctor_id) const {
+//     const char* paramValues[1] = { std::to_string(doctor_id).c_str() };
+//     PGresult *res = PQexecParams(connection_,
+//         "SELECT 1 FROM doctors WHERE doctor_id = $1",
+//         1, nullptr, paramValues, nullptr, nullptr, 0);
 
-    bool exists = res && PQntuples(res) > 0;
-    PQclear(res);
-    return exists;
-}
-
+//     bool exists = res && PQntuples(res) > 0;
+//     PQclear(res);
+//     return exists;
+// }
 
 PGconn* database_handler::get_connection() const {
     return connection_;

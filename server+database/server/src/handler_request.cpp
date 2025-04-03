@@ -29,6 +29,9 @@ using json = nlohmann::json;
 #include "../include/handlers/doctor_schedule.hpp"
 #include "../include/handlers/junior_admin_schedule.hpp"
 #include "../include/handlers/patient_schedule.hpp"
+#include "../include/handlers/doctor_exists.hpp"
+#include "../include/handlers/hospital_exists.hpp"
+#include "../include/handlers/attach_doctor_to_hospital.hpp"
 #include "../include/database.hpp"
 
 std::string base64_decode(const std::string &encoded) {
@@ -92,7 +95,9 @@ void handle_request(
             }
             else if (req.target() == "/registration") {
                 registration(body, res, db_handler);
-            } 
+            } else if (req.target() == "/attach_doctor_to_hospital") {
+                attach_doctor_to_hospital(body, res, db_handler);
+            }
             else if (req.target() == "/add_doctor") {
                 add_doctor(body, res, db_handler);
             }
@@ -106,6 +111,8 @@ void handle_request(
                 add_hospital_to_doctor(body, res, db_handler);
             } else if (req.target() == "/remove_hospital_from_doctor") {
                 remove_hospital_from_doctor(body, res, db_handler);
+            }  else if (req.target() == "/view_doctor_schedule_for_patient") {
+                view_doctor_schedule_for_patient(body, res, db_handler);  
             } else {
                 handle_not_found(res);
             }
@@ -117,16 +124,49 @@ void handle_request(
             } else if (req.target() == "/display_users") {
                 display_users_table(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются
             } else if (req.target().starts_with("/doctors/")) {
-                std::string target = std::string(req.target());  // например, "/doctors/123"
-                std::string id_str = target.substr(std::string("/doctors/").length());  // "123"
-                db_handler.doctor_exists(std::stoi(id_str));
+                std::string id_str = std::string(req.target()).substr(std::string("/doctors/").length());
+                int doctor_id = std::stoi(id_str);
+                doctor_exists(doctor_id, res, db_handler);
+            } else if (req.target().starts_with("/hospitals/")) {
+                std::string id_str = std::string(req.target()).substr(std::string("/hospitals/").length());
+                int hospital_id = std::stoi(id_str);
+                hospital_exists(hospital_id, res, db_handler);
             }
-            else if (req.target() == "/display_doctor_schedule") {
-                display_doctor_schedule(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются
-            } else if (req.target() == "/junior_admin_schedule") {
+            else if (req.target().starts_with("/display_doctor_schedule")) {
+                std::string target = std::string(req.target());  // Преобразуем в строку
+                size_t pos = target.find("?doctor_id=");
+
+            if (pos != std::string::npos) {
+                std::string doctor_id_str = target.substr(pos + 11);  // 11 - длина "?doctor_id="
+
+            try {
+            int doctor_id = std::stoi(doctor_id_str);  // Преобразуем в число
+
+            json request_data;
+            request_data["doctor_id"] = doctor_id;
+
+            display_doctor_schedule(request_data, res, db_handler);
+        } catch (const std::exception& e) {
+            json error;
+            error["success"] = false;
+            error["error"] = "Invalid doctor_id format";
+
+            res.result(http::status::bad_request);
+            res.set(http::field::content_type, "application/json");
+            res.body() = error.dump();
+        }
+    } else {
+        json error;
+        error["success"] = false;
+        error["error"] = "Missing doctor_id";
+
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = error.dump();
+    }
+}
+ else if (req.target() == "/junior_admin_schedule") {
                 junior_admin_schedule(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются
-            } else if (req.target() == "/view_doctor_schedule_for_patient") {
-                view_doctor_schedule_for_patient(json::object(), res, db_handler);  // Пустой JSON, так как данные не требуются
             }
             else if (req.target().starts_with("/get_user_id")) {
                 json out;
@@ -184,5 +224,3 @@ void handle_request(
     }
     res.prepare_payload();
 }
-
-// Остальные функции (base64_decode, extract_basic_credentials, handle_not_found, handle_error) остаются без изменений

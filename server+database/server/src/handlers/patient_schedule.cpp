@@ -37,13 +37,17 @@ void view_doctor_schedule_for_patient(const json &data, http::response<http::str
     std::string doctor_id_str = std::to_string(doctor_id);
     std::string hospital_id_str = std::to_string(hospital_id);
     const char* params[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
+    int paramLengths[2] = { (int)doctor_id_str.size(), (int)hospital_id_str.size() };
+    int paramFormats[2] = { 0, 0 };  // 0 означает, что передаём текстовый формат
+
     PGresult *res_query = PQexecParams(db_handler.get_connection(),
-        "SELECT appointment_date, appointment_time, cabinet_number, patient_id "
-        "FROM records "
-        "WHERE doctor_id = $1 AND hospital_id = $2 "
-        "AND appointment_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + INTERVAL '7 day') "
-        "ORDER BY appointment_date, appointment_time",
-        2, nullptr, params, nullptr, nullptr, 0);
+    "SELECT appointment_date, appointment_time, cabinet_number, patient_id "
+    "FROM records "
+    "WHERE doctor_id = $1::int AND hospital_id = $2::int "
+    "AND appointment_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + INTERVAL '7 day') "
+    "ORDER BY appointment_date, appointment_time",
+    2, nullptr, params, paramLengths, paramFormats, 0);
+
 
     if (!res_query || PQresultStatus(res_query) != PGRES_TUPLES_OK) {
         response["success"] = false;
@@ -76,4 +80,5 @@ void view_doctor_schedule_for_patient(const json &data, http::response<http::str
     res.result(http::status::ok);  // 200 OK
     res.set(http::field::content_type, "application/json");
     res.body() = response.dump();
+    res.prepare_payload();
 }

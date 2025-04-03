@@ -12,12 +12,12 @@ class doctor_client {
 public:
     doctor_client(int doctor_id);
     void display_schedule();
-    void run_menu(); // Добавляем метод для запуска меню
+    void run_menu();  // Добавляем метод для запуска меню
 
 private:
     int doctor_id;
 };
 
-} // namespace doctor
+}  // namespace doctor
 
-#endif // DOCTOR_CLIENT_HPP
+#endif  // DOCTOR_CLIENT_HPP

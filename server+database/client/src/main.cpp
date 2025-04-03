@@ -1,9 +1,9 @@
 #include <iostream>
+#include "client_auth.hpp"
 #include "client_doctor.hpp"
 #include "client_junior_admin.hpp"
-#include "client_senior_admin.hpp"
 #include "client_patient.hpp"
-#include "client_auth.hpp"
+#include "client_senior_admin.hpp"
 
 void display_main_menu() {
     std::cout << "\n=== Main Menu ===\n";
@@ -31,7 +31,8 @@ int main() {
 
                     auth::user_info user = auth::login(phone, password);
                     if (user.id != -1) {
-                        std::cout << "Login successful!" << "\n";
+                        std::cout << "Login successful!"
+                                  << "\n";
 
                         if (user.user_type == "doctor") {
                             doctor::doctor_client doctor(user.id);
@@ -40,7 +41,9 @@ int main() {
                             junior_admin::junior_admin_client admin(user.id);
                             admin.run_menu();
                         } else if (user.user_type == "senior administrator") {
-                            senior_admin::senior_admin_client senior_admin(user.id);
+                            senior_admin::senior_admin_client senior_admin(
+                                user.id
+                            );
                             senior_admin.run_menu();
                         } else if (user.user_type == "patient") {
                             patient::patient_client patient(user.id);
@@ -56,7 +59,7 @@ int main() {
                 break;
             }
 
-            case 2: { 
+            case 2: {
                 std::string phone, password, first_name, last_name, patronymic;
                 std::cout << "Enter phone: ";
                 std::cin >> phone;
@@ -69,7 +72,9 @@ int main() {
                 std::cout << "Enter patronymic: ";
                 std::cin >> patronymic;
 
-                auth::user_info user = auth::register_user(phone, password, first_name, last_name, patronymic);
+                auth::user_info user = auth::register_user(
+                    phone, password, first_name, last_name, patronymic
+                );
                 if (user.id != -1) {
                     std::cout << "Registration successful!\n";
                 } else {

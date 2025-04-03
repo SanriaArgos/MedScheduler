@@ -11,10 +11,10 @@ public:
     void run_menu();
 
 private:
-    int user_id; 
+    int user_id;
     void view_doctor_schedule();
 };
 
-} // namespace patient
+}  // namespace patient
 
-#endif // CLIENT_PATIENT_HPP
+#endif  // CLIENT_PATIENT_HPP
