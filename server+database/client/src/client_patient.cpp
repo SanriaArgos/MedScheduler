@@ -40,7 +40,6 @@ void patient_client::run_menu() {
 }
 
 void patient_client::view_doctor_schedule() {
-    // Ввод данных от пользователя
     std::string region, settlement_type, settlement_name, specialty;
     int hospital_id, doctor_id;
 
@@ -57,16 +56,15 @@ void patient_client::view_doctor_schedule() {
     std::cout << "Enter doctor ID: ";
     std::cin >> doctor_id;
 
-    // Создаём JSON с данными
     json request_data = {
         {"region", region},
         {"settlement_type", settlement_type},
         {"settlement_name", settlement_name},
         {"specialty", specialty},
         {"hospital_id", hospital_id},
-        {"doctor_id", doctor_id}};
+        {"doctor_id", doctor_id}
+    };
 
-    // Отправляем POST-запрос с JSON
     std::string response = send_post_request(
         "http://localhost:8080/view_doctor_schedule_for_patient", request_data
     );
@@ -84,13 +82,7 @@ void patient_client::view_doctor_schedule() {
         }
 
         std::cout << "\n=== Doctor's Schedule ===\n";
-        for (const auto &entry : schedule["schedule"]) {
-            std::cout << "Date: " << entry["appointment_date"] << "\n";
-            std::cout << "Time: " << entry["appointment_time"] << "\n";
-            std::cout << "Cabinet: " << entry["cabinet_number"] << "\n";
-            std::cout << "Patient ID: " << entry["patient_id"] << "\n";
-            std::cout << "----------------------------\n";
-        }
+        std::cout << schedule.dump(4) << std::endl; 
     } catch (const std::exception &e) {
         std::cerr << "Error parsing schedule: " << e.what() << std::endl;
     }

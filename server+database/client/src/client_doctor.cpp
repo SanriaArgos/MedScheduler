@@ -34,60 +34,56 @@ void doctor_client::run_menu() {
     }
 }
 
-// try {
-//     json result = json::parse(response);
-//     const auto& users = result["users"];
-//     std::cout << "\n=== Users Table ===\n";
-//     for (const auto& user : users) {
-
 void doctor_client::display_schedule() {
+    int doctor_id;
+    std::cout << "Enter your ID: ";
+    std::cin >> doctor_id;
+
     std::string url =
         "http://localhost:8080/display_doctor_schedule?doctor_id=" +
         std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
     if (response.empty()) {
-        std::cerr << "Получен пустой ответ от сервера." << std::endl;
+        std::cerr << "Empty response from server." << std::endl;
         return;
     }
 
     try {
         json full_response = json::parse(response);
-        if (!full_response["success"]) {
-            std::cerr << "Ошибка: не удалось получить расписание" << std::endl;
+
+        if (!full_response.contains("success") || !full_response["success"]) {
+            std::cerr << "Error: failed to fetch schedule." << std::endl;
             return;
         }
 
         json schedule = full_response["schedule"];
 
-        std::cout << "\n=== Расписание доктора ===\n";
-        std::string current_date;
-        for (const auto &entry : schedule) {
-            std::string date = entry["appointment_date"];
-            std::string time = entry["appointment_time"];
-            std::string hospital = entry["full_name"];
-            std::string cabinet = entry["cabinet_number"];
-            std::string last_name = entry["last_name"];
-            std::string first_name = entry["first_name"];
-            std::string patronymic = entry["patronymic"];
-            std::string patient_phone = entry["phone"];
+        if (!schedule.empty()) {
+            for (auto& entry : schedule) {
+                // Remove patient_id from output
+                entry.erase("patient_id");
 
-            if (date != current_date) {  // Выводим по дате
-                std::cout << "\n" << date << ":\n";
-                current_date = date;
+                bool is_empty =
+                    entry["last_name"].is_null() || entry["last_name"] == "" ||
+                    entry["first_name"].is_null() || entry["first_name"] == "" ||
+                    entry["patronymic"].is_null() || entry["patronymic"] == "";
+
+                if (is_empty) {
+                    entry["status"] = "available";
+                } else {
+                    entry["status"] = "booked";
+                }
             }
 
-            std::cout << time << ": " << hospital << ", кабинет " << cabinet;
-            if (last_name.empty() && first_name.empty() && patronymic.empty()) {
-                std::cout << ", свободно";
-            } else {
-                std::cout << ", " << last_name << " " << first_name << " "
-                          << patronymic << ", " << patient_phone;
-            }
-            std::cout << "\n";
+            std::cout << "\n=== Doctor Schedule ===\n";
+            std::cout << schedule.dump(4) << std::endl;
+        } else {
+            std::cout << "Schedule is empty.\n";
         }
+
     } catch (const std::exception &e) {
-        std::cerr << "Ошибка при парсинге JSON: " << e.what() << std::endl;
+        std::cerr << "Error parsing JSON: " << e.what() << std::endl;
     }
 }
 
