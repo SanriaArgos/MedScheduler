@@ -6,6 +6,9 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <nlohmann/json.hpp>
+#include "server+database/client/src/client_senior_admin.cpp"
+#include "server+database/client/src/common_for_all.cpp"
 SeniorAdminWindow::SeniorAdminWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::SeniorAdminWindow)
@@ -41,13 +44,20 @@ void SeniorAdminWindow::on_add_junior_administrator_button_clicked()
         ui->error_add_junior->setText("Incorrect format for the phone number.");
         return;
     }
-    QJsonObject json;
-    json["last_name"]=last_name;
-    json["first_name"] = first_name;
-    json["middle_name"] = middle_name;
-    json["phone_number"] = phone_number;
-    json["user_type"]="junior admin";
-    add_json_to_users(json);
+    QJsonObject junior_admin_data = {
+        {"last_name", last_name},
+        {"first_name", first_name},
+        {"patronymic", middle_name},
+        {"phone", phone_number},
+        {"user_type", "junior admin"}
+    };
+    // Преобразование QJsonObject в строку, если функция add_junior_admin принимает std::string
+    QByteArray jsonData = QJsonDocument(junior_admin_data).toJson();
+    std::string jsonString = jsonData.toStdString();
+    nlohmann::json j = nlohmann::json::parse(jsonString);
+
+    senior_admin::senior_admin_client client(1);
+    client.add_junior_admin(j);
 }
 
 
@@ -85,32 +95,33 @@ void SeniorAdminWindow::on_add_new_hospital_button_clicked()
         ui->error_add_hospital->setText("Incorrect format for id of junior administrator.");
         return;
     }
-    QJsonObject json;
-    json["region"]=region;
-    json["settlement_type"] = settlement_type;
-    json["settlement_name"] = settlement_name;
-    json["street"] = street;
-    json["house"]=house;
-    json["hospital_full_name"]=hospital_full_name;
-    json["id_of_junior_administrator"]=id_of_junior_administrator;
-    add_json_to_hospitals(json);
+    QJsonObject hospital_data = {
+        {"region", region},
+        {"settlement_type", settlement_type},
+        {"settlement_name", settlement_name},
+        {"street", street},
+        {"house", house},
+        {"full_name", hospital_full_name},
+        {"administrator_id", id_of_junior_administrator}};
+    QByteArray jsonData = QJsonDocument(hospital_data).toJson();
+    std::string jsonString = jsonData.toStdString();
+    nlohmann::json j = nlohmann::json::parse(jsonString);
+    senior_admin::senior_admin_client client(1);
+    client.add_hospital(j);
 }
 
 
 void SeniorAdminWindow::on_get_users_table_button_clicked()
 {
-    QFile file("users.json");
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Ошибка при открытии файла для чтения!";
-        return;
-    }
+    senior_admin::senior_admin_client client(1);
+    // Получаем данные в формате nlohmann::json
+    nlohmann::json jsonData = client.get_users_table();
 
-    // Читаем данные из файла
-    QByteArray fileData = file.readAll();
-    file.close();
+    // Преобразуем в строку
+    std::string jsonString = jsonData.dump();
 
-    // Преобразуем данные в JSON-документ
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
+    // Создаем QJsonDocument из строки
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));
     if (jsonDoc.isNull()) {
         qDebug() << "Ошибка при разборе JSON!";
         return;
@@ -134,9 +145,9 @@ void SeniorAdminWindow::on_get_users_table_button_clicked()
 
             QString fullName = userObj["last_name"].toString() + ", " +
                                userObj["first_name"].toString() + ", " +
-                               userObj["middle_name"].toString();
+                               userObj["patronymic"].toString();
 
-            QString phoneNumber = userObj["phone_number"].toString();
+            QString phoneNumber = userObj["phone"].toString();
 
             QString type= userObj["user_type"].toString();
 
@@ -158,14 +169,15 @@ void SeniorAdminWindow::on_get_users_table_button_clicked()
 
 void SeniorAdminWindow::on_get_hospitals_table_button_clicked()
 {
-    QFile file("hospitals.json");
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Ошибка при открытии файла для чтения!";
-        return;
-    }
-    QByteArray fileData = file.readAll();
-    file.close();
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
+    senior_admin::senior_admin_client client(1);
+    // Получаем данные в формате nlohmann::json
+    nlohmann::json jsonData = client.display_hospitals_table();
+
+    // Преобразуем в строку
+    std::string jsonString = jsonData.dump();
+
+    // Создаем QJsonDocument из строки
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));
     if (jsonDoc.isNull()) {
         qDebug() << "Ошибка при разборе JSON!";
         return;
@@ -182,7 +194,7 @@ void SeniorAdminWindow::on_get_hospitals_table_button_clicked()
     for (const QJsonValue &hospitalValue : hospitalsArray) {
         if (hospitalValue.isObject()) {
             QJsonObject hospitalObj = hospitalValue.toObject();
-            QString text =hospitalObj["hospital_id"].toString()+", "+hospitalObj["region"].toString()+", "+hospitalObj["settlement_type"].toString()+", "+hospitalObj["settlement_name"].toString()+", "+hospitalObj["street"].toString()+", "+hospitalObj["house"].toString()+", "+hospitalObj["hospital_full_name"].toString()+", "+hospitalObj["id_of_junior_administrator"].toString();
+            QString text =hospitalObj["hospital_id"].toString()+", "+hospitalObj["region"].toString()+", "+hospitalObj["settlement_type"].toString()+", "+hospitalObj["settlement_name"].toString()+", "+hospitalObj["street"].toString()+", "+hospitalObj["house"].toString()+", "+hospitalObj["full_name"].toString()+", "+hospitalObj["administrator_id"].toString();
             QLabel *label = new QLabel(contentWidget);
             label->setText(text);
             label->setStyleSheet("border: 1px solid black; padding: 5px;");
