@@ -1,0 +1,18 @@
+{
+    "users": [
+        {
+            "first_name": "ivam",
+            "last_name": "ivan",
+            "middle_name": "kfdkjfd",
+            "password": "password123",
+            "phone_number": "+71234567890"
+        },
+        {
+            "first_name": "fgdfg",
+            "last_name": "gdf",
+            "middle_name": "gdfgds",
+            "phone_number": "+71234567890",
+            "user_type": "junior admin"
+        }
+    ]
+}

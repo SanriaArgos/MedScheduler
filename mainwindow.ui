@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>MedScheduler</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/images/icon-512.png</normaloff>:/images/icon-512.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
@@ -58,7 +62,8 @@ background-color: rgb(31, 31, 39);</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 18pt &quot;Microsoft YaHei&quot;;</string>
+        <string notr="true">font: 18pt &quot;Microsoft YaHei&quot;;
+color: rgb(255, 255, 255);</string>
        </property>
        <property name="text">
         <string>MedScheduler</string>
@@ -322,6 +327,8 @@ text-decoration: underline;</string>
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

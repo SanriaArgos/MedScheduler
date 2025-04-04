@@ -26,6 +26,8 @@ private slots:
 
     void on_get_schedule_button_clicked();
 
+    void on_get_users_table_button_clicked();
+
 private:
     Ui::JuniorAdminWindow *ui;
 };

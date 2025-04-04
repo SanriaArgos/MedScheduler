@@ -3,6 +3,9 @@
 #include <QString>
 #include <utils.h>
 #include <QJsonObject>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonArray>
 RegistrationWindow::RegistrationWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::RegistrationWindow)
@@ -33,7 +36,7 @@ void RegistrationWindow::on_pushButton_clicked()
         return;
     }
     if(!is_latin_or_dash(middle_name)){
-        ui->invalid_text->setText("Incorrect format for the middle name.");
+        ui->invalid_text->setText("Incorrect format for the middle name. If there is no middle name, enter '-'.");
         return;
     }
     if(!is_validated_phone(phone_number)){
@@ -52,11 +55,14 @@ void RegistrationWindow::on_pushButton_clicked()
         ui->invalid_text->setText("Passwords are not the same.");
         return;
     }
+
     QJsonObject json;
     json["last_name"]=last_name;
     json["first_name"] = first_name;
     json["middle_name"] = middle_name;
     json["phone_number"] = phone_number;
     json["password"] = password;
+    json["user_type"]="patient";
+    add_json_to_users(json);
 }
 

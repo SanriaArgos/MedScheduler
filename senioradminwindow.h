@@ -20,6 +20,10 @@ private slots:
 
     void on_add_new_hospital_button_clicked();
 
+    void on_get_users_table_button_clicked();
+
+    void on_get_hospitals_table_button_clicked();
+
 private:
     Ui::SeniorAdminWindow *ui;
 };

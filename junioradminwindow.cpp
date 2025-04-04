@@ -35,7 +35,7 @@ void JuniorAdminWindow::on_add_doctor_button_clicked()
         return;
     }
     if(!is_latin_or_dash(middle_name)){
-        ui->add_doctor_error->setText("Incorrect format for the middle name.");
+        ui->add_doctor_error->setText("Incorrect format for the middle name. If there is no middle name, enter '-'.");
         return;
     }
     if(!is_validated_phone(phone_number)){
@@ -151,5 +151,64 @@ void JuniorAdminWindow::on_get_schedule_button_clicked()
     QJsonObject json;
     json["doctor_id"]=doctor_id;
     //send
+}
+
+
+void JuniorAdminWindow::on_get_users_table_button_clicked()
+{
+    QFile file("users.json");
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Ошибка при открытии файла для чтения!";
+        return;
+    }
+
+    // Читаем данные из файла
+    QByteArray fileData = file.readAll();
+    file.close();
+
+    // Преобразуем данные в JSON-документ
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
+    if (jsonDoc.isNull()) {
+        qDebug() << "Ошибка при разборе JSON!";
+        return;
+    }
+
+    // Получаем корневой объект JSON
+    QJsonObject rootObject = jsonDoc.object();
+    if (!rootObject.contains("users") || !rootObject["users"].isArray()) {
+        qDebug() << "Ключ 'users' отсутствует или не является массивом!";
+        return;
+    }
+    QJsonArray usersArray = rootObject["users"].toArray();
+    QWidget *contentWidget = new QWidget(ui->users_scroll);
+    QVBoxLayout *layout = new QVBoxLayout(contentWidget);
+
+    // Добавляем данные в виджет
+    for (const QJsonValue &userValue : usersArray) {
+        if (userValue.isObject()) {
+            QJsonObject userObj = userValue.toObject();
+            QString id=userObj["id"].toString();
+
+            QString fullName = userObj["last_name"].toString() + ", " +
+                               userObj["first_name"].toString() + ", " +
+                               userObj["middle_name"].toString();
+
+            QString phoneNumber = userObj["phone_number"].toString();
+
+            QString type= userObj["user_type"].toString();
+
+            // Создаем QLabel для отображения данных
+            QLabel *label = new QLabel(contentWidget);
+            label->setText(id+", "+fullName +", "+ phoneNumber+", "+type);
+            label->setStyleSheet("border: 1px solid black; padding: 5px;");
+
+            // Добавляем QLabel в layout
+            layout->addWidget(label);
+        }
+    }
+    // Устанавливаем layout для contentWidget
+    contentWidget->setLayout(layout);
+    // Устанавливаем contentWidget в QScrollArea
+    ui->users_scroll->setWidget(contentWidget);
 }
 
