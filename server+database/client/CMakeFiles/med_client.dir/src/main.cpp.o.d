@@ -146,6 +146,7 @@ CMakeFiles/med_client.dir/src/main.cpp.o: \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
  /usr/include/c++/11/bits/istream.tcc \
+ /home/victoria/MedScheduler/server+database/client/include/client_auth.hpp \
  /home/victoria/MedScheduler/server+database/client/include/client_doctor.hpp \
  /usr/include/nlohmann/json.hpp /usr/include/c++/11/algorithm \
  /usr/include/c++/11/utility /usr/include/c++/11/bits/stl_relops.h \
@@ -279,6 +280,5 @@ CMakeFiles/med_client.dir/src/main.cpp.o: \
  /usr/include/nlohmann/detail/macro_unscope.hpp \
  /usr/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
  /home/victoria/MedScheduler/server+database/client/include/client_junior_admin.hpp \
- /home/victoria/MedScheduler/server+database/client/include/client_senior_admin.hpp \
  /home/victoria/MedScheduler/server+database/client/include/client_patient.hpp \
- /home/victoria/MedScheduler/server+database/client/include/client_auth.hpp
+ /home/victoria/MedScheduler/server+database/client/include/client_senior_admin.hpp

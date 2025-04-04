@@ -1,14 +1,14 @@
-#include "client_senior_admin.hpp"
+#include "../include/client_senior_admin.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "common_for_all.hpp"
+#include "../include/common_for_all.hpp"
 
 namespace senior_admin {
 
 using json = nlohmann::json;
 
 senior_admin_client::senior_admin_client(int admin_id) : admin_id(admin_id) {
-}
+};
 
 void senior_admin_client::run_menu() {
     int choice = 0;
@@ -25,22 +25,22 @@ void senior_admin_client::run_menu() {
 
         switch (choice) {
             case 1: {
-                std::string last_name, first_name, patronymic, phone;
-                std::cout << "Enter last name: ";
-                std::cin >> last_name;
-                std::cout << "Enter first name: ";
-                std::cin >> first_name;
-                std::cout << "Enter patronymic: ";
-                std::cin >> patronymic;
-                std::cout << "Enter phone: ";
-                std::cin >> phone;
+                // std::string last_name, first_name, patronymic, phone;
+                // std::cout << "Enter last name: ";
+                // std::cin >> last_name;
+                // std::cout << "Enter first name: ";
+                // std::cin >> first_name;
+                // std::cout << "Enter patronymic: ";
+                // std::cin >> patronymic;
+                // std::cout << "Enter phone: ";
+                // std::cin >> phone;
 
-                json junior_admin_data = {
-                    {"last_name", last_name},
-                    {"first_name", first_name},
-                    {"patronymic", patronymic},
-                    {"phone", phone}};
-                add_junior_admin(junior_admin_data);
+                // json junior_admin_data = {
+                //     {"last_name", last_name},
+                //     {"first_name", first_name},
+                //     {"patronymic", patronymic},
+                //     {"phone", phone}};
+                // add_junior_admin(junior_admin_data);
                 break;
             }
 
@@ -82,13 +82,34 @@ void senior_admin_client::run_menu() {
                 break;
             }
 
-            case 3: {
-                display_hospitals_table();
+            // case 3: {
+            //     display_hospitals_table();
+            //     break;
+            // }
+
+            case 3: {  // Просмотреть таблицу пользователей
+                json hospitals = display_hospitals_table();
+                if (!hospitals.empty()) {
+                    std::cout << "\n=== Hospitals Table ===\n";
+                    std::cout << hospitals.dump(4)
+                              << std::endl;  // Выводим JSON в читаемом формате
+                                             // - потом Аюр норм обработает
+                } else {
+                    std::cout << "Error: Failed to fetch users data.\n";
+                }
                 break;
             }
 
-            case 4: {
-                display_users_table();
+            case 4: {  // Просмотреть таблицу пользователей
+                json users = get_users_table();
+                if (!users.empty()) {
+                    std::cout << "\n=== Users Table ===\n";
+                    std::cout << users.dump(4)
+                              << std::endl;  // Выводим JSON в читаемом формате
+                                             // - потом Аюр норм обработает
+                } else {
+                    std::cout << "Error: Failed to fetch users data.\n";
+                }
                 break;
             }
 
@@ -115,45 +136,65 @@ void senior_admin_client::add_hospital(const json &json_data) {
     std::string response = send_post_request(url, json_data);
 }
 
-void senior_admin_client::display_hospitals_table() {
-    std::string url = "http://localhost:8080/display_hospitals";
-    std::string response = send_get_request(url);
-
-    try {
-        json result = json::parse(response);
-        const auto &hospitals = result["hospitals"];
-        std::cout << "\n=== Hospitals Table ===\n";
-        for (const auto &hospital : hospitals) {
-            std::cout << "(" << hospital["hospital_id"] << ") "
-                      << hospital["region"] << "-"
-                      << hospital["settlement_type"] << "-"
-                      << hospital["settlement_name"] << "-"
-                      << hospital["street"] << "-" << hospital["house"] << "-"
-                      << hospital["full_name"] << "-"
-                      << hospital["administrator_id"] << "\n";
-        }
-    } catch (const std::exception &e) {
-        std::cerr << "Error fetching hospitals table: " << e.what()
-                  << std::endl;
-    }
-}
-
-void senior_admin_client::display_users_table() {
+json senior_admin_client::get_users_table() {
     std::string url = "http://localhost:8080/display_users";
     std::string response = send_get_request(url);
 
     try {
-        json result = json::parse(response);
-        const auto &users = result["users"];
-        std::cout << "\n=== Users Table ===\n";
-        for (const auto &user : users) {
-            std::cout << "(" << user["id"] << ") " << user["last_name"] << "-"
-                      << user["first_name"] << "-" << user["patronymic"] << ", "
-                      << user["phone"] << ", " << user["user_type"] << "\n";
-        }
+        json users = json::parse(response);
+        return users;
     } catch (const std::exception &e) {
         std::cerr << "Error fetching users table: " << e.what() << std::endl;
+        return json();
     }
 }
+
+json senior_admin_client::display_hospitals_table() {
+    std::string url = "http://localhost:8080/display_hospitals";
+    std::string response = send_get_request(url);
+
+    try {
+        json hospitals = json::parse(response);
+        return hospitals;
+    } catch (const std::exception &e) {
+        std::cerr << "Error fetching users table: " << e.what() << std::endl;
+        return json();
+    }
+    // try {
+    //     json result = json::parse(response);
+    //     const auto &hospitals = result["hospitals"];
+    //     std::cout << "\n=== Hospitals Table ===\n";
+    //     for (const auto &hospital : hospitals) {
+    //         std::cout << "(" << hospital["hospital_id"] << ") "
+    //                   << hospital["region"] << "-"
+    //                   << hospital["settlement_type"] << "-"
+    //                   << hospital["settlement_name"] << "-"
+    //                   << hospital["street"] << "-" << hospital["house"] << "-"
+    //                   << hospital["full_name"] << "-"
+    //                   << hospital["administrator_id"] << "\n";
+    //     }
+    // } catch (const std::exception &e) {
+    //     std::cerr << "Error fetching hospitals table: " << e.what()
+    //               << std::endl;
+    // }
+}
+
+// void senior_admin_client::display_users_table() {
+//     std::string url = "http://localhost:8080/display_users";
+//     std::string response = send_get_request(url);
+
+//     try {
+//         json result = json::parse(response);
+//         const auto &users = result["users"];
+//         std::cout << "\n=== Users Table ===\n";
+//         for (const auto &user : users) {
+//             std::cout << "(" << user["id"] << ") " << user["last_name"] << "-"
+//                       << user["first_name"] << "-" << user["patronymic"] << ", "
+//                       << user["phone"] << ", " << user["user_type"] << "\n";
+//         }
+//     } catch (const std::exception &e) {
+//         std::cerr << "Error fetching users table: " << e.what() << std::endl;
+//     }
+// }
 
 }  // namespace senior_admin
