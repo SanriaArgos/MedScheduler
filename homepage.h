@@ -28,6 +28,8 @@ private slots:
 
     void on_settings_button_clicked();
 
+    void on_view_schedule_button_clicked();
+
 private:
     Ui::homepage *ui;
 };
