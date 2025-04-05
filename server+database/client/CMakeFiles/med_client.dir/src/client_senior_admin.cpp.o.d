@@ -1,7 +1,7 @@
 CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o: \
- /mnt/c/MedProject/MedScheduler/server+database/client/src/client_senior_admin.cpp \
+ /home/victoria/MedScheduler/server+database/client/src/client_senior_admin.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/MedProject/MedScheduler/server+database/client/src/../include/client_senior_admin.hpp \
+ /home/victoria/MedScheduler/server+database/client/src/../include/client_senior_admin.hpp \
  /usr/include/nlohmann/json.hpp /usr/include/c++/11/algorithm \
  /usr/include/c++/11/utility \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
@@ -277,7 +277,7 @@ CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o: \
  /usr/include/nlohmann/detail/macro_unscope.hpp \
  /usr/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
  /usr/include/c++/11/iostream \
- /mnt/c/MedProject/MedScheduler/server+database/client/src/../include/common_for_all.hpp \
+ /home/victoria/MedScheduler/server+database/client/src/../include/common_for_all.hpp \
  /usr/include/x86_64-linux-gnu/curl/curl.h \
  /usr/include/x86_64-linux-gnu/curl/curlver.h \
  /usr/include/x86_64-linux-gnu/curl/system.h \

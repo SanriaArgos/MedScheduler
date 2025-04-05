@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/MedProject/MedScheduler/server+database/client
+CMAKE_SOURCE_DIR = /home/victoria/MedScheduler/server+database/client
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/MedProject/MedScheduler/server+database/client
+CMAKE_BINARY_DIR = /home/victoria/MedScheduler/server+database/client
 
 # Include any dependencies generated for this target.
 include CMakeFiles/med_client.dir/depend.make
@@ -72,114 +72,114 @@ include CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/client_auth.cpp.o: CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/client_auth.cpp.o: src/client_auth.cpp
 CMakeFiles/med_client.dir/src/client_auth.cpp.o: CMakeFiles/med_client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/med_client.dir/src/client_auth.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_auth.cpp.o -MF CMakeFiles/med_client.dir/src/client_auth.cpp.o.d -o CMakeFiles/med_client.dir/src/client_auth.cpp.o -c /mnt/c/MedProject/MedScheduler/server+database/client/src/client_auth.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/med_client.dir/src/client_auth.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_auth.cpp.o -MF CMakeFiles/med_client.dir/src/client_auth.cpp.o.d -o CMakeFiles/med_client.dir/src/client_auth.cpp.o -c /home/victoria/MedScheduler/server+database/client/src/client_auth.cpp
 
 CMakeFiles/med_client.dir/src/client_auth.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/med_client.dir/src/client_auth.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/MedProject/MedScheduler/server+database/client/src/client_auth.cpp > CMakeFiles/med_client.dir/src/client_auth.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/client/src/client_auth.cpp > CMakeFiles/med_client.dir/src/client_auth.cpp.i
 
 CMakeFiles/med_client.dir/src/client_auth.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/med_client.dir/src/client_auth.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/MedProject/MedScheduler/server+database/client/src/client_auth.cpp -o CMakeFiles/med_client.dir/src/client_auth.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/client/src/client_auth.cpp -o CMakeFiles/med_client.dir/src/client_auth.cpp.s
 
 CMakeFiles/med_client.dir/src/client_doctor.cpp.o: CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/client_doctor.cpp.o: src/client_doctor.cpp
 CMakeFiles/med_client.dir/src/client_doctor.cpp.o: CMakeFiles/med_client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/med_client.dir/src/client_doctor.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_doctor.cpp.o -MF CMakeFiles/med_client.dir/src/client_doctor.cpp.o.d -o CMakeFiles/med_client.dir/src/client_doctor.cpp.o -c /mnt/c/MedProject/MedScheduler/server+database/client/src/client_doctor.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/med_client.dir/src/client_doctor.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_doctor.cpp.o -MF CMakeFiles/med_client.dir/src/client_doctor.cpp.o.d -o CMakeFiles/med_client.dir/src/client_doctor.cpp.o -c /home/victoria/MedScheduler/server+database/client/src/client_doctor.cpp
 
 CMakeFiles/med_client.dir/src/client_doctor.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/med_client.dir/src/client_doctor.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/MedProject/MedScheduler/server+database/client/src/client_doctor.cpp > CMakeFiles/med_client.dir/src/client_doctor.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/client/src/client_doctor.cpp > CMakeFiles/med_client.dir/src/client_doctor.cpp.i
 
 CMakeFiles/med_client.dir/src/client_doctor.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/med_client.dir/src/client_doctor.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/MedProject/MedScheduler/server+database/client/src/client_doctor.cpp -o CMakeFiles/med_client.dir/src/client_doctor.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/client/src/client_doctor.cpp -o CMakeFiles/med_client.dir/src/client_doctor.cpp.s
 
 CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o: CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o: src/client_junior_admin.cpp
 CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o: CMakeFiles/med_client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o -MF CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o.d -o CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o -c /mnt/c/MedProject/MedScheduler/server+database/client/src/client_junior_admin.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o -MF CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o.d -o CMakeFiles/med_client.dir/src/client_junior_admin.cpp.o -c /home/victoria/MedScheduler/server+database/client/src/client_junior_admin.cpp
 
 CMakeFiles/med_client.dir/src/client_junior_admin.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/med_client.dir/src/client_junior_admin.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/MedProject/MedScheduler/server+database/client/src/client_junior_admin.cpp > CMakeFiles/med_client.dir/src/client_junior_admin.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/client/src/client_junior_admin.cpp > CMakeFiles/med_client.dir/src/client_junior_admin.cpp.i
 
 CMakeFiles/med_client.dir/src/client_junior_admin.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/med_client.dir/src/client_junior_admin.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/MedProject/MedScheduler/server+database/client/src/client_junior_admin.cpp -o CMakeFiles/med_client.dir/src/client_junior_admin.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/client/src/client_junior_admin.cpp -o CMakeFiles/med_client.dir/src/client_junior_admin.cpp.s
 
 CMakeFiles/med_client.dir/src/client_patient.cpp.o: CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/client_patient.cpp.o: src/client_patient.cpp
 CMakeFiles/med_client.dir/src/client_patient.cpp.o: CMakeFiles/med_client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/med_client.dir/src/client_patient.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_patient.cpp.o -MF CMakeFiles/med_client.dir/src/client_patient.cpp.o.d -o CMakeFiles/med_client.dir/src/client_patient.cpp.o -c /mnt/c/MedProject/MedScheduler/server+database/client/src/client_patient.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/med_client.dir/src/client_patient.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_patient.cpp.o -MF CMakeFiles/med_client.dir/src/client_patient.cpp.o.d -o CMakeFiles/med_client.dir/src/client_patient.cpp.o -c /home/victoria/MedScheduler/server+database/client/src/client_patient.cpp
 
 CMakeFiles/med_client.dir/src/client_patient.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/med_client.dir/src/client_patient.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/MedProject/MedScheduler/server+database/client/src/client_patient.cpp > CMakeFiles/med_client.dir/src/client_patient.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/client/src/client_patient.cpp > CMakeFiles/med_client.dir/src/client_patient.cpp.i
 
 CMakeFiles/med_client.dir/src/client_patient.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/med_client.dir/src/client_patient.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/MedProject/MedScheduler/server+database/client/src/client_patient.cpp -o CMakeFiles/med_client.dir/src/client_patient.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/client/src/client_patient.cpp -o CMakeFiles/med_client.dir/src/client_patient.cpp.s
 
 CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o: CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o: src/client_senior_admin.cpp
 CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o: CMakeFiles/med_client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o -MF CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o.d -o CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o -c /mnt/c/MedProject/MedScheduler/server+database/client/src/client_senior_admin.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o -MF CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o.d -o CMakeFiles/med_client.dir/src/client_senior_admin.cpp.o -c /home/victoria/MedScheduler/server+database/client/src/client_senior_admin.cpp
 
 CMakeFiles/med_client.dir/src/client_senior_admin.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/med_client.dir/src/client_senior_admin.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/MedProject/MedScheduler/server+database/client/src/client_senior_admin.cpp > CMakeFiles/med_client.dir/src/client_senior_admin.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/client/src/client_senior_admin.cpp > CMakeFiles/med_client.dir/src/client_senior_admin.cpp.i
 
 CMakeFiles/med_client.dir/src/client_senior_admin.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/med_client.dir/src/client_senior_admin.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/MedProject/MedScheduler/server+database/client/src/client_senior_admin.cpp -o CMakeFiles/med_client.dir/src/client_senior_admin.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/client/src/client_senior_admin.cpp -o CMakeFiles/med_client.dir/src/client_senior_admin.cpp.s
 
 CMakeFiles/med_client.dir/src/common_for_all.cpp.o: CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/common_for_all.cpp.o: src/common_for_all.cpp
 CMakeFiles/med_client.dir/src/common_for_all.cpp.o: CMakeFiles/med_client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/med_client.dir/src/common_for_all.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/common_for_all.cpp.o -MF CMakeFiles/med_client.dir/src/common_for_all.cpp.o.d -o CMakeFiles/med_client.dir/src/common_for_all.cpp.o -c /mnt/c/MedProject/MedScheduler/server+database/client/src/common_for_all.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/med_client.dir/src/common_for_all.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/common_for_all.cpp.o -MF CMakeFiles/med_client.dir/src/common_for_all.cpp.o.d -o CMakeFiles/med_client.dir/src/common_for_all.cpp.o -c /home/victoria/MedScheduler/server+database/client/src/common_for_all.cpp
 
 CMakeFiles/med_client.dir/src/common_for_all.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/med_client.dir/src/common_for_all.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/MedProject/MedScheduler/server+database/client/src/common_for_all.cpp > CMakeFiles/med_client.dir/src/common_for_all.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/client/src/common_for_all.cpp > CMakeFiles/med_client.dir/src/common_for_all.cpp.i
 
 CMakeFiles/med_client.dir/src/common_for_all.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/med_client.dir/src/common_for_all.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/MedProject/MedScheduler/server+database/client/src/common_for_all.cpp -o CMakeFiles/med_client.dir/src/common_for_all.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/client/src/common_for_all.cpp -o CMakeFiles/med_client.dir/src/common_for_all.cpp.s
 
 CMakeFiles/med_client.dir/src/get_by_phone.cpp.o: CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/get_by_phone.cpp.o: src/get_by_phone.cpp
 CMakeFiles/med_client.dir/src/get_by_phone.cpp.o: CMakeFiles/med_client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/med_client.dir/src/get_by_phone.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/get_by_phone.cpp.o -MF CMakeFiles/med_client.dir/src/get_by_phone.cpp.o.d -o CMakeFiles/med_client.dir/src/get_by_phone.cpp.o -c /mnt/c/MedProject/MedScheduler/server+database/client/src/get_by_phone.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/med_client.dir/src/get_by_phone.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/get_by_phone.cpp.o -MF CMakeFiles/med_client.dir/src/get_by_phone.cpp.o.d -o CMakeFiles/med_client.dir/src/get_by_phone.cpp.o -c /home/victoria/MedScheduler/server+database/client/src/get_by_phone.cpp
 
 CMakeFiles/med_client.dir/src/get_by_phone.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/med_client.dir/src/get_by_phone.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/MedProject/MedScheduler/server+database/client/src/get_by_phone.cpp > CMakeFiles/med_client.dir/src/get_by_phone.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/client/src/get_by_phone.cpp > CMakeFiles/med_client.dir/src/get_by_phone.cpp.i
 
 CMakeFiles/med_client.dir/src/get_by_phone.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/med_client.dir/src/get_by_phone.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/MedProject/MedScheduler/server+database/client/src/get_by_phone.cpp -o CMakeFiles/med_client.dir/src/get_by_phone.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/client/src/get_by_phone.cpp -o CMakeFiles/med_client.dir/src/get_by_phone.cpp.s
 
 CMakeFiles/med_client.dir/src/main.cpp.o: CMakeFiles/med_client.dir/flags.make
 CMakeFiles/med_client.dir/src/main.cpp.o: src/main.cpp
 CMakeFiles/med_client.dir/src/main.cpp.o: CMakeFiles/med_client.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/med_client.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/main.cpp.o -MF CMakeFiles/med_client.dir/src/main.cpp.o.d -o CMakeFiles/med_client.dir/src/main.cpp.o -c /mnt/c/MedProject/MedScheduler/server+database/client/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/med_client.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/med_client.dir/src/main.cpp.o -MF CMakeFiles/med_client.dir/src/main.cpp.o.d -o CMakeFiles/med_client.dir/src/main.cpp.o -c /home/victoria/MedScheduler/server+database/client/src/main.cpp
 
 CMakeFiles/med_client.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/med_client.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/MedProject/MedScheduler/server+database/client/src/main.cpp > CMakeFiles/med_client.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/victoria/MedScheduler/server+database/client/src/main.cpp > CMakeFiles/med_client.dir/src/main.cpp.i
 
 CMakeFiles/med_client.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/med_client.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/MedProject/MedScheduler/server+database/client/src/main.cpp -o CMakeFiles/med_client.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/victoria/MedScheduler/server+database/client/src/main.cpp -o CMakeFiles/med_client.dir/src/main.cpp.s
 
 # Object files for target med_client
 med_client_OBJECTS = \
@@ -206,7 +206,7 @@ med_client: CMakeFiles/med_client.dir/src/main.cpp.o
 med_client: CMakeFiles/med_client.dir/build.make
 med_client: /usr/lib/x86_64-linux-gnu/libcurl.so
 med_client: CMakeFiles/med_client.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable med_client"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/victoria/MedScheduler/server+database/client/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable med_client"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/med_client.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -218,6 +218,6 @@ CMakeFiles/med_client.dir/clean:
 .PHONY : CMakeFiles/med_client.dir/clean
 
 CMakeFiles/med_client.dir/depend:
-	cd /mnt/c/MedProject/MedScheduler/server+database/client && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/c/MedProject/MedScheduler/server+database/client /mnt/c/MedProject/MedScheduler/server+database/client /mnt/c/MedProject/MedScheduler/server+database/client /mnt/c/MedProject/MedScheduler/server+database/client /mnt/c/MedProject/MedScheduler/server+database/client/CMakeFiles/med_client.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/victoria/MedScheduler/server+database/client && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/victoria/MedScheduler/server+database/client /home/victoria/MedScheduler/server+database/client /home/victoria/MedScheduler/server+database/client /home/victoria/MedScheduler/server+database/client /home/victoria/MedScheduler/server+database/client/CMakeFiles/med_client.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/med_client.dir/depend
 

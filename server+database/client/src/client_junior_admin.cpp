@@ -1,7 +1,9 @@
-#include "client_junior_admin.hpp"
+
+#include "../include/client_junior_admin.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include "common_for_all.hpp"
+#include <curl/curl.h>
 
 namespace junior_admin {
 
@@ -77,6 +79,7 @@ void junior_admin_client::run_menu() {
                     {"date", date},
                     {"time", time},
                     {"hospital_id", hospital_id},
+                    {"junior_admin_id", admin_id},
                     {"cabinet", cabinet}};
                 add_record_slot(slot_data);
                 break;
@@ -92,9 +95,42 @@ void junior_admin_client::run_menu() {
 
                 json attach_data = {
                     {"doctor_id", doctor_id}, {"hospital_id", hospital_id}};
-                attach_doctor_to_hospital(attach_data);
+
+                attach_doctor_to_hospital_class(attach_data);
+                std::cout << doctor_id << " " << hospital_id << "\n";
                 break;
             }
+
+            // case 1: {  // Добавление врача
+            //     std::string last_name, first_name, patronymic, phone, education,
+            //         specialty;
+            //     int experience;
+
+            //     std::cout << "Enter last name: ";
+            //     std::cin >> last_name;
+            //     std::cout << "Enter first name: ";
+            //     std::cin >> first_name;
+            //     std::cout << "Enter patronymic (optional): ";
+            //     std::cin.ignore();  // Игнорируем остаток строки
+            //     std::getline(std::cin, patronymic);
+            //     std::cout << "Enter phone: ";
+            //     std::cin >> phone;
+            //     std::cout << "Enter education: ";
+            //     std::cin.ignore();
+            //     std::getline(std::cin, education);
+            //     std::cout << "Enter specialty: ";
+            //     std::getline(std::cin, specialty);
+            //     std::cout << "Enter experience (in years): ";
+            //     std::cin >> experience;
+
+            //     json doctor_data = {
+            //         {"last_name", last_name},   {"first_name", first_name},
+            //         {"patronymic", patronymic}, {"phone", phone},
+            //         {"education", education},   {"specialty", specialty},
+            //         {"experience", experience}};
+            //     add_doctor(doctor_data);
+            //     break;
+            // }
 
             case 4: {  // Открепить врача от больницы
                 int doctor_id, hospital_id;
@@ -141,29 +177,16 @@ void junior_admin_client::run_menu() {
                 std::cout << "Enter doctor ID: ";
                 std::cin >> doctor_id;
 
-                json schedule = get_doctor_schedule(doctor_id);
-                if (!schedule.empty()) {
-                    std::cout << "\n=== Doctor's Schedule ===\n";
-                    for (const auto &entry : schedule) {
-                        std::cout << "Date: " << entry["appointment_date"]
-                                  << "\n";
-                        std::cout << "Time: " << entry["appointment_time"]
-                                  << "\n";
-                        std::cout << "Hospital: " << entry["hospital_name"]
-                                  << "\n";
-                        std::cout << "Cabinet: " << entry["cabinet_number"]
-                                  << "\n";
-                        if (entry["patient_name"].is_null()) {
-                            std::cout << "Patient: free\n";
-                        } else {
-                            std::cout << "Patient: " << entry["patient_name"]
-                                      << "\n";
-                        }
-                        std::cout << "----------------------------\n";
-                    }
-                } else {
-                    std::cout << "Error: Failed to fetch doctor's schedule.\n";
-                }
+                json full_response  = get_doctor_schedule(doctor_id);
+
+                //json schedule = full_response["schedule"];
+                // if (!schedule.empty()) {
+                //     std::cout << "\n=== Doctor's Schedule ===\n";
+                //     std::cout << schedule.dump(4)
+                //               << std::endl; 
+                // } else {
+                //     std::cout << "Error: Failed to fetch doctor's schedule.\n";
+                // }
                 break;
             }
 
@@ -180,8 +203,74 @@ void junior_admin_client::run_menu() {
     }
 }
 
+
+json junior_admin_client::get_doctor_schedule(int doctor_id) {
+    // std::string check_url =
+    //     "http://localhost:8080/check_doctor_admin_hospital?doctor_id=" +
+    //     std::to_string(doctor_id) + "&admin_id=" + std::to_string(admin_id);
+    // std::string check_response = send_get_request(check_url);
+
+    // try {
+    //     json check_result = json::parse(check_response);
+    //     if (!check_result.value("is_valid", false)) {
+    //         std::cerr << "Error: Doctor and admin are not associated with the
+    //         same hospital.\n"; return json();
+    //     }
+    // } catch (const std::exception& e) {
+    //     std::cerr << "Error checking hospital association: " << e.what() <<
+    //     std::endl; return json();
+    // }
+
+    std::string schedule_url = "http://localhost:8080/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
+    //std::cout << schedule_url << "\n";
+    std::string schedule_response = send_get_request(schedule_url);
+
+    try {
+        json schedule = json::parse(schedule_response);
+        return schedule;
+    } catch (const std::exception &e) {
+        std::cerr << "Error fetching doctor's schedule: " << e.what()
+                  << std::endl;
+        return json();
+    }
+}
+
 void junior_admin_client::add_doctor(const json &data) {
     std::string url = "http://localhost:8080/add_doctor";
+    std::cerr << "goodbye\n";
+    std::string response = send_post_request(url, data);
+}
+
+void junior_admin_client::attach_doctor_to_hospital_class(const json &data) {
+    int doctor_id = data.value("doctor_id", -1);
+    int hospital_id = data.value("hospital_id", -1);
+
+    std::cout << doctor_id << " " << hospital_id << "\n";
+
+    if (doctor_id == -1 || hospital_id == -1) {
+        std::cerr << "Invalid JSON: missing or wrong type for doctor_id / "
+                     "hospital_id\n";
+        return;
+    }
+
+    // if (!check_doctor_exists(doctor_id)) {
+    //     std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
+    //     return;
+    // }
+
+    // if (!check_hospital_exists(hospital_id)) {
+    //     std::cerr << "Error: Hospital with ID " << hospital_id
+    //               << " not found.\n";
+    //     return;
+    // }
+
+    // if (is_doctor_attached_to_hospital(doctor_id, hospital_id)) {
+    //     std::cerr << "Error: Doctor with ID " << doctor_id << " is already
+    //     attached to hospital with ID " << hospital_id << ".\n"; return;
+    // } потом надо ее вернуть - пока что обойдемся так
+
+    // std::string json_data = data.dump();
+    std::string url = "http://localhost:8080/attach_doctor_to_hospital";
     std::string response = send_post_request(url, data);
 }
 
@@ -260,37 +349,6 @@ bool junior_admin_client::is_doctor_attached_to_hospital(
     return false;  // Врач не привязан к этой больнице
 }
 
-void junior_admin_client::attach_doctor_to_hospital(const json &data) {
-    int doctor_id = data.value("doctor_id", -1);
-    int hospital_id = data.value("hospital_id", -1);
-
-    if (doctor_id == -1 || hospital_id == -1) {
-        std::cerr << "Invalid JSON: missing or wrong type for doctor_id / "
-                     "hospital_id\n";
-        return;
-    }
-
-    if (!check_doctor_exists(doctor_id)) {
-        std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
-        return;
-    }
-
-    if (!check_hospital_exists(hospital_id)) {
-        std::cerr << "Error: Hospital with ID " << hospital_id
-                  << " not found.\n";
-        return;
-    }
-
-    // if (is_doctor_attached_to_hospital(doctor_id, hospital_id)) {
-    //     std::cerr << "Error: Doctor with ID " << doctor_id << " is already
-    //     attached to hospital with ID " << hospital_id << ".\n"; return;
-    // } потом надо ее вернуть - пока что обойдемся так
-
-    std::string json_data = data.dump();
-    std::string url = "http://localhost:8080/attach_doctor_to_hospital";
-    std::string response = send_post_request(url, json_data);
-}
-
 void junior_admin_client::detach_doctor_from_hospital(const json &data) {
     int doctor_id = data.value("doctor_id", -1);
     int hospital_id = data.value("hospital_id", -1);
@@ -333,38 +391,6 @@ json junior_admin_client::get_users_table() {
         return users;
     } catch (const std::exception &e) {
         std::cerr << "Error fetching users table: " << e.what() << std::endl;
-        return json();
-    }
-}
-
-json junior_admin_client::get_doctor_schedule(int doctor_id) {
-    std::string check_url =
-        "http://localhost:8080/check_doctor_admin_hospital?doctor_id=" +
-        std::to_string(doctor_id) + "&admin_id=" + std::to_string(admin_id);
-    std::string check_response = send_get_request(check_url);
-
-    // try {
-    //     json check_result = json::parse(check_response);
-    //     if (!check_result.value("is_valid", false)) {
-    //         std::cerr << "Error: Doctor and admin are not associated with the
-    //         same hospital.\n"; return json();
-    //     }
-    // } catch (const std::exception& e) {
-    //     std::cerr << "Error checking hospital association: " << e.what() <<
-    //     std::endl; return json();
-    // }
-
-    std::string schedule_url =
-        "http://localhost:8080/doctor_schedule?doctor_id=" +
-        std::to_string(doctor_id);
-    std::string schedule_response = send_get_request(schedule_url);
-
-    try {
-        json schedule = json::parse(schedule_response);
-        return schedule;
-    } catch (const std::exception &e) {
-        std::cerr << "Error fetching doctor's schedule: " << e.what()
-                  << std::endl;
         return json();
     }
 }

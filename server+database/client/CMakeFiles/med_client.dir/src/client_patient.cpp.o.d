@@ -1,7 +1,7 @@
 CMakeFiles/med_client.dir/src/client_patient.cpp.o: \
- /mnt/c/MedProject/MedScheduler/server+database/client/src/client_patient.cpp \
+ /home/victoria/MedScheduler/server+database/client/src/client_patient.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/MedProject/MedScheduler/server+database/client/include/client_patient.hpp \
+ /home/victoria/MedScheduler/server+database/client/include/client_patient.hpp \
  /usr/include/c++/11/string \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -282,7 +282,7 @@ CMakeFiles/med_client.dir/src/client_patient.cpp.o: \
  /usr/include/nlohmann/ordered_map.hpp \
  /usr/include/nlohmann/detail/macro_unscope.hpp \
  /usr/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
- /mnt/c/MedProject/MedScheduler/server+database/client/include/common_for_all.hpp \
+ /home/victoria/MedScheduler/server+database/client/include/common_for_all.hpp \
  /usr/include/x86_64-linux-gnu/curl/curl.h \
  /usr/include/x86_64-linux-gnu/curl/curlver.h \
  /usr/include/x86_64-linux-gnu/curl/system.h \

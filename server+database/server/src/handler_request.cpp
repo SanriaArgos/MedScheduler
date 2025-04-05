@@ -132,7 +132,9 @@ void handle_request(
                 int hospital_id = std::stoi(id_str);
                 hospital_exists(hospital_id, res, db_handler);
             }
-            else if (req.target().starts_with("/display_doctor_schedule")) {
+
+            
+            else if (req.target().starts_with("/doctor_schedule")) {
                 std::string target = std::string(req.target());  // Преобразуем в строку
                 size_t pos = target.find("?doctor_id=");
 
@@ -141,6 +143,7 @@ void handle_request(
 
             try {
             int doctor_id = std::stoi(doctor_id_str);  // Преобразуем в число
+            std::cerr << doctor_id << "\n";
 
             json request_data;
             request_data["doctor_id"] = doctor_id;

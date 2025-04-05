@@ -1,3 +1,0 @@
-/mnt/c/MedProject/MedScheduler/server+database/server/CMakeFiles/boost_api_server.dir
-/mnt/c/MedProject/MedScheduler/server+database/server/CMakeFiles/edit_cache.dir
-/mnt/c/MedProject/MedScheduler/server+database/server/CMakeFiles/rebuild_cache.dir

@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DJSON_DIAGNOSTICS=0 -DJSON_USE_IMPLICIT_CONVERSIONS=1
 
-CXX_INCLUDES = -I/mnt/c/MedProject/MedScheduler/server+database/client/include
+CXX_INCLUDES = -I/home/victoria/MedScheduler/server+database/client/include
 
 CXX_FLAGS = -std=gnu++17
 

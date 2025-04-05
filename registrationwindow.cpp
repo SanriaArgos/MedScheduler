@@ -63,6 +63,5 @@ void RegistrationWindow::on_pushButton_clicked()
     json["phone_number"] = phone_number;
     json["password"] = password;
     json["user_type"]="patient";
-    add_json_to_users(json);
 }
 

@@ -4,6 +4,8 @@
 #include <QJsonDocument>
 #include <QString>
 #include <utils.h>
+#include <nlohmann/json.hpp>
+#include "server+database/client/src/client_junior_admin.cpp"
 JuniorAdminWindow::JuniorAdminWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::JuniorAdminWindow)
@@ -53,12 +55,17 @@ void JuniorAdminWindow::on_add_doctor_button_clicked()
     QJsonObject json;
     json["last_name"]=last_name;
     json["first_name"] = first_name;
-    json["middle_name"] = middle_name;
-    json["phone_number"] = phone_number;
+    json["patronymic"] = middle_name;
+    json["phone"] = phone_number;
     json["education"] = education;
     json["specialty"] = specialty;
-    json["experience"] = experience;
-    //как-то отправить потом
+    json["experience"] = experience.toInt();
+    QJsonDocument doc(json);
+    QString jsonString = doc.toJson(QJsonDocument::Compact);
+    nlohmann::json doctor_data = nlohmann::json::parse(jsonString.toStdString());
+
+    junior_admin::junior_admin_client client(1);
+    client.add_doctor(doctor_data);
 }
 
 
@@ -76,9 +83,12 @@ void JuniorAdminWindow::on_add_doctor_to_hospital_button_clicked()
         return;
     }
     QJsonObject json;
-    json["doctor_id"]=doctor_id;
-    json["hospital_id"]=hospital_id;
-    //как-то отправить
+    json["doctor_id"]=doctor_id.toInt();
+    json["hospital_id"]=hospital_id.toInt();
+    QJsonDocument qdoc(json);
+    nlohmann::json doctor_data = nlohmann::json::parse(qdoc.toJson().toStdString());
+    junior_admin::junior_admin_client client(1);
+    client.attach_doctor_to_hospital_class(doctor_data);
 }
 
 
@@ -107,7 +117,7 @@ void JuniorAdminWindow::on_add_appointment_button_clicked()
     ui->error_appointment->setText("");
     QString doctor_id=ui->doctor_id_form_from_appointment->text();
     QString date = ui->date_form->text();
-    QString time = ui->time_form->text();
+    QString timee = ui->time_form->text();
     QString hospital_id=ui->hospital_id_form_from_appointment->text();
     QString cabinet = ui->cabinet_form->text();
     if(!is_number(doctor_id)){
@@ -118,7 +128,7 @@ void JuniorAdminWindow::on_add_appointment_button_clicked()
         ui->error_appointment->setText("Incorrect format for date(YYYY-MM-DD).");
         return;
     };
-    if(!is_valid_time(time)){
+    if(!is_valid_time(timee)){
         ui->error_appointment->setText("Incorrect format for time(HH:MM).");
         return;
     };
@@ -131,12 +141,16 @@ void JuniorAdminWindow::on_add_appointment_button_clicked()
         return;
     }
     QJsonObject json;
-    json["doctor_id"]=doctor_id;
+    json["doctor_id"]=doctor_id.toInt();
     json["date"]=date;
-    json["time"]=time;
-    json["hospital_id"]=hospital_id;
-    json["cabinet"]=cabinet;
-    //send
+    json["time"]=timee;
+    json["hospital_id"]=hospital_id.toInt();
+    json["cabinet"]=cabinet.toInt();
+    json["junior_admin_id"]=1;
+    QJsonDocument qdoc(json);
+    nlohmann::json data = nlohmann::json::parse(qdoc.toJson().toStdString());
+    junior_admin::junior_admin_client client(1);
+    client.add_record_slot(data);
 }
 
 
@@ -150,28 +164,22 @@ void JuniorAdminWindow::on_get_schedule_button_clicked()
     }
     QJsonObject json;
     json["doctor_id"]=doctor_id;
-    //send
+    junior_admin::junior_admin_client client(1);
+    nlohmann::json full_response  = client.get_doctor_schedule(doctor_id.toInt());
+    QJsonDocument qdoc = QJsonDocument::fromJson(QByteArray::fromStdString(full_response.dump()));
+qDebug().noquote() << qdoc.toJson(QJsonDocument::Indented);
+    
 }
 
 
 void JuniorAdminWindow::on_get_users_table_button_clicked()
 {
-    QFile file("users.json");
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Ошибка при открытии файла для чтения!";
-        return;
-    }
-
-    // Читаем данные из файла
-    QByteArray fileData = file.readAll();
-    file.close();
-
+    junior_admin::junior_admin_client client(1);
+    nlohmann::json users = client.get_users_table();
+    std::string jsonString = users.dump();
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));
     // Преобразуем данные в JSON-документ
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
-    if (jsonDoc.isNull()) {
-        qDebug() << "Ошибка при разборе JSON!";
-        return;
-    }
+
 
     // Получаем корневой объект JSON
     QJsonObject rootObject = jsonDoc.object();
@@ -191,9 +199,9 @@ void JuniorAdminWindow::on_get_users_table_button_clicked()
 
             QString fullName = userObj["last_name"].toString() + ", " +
                                userObj["first_name"].toString() + ", " +
-                               userObj["middle_name"].toString();
+                               userObj["patronymic"].toString();
 
-            QString phoneNumber = userObj["phone_number"].toString();
+            QString phoneNumber = userObj["phone"].toString();
 
             QString type= userObj["user_type"].toString();
 
@@ -210,5 +218,54 @@ void JuniorAdminWindow::on_get_users_table_button_clicked()
     contentWidget->setLayout(layout);
     // Устанавливаем contentWidget в QScrollArea
     ui->users_scroll->setWidget(contentWidget);
+}
+
+
+void JuniorAdminWindow::on_get_doctors_table_button_clicked()
+{
+    junior_admin::junior_admin_client client(1);
+    nlohmann::json users = client.get_doctors_table();
+    std::string jsonString = users.dump();
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));
+    // Преобразуем данные в JSON-документ
+
+
+    // Получаем корневой объект JSON
+    QJsonObject rootObject = jsonDoc.object();
+    if (!rootObject.contains("doctors") || !rootObject["doctors"].isArray()) {
+        qDebug() << "Ключ 'users' отсутствует или не является массивом!";
+        return;
+    }
+    QJsonArray usersArray = rootObject["doctors"].toArray();
+    QWidget *contentWidget = new QWidget(ui->users_scroll);
+    QVBoxLayout *layout = new QVBoxLayout(contentWidget);
+
+    // Добавляем данные в виджет
+    for (const QJsonValue &userValue : usersArray) {
+        if (userValue.isObject()) {
+            QJsonObject userObj = userValue.toObject();
+            QString id=userObj["id"].toString();
+
+            QString fullName = userObj["last_name"].toString() + ", " +
+                               userObj["first_name"].toString() + ", " +
+                               userObj["patronymic"].toString();
+
+            QString phoneNumber = userObj["phone"].toString();
+
+            QString type= userObj["user_type"].toString();
+
+            // Создаем QLabel для отображения данных
+            QLabel *label = new QLabel(contentWidget);
+            label->setText(id+", "+fullName +", "+ phoneNumber+", "+type);
+            label->setStyleSheet("border: 1px solid black; padding: 5px;");
+
+            // Добавляем QLabel в layout
+            layout->addWidget(label);
+        }
+    }
+    // Устанавливаем layout для contentWidget
+    contentWidget->setLayout(layout);
+    // Устанавливаем contentWidget в QScrollArea
+    ui->doctors_scroll->setWidget(contentWidget);
 }
 

@@ -16,7 +16,7 @@ SOURCES += \
     mainwindow.cpp \
     registrationwindow.cpp \
     senioradminwindow.cpp \
-    utils.cpp
+    utils.cpp \
 
 HEADERS += \
     doctorwindow.h \
@@ -44,3 +44,8 @@ RESOURCES += \
     res.qrc
 
 LIBS += -lcurl
+
+INCLUDEPATH += $$PWD/server+database/client/include
+
+
+

@@ -3,9 +3,6 @@
 #include "../include/common_for_all.hpp"
 #include <curl/curl.h>
 #include <iostream>
-#include <nlohmann/json.hpp>
-#include <string>
-
 size_t
 write_callback(void *contents, size_t size, size_t nmemb, std::string *s) {
     size_t new_length = size * nmemb;

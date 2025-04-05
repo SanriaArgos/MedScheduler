@@ -1,5 +1,5 @@
 CMakeFiles/med_client.dir/src/main.cpp.o: \
- /mnt/c/MedProject/MedScheduler/server+database/client/src/main.cpp \
+ /home/victoria/MedScheduler/server+database/client/src/main.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -146,8 +146,8 @@ CMakeFiles/med_client.dir/src/main.cpp.o: \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
  /usr/include/c++/11/bits/istream.tcc \
- /mnt/c/MedProject/MedScheduler/server+database/client/include/client_auth.hpp \
- /mnt/c/MedProject/MedScheduler/server+database/client/include/client_doctor.hpp \
+ /home/victoria/MedScheduler/server+database/client/include/client_auth.hpp \
+ /home/victoria/MedScheduler/server+database/client/include/client_doctor.hpp \
  /usr/include/nlohmann/json.hpp /usr/include/c++/11/algorithm \
  /usr/include/c++/11/utility /usr/include/c++/11/bits/stl_relops.h \
  /usr/include/c++/11/bits/stl_algo.h \
@@ -279,6 +279,6 @@ CMakeFiles/med_client.dir/src/main.cpp.o: \
  /usr/include/nlohmann/ordered_map.hpp \
  /usr/include/nlohmann/detail/macro_unscope.hpp \
  /usr/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
- /mnt/c/MedProject/MedScheduler/server+database/client/include/client_junior_admin.hpp \
- /mnt/c/MedProject/MedScheduler/server+database/client/include/client_patient.hpp \
- /mnt/c/MedProject/MedScheduler/server+database/client/include/client_senior_admin.hpp
+ /home/victoria/MedScheduler/server+database/client/include/client_junior_admin.hpp \
+ /home/victoria/MedScheduler/server+database/client/include/client_patient.hpp \
+ /home/victoria/MedScheduler/server+database/client/include/client_senior_admin.hpp

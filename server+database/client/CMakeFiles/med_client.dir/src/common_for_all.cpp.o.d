@@ -1,7 +1,7 @@
 CMakeFiles/med_client.dir/src/common_for_all.cpp.o: \
- /mnt/c/MedProject/MedScheduler/server+database/client/src/common_for_all.cpp \
+ /home/victoria/MedScheduler/server+database/client/src/common_for_all.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/MedProject/MedScheduler/server+database/client/src/../include/common_for_all.hpp \
+ /home/victoria/MedScheduler/server+database/client/src/../include/common_for_all.hpp \
  /usr/include/x86_64-linux-gnu/curl/curl.h \
  /usr/include/x86_64-linux-gnu/curl/curlver.h \
  /usr/include/x86_64-linux-gnu/curl/system.h \
