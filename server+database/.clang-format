@@ -1,0 +1,18 @@
+BasedOnStyle: Chromium
+IndentWidth: 4
+AccessModifierOffset: -4
+PointerAlignment: Right
+IncludeBlocks: Merge
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# Only from clang-format 14.0.0
+AlignAfterOpenBracket: BlockIndent
+QualifierAlignment: Left
+SeparateDefinitionBlocks: Always
+EmptyLineAfterAccessModifier: Never
+
+# Only after clang-format 15.0.0
+InsertBraces: true
