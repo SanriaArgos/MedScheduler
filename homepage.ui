@@ -48,7 +48,7 @@ color: rgb(0, 0, 0);</string>
      <widget class="QGroupBox" name="groupBox">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>20</horstretch>
+        <horstretch>15</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
@@ -61,6 +61,15 @@ color: rgb(255, 255, 255);</string>
        <string/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="leftMargin">
+        <number>20</number>
+       </property>
+       <property name="topMargin">
+        <number>11</number>
+       </property>
+       <property name="bottomMargin">
+        <number>40</number>
+       </property>
        <item>
         <widget class="QLabel" name="MedScheduler_label">
          <property name="sizePolicy">
@@ -71,12 +80,15 @@ color: rgb(255, 255, 255);</string>
          </property>
          <property name="font">
           <font>
-           <family>Microsoft YaHei</family>
-           <pointsize>16</pointsize>
+           <family>Franklin Gothic</family>
+           <pointsize>20</pointsize>
+           <italic>false</italic>
+           <bold>false</bold>
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">color: rgb(255, 255, 255);</string>
+          <string notr="true">font: 20pt &quot;Franklin Gothic&quot;;
+color: rgb(255, 255, 255);</string>
          </property>
          <property name="text">
           <string>MedScheduler</string>
@@ -96,8 +108,17 @@ color: rgb(255, 255, 255);</string>
          </property>
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <family>Arial</family>
+           <pointsize>15</pointsize>
+           <italic>false</italic>
+           <bold>false</bold>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+font: 15pt &quot;Arial&quot;;
+text-align:left;
+padding-left: 10%;</string>
          </property>
          <property name="text">
           <string>appointments</string>
@@ -114,8 +135,17 @@ color: rgb(255, 255, 255);</string>
          </property>
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <family>Arial</family>
+           <pointsize>15</pointsize>
+           <italic>false</italic>
+           <bold>false</bold>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+font: 15pt &quot;Arial&quot;;
+text-align:left;
+padding-left: 10%;</string>
          </property>
          <property name="text">
           <string>doctors</string>
@@ -132,8 +162,17 @@ color: rgb(255, 255, 255);</string>
          </property>
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <family>Arial</family>
+           <pointsize>15</pointsize>
+           <italic>false</italic>
+           <bold>false</bold>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+font: 15pt &quot;Arial&quot;;
+text-align:left;
+padding-left: 10%;</string>
          </property>
          <property name="text">
           <string>hospitals</string>
@@ -150,8 +189,17 @@ color: rgb(255, 255, 255);</string>
          </property>
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <family>Arial</family>
+           <pointsize>15</pointsize>
+           <italic>false</italic>
+           <bold>false</bold>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+font: 15pt &quot;Arial&quot;;
+text-align:left;
+padding-left: 10%;</string>
          </property>
          <property name="text">
           <string>profile</string>
@@ -181,11 +229,26 @@ color: rgb(255, 255, 255);</string>
          </property>
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <family>Arial</family>
+           <pointsize>15</pointsize>
+           <italic>false</italic>
+           <bold>false</bold>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+font: 15pt &quot;Arial&quot;;
+text-align:left;
+padding-left: 10%;</string>
          </property>
          <property name="text">
           <string>notifications</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>15</width>
+           <height>15</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -199,11 +262,26 @@ color: rgb(255, 255, 255);</string>
          </property>
          <property name="font">
           <font>
-           <pointsize>14</pointsize>
+           <family>Arial</family>
+           <pointsize>15</pointsize>
+           <italic>false</italic>
+           <bold>false</bold>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+font: 15pt &quot;Arial&quot;;
+text-align:left;
+padding-left: 10%;</string>
          </property>
          <property name="text">
           <string>settings</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>15</width>
+           <height>15</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -222,6 +300,9 @@ color: rgb(255, 255, 255);</string>
        </item>
        <item>
         <widget class="QLabel" name="question_text">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);\nfont: 15pt &quot;Arial&quot;;\ntext-align:left;\npadding-left: 10%;</string>
+         </property>
          <property name="text">
           <string>For all questions:</string>
          </property>
@@ -229,6 +310,10 @@ color: rgb(255, 255, 255);</string>
        </item>
        <item>
         <widget class="QLabel" name="number_text">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 255, 255);
+font: 9pt &quot;Arial&quot;;</string>
+         </property>
          <property name="text">
           <string>+7 983(333)19970</string>
          </property>
@@ -249,7 +334,7 @@ color: rgb(255, 255, 255);</string>
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="appointments_page">
        <property name="styleSheet">
@@ -391,7 +476,7 @@ color: rgb(255, 255, 255);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>733</width>
+             <width>746</width>
              <height>676</height>
             </rect>
            </property>

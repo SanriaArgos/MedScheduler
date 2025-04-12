@@ -6,6 +6,11 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include "client_auth.hpp"
+#include "client_doctor.hpp"
+#include "client_junior_admin.hpp"
+#include "client_senior_admin.hpp"
+#include "client_patient.hpp"
 RegistrationWindow::RegistrationWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::RegistrationWindow)
@@ -63,5 +68,13 @@ void RegistrationWindow::on_pushButton_clicked()
     json["phone_number"] = phone_number;
     json["password"] = password;
     json["user_type"]="patient";
+    auth::user_info user = auth::register_user(
+        phone_number.toStdString(), password.toStdString(), first_name.toStdString(), last_name.toStdString(), middle_name.toStdString()
+        );
+    if (user.id != -1) {
+        ui->invalid_text->setText("Registration successful!");
+    } else {
+        ui->invalid_text->setText("Registration failed. Please try again.");
+    }
 }
 

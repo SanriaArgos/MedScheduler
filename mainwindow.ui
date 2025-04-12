@@ -62,37 +62,11 @@ background-color: rgb(31, 31, 39);</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 18pt &quot;Microsoft YaHei&quot;;
+        <string notr="true">font: 18pt &quot;Franklin Gothic&quot;;
 color: rgb(255, 255, 255);</string>
        </property>
        <property name="text">
         <string>MedScheduler</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="junior_button">
-       <property name="geometry">
-        <rect>
-         <x>120</x>
-         <y>470</y>
-         <width>83</width>
-         <height>29</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>junior</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="geometry">
-        <rect>
-         <x>240</x>
-         <y>470</y>
-         <width>83</width>
-         <height>29</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>senior</string>
        </property>
       </widget>
      </widget>

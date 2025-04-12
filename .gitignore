@@ -69,7 +69,10 @@ CMakeLists.txt.user*
 *.pyc
 
 # Binaries
-# --------
+*.out
+*.a
+*.so
+*.dylib
 *.dll
 *.exe
 
@@ -80,3 +83,12 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+*.user
+*.autosave

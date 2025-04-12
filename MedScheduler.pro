@@ -17,6 +17,11 @@ SOURCES += \
     registrationwindow.cpp \
     senioradminwindow.cpp \
     utils.cpp \
+    server+database/client/src/client_auth.cpp \
+    server+database/client/src/client_doctor.cpp \
+    server+database/client/src/client_junior_admin.cpp \
+    server+database/client/src/client_patient.cpp \
+    server+database/client/src/client_senior_admin.cpp
 
 HEADERS += \
     doctorwindow.h \
@@ -25,7 +30,12 @@ HEADERS += \
     mainwindow.h \
     registrationwindow.h \
     senioradminwindow.h \
-    utils.h
+    utils.h \
+    server+database/client/include/client_auth.hpp \
+    server+database/client/include/client_doctor.hpp \
+    server+database/client/include/client_junior_admin.hpp \
+    server+database/client/include/client_patient.hpp \
+    server+database/client/include/client_senior_admin.hpp
 
 FORMS += \
     doctorwindow.ui \
