@@ -244,19 +244,20 @@ void JuniorAdminWindow::on_get_doctors_table_button_clicked()
     for (const QJsonValue &userValue : usersArray) {
         if (userValue.isObject()) {
             QJsonObject userObj = userValue.toObject();
-            QString id=userObj["id"].toString();
+            QString id=userObj["doctor_id"].toString()+", "+userObj["user_id"].toString();
 
             QString fullName = userObj["last_name"].toString() + ", " +
                                userObj["first_name"].toString() + ", " +
                                userObj["patronymic"].toString();
 
             QString phoneNumber = userObj["phone"].toString();
-
-            QString type= userObj["user_type"].toString();
+            QString education = userObj["education"].toString();
+            QString specialty = userObj["specialty"].toString();
+            QString experience = userObj["experience"].toString();
 
             // Создаем QLabel для отображения данных
             QLabel *label = new QLabel(contentWidget);
-            label->setText(id+", "+fullName +", "+ phoneNumber+", "+type);
+            label->setText(id+", "+fullName +", "+ phoneNumber+", "+education +", "+specialty+", "+experience);
             label->setStyleSheet("border: 1px solid black; padding: 5px;");
 
             // Добавляем QLabel в layout
