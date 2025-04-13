@@ -1,11 +1,15 @@
 #include "../../include/handlers/registration.hpp"
+#include <boost/beast/http.hpp>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <boost/beast/http.hpp>
 
 namespace http = boost::beast::http;
 
-void registration(const nlohmann::json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void registration(
+    const nlohmann::json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     nlohmann::json response;
 
     if (!data.contains("last_name") || !data.contains("first_name") ||
@@ -26,7 +30,9 @@ void registration(const nlohmann::json &data, http::response<http::string_body> 
     std::string phone = data["phone"];
     std::string password = data["password"];
 
-    bool success = db_handler.register_user(last_name, first_name, patronymic, phone, password);
+    bool success = db_handler.register_user(
+        last_name, first_name, patronymic, phone, password
+    );
     response["success"] = success;
     response["action"] = "registration";
 

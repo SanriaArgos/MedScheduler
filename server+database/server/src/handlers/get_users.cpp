@@ -1,29 +1,39 @@
-#include "../../include/handlers/display_users.hpp"
+#include "../../include/handlers/get_users.hpp"
 #include <libpq-fe.h>
-#include <nlohmann/json.hpp>
 #include <boost/beast/http.hpp>
 #include <iostream>
+#include <nlohmann/json.hpp>
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void display_users_table(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void get_users_table(
+    const json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     json result;
 
     PGconn *conn = db_handler.get_connection();
-    std::string query = "SELECT id, last_name, first_name, patronymic, phone, user_type FROM users ORDER BY id";
+    std::string query =
+        "SELECT id, last_name, first_name, patronymic, phone, user_type FROM "
+        "users ORDER BY id";
     PGresult *res_query = PQexec(conn, query.c_str());
 
     if (!res_query || PQresultStatus(res_query) != PGRES_TUPLES_OK) {
-        std::cerr << "Ошибка вывода таблицы пользователей: " << PQerrorMessage(conn) << "\n";
+        std::cerr << "Ошибка вывода таблицы пользователей: "
+                  << PQerrorMessage(conn) << "\n";
         result["success"] = false;
         result["error"] = "Ошибка при выполнении запроса";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = result.dump();
 
-        if (res_query) PQclear(res_query);
+        if (res_query) {
+            PQclear(res_query);
+        }
         return;
     }
 
@@ -36,8 +46,7 @@ void display_users_table(const json &data, http::response<http::string_body> &re
             {"first_name", PQgetvalue(res_query, i, 2)},
             {"patronymic", PQgetvalue(res_query, i, 3)},
             {"phone", PQgetvalue(res_query, i, 4)},
-            {"user_type", PQgetvalue(res_query, i, 5)}
-        };
+            {"user_type", PQgetvalue(res_query, i, 5)}};
         users.push_back(user);
     }
 

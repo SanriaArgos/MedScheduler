@@ -1,17 +1,19 @@
 #include "../../include/handlers/add_hospital.hpp"
-#include <iostream>
-#include <sstream>
 #include <libpq-fe.h>
-#include <regex>
-#include <nlohmann/json.hpp>
 #include <boost/beast/http.hpp>
+#include <iostream>
+#include <nlohmann/json.hpp>
+#include <regex>
+#include <sstream>
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
-
-void add_hospital(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void add_hospital(
+    const json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     nlohmann::json response;
 
     if (!data.contains("region") || !data.contains("settlement_type") ||
@@ -37,11 +39,17 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
     std::string admin_id = data["administrator_id"];
 
     // Проверка, если такой адрес уже существует в базе
-    const char* params_exist[5] = { region.c_str(), settlement_type.c_str(), settlement_name.c_str(), street.c_str(), house.c_str() };
-    PGresult *res_exist = PQexecParams(db_handler.get_connection(),
-        "SELECT 1 FROM hospitals WHERE region = $1 AND settlement_type = $2 AND settlement_name = $3 AND street = $4 AND house = $5",
-        5, NULL, params_exist, NULL, NULL, 0);
-    if (PQresultStatus(res_exist) == PGRES_TUPLES_OK && PQntuples(res_exist) > 0) {
+    const char *params_exist[5] = {
+        region.c_str(), settlement_type.c_str(), settlement_name.c_str(),
+        street.c_str(), house.c_str()};
+    PGresult *res_exist = PQexecParams(
+        db_handler.get_connection(),
+        "SELECT 1 FROM hospitals WHERE region = $1 AND settlement_type = $2 "
+        "AND settlement_name = $3 AND street = $4 AND house = $5",
+        5, NULL, params_exist, NULL, NULL, 0
+    );
+    if (PQresultStatus(res_exist) == PGRES_TUPLES_OK &&
+        PQntuples(res_exist) > 0) {
         std::cerr << "Error: Address already in use\n";
         response["success"] = false;
         response["error"] = "Address already in use";
@@ -56,10 +64,17 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
 
     // Вставка нового госпиталя в базу
     std::string admin_id_str = admin_id;
-    const char* params_ins[7] = { region.c_str(), settlement_type.c_str(), settlement_name.c_str(), street.c_str(), house.c_str(), full_name.c_str(), admin_id_str.c_str() };
-    PGresult *res_ins = PQexecParams(db_handler.get_connection(),
-        "INSERT INTO hospitals (region, settlement_type, settlement_name, street, house, full_name, administrator_id) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-        7, NULL, params_ins, NULL, NULL, 0);
+    const char *params_ins[7] = {
+        region.c_str(),      settlement_type.c_str(), settlement_name.c_str(),
+        street.c_str(),      house.c_str(),           full_name.c_str(),
+        admin_id_str.c_str()};
+    PGresult *res_ins = PQexecParams(
+        db_handler.get_connection(),
+        "INSERT INTO hospitals (region, settlement_type, settlement_name, "
+        "street, house, full_name, administrator_id) VALUES ($1, $2, $3, $4, "
+        "$5, $6, $7)",
+        7, NULL, params_ins, NULL, NULL, 0
+    );
 
     // Проверка, если госпиталь был успешно добавлен
     if (PQresultStatus(res_ins) == PGRES_COMMAND_OK) {
@@ -75,7 +90,8 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
         response["error"] = "Error adding hospital";
 
         PQclear(res_ins);
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
     }
 
     res.set(http::field::content_type, "application/json");

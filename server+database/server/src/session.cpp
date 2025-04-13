@@ -1,6 +1,6 @@
-#include "../include/handler_request.hpp"
 #include "../include/session.hpp"
 #include <iostream>
+#include "../include/handler_request.hpp"
 
 session::session(tcp::socket socket, database_handler &db_handler)
     : socket_(std::move(socket)), db_handler_(db_handler) {

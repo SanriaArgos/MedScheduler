@@ -1,16 +1,18 @@
 #include "../../include/handlers/patient_schedule.hpp"
-#include <iostream>
-#include <sstream>
 #include <libpq-fe.h>
-#include <nlohmann/json.hpp>
 #include <boost/beast/http.hpp>
+#include <iostream>
+#include <nlohmann/json.hpp>
+#include <sstream>
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
-
-void view_doctor_schedule_for_patient(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void view_doctor_schedule_for_patient(
+    const json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     json response;
 
     // Проверка наличия необходимых полей
@@ -18,7 +20,9 @@ void view_doctor_schedule_for_patient(const json &data, http::response<http::str
         !data.contains("settlement_name") || !data.contains("specialty") ||
         !data.contains("hospital_id") || !data.contains("doctor_id")) {
         response["success"] = false;
-        response["error"] = "Missing required fields (region, settlement_type, settlement_name, specialty, hospital_id, doctor_id)";
+        response["error"] =
+            "Missing required fields (region, settlement_type, "
+            "settlement_name, specialty, hospital_id, doctor_id)";
 
         res.result(http::status::bad_request);  // 400 Bad Request
         res.set(http::field::content_type, "application/json");
@@ -33,31 +37,37 @@ void view_doctor_schedule_for_patient(const json &data, http::response<http::str
     std::string specialty = data["specialty"];
     int hospital_id = data["hospital_id"];
     int doctor_id = data["doctor_id"];
-    
+
     std::string doctor_id_str = std::to_string(doctor_id);
     std::string hospital_id_str = std::to_string(hospital_id);
-    const char* params[2] = { doctor_id_str.c_str(), hospital_id_str.c_str() };
-    int paramLengths[2] = { (int)doctor_id_str.size(), (int)hospital_id_str.size() };
-    int paramFormats[2] = { 0, 0 };  // 0 означает, что передаём текстовый формат
+    const char *params[2] = {doctor_id_str.c_str(), hospital_id_str.c_str()};
+    int paramLengths[2] = {
+        (int)doctor_id_str.size(), (int)hospital_id_str.size()};
+    int paramFormats[2] = {0, 0};  // 0 означает, что передаём текстовый формат
 
-    PGresult *res_query = PQexecParams(db_handler.get_connection(),
-    "SELECT appointment_date, appointment_time, cabinet_number, patient_id "
-    "FROM records "
-    "WHERE doctor_id = $1::int AND hospital_id = $2::int "
-    "AND appointment_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + INTERVAL '7 day') "
-    "ORDER BY appointment_date, appointment_time",
-    2, nullptr, params, paramLengths, paramFormats, 0);
-
+    PGresult *res_query = PQexecParams(
+        db_handler.get_connection(),
+        "SELECT appointment_date, appointment_time, cabinet_number, patient_id "
+        "FROM records "
+        "WHERE doctor_id = $1::int AND hospital_id = $2::int "
+        "AND appointment_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + "
+        "INTERVAL '7 day') "
+        "ORDER BY appointment_date, appointment_time",
+        2, nullptr, params, paramLengths, paramFormats, 0
+    );
 
     if (!res_query || PQresultStatus(res_query) != PGRES_TUPLES_OK) {
         response["success"] = false;
         response["error"] = "Schedule not available";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
 
-        if (res_query) PQclear(res_query);
+        if (res_query) {
+            PQclear(res_query);
+        }
         return;
     }
 
