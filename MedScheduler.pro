@@ -40,12 +40,12 @@ HEADERS += \
     server+database/client/include/common_for_all.hpp
 
 FORMS += \
-    doctorwindow.ui \
-    homepage.ui \
-    junioradminwindow.ui \
-    mainwindow.ui \
-    registrationwindow.ui \
-    senioradminwindow.ui
+    forms/doctorwindow.ui \
+    forms/homepage.ui \
+    forms/junioradminwindow.ui \
+    forms/mainwindow.ui \
+    forms/registrationwindow.ui \
+    forms/senioradminwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
