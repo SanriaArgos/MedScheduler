@@ -9,14 +9,14 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    doctorwindow.cpp \
-    homepage.cpp \
-    junioradminwindow.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    registrationwindow.cpp \
-    senioradminwindow.cpp \
-    utils.cpp \
+    src/doctorwindow.cpp \
+    src/homepage.cpp \
+    src/junioradminwindow.cpp \
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/registrationwindow.cpp \
+    src/senioradminwindow.cpp \
+    src/utils.cpp \
     server+database/client/src/client_auth.cpp \
     server+database/client/src/client_doctor.cpp \
     server+database/client/src/client_junior_admin.cpp \
@@ -25,13 +25,13 @@ SOURCES += \
     server+database/client/src/common_for_all.cpp
 
 HEADERS += \
-    doctorwindow.h \
-    homepage.h \
-    junioradminwindow.h \
-    mainwindow.h \
-    registrationwindow.h \
-    senioradminwindow.h \
-    utils.h \
+    include/doctorwindow.h \
+    include/homepage.h \
+    include/junioradminwindow.h \
+    include/mainwindow.h \
+    include/registrationwindow.h \
+    include/senioradminwindow.h \
+    include/utils.h \
     server+database/client/include/client_auth.hpp \
     server+database/client/include/client_doctor.hpp \
     server+database/client/include/client_junior_admin.hpp \
@@ -58,5 +58,5 @@ RESOURCES += \
 LIBS += -lcurl
 
 INCLUDEPATH += $$PWD/server+database/client/include
-
+INCLUDEPATH += $$PWD/include
 
