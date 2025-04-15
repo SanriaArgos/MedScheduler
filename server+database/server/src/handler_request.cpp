@@ -17,6 +17,7 @@ using json = nlohmann::json;
 
 #include "../include/database.hpp"
 #include "../include/get_hospital_id.hpp"
+#include "../include/check_doctor_hospital.hpp" // Добавила новый файлик с айди доктора
 #include "../include/handlers/add_doctor.hpp"
 #include "../include/handlers/add_hospital.hpp"
 #include "../include/handlers/add_junior_admin.hpp"
@@ -210,20 +211,19 @@ void handle_request(
                     int doctor_id = std::stoi(doctor_id_str);
                     int admin_id = std::stoi(admin_id_str);
 
-                    //Получаем hospital_id для обоих
+                    // Получаем hospital_id, к которой прикреплён администратор
                     int hospital_id_admin = get_hospital_id_admin(admin_id);
-                    int hospital_id_doctor = get_hospital_id(doctor_id);
+                    // Проверяем, привязан ли доктор к больнице администратора
+                    bool is_valid = check_doctor_hospital(doctor_id, hospital_id_admin);
 
                     // Формируем JSON ответ
                     json response;
-                    response["is_valid"] =
-                        (hospital_id_admin == hospital_id_doctor);
+                    response["is_valid"] = is_valid;
                     response["admin_hospital_id"] = hospital_id_admin;
-                    response["doctor_hospital_id"] = hospital_id_doctor;
+                    response["doctor_id"] = doctor_id;
 
-                    if (!response["is_valid"]) {
-                        std::cerr << "Error: Doctor and admin are not "
-                                     "associated with the same hospital\n";
+                    if (!is_valid) {
+                        std::cerr << "Error: Doctor and admin are not associated with the same hospital\n";
                     }
 
                     // return response;
