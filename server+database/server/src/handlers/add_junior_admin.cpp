@@ -7,6 +7,8 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
+extern database_handler* global_db;
+
 void add_junior_admin(
     const json &data,
     http::response<http::string_body> &res,

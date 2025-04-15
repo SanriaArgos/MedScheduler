@@ -16,6 +16,7 @@ namespace http = boost::beast::http;
 using json = nlohmann::json;
 
 #include "../include/database.hpp"
+#include "../include/get_hospital_id.hpp"
 #include "../include/handlers/add_doctor.hpp"
 #include "../include/handlers/add_hospital.hpp"
 #include "../include/handlers/add_junior_admin.hpp"
@@ -149,8 +150,6 @@ void handle_request(
                         .substr(std::string("/hospitals/").length());
                 int hospital_id = std::stoi(id_str);
                 hospital_exists(hospital_id, res, db_handler);
-            } else if (req.target().start_with("/doctors/")) {
-
             } else if (req.target().starts_with("/get_doctor_schedule")) {
                 std::string target =
                     std::string(req.target());  // Преобразуем в строку
@@ -211,8 +210,8 @@ void handle_request(
                     int doctor_id = std::stoi(doctor_id_str);
                     int admin_id = std::stoi(admin_id_str);
 
-                    // Получаем hospital_id для обоих
-                    int hospital_id_admin = get_hospital_id(admin_id);
+                    //Получаем hospital_id для обоих
+                    int hospital_id_admin = get_hospital_id_admin(admin_id);
                     int hospital_id_doctor = get_hospital_id(doctor_id);
 
                     // Формируем JSON ответ
@@ -227,13 +226,13 @@ void handle_request(
                                      "associated with the same hospital\n";
                     }
 
-                    return response;
+                    // return response;
 
                 } catch (const std::exception &e) {
                     std::cerr
                         << "Error checking hospital association: " << e.what()
                         << std::endl;
-                    return json{{"error", e.what()}, {"is_valid", false}};
+                    // return json{{"error", e.what()}, {"is_valid", false}};
                 }
             } else if (req.target() == "/junior_admin_schedule") {
                 junior_admin_schedule(

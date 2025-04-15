@@ -8,7 +8,7 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-static bool get_junior_admin_hospital_id(int junior_admin_id, int &out_hospital_id);
+bool get_junior_admin_hospital_id(int junior_admin_id, int &out_hospital_id);
 
 // Функция добавления больницы в список врача принимает JSON с полями: doctor_id, hospital_id, junior_admin_id.
 void add_hospital_to_doctor(const json &data, http::response<http::string_body> &res, database_handler &db_handler);

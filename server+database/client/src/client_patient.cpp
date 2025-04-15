@@ -10,69 +10,18 @@ using json = nlohmann::json;
 patient_client::patient_client(int user_id) : user_id(user_id) {
 }
 
-void patient_client::run_menu() {
-    int choice = 0;
-
-    while (true) {
-        std::cout << "\n=== Patient Menu ===\n";
-        std::cout << "1. View doctor's schedule\n";
-        std::cout << "2. Exit\n";
-        std::cout << "Choose an option: ";
-        std::cin >> choice;
-
-        switch (choice) {
-            case 1: {
-                view_doctor_schedule();
-                break;
-            }
-
-            case 2: {
-                std::cout << "Exiting the program.\n";
-                return;
-            }
-
-            default: {
-                std::cout << "Invalid choice. Please try again.\n";
-                break;
-            }
-        }
-    }
-}
-
-void patient_client::view_doctor_schedule() {
-    std::string region, settlement_type, settlement_name, specialty;
-    int hospital_id, doctor_id;
-
-    std::cout << "Enter region: ";
-    std::cin >> region;
-    std::cout << "Enter settlement type: ";
-    std::cin >> settlement_type;
-    std::cout << "Enter settlement name: ";
-    std::cin >> settlement_name;
-    std::cout << "Enter specialty: ";
-    std::cin >> specialty;
-    std::cout << "Enter hospital ID: ";
-    std::cin >> hospital_id;
-    std::cout << "Enter doctor ID: ";
-    std::cin >> doctor_id;
-
-    json request_data = {
-        {"region", region},
-        {"settlement_type", settlement_type},
-        {"settlement_name", settlement_name},
-        {"specialty", specialty},
-        {"hospital_id", hospital_id},
-        {"doctor_id", doctor_id}
-    };
+void patient_client::view_doctor_schedule(json request_data) {
+    // std::string region, settlement_type, settlement_name, specialty;
+    // int hospital_id, doctor_id; все это должно быть в request_data
 
     std::string response = send_post_request(
         "http://localhost:8080/view_doctor_schedule_for_patient", request_data
     );
 
-    if (response.empty()) {
-        std::cerr << "Error: Empty response from server\n";
-        return;
-    }
+    // if (response.empty()) {
+    //     std::cerr << "Error: Empty response from server\n";
+    //     return;
+    // }  тут надо научиться выводить, что запрашиваемых данных нет, и наверное не уводить это в ошибку...
 
     try {
         json schedule = json::parse(response);
@@ -80,11 +29,9 @@ void patient_client::view_doctor_schedule() {
             std::cerr << "Error: " << schedule["error"] << std::endl;
             return;
         }
-
-        std::cout << "\n=== Doctor's Schedule ===\n";
-        std::cout << schedule.dump(4) << std::endl; 
+        return schedule;
     } catch (const std::exception &e) {
-        std::cerr << "Error parsing schedule: " << e.what() << std::endl;
+        std::cerr << "Error fetching schedule: " << e.what() << std::endl;
     }
 }
 

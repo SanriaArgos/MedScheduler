@@ -1,4 +1,5 @@
 #include "../../include/handlers/junior_admin_schedule.hpp"
+#include "../../include/handlers/add_record_slot.hpp"
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <iostream>
@@ -9,22 +10,7 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-int get_hospital_id(int client_id) {
-    std::string admin_id_str = std::to_string(junior_admin_id);
-    const char *params[1] = {admin_id_str.c_str()};
-    PGresult *res = PQexecParams(
-        global_db->get_connection(),
-        "SELECT hospital_id FROM hospitals WHERE administrator_id = $1 LIMIT 1",
-        1, nullptr, params, nullptr, nullptr, 0
-    );
-    if (PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
-        PQclear(res);
-        return -1; 
-    }
-    int hospital_id = std::stoi(PQgetvalue(res, 0, 0));
-    PQclear(res);
-    return hospital_id;
-}
+extern database_handler* global_db;
 
 void junior_admin_schedule(
     const json &data,
@@ -48,7 +34,7 @@ void junior_admin_schedule(
     int doctor_id = data["doctor_id"];
 
     int my_hospital_id;
-    if (!get_junior_admin_hospital_id(junior_admin_id, my_hospital_id)) {
+    if (!get_junior_admin_hospital_id(junior_admin_id)) {
         response["success"] = false;
         response["error"] = "Your hospital not found";
 

@@ -14,11 +14,9 @@ public:
 
     void add_junior_admin(const json &data);
     void add_hospital(const json &data);
-    json display_hospitals_table();
-    // void display_users_table();
+    json get_hospitals_table();
     json get_users_table();
-
-    void run_menu();  // Метод для запуска меню
+    json get_users_table();
 
 private:
     int admin_id;

@@ -24,8 +24,6 @@ public:
 
     bool is_doctor_attached_to_hospital(int doctor_id, int hospital_id);
 
-    void run_menu();  // Добавляем метод для запуска меню
-
 private:
     int admin_id;
 };

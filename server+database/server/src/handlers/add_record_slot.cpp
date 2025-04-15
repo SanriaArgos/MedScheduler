@@ -7,7 +7,9 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-static int get_junior_admin_hospital_id(int junior_admin_id) {
+extern database_handler* global_db;
+
+int get_junior_admin_hospital_id(int junior_admin_id) {
     int hospital_id = -1;
     std::string admin_id_str = std::to_string(junior_admin_id);
     const char *params[1] = {admin_id_str.c_str()};

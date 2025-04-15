@@ -12,6 +12,8 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
+extern database_handler* global_db;
+
 bool
 get_junior_admin_hospital_id(int junior_admin_id, int &out_hospital_id) {
     std::string admin_id_str = std::to_string(junior_admin_id);
