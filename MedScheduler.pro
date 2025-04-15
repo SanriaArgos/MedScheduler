@@ -21,7 +21,8 @@ SOURCES += \
     server+database/client/src/client_doctor.cpp \
     server+database/client/src/client_junior_admin.cpp \
     server+database/client/src/client_patient.cpp \
-    server+database/client/src/client_senior_admin.cpp
+    server+database/client/src/client_senior_admin.cpp \
+    server+database/client/src/common_for_all.cpp
 
 HEADERS += \
     doctorwindow.h \
@@ -35,7 +36,8 @@ HEADERS += \
     server+database/client/include/client_doctor.hpp \
     server+database/client/include/client_junior_admin.hpp \
     server+database/client/include/client_patient.hpp \
-    server+database/client/include/client_senior_admin.hpp
+    server+database/client/include/client_senior_admin.hpp \
+    server+database/client/include/common_for_all.hpp
 
 FORMS += \
     doctorwindow.ui \
@@ -56,6 +58,5 @@ RESOURCES += \
 LIBS += -lcurl
 
 INCLUDEPATH += $$PWD/server+database/client/include
-
 
 

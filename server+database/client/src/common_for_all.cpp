@@ -1,5 +1,3 @@
-#ifndef COMMON_FOR_ALL_HPP_
-#define COMMON_FOR_ALL_HPP_
 #include "../include/common_for_all.hpp"
 #include <curl/curl.h>
 #include <iostream>
@@ -81,4 +79,3 @@ send_post_request(const std::string &url, const nlohmann::json &json_data) {
     }
     return response;
 }
-#endif

@@ -7,8 +7,8 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <nlohmann/json.hpp>
-#include "server+database/client/src/client_senior_admin.cpp"
-#include "server+database/client/src/common_for_all.cpp"
+#include "server+database/client/include/client_senior_admin.hpp"
+#include "server+database/client/include/common_for_all.hpp"
 SeniorAdminWindow::SeniorAdminWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::SeniorAdminWindow)
