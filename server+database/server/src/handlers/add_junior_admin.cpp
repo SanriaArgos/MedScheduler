@@ -77,13 +77,11 @@ void add_junior_admin(
         response["success"] = false;
         response["error"] = "Error updating user type";
 
-        res.result(http::status::internal_server_error
-        );  // 500 Internal Server Error
+        res.result(http::status::internal_server_error);  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
         return;
     }
-
     PQclear(res_update);
 
     std::cerr << "Junior administrator added\n";

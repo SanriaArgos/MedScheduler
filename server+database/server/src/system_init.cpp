@@ -145,7 +145,6 @@ bool initialize_system(const std::string &superuser_connect_info) {
         return false;
     }
     PQclear(res_init);
-
     // Переустанавливаем владельца таблиц, если они существуют
     execute_sql(conn2, "ALTER TABLE users OWNER TO meduser");
     execute_sql(conn2, "ALTER TABLE hospitals OWNER TO meduser");

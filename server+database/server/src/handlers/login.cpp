@@ -1,19 +1,18 @@
 #include "../../include/handlers/login.hpp"
-#include <boost/beast/http.hpp>
+#include "../../include/database.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "../../include/database.hpp"
+#include <boost/beast/http.hpp>
 
 namespace http = boost::beast::http;
 
-void login(
-    const nlohmann::json &data,
-    http::response<http::string_body> &res,
-    database_handler &db_handler
-) {
+extern database_handler* global_db;  // Объявляем глобальный указатель, определённый в main.cpp
+
+void login(const nlohmann::json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     nlohmann::json response;
 
     if (!data.contains("phone") || !data.contains("password")) {
+        std::cerr << "Login error: missing required fields\n";
         res.result(http::status::bad_request);
         res.set(http::field::content_type, "application/json");
         res.body() = R"({"error": "Missing phone or password"})";

@@ -9,17 +9,16 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void add_hospital(
-    const json &data,
-    http::response<http::string_body> &res,
-    database_handler &db_handler
-) {
+extern database_handler* global_db;
+
+void add_hospital(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     nlohmann::json response;
 
+    // Проверка на наличие обязательных полей
     if (!data.contains("region") || !data.contains("settlement_type") ||
         !data.contains("settlement_name") || !data.contains("street") ||
         !data.contains("house") || !data.contains("full_name") ||
-        !data.contains("administrator_id")) {
+        !data.contains("admin_id")) {
         std::cerr << "Error: Missing required fields for adding hospital\n";
         response["success"] = false;
         response["error"] = "Missing required fields";
@@ -90,8 +89,7 @@ void add_hospital(
         response["error"] = "Error adding hospital";
 
         PQclear(res_ins);
-        res.result(http::status::internal_server_error
-        );  // 500 Internal Server Error
+        res.result(http::status::internal_server_error);  // 500 Internal Server Error
     }
 
     res.set(http::field::content_type, "application/json");

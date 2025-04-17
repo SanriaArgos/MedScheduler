@@ -22,3 +22,4 @@ user_info register_user(
 }  // namespace auth
 
 #endif  // CLIENT_AUTH_HPP
+

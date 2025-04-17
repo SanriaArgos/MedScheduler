@@ -17,14 +17,13 @@ json junior_admin_client::get_doctor_schedule(int doctor_id) {
     try {
         json check_result = json::parse(check_response);
         if (!check_result.value("is_valid", false)) {
-            std::cerr << "Error: Doctor and admin are not associated with the
-            same hospital.\n"; return json();
+            std::cerr << "Error: Doctor and admin are not associated with the same hospital.\n"; 
+            return json();
         }
         // вывести в интерфейсе что-то по типу "вы не можете посмотреть расписание у этого врача, так как он не прикреплен к вашей больнице"
     } catch (const std::exception& e) {
-        std::cerr << "Error checking hospital association: " << e.what() <<
-        std::endl;
-         return json();
+        std::cerr << "Error checking hospital association: " << e.what() << std::endl;
+        return json();
     }
 
     std::string schedule_url = "http://localhost:8080/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
@@ -34,8 +33,7 @@ json junior_admin_client::get_doctor_schedule(int doctor_id) {
         json schedule = json::parse(schedule_response);
         return schedule;
     } catch (const std::exception &e) {
-        std::cerr << "Error fetching doctor's schedule: " << e.what()
-                  << std::endl;
+        std::cerr << "Error fetching doctor's schedule: " << e.what() << std::endl;
         return json();
     }
 }

@@ -1,0 +1,52 @@
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+medscheduler
+.idea
+.vscode
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Visual C++ intermediate and debug files
+*.ilk
+*.pdb
+
+# Macos files
+*.DS_Store
+
+/github-access-token.txt

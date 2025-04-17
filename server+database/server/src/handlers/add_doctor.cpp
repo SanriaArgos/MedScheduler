@@ -10,11 +10,9 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void add_doctor(
-    const json &data,
-    http::response<http::string_body> &res,
-    database_handler &db_handler
-) {
+extern database_handler* global_db;
+
+void add_doctor(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     nlohmann::json response;
 
     // Проверка на наличие обязательных полей
@@ -24,7 +22,6 @@ void add_doctor(
         std::cerr << "Error: Missing required fields for add_doctor\n";
         response["success"] = false;
         response["error"] = "Missing required fields";
-
         res.result(http::status::bad_request);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
@@ -44,7 +41,6 @@ void add_doctor(
         std::cerr << "Error: Phone already registered\n";
         response["success"] = false;
         response["error"] = "Phone already registered";
-
         res.result(http::status::conflict);  // 409 Conflict
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
@@ -61,8 +57,7 @@ void add_doctor(
         response["success"] = false;
         response["error"] = "Could not add doctor to Users table";
 
-        res.result(http::status::internal_server_error
-        );  // 500 Internal Server Error
+        res.result(http::status::internal_server_error);  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
         return;
@@ -82,8 +77,7 @@ void add_doctor(
         response["success"] = false;
         response["error"] = "Could not update user type";
 
-        res.result(http::status::internal_server_error
-        );  // 500 Internal Server Error
+        res.result(http::status::internal_server_error);  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
         return;
@@ -138,8 +132,7 @@ void add_doctor(
         response["success"] = false;
         response["error"] = "Could not add data to Doctors table";
 
-        res.result(http::status::internal_server_error
-        );  // 500 Internal Server Error
+        res.result(http::status::internal_server_error);  // 500 Internal Server Error
     }
 
     res.set(http::field::content_type, "application/json");

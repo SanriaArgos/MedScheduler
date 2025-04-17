@@ -1,7 +1,13 @@
 #include "../../include/handlers/add_record_slot.hpp"
+<<<<<<< HEAD
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <iostream>
+=======
+#include <iostream>
+#include <libpq-fe.h>
+#include <boost/beast/http.hpp>
+>>>>>>> main
 #include <nlohmann/json.hpp>
 
 namespace http = boost::beast::http;
@@ -107,7 +113,6 @@ void add_record_slot(
         return;
     }
     PQclear(res_check);
-
     int my_hospital_id = get_junior_admin_hospital_id(junior_admin_id);
     if (my_hospital_id == -1) {
         std::cerr << "Error: Your hospital not found\n";
@@ -167,8 +172,7 @@ void add_record_slot(
         response["success"] = false;
         response["error"] = "Error adding appointment slot";
 
-        res.result(http::status::internal_server_error
-        );  // 500 Internal Server Error
+        res.result(http::status::internal_server_error);  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
     }

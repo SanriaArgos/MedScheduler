@@ -8,11 +8,9 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void view_doctor_schedule_for_patient(
-    const json &data,
-    http::response<http::string_body> &res,
-    database_handler &db_handler
-) {
+extern database_handler* global_db;
+
+void view_doctor_schedule_for_patient(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     json response;
 
     // Проверка наличия необходимых полей
