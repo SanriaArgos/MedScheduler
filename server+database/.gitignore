@@ -1,0 +1,38 @@
+# Игнорируем артефакты сборки
+server/build/
+server/CMakeCache.txt
+server/CMakeFiles/
+server/Makefile
+server/cmake_install.cmake
+
+# Игнорируем локальные конфигурационные файлы
+server/.vscode/
+server/.idea/
+
+# Игнорируем временные файлы
+*.tmp
+*.log
+*.swp
+*.bak
+*~
+
+# Игнорируем бинарные и исполняемые файлы
+*.bin
+*.exe
+*.out
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.dylib
+
+# Игнорируем зависимости (если используете пакетные менеджеры)
+vendor/
+node_modules/
+
+# Игнорируем исполняемые файлы без расширения (Unix)
+server/*  # если в этой папке только исполняемые файлы, можно так
+!server/*.cpp
+!server/*.h
+!server/README.md
