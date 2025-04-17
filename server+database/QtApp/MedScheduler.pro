@@ -59,4 +59,4 @@ LIBS += -lcurl
 
 INCLUDEPATH += $$PWD/server+database/client/include
 INCLUDEPATH += $$PWD/include
-
+INCLUDEPATH += $$PWD/../client/include

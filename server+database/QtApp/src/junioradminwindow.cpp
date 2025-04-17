@@ -149,7 +149,7 @@ void JuniorAdminWindow::on_add_appointment_button_clicked()//TODO
     json["junior_admin_id"]=1;
     QJsonDocument qdoc(json);
     nlohmann::json data = nlohmann::json::parse(qdoc.toJson().toStdString());
-    junior_admin::junior_admin_client client(1);
+    junior_admin::junior_admin_client client(2);
     client.add_record_slot(data);
 }
 

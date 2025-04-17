@@ -29,7 +29,7 @@ void patient_client::view_doctor_schedule(json request_data) {
             std::cerr << "Error: " << schedule["error"] << std::endl;
             return;
         }
-        return schedule;
+        // return schedule;
     } catch (const std::exception &e) {
         std::cerr << "Error fetching schedule: " << e.what() << std::endl;
     }

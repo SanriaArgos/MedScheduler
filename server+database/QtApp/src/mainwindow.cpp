@@ -15,6 +15,7 @@
 #include "senioradminwindow.h"
 #include "junioradminwindow.h"
 #include "doctorwindow.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)

@@ -1,7 +1,7 @@
-#include "client_junior_admin.hpp"
+#include "../include/client_junior_admin.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "common_for_all.hpp"
+#include "../include/common_for_all.hpp"
 
 namespace junior_admin {
 

@@ -7,8 +7,9 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <nlohmann/json.hpp>
-#include "server+database/client/include/client_senior_admin.hpp"
-#include "server+database/client/include/common_for_all.hpp"
+#include "../client/include/client_senior_admin.hpp"
+#include "../client/include/common_for_all.hpp"
+
 SeniorAdminWindow::SeniorAdminWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::SeniorAdminWindow)
@@ -171,7 +172,7 @@ void SeniorAdminWindow::on_get_hospitals_table_button_clicked()
 {
     senior_admin::senior_admin_client client(1);
     // Получаем данные в формате nlohmann::json
-    nlohmann::json jsonData = client.display_hospitals_table();
+    nlohmann::json jsonData = client.get_hospitals_table();
 
     // Преобразуем в строку
     std::string jsonString = jsonData.dump();

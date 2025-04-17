@@ -148,7 +148,7 @@ void handle_request(
             } else if (req.target().starts_with("/hospitals_exist/")) {
                 std::string id_str =
                     std::string(req.target())
-                        .substr(std::string("/hospitals/").length());
+                        .substr(std::string("/hospitals_exist/").length());
                 int hospital_id = std::stoi(id_str);
                 hospital_exists(hospital_id, res, db_handler);
             } else if (req.target().starts_with("/get_doctor_schedule")) {
