@@ -17,8 +17,6 @@ RUN apt-get update && apt-get install -y --fix-missing \
     nlohmann-json3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Boost.Beast через Boost (отдельно не нужен)
-
 # Устанавливаем рабочую директорию
 WORKDIR /app
 

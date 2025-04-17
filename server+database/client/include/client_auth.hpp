@@ -10,9 +10,16 @@ struct user_info {
     std::string user_type;
 };
 
-user_info login(const std::string& phone, const std::string& password);
-user_info register_user(const std::string& phone, const std::string& password, const std::string& first_name, const std::string& last_name, const std::string& patronymic);
+user_info login(const std::string &phone, const std::string &password);
+user_info register_user(
+    const std::string &phone,
+    const std::string &password,
+    const std::string &first_name,
+    const std::string &last_name,
+    const std::string &patronymic
+);
 
-} // namespace auth
+}  // namespace auth
 
-#endif // CLIENT_AUTH_HPP
+#endif  // CLIENT_AUTH_HPP
+

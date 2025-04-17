@@ -11,13 +11,12 @@ using json = nlohmann::json;
 class doctor_client {
 public:
     doctor_client(int doctor_id);
-    void display_schedule();
-    void run_menu(); // Добавляем метод для запуска меню
+    void get_schedule(int doctor_id);
 
 private:
     int doctor_id;
 };
 
-} // namespace doctor
+}  // namespace doctor
 
-#endif // DOCTOR_CLIENT_HPP
+#endif  // DOCTOR_CLIENT_HPP

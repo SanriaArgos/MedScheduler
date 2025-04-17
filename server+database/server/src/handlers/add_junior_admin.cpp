@@ -1,7 +1,7 @@
 #include "../../include/handlers/add_junior_admin.hpp"
-#include <iostream>
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
+#include <iostream>
 #include <nlohmann/json.hpp>
 
 namespace http = boost::beast::http;
@@ -9,11 +9,16 @@ using json = nlohmann::json;
 
 extern database_handler* global_db;
 
-void add_junior_admin(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void add_junior_admin(
+    const json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     nlohmann::json response;
 
     // Проверка на наличие обязательных полей
-    if (!data.contains("last_name") || !data.contains("first_name") || !data.contains("phone")) {
+    if (!data.contains("last_name") || !data.contains("first_name") ||
+        !data.contains("phone")) {
         std::cerr << "Error: Missing required fields for adding junior admin\n";
         response["success"] = false;
         response["error"] = "Missing required fields";
@@ -43,25 +48,31 @@ void add_junior_admin(const json &data, http::response<http::string_body> &res, 
 
     const std::string default_password = "0987654321";
     // Регистрация пользователя с дефолтным паролем
-    if (!global_db->register_user(last_name, first_name, patronymic, phone, default_password)) {
+    if (!global_db->register_user(
+            last_name, first_name, patronymic, phone, default_password
+        )) {
         std::cerr << "Error adding junior administrator\n";
         response["success"] = false;
         response["error"] = "Error adding junior administrator";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
         return;
     }
 
     // Обновление типа пользователя на 'junior administrator'
-    const char* params[1] = { phone.c_str() };
-    PGresult *res_update = PQexecParams(db_handler.get_connection(),
+    const char *params[1] = {phone.c_str()};
+    PGresult *res_update = PQexecParams(
+        db_handler.get_connection(),
         "UPDATE users SET user_type = 'junior administrator' WHERE phone = $1",
-        1, NULL, params, NULL, NULL, 0);
-    
+        1, NULL, params, NULL, NULL, 0
+    );
+
     if (PQresultStatus(res_update) != PGRES_COMMAND_OK) {
-        std::cerr << "Error updating user type: " << PQerrorMessage(db_handler.get_connection()) << "\n";
+        std::cerr << "Error updating user type: "
+                  << PQerrorMessage(db_handler.get_connection()) << "\n";
         PQclear(res_update);
         response["success"] = false;
         response["error"] = "Error updating user type";
@@ -71,7 +82,6 @@ void add_junior_admin(const json &data, http::response<http::string_body> &res, 
         res.body() = response.dump();
         return;
     }
-    
     PQclear(res_update);
 
     std::cerr << "Junior administrator added\n";

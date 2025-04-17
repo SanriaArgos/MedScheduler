@@ -1,7 +1,13 @@
 #include "../../include/handlers/add_record_slot.hpp"
+<<<<<<< HEAD
+#include <libpq-fe.h>
+#include <boost/beast/http.hpp>
+#include <iostream>
+=======
 #include <iostream>
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
+>>>>>>> main
 #include <nlohmann/json.hpp>
 
 namespace http = boost::beast::http;
@@ -9,13 +15,15 @@ using json = nlohmann::json;
 
 extern database_handler* global_db;
 
-static int get_junior_admin_hospital_id(int junior_admin_id) {
+int get_junior_admin_hospital_id(int junior_admin_id) {
     int hospital_id = -1;
     std::string admin_id_str = std::to_string(junior_admin_id);
-    const char* params[1] = { admin_id_str.c_str() };
-    PGresult *res = PQexecParams(global_db->get_connection(),
+    const char *params[1] = {admin_id_str.c_str()};
+    PGresult *res = PQexecParams(
+        global_db->get_connection(),
         "SELECT hospital_id FROM hospitals WHERE administrator_id = $1 LIMIT 1",
-        1, NULL, params, NULL, NULL, 0);
+        1, NULL, params, NULL, NULL, 0
+    );
     if (PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) > 0) {
         hospital_id = std::stoi(PQgetvalue(res, 0, 0));
     }
@@ -23,14 +31,48 @@ static int get_junior_admin_hospital_id(int junior_admin_id) {
     return hospital_id;
 }
 
-void add_record_slot(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void add_record_slot(
+    const json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     json response;
 
     // Проверка на наличие обязательных полей
-    if (!data.contains("doctor_id") || !data.contains("date") ||
-        !data.contains("time") || !data.contains("hospital_id") ||
-        !data.contains("cabinet") || !data.contains("junior_admin_id")) {
-        std::cerr << "Error: Missing required fields for add_record_slot\n";
+    bool has_error = false;
+
+    if (!data.contains("doctor_id")) {
+        std::cerr << "Error: Missing field 'doctor_id'\n";
+        response["missing_fields"].push_back("doctor_id");
+        has_error = true;
+    }
+    if (!data.contains("date")) {
+        std::cerr << "Error: Missing field 'date'\n";
+        response["missing_fields"].push_back("date");
+        has_error = true;
+    }
+    if (!data.contains("time")) {
+        std::cerr << "Error: Missing field 'time'\n";
+        response["missing_fields"].push_back("time");
+        has_error = true;
+    }
+    if (!data.contains("hospital_id")) {
+        std::cerr << "Error: Missing field 'hospital_id'\n";
+        response["missing_fields"].push_back("hospital_id");
+        has_error = true;
+    }
+    if (!data.contains("cabinet")) {
+        std::cerr << "Error: Missing field 'cabinet'\n";
+        response["missing_fields"].push_back("cabinet");
+        has_error = true;
+    }
+    if (!data.contains("junior_admin_id")) {
+        std::cerr << "Error: Missing field 'junior_admin_id'\n";
+        response["missing_fields"].push_back("junior_admin_id");
+        has_error = true;
+    }
+
+    if (has_error) {
         response["success"] = false;
         response["error"] = "Missing required fields";
 
@@ -50,11 +92,16 @@ void add_record_slot(const json &data, http::response<http::string_body> &res, d
     // Проверяем принадлежность hospital_id младшему администратору.
     std::string hosp_id_str = std::to_string(hospital_id);
     std::string junior_admin_id_str = std::to_string(junior_admin_id);
-    const char* params_check[2] = { hosp_id_str.c_str(), junior_admin_id_str.c_str() };
-    PGresult *res_check = PQexecParams(db_handler.get_connection(),
-        "SELECT 1 FROM hospitals WHERE hospital_id = $1 AND administrator_id = $2",
-        2, NULL, params_check, NULL, NULL, 0);
-    if (!(PQresultStatus(res_check) == PGRES_TUPLES_OK && PQntuples(res_check) > 0)) {
+    const char *params_check[2] = {
+        hosp_id_str.c_str(), junior_admin_id_str.c_str()};
+    PGresult *res_check = PQexecParams(
+        db_handler.get_connection(),
+        "SELECT 1 FROM hospitals WHERE hospital_id = $1 AND administrator_id = "
+        "$2",
+        2, NULL, params_check, NULL, NULL, 0
+    );
+    if (!(PQresultStatus(res_check) == PGRES_TUPLES_OK &&
+          PQntuples(res_check) > 0)) {
         std::cerr << "Error: Hospital ID does not match yours\n";
         PQclear(res_check);
         response["success"] = false;
@@ -66,7 +113,6 @@ void add_record_slot(const json &data, http::response<http::string_body> &res, d
         return;
     }
     PQclear(res_check);
-    
     int my_hospital_id = get_junior_admin_hospital_id(junior_admin_id);
     if (my_hospital_id == -1) {
         std::cerr << "Error: Your hospital not found\n";
@@ -81,11 +127,15 @@ void add_record_slot(const json &data, http::response<http::string_body> &res, d
 
     std::string doctor_id_str = std::to_string(doctor_id);
     std::string my_hosp_id_str = std::to_string(my_hospital_id);
-    const char* params_check_doc[2] = { doctor_id_str.c_str(), my_hosp_id_str.c_str() };
-    PGresult *res_check_doc = PQexecParams(db_handler.get_connection(),
+    const char *params_check_doc[2] = {
+        doctor_id_str.c_str(), my_hosp_id_str.c_str()};
+    PGresult *res_check_doc = PQexecParams(
+        db_handler.get_connection(),
         "SELECT 1 FROM doctors WHERE doctor_id = $1 AND $2 = ANY(hospital_ids)",
-        2, NULL, params_check_doc, NULL, NULL, 0);
-    if (!(PQresultStatus(res_check_doc) == PGRES_TUPLES_OK && PQntuples(res_check_doc) > 0)) {
+        2, NULL, params_check_doc, NULL, NULL, 0
+    );
+    if (!(PQresultStatus(res_check_doc) == PGRES_TUPLES_OK &&
+          PQntuples(res_check_doc) > 0)) {
         std::cerr << "Error: Doctor is not associated with your hospital\n";
         PQclear(res_check_doc);
         response["success"] = false;
@@ -97,13 +147,18 @@ void add_record_slot(const json &data, http::response<http::string_body> &res, d
         return;
     }
     PQclear(res_check_doc);
-    
+
     std::string cabinet_str = std::to_string(cabinet);
-    const char* params_ins[5] = { doctor_id_str.c_str(), date.c_str(), time_val.c_str(), hosp_id_str.c_str(), cabinet_str.c_str() };
-    PGresult *res_ins = PQexecParams(db_handler.get_connection(),
-        "INSERT INTO records (doctor_id, appointment_date, appointment_time, hospital_id, cabinet_number, patient_id) "
+    const char *params_ins[5] = {
+        doctor_id_str.c_str(), date.c_str(), time_val.c_str(),
+        hosp_id_str.c_str(), cabinet_str.c_str()};
+    PGresult *res_ins = PQexecParams(
+        db_handler.get_connection(),
+        "INSERT INTO records (doctor_id, appointment_date, appointment_time, "
+        "hospital_id, cabinet_number, patient_id) "
         "VALUES ($1, $2, $3, $4, $5, NULL)",
-        5, NULL, params_ins, NULL, NULL, 0);
+        5, NULL, params_ins, NULL, NULL, 0
+    );
     if (PQresultStatus(res_ins) == PGRES_COMMAND_OK) {
         std::cerr << "Appointment slot added\n";
         response["success"] = true;

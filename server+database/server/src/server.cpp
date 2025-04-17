@@ -1,7 +1,7 @@
-#include "../include/session.hpp"
 #include "../include/server.hpp"
 #include <functional>
 #include <iostream>
+#include "../include/session.hpp"
 
 server::server(
     boost::asio::io_context &io_context,

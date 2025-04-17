@@ -37,5 +37,5 @@ void login(const nlohmann::json &data, http::response<http::string_body> &res, d
     }
 
     res.set(http::field::content_type, "application/json");
-    res.body() = response.dump(); //тут устанавливам возврат джейсона
+    res.body() = response.dump();  // тут устанавливам возврат джейсона
 }
