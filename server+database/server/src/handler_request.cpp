@@ -202,7 +202,6 @@ void handle_request(
                     );
                     std::string admin_id_str = url.substr(admin_pos + 9);
 
-                    // Удаляем возможные дополнительные параметры после admin_id
                     size_t amp_pos = admin_id_str.find('&');
                     if (amp_pos != std::string::npos) {
                         admin_id_str = admin_id_str.substr(0, amp_pos);
@@ -211,12 +210,9 @@ void handle_request(
                     int doctor_id = std::stoi(doctor_id_str);
                     int admin_id = std::stoi(admin_id_str);
 
-                    // Получаем hospital_id, к которой прикреплён администратор
                     int hospital_id_admin = get_hospital_id_admin(admin_id);
-                    // Проверяем, привязан ли доктор к больнице администратора
                     bool is_valid = check_doctor_hospital(doctor_id, hospital_id_admin);
 
-                    // Формируем JSON ответ
                     json response;
                     response["is_valid"] = is_valid;
                     response["admin_hospital_id"] = hospital_id_admin;

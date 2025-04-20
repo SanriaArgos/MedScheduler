@@ -18,7 +18,6 @@ user_info login(const std::string &phone, const std::string &password) {
 
     std::string resp_id =
         send_get_request("http://localhost:8080/get_user_id?phone=" + phone_1);
-    int id = -1;
     try {
         response_j = nlohmann::json::parse(resp_id);
     } catch (const std::exception &e) {

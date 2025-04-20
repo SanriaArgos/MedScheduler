@@ -103,14 +103,14 @@ void SeniorAdminWindow::on_add_new_hospital_button_clicked()
         {"street", street},
         {"house", house},
         {"full_name", hospital_full_name},
-        {"administrator_id", id_of_junior_administrator}};
+        {"admin_id", id_of_junior_administrator}};
+
     QByteArray jsonData = QJsonDocument(hospital_data).toJson();
     std::string jsonString = jsonData.toStdString();
     nlohmann::json j = nlohmann::json::parse(jsonString);
     senior_admin::senior_admin_client client(1);
     client.add_hospital(j);
 }
-
 
 void SeniorAdminWindow::on_get_users_table_button_clicked()
 {

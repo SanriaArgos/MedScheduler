@@ -33,6 +33,7 @@ json senior_admin_client::get_users_table() {
     }
 }
 
+
 json senior_admin_client::get_hospitals_table() {
     std::string url = "http://localhost:8080/get_hospitals";
     std::string response = send_get_request(url);
@@ -42,19 +43,6 @@ json senior_admin_client::get_hospitals_table() {
         return hospitals;
     } catch (const std::exception &e) {
         std::cerr << "Error fetching hospitals table: " << e.what() << std::endl;
-        return json();
-    }
-}
-
-json junior_admin_client::get_users_table() {
-    std::string url = "http://localhost:8080/get_users";
-    std::string response = send_get_request(url);
-
-    try {
-        json users = json::parse(response);
-        return users;
-    } catch (const std::exception &e) {
-        std::cerr << "Error fetching users table: " << e.what() << std::endl;
         return json();
     }
 }

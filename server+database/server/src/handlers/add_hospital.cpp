@@ -14,7 +14,6 @@ extern database_handler* global_db;
 void add_hospital(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     nlohmann::json response;
 
-    // Проверка на наличие обязательных полей
     if (!data.contains("region") || !data.contains("settlement_type") ||
         !data.contains("settlement_name") || !data.contains("street") ||
         !data.contains("house") || !data.contains("full_name") ||
@@ -35,9 +34,8 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
     std::string street = data["street"];
     std::string house = data["house"];
     std::string full_name = data["full_name"];
-    std::string admin_id = data["administrator_id"];
+    std::string admin_id = data["admin_id"];
 
-    // Проверка, если такой адрес уже существует в базе
     const char *params_exist[5] = {
         region.c_str(), settlement_type.c_str(), settlement_name.c_str(),
         street.c_str(), house.c_str()};
@@ -61,7 +59,6 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
     }
     PQclear(res_exist);
 
-    // Вставка нового госпиталя в базу
     std::string admin_id_str = admin_id;
     const char *params_ins[7] = {
         region.c_str(),      settlement_type.c_str(), settlement_name.c_str(),
@@ -75,7 +72,6 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
         7, NULL, params_ins, NULL, NULL, 0
     );
 
-    // Проверка, если госпиталь был успешно добавлен
     if (PQresultStatus(res_ins) == PGRES_COMMAND_OK) {
         std::cerr << "Hospital added\n";
         response["success"] = true;

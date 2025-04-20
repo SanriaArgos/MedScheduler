@@ -7,9 +7,10 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <nlohmann/json.hpp>
-#include "server+database/client/include/common_for_all.hpp"
+#include "../client/include/common_for_all.hpp"
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
+
 homepage::homepage(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::homepage)
