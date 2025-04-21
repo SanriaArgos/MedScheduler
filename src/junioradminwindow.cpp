@@ -63,7 +63,6 @@ void JuniorAdminWindow::on_add_doctor_button_clicked()
     QJsonDocument doc(json);
     QString jsonString = doc.toJson(QJsonDocument::Compact);
     nlohmann::json doctor_data = nlohmann::json::parse(jsonString.toStdString());
-
     junior_admin::junior_admin_client client(1);
     client.add_doctor(doctor_data);
 }

@@ -30,6 +30,8 @@ private slots:
 
     void on_view_schedule_button_clicked();
 
+    void make_all_basic();
+
 private:
     Ui::homepage *ui;
 };

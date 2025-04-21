@@ -14,7 +14,7 @@
    <string>MedScheduler</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="res.qrc">
+   <iconset resource="../res.qrc">
     <normaloff>:/images/icon-512.png</normaloff>:/images/icon-512.png</iconset>
   </property>
   <property name="styleSheet">
@@ -302,7 +302,7 @@ text-decoration: underline;</string>
   </widget>
  </widget>
  <resources>
-  <include location="res.qrc"/>
+  <include location="../res.qrc"/>
  </resources>
  <connections/>
 </ui>

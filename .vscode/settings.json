@@ -118,5 +118,6 @@
     "xmemory": "cpp",
     "xtr1common": "cpp",
     "xutility": "cpp"
-  }
+  },
+  "makefile.configureOnOpen": true
 }

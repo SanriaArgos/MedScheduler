@@ -10,52 +10,153 @@
 #include "server+database/client/include/common_for_all.hpp"
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
+
 homepage::homepage(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::homepage)
 {
     ui->setupUi(this);
-    ui->stackedWidget->setCurrentWidget(ui->appointments_page);
+    on_appointments_button_clicked();
 }
 
 homepage::~homepage()
 {
     delete ui;
 }
+void homepage::make_all_basic(){
+    const QString baseStyle =
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: transparent;"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgba(64, 64, 80, 100);"
+        "   border-radius: 10px;"
+        "}";
 
+    // Apply to all buttons
+    ui->appointments_button->setStyleSheet(baseStyle);
+    ui->doctors_button->setStyleSheet(baseStyle);
+    ui->profile_button->setStyleSheet(baseStyle);
+    ui->hospitals_button->setStyleSheet(baseStyle);
+    ui->settings_button->setStyleSheet(baseStyle);
+    ui->notifications_button->setStyleSheet(baseStyle);
+}
 void homepage::on_appointments_button_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->appointments_page);
+    make_all_basic();
+    ui->appointments_button->setStyleSheet("QPushButton {"
+                                           "   color: rgb(255, 255, 255);"
+                                           "   font: 15pt 'Arial';"
+                                           "   text-align: left;"
+                                           "   padding-left: 10%;"
+                                           "   background-color: rgb(64, 64, 80);"
+                                           "   border-radius: 10px;"
+                                           "}"
+                                           "QPushButton:hover {"
+                                           "   background-color: rgb(64, 64, 100);"
+                                           "   border-radius: 10px;"
+                                           "}");
 }
 
 
 void homepage::on_profile_button_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->profile_page);
+    make_all_basic();
+    ui->profile_button->setStyleSheet("QPushButton {"
+                                      "   color: rgb(255, 255, 255);"
+                                      "   font: 15pt 'Arial';"
+                                      "   text-align: left;"
+                                      "   padding-left: 10%;"
+                                      "   background-color: rgb(64, 64, 80);"
+                                      "   border-radius: 10px;"
+                                      "}"
+                                      "QPushButton:hover {"
+                                      "   background-color: rgb(64, 64, 100);"
+                                      "   border-radius: 10px;"
+                                      "}");
 }
 
 
 void homepage::on_doctors_button_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->doctors_page);
+    make_all_basic();
+    ui->doctors_button->setStyleSheet("QPushButton {"
+                                      "   color: rgb(255, 255, 255);"
+                                      "   font: 15pt 'Arial';"
+                                      "   text-align: left;"
+                                      "   padding-left: 10%;"
+                                      "   background-color: rgb(64, 64, 80);"
+                                      "   border-radius: 10px;"
+                                      "}"
+                                      "QPushButton:hover {"
+                                      "   background-color: rgb(64, 64, 100);"
+                                      "   border-radius: 10px;"
+                                      "}");
 }
 
 
 void homepage::on_hospitals_button_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->hospitals_page);
+    make_all_basic();
+    ui->hospitals_button->setStyleSheet("QPushButton {"
+                                        "   color: rgb(255, 255, 255);"
+                                        "   font: 15pt 'Arial';"
+                                        "   text-align: left;"
+                                        "   padding-left: 10%;"
+                                        "   background-color: rgb(64, 64, 80);"
+                                        "   border-radius: 10px;"
+                                        "}"
+                                        "QPushButton:hover {"
+                                        "   background-color: rgb(64, 64, 100);"
+                                        "   border-radius: 10px;"
+                                        "}");
 }
 
 
 void homepage::on_notifications_button_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->notifications_page);
+    make_all_basic();
+    ui->notifications_button->setStyleSheet("QPushButton {"
+                                            "   color: rgb(255, 255, 255);"
+                                            "   font: 15pt 'Arial';"
+                                            "   text-align: left;"
+                                            "   padding-left: 10%;"
+                                            "   background-color: rgb(64, 64, 80);"
+                                            "   border-radius: 10px;"
+                                            "}"
+                                            "QPushButton:hover {"
+                                            "   background-color: rgb(64, 64, 100);"
+                                            "   border-radius: 10px;"
+                                            "}");
 }
 
 
 void homepage::on_settings_button_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->settings_page);
+    make_all_basic();
+    ui->settings_button->setStyleSheet("QPushButton {"
+                                       "   color: rgb(255, 255, 255);"
+                                       "   font: 15pt 'Arial';"
+                                       "   text-align: left;"
+                                       "   padding-left: 10%;"
+                                       "   background-color: rgb(64, 64, 80);"
+                                       "   border-radius: 10px;"
+                                       "}"
+                                       "QPushButton:hover {"
+                                       "   background-color: rgb(64, 64, 100);"
+                                       "   border-radius: 10px;"
+                                       "}");
 }
 
 
