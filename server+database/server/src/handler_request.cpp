@@ -152,24 +152,31 @@ void handle_request(
                 int hospital_id = std::stoi(id_str);
                 hospital_exists(hospital_id, res, db_handler);
             } else if (req.target().starts_with("/get_doctor_schedule")) {
-                std::string target =
-                    std::string(req.target());  // Преобразуем в строку
-                size_t pos = target.find("?doctor_id=");
-
-                if (pos != std::string::npos) {
-                    std::string doctor_id_str =
-                        target.substr(pos + 11);  // 11 - длина "?doctor_id="
+                std::string target = std::string(req.target());
+                
+                size_t doctor_id_start = target.find("doctor_id=");
+                
+                if (doctor_id_start != std::string::npos) {
+                    doctor_id_start += 10; // Длина "doctor_id="
+                    
+                    size_t doctor_id_end = target.find('&', doctor_id_start);
+                    
+                    std::string doctor_id_str = (doctor_id_end == std::string::npos) 
+                        ? target.substr(doctor_id_start) 
+                        : target.substr(doctor_id_start, doctor_id_end - doctor_id_start);
+                    std::cerr << "doctor_id" << doctor_id_str << "\n";
                     try {
-                        int doctor_id =
-                            std::stoi(doctor_id_str);  // Преобразуем в число
+                        int doctor_id = std::stoi(doctor_id_str);
+                        
                         json request_data;
                         request_data["doctor_id"] = doctor_id;
                         get_doctor_schedule(request_data, res, db_handler);
+                        
                     } catch (const std::exception &e) {
                         json error;
                         error["success"] = false;
-                        error["error"] = "Invalid doctor_id format";
-
+                        error["error"] = "Invalid doctor_id format: must be integer";
+                        
                         res.result(http::status::bad_request);
                         res.set(http::field::content_type, "application/json");
                         res.body() = error.dump();
@@ -198,9 +205,11 @@ void handle_request(
                     }
 
                     std::string doctor_id_str = url.substr(
-                        doctor_pos + 9, admin_pos - (doctor_pos + 9)
+                        doctor_pos + 10, admin_pos - (doctor_pos + 10)
                     );
-                    std::string admin_id_str = url.substr(admin_pos + 9);
+                    std::string admin_id_str = url.substr(admin_pos + 10);
+
+                    std::cerr << "doctor_id_str " << "admin_id_str " << doctor_id_str << " " << admin_id_str << "\n";  
 
                     size_t amp_pos = admin_id_str.find('&');
                     if (amp_pos != std::string::npos) {
@@ -208,10 +217,16 @@ void handle_request(
                     }
 
                     int doctor_id = std::stoi(doctor_id_str);
+
                     int admin_id = std::stoi(admin_id_str);
 
                     int hospital_id_admin = get_hospital_id_admin(admin_id);
+
+                    // std::cerr << hospital_id_admin << "\n";
+
                     bool is_valid = check_doctor_hospital(doctor_id, hospital_id_admin);
+
+                    // std::cerr << is_valid << "\n";
 
                     json response;
                     response["is_valid"] = is_valid;

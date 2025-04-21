@@ -6,6 +6,7 @@
 #include <utils.h>
 #include <nlohmann/json.hpp>
 #include "../client/src/client_junior_admin.cpp"
+
 JuniorAdminWindow::JuniorAdminWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::JuniorAdminWindow)

@@ -13,7 +13,7 @@ junior_admin_client::junior_admin_client(int admin_id) : admin_id(admin_id) {
 json junior_admin_client::get_doctor_schedule(int doctor_id) {
     std::string check_url = "http://localhost:8080/check_doctor_admin_hospital?doctor_id=" + std::to_string(doctor_id) + "&admin_id=" + std::to_string(admin_id);
     std::string check_response = send_get_request(check_url);
-
+    std::cerr <<  16 << "\n";
     try {
         json check_result = json::parse(check_response);
         if (!check_result.value("is_valid", false)) {
@@ -26,11 +26,14 @@ json junior_admin_client::get_doctor_schedule(int doctor_id) {
         return json();
     }
 
+    std::cerr << 29 << "\n";
+
     std::string schedule_url = "http://localhost:8080/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
     std::string schedule_response = send_get_request(schedule_url);
 
     try {
         json schedule = json::parse(schedule_response);
+        std::cerr <<  34 << "\n";
         return schedule;
     } catch (const std::exception &e) {
         std::cerr << "Error fetching doctor's schedule: " << e.what() << std::endl;
