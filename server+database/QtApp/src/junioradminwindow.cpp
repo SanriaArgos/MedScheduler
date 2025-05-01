@@ -111,6 +111,7 @@ void JuniorAdminWindow::on_remove_doctor_button_clicked()
     QJsonObject json;
     json["doctor_id"] = doctor_id.toInt();
     json["hospital_id"] = hospital_id.toInt();
+    json["junior_admin_id"] = 1;
 
     QJsonDocument qdoc(json);
     nlohmann::json doctor_data = nlohmann::json::parse(qdoc.toJson().toStdString());
