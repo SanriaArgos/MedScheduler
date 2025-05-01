@@ -169,18 +169,18 @@ void add_hospital_to_doctor(
     res.body() = response.dump();
 }
 
-void remove_hospital_from_doctor(
+void detach_hospital_from_doctor(
     const json &data,
     http::response<http::string_body> &res,
     database_handler &db_handler
 ) {
     json response;
-
+    std::cerr << 178 << "doctor_hospital_managment" << "\n";
     // Проверка на наличие обязательных полей
     if (!data.contains("doctor_id") || !data.contains("hospital_id") ||
         !data.contains("junior_admin_id")) {
         std::cerr << "Error: Missing required fields for "
-                     "remove_hospital_from_doctor\n";
+                     "detach_hospital_from_doctor\n";
         response["success"] = false;
         response["error"] = "Missing required fields";
 
@@ -190,6 +190,7 @@ void remove_hospital_from_doctor(
         return;
     }
 
+    std::cerr << 193 << "doctor_hospital_managment" << "\n";
     int doctor_id = data["doctor_id"];
     int hospital_id = data["hospital_id"];
     int junior_admin_id = data["junior_admin_id"];
@@ -201,6 +202,8 @@ void remove_hospital_from_doctor(
         "SELECT 1 FROM doctors WHERE doctor_id = $1", 1, NULL, params_doc, NULL,
         NULL, 0
     );
+
+    std::cerr << 204 << "doctor_hospital_managment" << "\n";
     if (!(PQresultStatus(res_doc) == PGRES_TUPLES_OK && PQntuples(res_doc) > 0
         )) {
         std::cerr << "Error: Doctor not found\n";
@@ -218,6 +221,7 @@ void remove_hospital_from_doctor(
     }
     PQclear(res_doc);
 
+    std::cerr << 224 << "doctor_hospital_managment" << "\n";
     std::string hospital_id_str = std::to_string(hospital_id);
     std::string junior_admin_id_str = std::to_string(junior_admin_id);
     const char *params_hosp[2] = {
@@ -228,6 +232,8 @@ void remove_hospital_from_doctor(
         "$2",
         2, NULL, params_hosp, NULL, NULL, 0
     );
+
+    std::cerr << 236 << "doctor_hospital_managment" << "\n";
     if (!(PQresultStatus(res_hosp) == PGRES_TUPLES_OK && PQntuples(res_hosp) > 0
         )) {
         std::cerr
@@ -245,6 +251,7 @@ void remove_hospital_from_doctor(
     }
     PQclear(res_hosp);
 
+    std::cerr << 254 << "doctor_hospital_managment" << "\n";
     const char *params_check[2] = {
         doctor_id_str.c_str(), hospital_id_str.c_str()};
     PGresult *res_check = PQexecParams(
@@ -266,6 +273,8 @@ void remove_hospital_from_doctor(
         return;
     }
     PQclear(res_check);
+
+    std::cerr << 277 << "doctor_hospital_managment" << "\n";
 
     const char *params_update[2] = {
         doctor_id_str.c_str(), hospital_id_str.c_str()};
@@ -290,6 +299,8 @@ void remove_hospital_from_doctor(
         return;
     }
     PQclear(res_update);
+
+    std::cerr << 303 << "doctor_hospital_managment" << "\n";
 
     std::cerr << "Hospital ID removed from doctor's list\n";
     response["success"] = true;

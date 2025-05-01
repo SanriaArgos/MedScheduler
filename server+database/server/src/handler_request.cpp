@@ -119,8 +119,9 @@ void handle_request(
                 add_record_slot(body, res, db_handler);
             } else if (req.target() == "/add_hospital_to_doctor") {
                 add_hospital_to_doctor(body, res, db_handler);
-            } else if (req.target() == "/remove_hospital_from_doctor") {
-                remove_hospital_from_doctor(body, res, db_handler);
+            } else if (req.target() == "/detach_doctor_from_hospital") {
+                std::cerr << 123 << "handler_request" << "\n";
+                detach_hospital_from_doctor(body, res, db_handler);
             } else if (req.target() == "/view_doctor_schedule_for_patient") {
                 view_doctor_schedule_for_patient(body, res, db_handler);
             } else {
@@ -190,62 +191,66 @@ void handle_request(
                     res.set(http::field::content_type, "application/json");
                     res.body() = error.dump();
                 }
-            } else if (req.target().starts_with("/check_doctor_admin_hospital"
-                       )) {
-                try {
-                    const std::string &url = req.target().to_string();
-                    size_t doctor_pos = url.find("doctor_id=");
-                    size_t admin_pos = url.find("&admin_id=");
+            } 
+            else if (req.target().starts_with("/check_doctor_admin_hospital")) {
+    try {
+        const std::string &url = req.target().to_string();
+        size_t doctor_pos = url.find("doctor_id=");
+        size_t admin_pos = url.find("&admin_id=");
 
-                    if (doctor_pos == std::string::npos ||
-                        admin_pos == std::string::npos) {
-                        throw std::runtime_error(
-                            "Missing required parameters in URL"
-                        );
-                    }
+        if (doctor_pos == std::string::npos || admin_pos == std::string::npos) {
+            throw std::runtime_error("Missing required parameters in URL");
+        }
 
-                    std::string doctor_id_str = url.substr(
-                        doctor_pos + 10, admin_pos - (doctor_pos + 10)
-                    );
-                    std::string admin_id_str = url.substr(admin_pos + 10);
+        std::string doctor_id_str = url.substr(doctor_pos + 10, admin_pos - (doctor_pos + 10));
+        std::string admin_id_str = url.substr(admin_pos + 10);
 
-                    std::cerr << "doctor_id_str " << "admin_id_str " << doctor_id_str << " " << admin_id_str << "\n";  
+        std::cerr << "doctor_id_str admin_id_str: " << doctor_id_str << " " << admin_id_str << "\n";
 
-                    size_t amp_pos = admin_id_str.find('&');
-                    if (amp_pos != std::string::npos) {
-                        admin_id_str = admin_id_str.substr(0, amp_pos);
-                    }
+        size_t amp_pos = admin_id_str.find('&');
+        if (amp_pos != std::string::npos) {
+            admin_id_str = admin_id_str.substr(0, amp_pos);
+        }
 
-                    int doctor_id = std::stoi(doctor_id_str);
+        int doctor_id = std::stoi(doctor_id_str);
+        int admin_id = std::stoi(admin_id_str);
 
-                    int admin_id = std::stoi(admin_id_str);
+        int hospital_id_admin = get_hospital_id_admin(admin_id);
 
-                    int hospital_id_admin = get_hospital_id_admin(admin_id);
+        bool is_valid = check_doctor_hospital(doctor_id, hospital_id_admin);
 
-                    // std::cerr << hospital_id_admin << "\n";
+        json response;
+        response["is_valid"] = is_valid;
+        response["admin_hospital_id"] = hospital_id_admin;
+        response["doctor_id"] = doctor_id;
 
-                    bool is_valid = check_doctor_hospital(doctor_id, hospital_id_admin);
+        if (!is_valid) {
+            std::cerr << "Error: Doctor and admin are not associated with the same hospital\n";
+        }
 
-                    // std::cerr << is_valid << "\n";
+        res.set(http::field::content_type, "application/json");
+        res.keep_alive(req.keep_alive());
+        res.result(http::status::ok);
+        res.body() = response.dump();
+        res.prepare_payload();
+        return;
+    } catch (const std::exception &e) {
+        std::cerr << "Error checking hospital association: " << e.what() << std::endl;
 
-                    json response;
-                    response["is_valid"] = is_valid;
-                    response["admin_hospital_id"] = hospital_id_admin;
-                    response["doctor_id"] = doctor_id;
+        // ❗ Отправляем ошибку клиенту
+        json error_response;
+        error_response["error"] = e.what();
+        error_response["is_valid"] = false;
 
-                    if (!is_valid) {
-                        std::cerr << "Error: Doctor and admin are not associated with the same hospital\n";
-                    }
-
-                    // return response;
-
-                } catch (const std::exception &e) {
-                    std::cerr
-                        << "Error checking hospital association: " << e.what()
-                        << std::endl;
-                    // return json{{"error", e.what()}, {"is_valid", false}};
-                }
-            } else if (req.target() == "/junior_admin_schedule") {
+        res.set(http::field::content_type, "application/json");
+        res.keep_alive(req.keep_alive());
+        res.result(http::status::bad_request);
+        res.body() = error_response.dump();
+        res.prepare_payload();
+        return;
+    }
+}
+            else if (req.target() == "/junior_admin_schedule") {
                 junior_admin_schedule(
                     json::object(), res, db_handler
                 );  // Пустой JSON, так как данные не требуются
