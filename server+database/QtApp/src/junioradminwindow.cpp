@@ -93,24 +93,32 @@ void JuniorAdminWindow::on_add_doctor_to_hospital_button_clicked()
 }
 
 
-void JuniorAdminWindow::on_remove_doctor_button_clicked()//TODO
+void JuniorAdminWindow::on_remove_doctor_button_clicked()
 {
     ui->error_label_add_remove->setText("");
-    QString doctor_id=ui->doctor_id_form->text();
-    QString hospital_id=ui->doctor_id_form->text();
-    if(!is_number(doctor_id)){
+    QString doctor_id = ui->doctor_id_form->text();
+    QString hospital_id = ui->hospital_id_form->text();  // 🛠 Исправлено здесь
+
+    if (!is_number(doctor_id)) {
         ui->error_label_add_remove->setText("Incorrect format for doctor id.");
         return;
     }
-    if(!is_number(hospital_id)){
+    if (!is_number(hospital_id)) {
         ui->error_label_add_remove->setText("Incorrect format for hospital id.");
         return;
     }
+
     QJsonObject json;
-    json["doctor_id"]=doctor_id;
-    json["hospital_id"]=hospital_id;
-    //send
+    json["doctor_id"] = doctor_id.toInt();
+    json["hospital_id"] = hospital_id.toInt();
+
+    QJsonDocument qdoc(json);
+    nlohmann::json doctor_data = nlohmann::json::parse(qdoc.toJson().toStdString());
+
+    junior_admin::junior_admin_client client(1);
+    client.detach_doctor_from_hospital(doctor_data);  // ✅ вызов нужной функции
 }
+
 
 
 void JuniorAdminWindow::on_add_appointment_button_clicked()//TODO
