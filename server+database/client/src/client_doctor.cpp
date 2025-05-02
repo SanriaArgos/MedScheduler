@@ -10,7 +10,7 @@ using json = nlohmann::json;
 doctor_client::doctor_client(int doctor_id) : doctor_id(doctor_id) {
 }
 
-json doctor_client::get_schedule(int doctor_id) {
+json doctor_client::get_schedule() {
     std::string url =
         "http://localhost:8080/get_doctor_schedule?doctor_id=" + std::to_string(doctor_id);
     std::string response = send_get_request(url);

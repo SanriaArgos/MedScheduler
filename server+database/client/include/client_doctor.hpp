@@ -11,7 +11,7 @@ using json = nlohmann::json;
 class doctor_client {
 public:
     doctor_client(int doctor_id);
-    json get_schedule(int doctor_id);
+    json get_schedule();
 
 private:
     int doctor_id;
