@@ -24,7 +24,7 @@ using json = nlohmann::json;
 #include "../include/handlers/add_record_slot.hpp"
 #include "../include/handlers/attach_doctor_to_hospital.hpp"
 #include "../include/handlers/doctor_exists.hpp"
-#include "../include/handlers/doctor_hospital_managment.hpp"
+#include "../include/handlers/detach_doctor_from_hospital.hpp"
 #include "../include/handlers/doctor_schedule.hpp"
 #include "../include/handlers/get_doctors.hpp"
 #include "../include/handlers/get_hospitals.hpp"
@@ -117,8 +117,6 @@ void handle_request(
                 add_junior_admin(body, res, db_handler);
             } else if (req.target() == "/add_record_slot") {
                 add_record_slot(body, res, db_handler);
-            } else if (req.target() == "/add_hospital_to_doctor") {
-                add_hospital_to_doctor(body, res, db_handler);
             } else if (req.target() == "/detach_doctor_from_hospital") {
                 std::cerr << 123 << "handler_request" << "\n";
                 detach_hospital_from_doctor(body, res, db_handler);
