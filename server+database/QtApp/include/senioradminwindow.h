@@ -14,7 +14,8 @@ class SeniorAdminWindow : public QMainWindow
 public:
     explicit SeniorAdminWindow(QWidget *parent = nullptr);
     ~SeniorAdminWindow();
-
+    void set_user_id(int id);
+    int get_user_id();
 private slots:
     void on_add_junior_administrator_button_clicked();
 
@@ -26,6 +27,7 @@ private slots:
 
 private:
     Ui::SeniorAdminWindow *ui;
+    int user_id = 0;
 };
 
 #endif // SENIORADMINWINDOW_H

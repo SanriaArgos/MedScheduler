@@ -14,7 +14,8 @@ class homepage : public QMainWindow
 public:
     explicit homepage(QWidget *parent = nullptr);
     ~homepage();
-
+    void set_user_id(int id);
+    int get_user_id();
 private slots:
     void on_appointments_button_clicked();
 
@@ -30,8 +31,11 @@ private slots:
 
     void on_view_schedule_button_clicked();
 
+    void make_all_basic();
+
 private:
     Ui::homepage *ui;
+    int user_id = 0;
 };
 
 #endif // HOMEPAGE_H

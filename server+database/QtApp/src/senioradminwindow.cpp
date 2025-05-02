@@ -17,6 +17,12 @@ SeniorAdminWindow::SeniorAdminWindow(QWidget *parent)
     ui->setupUi(this);
 }
 
+void SeniorAdminWindow::set_user_id(int id){
+    user_id=id;
+}
+int SeniorAdminWindow::get_user_id(){
+    return user_id;
+}
 SeniorAdminWindow::~SeniorAdminWindow()
 {
     delete ui;
@@ -57,7 +63,7 @@ void SeniorAdminWindow::on_add_junior_administrator_button_clicked()
     std::string jsonString = jsonData.toStdString();
     nlohmann::json j = nlohmann::json::parse(jsonString);
 
-    senior_admin::senior_admin_client client(1);
+    senior_admin::senior_admin_client client(get_user_id());
     client.add_junior_admin(j);
 }
 
@@ -108,13 +114,13 @@ void SeniorAdminWindow::on_add_new_hospital_button_clicked()
     QByteArray jsonData = QJsonDocument(hospital_data).toJson();
     std::string jsonString = jsonData.toStdString();
     nlohmann::json j = nlohmann::json::parse(jsonString);
-    senior_admin::senior_admin_client client(1);
+    senior_admin::senior_admin_client client(get_user_id());
     client.add_hospital(j);
 }
 
 void SeniorAdminWindow::on_get_users_table_button_clicked()
 {
-    senior_admin::senior_admin_client client(1);
+    senior_admin::senior_admin_client client(get_user_id());
     // Получаем данные в формате nlohmann::json
     nlohmann::json jsonData = client.get_users_table();
 
@@ -170,7 +176,7 @@ void SeniorAdminWindow::on_get_users_table_button_clicked()
 
 void SeniorAdminWindow::on_get_hospitals_table_button_clicked()
 {
-    senior_admin::senior_admin_client client(1);
+    senior_admin::senior_admin_client client(get_user_id());
     // Получаем данные в формате nlohmann::json
     nlohmann::json jsonData = client.get_hospitals_table();
 

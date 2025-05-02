@@ -20,7 +20,7 @@
    <string>MedScheduler</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="res.qrc">
+   <iconset resource="../res.qrc">
     <normaloff>:/images/icon-512.png</normaloff>:/images/icon-512.png</iconset>
   </property>
   <property name="styleSheet">
@@ -301,7 +301,7 @@ padding-left: 10%;</string>
        <item>
         <widget class="QLabel" name="question_text">
          <property name="styleSheet">
-          <string notr="true">color: rgb(255, 255, 255);\nfont: 15pt &quot;Arial&quot;;\ntext-align:left;\npadding-left: 10%;</string>
+          <string notr="true">color: rgb(255, 255, 255);font: 9pt &quot;Arial&quot;;text-align:left;</string>
          </property>
          <property name="text">
           <string>For all questions:</string>
@@ -334,7 +334,7 @@ font: 9pt &quot;Arial&quot;;</string>
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="appointments_page">
        <property name="styleSheet">
@@ -476,7 +476,7 @@ font: 9pt &quot;Arial&quot;;</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>746</width>
+             <width>749</width>
              <height>676</height>
             </rect>
            </property>
@@ -489,8 +489,8 @@ font: 9pt &quot;Arial&quot;;</string>
        <widget class="QLabel" name="label_5">
         <property name="geometry">
          <rect>
-          <x>190</x>
-          <y>70</y>
+          <x>80</x>
+          <y>50</y>
           <width>91</width>
           <height>41</height>
          </rect>
@@ -551,7 +551,7 @@ font: 9pt &quot;Arial&quot;;</string>
   </widget>
  </widget>
  <resources>
-  <include location="res.qrc"/>
+  <include location="../res.qrc"/>
  </resources>
  <connections/>
 </ui>

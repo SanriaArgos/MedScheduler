@@ -14,7 +14,8 @@ class JuniorAdminWindow : public QMainWindow
 public:
     explicit JuniorAdminWindow(QWidget *parent = nullptr);
     ~JuniorAdminWindow();
-
+    void set_user_id(int id);
+    int get_user_id();
 private slots:
     void on_add_doctor_button_clicked();
 
@@ -32,6 +33,7 @@ private slots:
 
 private:
     Ui::JuniorAdminWindow *ui;
+    int user_id = 0;
 };
 
 #endif // JUNIORADMINWINDOW_H

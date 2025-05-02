@@ -14,6 +14,14 @@ JuniorAdminWindow::JuniorAdminWindow(QWidget *parent)
     ui->setupUi(this);
 }
 
+void JuniorAdminWindow::set_user_id(int id){
+    user_id=id;
+}
+
+int JuniorAdminWindow::get_user_id(){
+    return user_id;
+}
+
 JuniorAdminWindow::~JuniorAdminWindow()
 {
     delete ui;
@@ -65,7 +73,7 @@ void JuniorAdminWindow::on_add_doctor_button_clicked()
     QString jsonString = doc.toJson(QJsonDocument::Compact);
     nlohmann::json doctor_data = nlohmann::json::parse(jsonString.toStdString());
 
-    junior_admin::junior_admin_client client(1);
+    junior_admin::junior_admin_client client(get_user_id());
     client.add_doctor(doctor_data);
 }
 
@@ -88,7 +96,7 @@ void JuniorAdminWindow::on_add_doctor_to_hospital_button_clicked()
     json["hospital_id"]=hospital_id.toInt();
     QJsonDocument qdoc(json);
     nlohmann::json doctor_data = nlohmann::json::parse(qdoc.toJson().toStdString());
-    junior_admin::junior_admin_client client(1);
+    junior_admin::junior_admin_client client(get_user_id());
     client.attach_doctor_to_hospital_class(doctor_data);
 }
 
@@ -116,7 +124,7 @@ void JuniorAdminWindow::on_remove_doctor_button_clicked()
     QJsonDocument qdoc(json);
     nlohmann::json doctor_data = nlohmann::json::parse(qdoc.toJson().toStdString());
 
-    junior_admin::junior_admin_client client(1);
+    junior_admin::junior_admin_client client(get_user_id());
     client.detach_doctor_from_hospital(doctor_data);  // ✅ вызов нужной функции
 }
 
@@ -159,7 +167,7 @@ void JuniorAdminWindow::on_add_appointment_button_clicked()//TODO
     json["junior_admin_id"]=1;
     QJsonDocument qdoc(json);
     nlohmann::json data = nlohmann::json::parse(qdoc.toJson().toStdString());
-    junior_admin::junior_admin_client client(2);
+    junior_admin::junior_admin_client client(get_user_id());
     client.add_record_slot(data);
 }
 
@@ -172,7 +180,7 @@ void JuniorAdminWindow::on_get_schedule_button_clicked()//TODO
         ui->error_schedule->setText("Incorrect format for doctor id.");
         return;
     }
-    junior_admin::junior_admin_client client(1);
+    junior_admin::junior_admin_client client(get_user_id());
     nlohmann::json full_response  = client.get_doctor_schedule(doctor_id.toInt());
     std::string jsonString = full_response.dump();
     QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));
@@ -212,7 +220,7 @@ void JuniorAdminWindow::on_get_schedule_button_clicked()//TODO
 
 void JuniorAdminWindow::on_get_users_table_button_clicked()
 {
-    junior_admin::junior_admin_client client(1);
+    junior_admin::junior_admin_client client(get_user_id());
     nlohmann::json users = client.get_users_table();
     std::string jsonString = users.dump();
     QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));
@@ -260,7 +268,7 @@ void JuniorAdminWindow::on_get_users_table_button_clicked()
 
 void JuniorAdminWindow::on_get_doctors_table_button_clicked()
 {
-    junior_admin::junior_admin_client client(1);
+    junior_admin::junior_admin_client client(get_user_id());
     nlohmann::json users = client.get_doctors_table();
     std::string jsonString = users.dump();
     QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));

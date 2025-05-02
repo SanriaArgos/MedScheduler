@@ -14,9 +14,14 @@ class DoctorWindow : public QMainWindow
 public:
     explicit DoctorWindow(QWidget *parent = nullptr);
     ~DoctorWindow();
+    void set_user_id(int id);
+    int get_user_id();
+private slots:
+    void on_view_schedule_button_clicked();
 
 private:
     Ui::DoctorWindow *ui;
+    int user_id = 0;
 };
 
 #endif // DOCTORWINDOW_H
