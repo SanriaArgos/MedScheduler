@@ -59,7 +59,7 @@ void junior_admin_client::attach_doctor_to_hospital_class(const json &data) {
     json payload = {
         { "doctor_id",   doctor_id   },
         { "hospital_id", hospital_id },
-        { "admin_id",    admin_id    }  
+        { "junior_admin_id",    admin_id    }  
     };
 
     std::string url = "http://localhost:8080/attach_doctor_to_hospital";
@@ -162,7 +162,7 @@ void junior_admin_client::detach_doctor_from_hospital(const json &data) {
     json payload = {
         { "doctor_id",   doctor_id   },
         { "hospital_id", hospital_id },
-        { "admin_id",    admin_id    } // <— make sure the server sees it!
+        { "junior_admin_id",    admin_id    } // <— make sure the server sees it!
     };
 
     std::string url      = "http://localhost:8080/detach_doctor_from_hospital";
