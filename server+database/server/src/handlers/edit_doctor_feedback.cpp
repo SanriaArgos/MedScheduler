@@ -12,7 +12,7 @@
 //   403 Forbidden    – пользователь не является автором отзыва
 //   500 Internal     – ошибка БД
 
-#include "../../include/handlers/edit_doctor_rating.hpp"
+#include "../../include/handlers/edit_doctor_feedback.hpp"
 #include <libpq-fe.h>
 
 namespace http = boost::beast::http;

@@ -1,20 +1,20 @@
-// Handler: get_doctor_rating_items
-// Purpose: Возвращает список всех отзывов (ratings) для указанного врача.
-// Input JSON:
+// Handler: get_doctor_rating_calculated
+// Purpose: Вычисляет и возвращает средний рейтинг (AVG(rate)) для указанного
+// врача. Input JSON:
 //   { "doctor_id": <int> }
 // Output JSON (200 OK):
-//   { "success": true, "ratings": [ {id,text,name,date,rate,address}, ... ] }
+//   { "success": true, "average": <double> }
 // Errors:
 //   400 Bad Request  – если нет doctor_id
 //   500 Internal     – при ошибке базы
 
-#include "../../include/handlers/get_doctor_rating_items.hpp"
+#include "../../include/handlers/get_doctor_feedback_calculated.hpp"
 #include <libpq-fe.h>
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void get_doctor_rating_items(
+void get_doctor_rating_calculated(
     const json &data,
     http::response<http::string_body> &res,
     database_handler &db_handler
@@ -31,16 +31,15 @@ void get_doctor_rating_items(
         return;
     }
 
-    // 2. Запрашиваем все поля отзывов из БД
+    // 2. Запрос среднего рейтинга из БД
     int doctor_id = data["doctor_id"];
-    std::string id_str = std::to_string(doctor_id);
-    const char *params[1] = {id_str.c_str()};
+    std::string doctor_id_str = std::to_string(doctor_id);
+    const char *params[1] = {doctor_id_str.c_str()};
 
     PGresult *pgres = PQexecParams(
         db_handler.get_connection(),
-        "SELECT id, text, name, date, rate, address "
-        "FROM rating WHERE doctor_ref_id = $1 ORDER BY date DESC",
-        1, nullptr, params, nullptr, nullptr, 0
+        "SELECT AVG(rate) FROM rating WHERE doctor_ref_id = $1", 1, nullptr,
+        params, nullptr, nullptr, 0
     );
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
         if (pgres) {
@@ -54,24 +53,14 @@ void get_doctor_rating_items(
         return;
     }
 
-    // 3. Собираем массив отзывов
-    int rows = PQntuples(pgres);
-    json items = json::array();
-    for (int i = 0; i < rows; ++i) {
-        json item;
-        item["id"] = std::stoi(PQgetvalue(pgres, i, 0));
-        item["text"] = PQgetvalue(pgres, i, 1);
-        item["name"] = PQgetvalue(pgres, i, 2);
-        item["date"] = PQgetvalue(pgres, i, 3);
-        item["rate"] = std::stoi(PQgetvalue(pgres, i, 4));
-        item["address"] = PQgetvalue(pgres, i, 5);
-        items.push_back(item);
-    }
+    // 3. Читаем результат и формируем ответ
+    char *avg_str = PQgetvalue(pgres, 0, 0);
+    double average = avg_str ? atof(avg_str) : 0.0;
     PQclear(pgres);
 
-    // 4. Отправляем результат клиенту
     response["success"] = true;
-    response["ratings"] = items;
+    response["average"] = average;
+
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");
     res.body() = response.dump();

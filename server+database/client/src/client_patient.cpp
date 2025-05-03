@@ -1,13 +1,17 @@
 #include "client_patient.hpp"
+#include "common_for_all.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "common_for_all.hpp"
 
 namespace patient {
 
 using json = nlohmann::json;
 
 patient_client::patient_client(int user_id) : user_id(user_id) {
+}
+
+void patient_client::post_doctor_feedback_client(json request_data) {
+    std::string response = send_post_request("http://localhost:8080/post_doctor_rating", request_data);
 }
 
 void patient_client::view_doctor_schedule(json request_data) {
@@ -29,7 +33,6 @@ void patient_client::view_doctor_schedule(json request_data) {
             std::cerr << "Error: " << schedule["error"] << std::endl;
             return;
         }
-        // return schedule;
     } catch (const std::exception &e) {
         std::cerr << "Error fetching schedule: " << e.what() << std::endl;
     }

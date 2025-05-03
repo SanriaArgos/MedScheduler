@@ -1,14 +1,14 @@
-#ifndef DELETE_DOCTOR_RATING_HPP_
-#define DELETE_DOCTOR_RATING_HPP_
+#ifndef GET_DOCTOR_FEEDBACK_CALCULATED_HPP_
+#define GET_DOCTOR_FEEDBACK_CALCULATED_HPP_
 
-#include <boost/beast/http.hpp>
 #include <nlohmann/json.hpp>
+#include <boost/beast/http.hpp>
 #include "../database.hpp"
 
-void delete_doctor_rating(
+void get_doctor_rating_calculated(
     const nlohmann::json &data,
     boost::beast::http::response<boost::beast::http::string_body> &res,
     database_handler &db_handler
 );
 
-#endif  // DELETE_DOCTOR_RATING_HPP_
+#endif // GET_DOCTOR_FEEDBACK_CALCULATED_HPP_

@@ -1,5 +1,5 @@
-#ifndef GET_DOCTOR_RATING_ITEMS_HPP_
-#define GET_DOCTOR_RATING_ITEMS_HPP_
+#ifndef GET_DOCTOR_FEEDBACK_ITEMS_HPP_
+#define GET_DOCTOR_FEEDBACK_ITEMS_HPP_
 
 #include <boost/beast/http.hpp>
 #include <nlohmann/json.hpp>
@@ -11,4 +11,4 @@ void get_doctor_rating_items(
     database_handler &db_handler
 );
 
-#endif  // GET_DOCTOR_RATING_ITEMS_HPP_
+#endif  // GET_DOCTOR_FEEDBACK_ITEMS_HPP_

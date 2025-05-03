@@ -9,7 +9,7 @@
 //   400 Bad Request  – если отсутствует любое поле
 //   500 Internal     – при ошибке вставки в БД
 
-#include "../../include/handlers/post_doctor_rating.hpp"
+#include "../../include/handlers/post_doctor_feedback.hpp"
 #include <libpq-fe.h>
 
 namespace http = boost::beast::http;

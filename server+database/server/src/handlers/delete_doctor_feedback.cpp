@@ -10,13 +10,13 @@
 //   403 Forbidden    – недостаточно прав
 //   500 Internal     – ошибка БД
 
-#include "../../include/handlers/delete_doctor_rating.hpp"
+#include "../../include/handlers/delete_doctor_feedback.hpp"
 #include <libpq-fe.h>
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void delete_doctor_rating(
+void delete_doctor_feedback(
     const json &data,
     http::response<http::string_body> &res,
     database_handler &db_handler

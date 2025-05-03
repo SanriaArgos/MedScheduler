@@ -1,4 +1,5 @@
 #include "../include/handler_request.hpp"
+#include "../include/handlers/auth_handler.hpp"
 #include <openssl/sha.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/beast/http.hpp>
@@ -12,12 +13,9 @@
 #include "../include/database.hpp"
 #include "nlohmann/json.hpp"
 
-namespace http = boost::beast::http;
-using json = nlohmann::json;
-
 #include "../include/database.hpp"
 #include "../include/get_hospital_id.hpp"
-#include "../include/check_doctor_hospital.hpp" // Добавила новый файлик с айди доктора
+#include "../include/check_doctor_hospital.hpp" 
 #include "../include/handlers/add_doctor.hpp"
 #include "../include/handlers/add_hospital.hpp"
 #include "../include/handlers/add_junior_admin.hpp"
@@ -34,6 +32,12 @@ using json = nlohmann::json;
 #include "../include/handlers/login.hpp"
 #include "../include/handlers/patient_schedule.hpp"
 #include "../include/handlers/registration.hpp"
+#include "../include/handlers/post_doctor_feedback.hpp"
+
+extern database_handler* global_db;
+
+namespace http = boost::beast::http;
+using json = nlohmann::json;
 
 std::string base64_decode(const std::string &encoded) {
     const std::string base64_chars =
@@ -118,10 +122,11 @@ void handle_request(
             } else if (req.target() == "/add_record_slot") {
                 add_record_slot(body, res, db_handler);
             } else if (req.target() == "/detach_doctor_from_hospital") {
-                std::cerr << 123 << "handler_request" << "\n";
                 detach_hospital_from_doctor(body, res, db_handler);
             } else if (req.target() == "/view_doctor_schedule_for_patient") {
                 view_doctor_schedule_for_patient(body, res, db_handler);
+            } else if (req.target() == "/post_doctor_rating") {
+                post_doctor_rating(body, res, db_handler);
             } else {
                 handle_not_found(res);
             }
@@ -129,15 +134,15 @@ void handle_request(
             if (req.target() == "/get_doctors") {
                 get_doctors_table(
                     json::object(), res, db_handler
-                );  // Пустой JSON, так как данные не требуются
+                ); 
             } else if (req.target() == "/get_hospitals") {
                 get_hospitals_table(
                     json::object(), res, db_handler
-                );  // Пустой JSON, так как данные не требуются
+                ); 
             } else if (req.target() == "/get_users") {
                 get_users_table(
                     json::object(), res, db_handler
-                );  // Пустой JSON, так как данные не требуются
+                ); 
             } else if (req.target().starts_with("/doctors_exist/")) {
                 std::string id_str =
                     std::string(req.target())
@@ -235,7 +240,6 @@ void handle_request(
     } catch (const std::exception &e) {
         std::cerr << "Error checking hospital association: " << e.what() << std::endl;
 
-        // ❗ Отправляем ошибку клиенту
         json error_response;
         error_response["error"] = e.what();
         error_response["is_valid"] = false;
@@ -251,7 +255,7 @@ void handle_request(
             else if (req.target() == "/junior_admin_schedule") {
                 junior_admin_schedule(
                     json::object(), res, db_handler
-                );  // Пустой JSON, так как данные не требуются
+                ); 
             } else if (req.target().starts_with("/get_user_id")) {
                 json out;
                 auto pos = req.target().find("phone=");
@@ -260,7 +264,7 @@ void handle_request(
                     out["error"] = "Missing phone parameter";
                 } else {
                     std::string phone{req.target().substr(pos + 6)};
-                    int id = db_handler.get_user_id_by_phone(phone);
+                    int id = get_user_id_by_phone(db_handler, phone);
                     if (id < 0) {
                         res.result(http::status::not_found);
                         out["error"] = "User not found";
@@ -281,7 +285,7 @@ void handle_request(
                     out["error"] = "Missing phone parameter";
                 } else {
                     std::string phone{req.target().substr(pos + 6)};
-                    std::string type = db_handler.get_user_type_by_phone(phone);
+                    std::string type = get_user_type_by_phone(db_handler, phone);
                     if (type.empty()) {
                         res.result(http::status::not_found);
                         out["error"] = "User not found";

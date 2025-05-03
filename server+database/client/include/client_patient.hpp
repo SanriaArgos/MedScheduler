@@ -15,6 +15,7 @@ public:
 private:
     int user_id;
     void view_doctor_schedule(json request_data);
+    void post_doctor_feedback_client(json request_data);
 };
 
 }  // namespace patient
