@@ -172,7 +172,7 @@ void JuniorAdminWindow::on_add_appointment_button_clicked()//TODO
     json["time"]=timee;
     json["hospital_id"]=hospital_id.toInt();
     json["cabinet"]=cabinet.toInt();
-    json["junior_admin_id"]=1;
+    json["junior_admin_id"]=get_user_id();
     QJsonDocument qdoc(json);
     nlohmann::json data = nlohmann::json::parse(qdoc.toJson().toStdString());
     junior_admin::junior_admin_client client(get_user_id());
