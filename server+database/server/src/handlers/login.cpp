@@ -1,4 +1,5 @@
 #include "../../include/handlers/login.hpp"
+#include "../../include/handlers/auth_handler.hpp"
 #include "../../include/database.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -6,7 +7,7 @@
 
 namespace http = boost::beast::http;
 
-extern database_handler* global_db;  // Объявляем глобальный указатель, определённый в main.cpp
+extern database_handler* global_db; 
 
 void login(const nlohmann::json &data, http::response<http::string_body> &res, database_handler &db_handler) {
     nlohmann::json response;
@@ -22,7 +23,7 @@ void login(const nlohmann::json &data, http::response<http::string_body> &res, d
     std::string phone = data["phone"];
     std::string password = data["password"];
 
-    std::string login_result = db_handler.login_user(phone, password);
+    std::string login_result = login_user(*global_db, phone, password);
     bool success = !login_result.empty();
 
     response["success"] = success;

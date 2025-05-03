@@ -11,48 +11,64 @@ user_info login(const std::string &phone, const std::string &password) {
     json login_data = {{"phone", phone}, {"password", password}};
 
     std::string url = "http://localhost:8080/login";
-    std::string response = send_post_request(url, login_data);
 
-    std::string phone_1 = login_data["phone"];
-    json response_j;
-
-    std::string resp_id =
-        send_get_request("http://localhost:8080/get_user_id?phone=" + phone_1);
-    int id = -1;
+    std::string response;
     try {
-        response_j = nlohmann::json::parse(resp_id);
+        response = send_post_request(url, login_data);
     } catch (const std::exception &e) {
-        std::cerr << "Error parsing get_user_id response: " << e.what() << "\n";
+        std::cerr << "Error sending login request: " << e.what() << "\n";
+        return {-1, ""};
+    }
+  
+    json response_j;
+    try {
+        response_j = nlohmann::json::parse(response);
+    } catch (const std::exception &e) {
+        std::cerr << "Error parsing login response: " << e.what() << "\n";
+        return {-1, ""};
     }
 
-    std::string resp_type = send_get_request(
-        "http://localhost:8080/get_user_type?phone=" + phone_1
-    );
+    if (!response_j.value("success", false)) {
+        std::cerr << "Login failed: " << response_j.value("error", "Unknown error") << "\n";
+        return {-1, ""};
+    }
+
+    // Извлекаем поле "result", например "patient:42"
+    std::string result = response_j.value("result", "");
+    size_t sep = result.find(':');
+    if (sep == std::string::npos) {
+        std::cerr << "Invalid result format: " << result << "\n";
+        return {-1, ""};
+    }
+
+    int user_id = -1;
+    try {
+        user_id = std::stoi(result.substr(sep + 1));
+    } catch (const std::exception &e) {
+        std::cerr << "Error parsing user ID: " << e.what() << "\n";
+        return {-1, ""};
+    }
+
+    // Получаем полный user_type через GET-запрос, используя код в database.cpp
+    std::string type_response;
+    try {
+        type_response = send_get_request(
+            "http://localhost:8080/get_user_type?phone=" + phone);
+    } catch (const std::exception &e) {
+        std::cerr << "Error fetching user type: " << e.what() << "\n";
+        return {-1, ""};
+    }
+
     std::string user_type;
     try {
-        auto j2 = nlohmann::json::parse(resp_type);
-        user_type = j2.value("user_type", "");
-
-        if (!user_type.empty()) {
-            response_j["user_type"] = user_type;
-        }
+        auto type_json = json::parse(type_response);
+        user_type = type_json.value("user_type", "");
     } catch (const std::exception &e) {
-        std::cerr << "Error parsing get_user_type response: " << e.what()
-                  << "\n";
+        std::cerr << "Error parsing user type response: " << e.what() << "\n";
+        return {-1, ""};
     }
 
-    try {
-        if (response_j.contains("id") && response_j.contains("user_type")) {
-            return {response_j["id"], response_j["user_type"]};
-        } else {
-            std::cerr << "Error: " << response_j.value("error", "Login failed")
-                      << std::endl;
-        }
-    } catch (const std::exception &e) {
-        std::cerr << "Error parsing server response: " << e.what() << std::endl;
-    }
-
-    return {-1, ""};  // Возвращаем пустые данные в случае ошибки
+    return {user_id, user_type};
 }
 
 user_info register_user(

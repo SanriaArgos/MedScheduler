@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS hospitals (
     house TEXT NOT NULL,
     full_name TEXT NOT NULL,
     administrator_id INT NOT NULL REFERENCES users(id),
+    junior_admin_phone TEXT UNIQUE,
+    time_open TEXT,
     UNIQUE (region, settlement_type, settlement_name, street, house)
 );
 
@@ -27,7 +29,9 @@ CREATE TABLE IF NOT EXISTS doctors (
     education TEXT NOT NULL,
     specialty TEXT NOT NULL,
     experience INT NOT NULL,
-    hospital_ids INTEGER[]
+    hospital_ids INTEGER[],
+    photo TEXT,
+    price NUMERIC
 );
 
 CREATE TABLE IF NOT EXISTS records (
@@ -38,4 +42,14 @@ CREATE TABLE IF NOT EXISTS records (
     hospital_id INT NOT NULL REFERENCES hospitals(hospital_id),
     cabinet_number INT NOT NULL CHECK (cabinet_number >= 1),
     patient_id INT REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS rating (
+    id SERIAL PRIMARY KEY,
+    doctor_ref_id INT NOT NULL REFERENCES doctors(doctor_id),
+    text TEXT NOT NULL,
+    name TEXT NOT NULL,
+    date TEXT NOT NULL,
+    rate INT NOT NULL CHECK (rate BETWEEN 0 AND 5),
+    address TEXT NOT NULL
 );

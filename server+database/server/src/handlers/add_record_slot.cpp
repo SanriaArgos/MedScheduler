@@ -1,13 +1,7 @@
 #include "../../include/handlers/add_record_slot.hpp"
-<<<<<<< HEAD
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <iostream>
-=======
-#include <iostream>
-#include <libpq-fe.h>
-#include <boost/beast/http.hpp>
->>>>>>> main
 #include <nlohmann/json.hpp>
 
 namespace http = boost::beast::http;

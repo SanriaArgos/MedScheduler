@@ -63,8 +63,7 @@ void junior_admin_schedule(
         response["success"] = false;
         response["error"] = "Schedule not available";
 
-        res.result(http::status::internal_server_error
-        );  // 500 Internal Server Error
+        res.result(http::status::internal_server_error); 
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
 

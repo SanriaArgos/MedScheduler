@@ -1,4 +1,5 @@
 #include "../../include/handlers/add_junior_admin.hpp"
+#include "../../include/handlers/auth_handler.hpp"
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <iostream>
@@ -35,7 +36,7 @@ void add_junior_admin(
     std::string phone = data["phone"];
 
     // Проверка, если пользователь с таким номером телефона уже существует
-    if (global_db->user_exists(phone)) {
+    if (user_exists(db_handler, phone)) {
         std::cerr << "Error: Phone already registered\n";
         response["success"] = false;
         response["error"] = "Phone already registered";
@@ -48,7 +49,7 @@ void add_junior_admin(
 
     const std::string default_password = "0987654321";
     // Регистрация пользователя с дефолтным паролем
-    if (!global_db->register_user(
+    if (!register_user(*global_db, 
             last_name, first_name, patronymic, phone, default_password
         )) {
         std::cerr << "Error adding junior administrator\n";

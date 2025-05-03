@@ -16,7 +16,6 @@ public:
     void add_hospital(const json &data);
     json get_hospitals_table();
     json get_users_table();
-    json get_users_table();
 
 private:
     int admin_id;

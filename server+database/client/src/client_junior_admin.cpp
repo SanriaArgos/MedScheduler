@@ -1,7 +1,7 @@
-#include "client_junior_admin.hpp"
+#include "../include/client_junior_admin.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "common_for_all.hpp"
+#include "../include/common_for_all.hpp"
 
 namespace junior_admin {
 
@@ -13,8 +13,8 @@ junior_admin_client::junior_admin_client(int admin_id) : admin_id(admin_id) {
 json junior_admin_client::get_doctor_schedule(int doctor_id) {
     std::string check_url = "http://localhost:8080/check_doctor_admin_hospital?doctor_id=" + std::to_string(doctor_id) + "&admin_id=" + std::to_string(admin_id);
     std::string check_response = send_get_request(check_url);
-
     try {
+        std::cerr << "Raw response: " << check_response << std::endl;  
         json check_result = json::parse(check_response);
         if (!check_result.value("is_valid", false)) {
             std::cerr << "Error: Doctor and admin are not associated with the same hospital.\n"; 
@@ -26,10 +26,11 @@ json junior_admin_client::get_doctor_schedule(int doctor_id) {
         return json();
     }
 
-    std::string schedule_url = "http://localhost:8080/doctor_schedule?doctor_id=" + std::to_string(doctor_id);
+    std::string schedule_url = "http://localhost:8080/get_doctor_schedule?doctor_id=" + std::to_string(doctor_id);
     std::string schedule_response = send_get_request(schedule_url);
 
     try {
+        std::cerr << "Raw response: " << schedule_response << std::endl;  
         json schedule = json::parse(schedule_response);
         return schedule;
     } catch (const std::exception &e) {
@@ -148,11 +149,13 @@ bool junior_admin_client::is_doctor_attached_to_hospital(
 void junior_admin_client::detach_doctor_from_hospital(const json &data) {
     int doctor_id = data.value("doctor_id", -1);
     int hospital_id = data.value("hospital_id", -1);
+    // int junior_admin_id = data.value("junior_admin_id", -1);
 
     if (!check_doctor_exists(doctor_id)) {
         std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
         return;
     }
+
 
     if (!check_hospital_exists(hospital_id)) {
         std::cerr << "Error: Hospital with ID " << hospital_id

@@ -1,4 +1,5 @@
 #include "../../include/handlers/add_doctor.hpp"
+#include "../../include/handlers/auth_handler.hpp"
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <cstdlib>
@@ -37,7 +38,7 @@ void add_doctor(const json &data, http::response<http::string_body> &res, databa
     int experience = data["experience"];
 
     // Проверка, если номер телефона уже зарегистрирован
-    if (db_handler.user_exists(phone)) {
+    if (user_exists(db_handler, phone)) {
         std::cerr << "Error: Phone already registered\n";
         response["success"] = false;
         response["error"] = "Phone already registered";
@@ -50,7 +51,7 @@ void add_doctor(const json &data, http::response<http::string_body> &res, databa
     const std::string default_password = "987654321";
 
     // Регистрация пользователя
-    if (!db_handler.register_user(
+    if (!register_user(*global_db,
             last_name, first_name, patronymic, phone, default_password
         )) {
         std::cerr << "Error: Could not add doctor to Users table\n";
