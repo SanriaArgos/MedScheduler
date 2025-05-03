@@ -59,6 +59,58 @@ void add_hospital(const json &data, http::response<http::string_body> &res, data
     }
     PQclear(res_exist);
 
+    const char *auth_params[1] = { admin_id.c_str() };
+    PGresult *res_auth = PQexecParams(
+        db_handler.get_connection(),
+        "SELECT user_type FROM users WHERE id = $1",
+        1, nullptr, auth_params, nullptr, nullptr, 0
+    );
+    if (!res_auth || PQresultStatus(res_auth) != PGRES_TUPLES_OK ||
+        PQntuples(res_auth) == 0) {
+        if (res_auth) PQclear(res_auth);
+        std::cerr << "Error: Admin user not found\n";
+        response["success"] = false;
+        response["error"]   = "Admin user not found";
+
+        res.result(http::status::not_found);
+        res.set(http::field::content_type, "application/json");
+        res.body() = response.dump();
+        return;
+    }
+    std::string user_type = PQgetvalue(res_auth, 0, 0);
+    PQclear(res_auth);
+
+    if (user_type != "junior administrator") {
+        std::cerr << "Error: User is not junior administrator\n";
+        response["success"] = false;
+        response["error"]   = "User is not junior administrator";
+
+        res.result(http::status::forbidden);
+        res.set(http::field::content_type, "application/json");
+        res.body() = response.dump();
+        return;
+    }
+
+    const char *check_params[1] = { admin_id.c_str() };
+    PGresult *res_check_admin = PQexecParams(
+        db_handler.get_connection(),
+        "SELECT 1 FROM hospitals WHERE administrator_id = $1",
+        1, nullptr, check_params, nullptr, nullptr, 0
+    );
+    if (PQresultStatus(res_check_admin) == PGRES_TUPLES_OK &&
+        PQntuples(res_check_admin) > 0) {
+        std::cerr << "Error: Junior administrator already assigned to a hospital\n";
+        response["success"] = false;
+        response["error"]   = "Junior administrator already assigned to a hospital";
+
+        PQclear(res_check_admin);
+        res.result(http::status::conflict);
+        res.set(http::field::content_type, "application/json");
+        res.body() = response.dump();
+        return;
+    }
+    PQclear(res_check_admin);
+
     std::string admin_id_str = admin_id;
     const char *params_ins[7] = {
         region.c_str(),      settlement_type.c_str(), settlement_name.c_str(),
