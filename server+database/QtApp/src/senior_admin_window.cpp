@@ -1,5 +1,7 @@
-#include "senioradminwindow.h"
-#include "ui_senioradminwindow.h"
+#include "senior_admin_window.h"
+#include "ui_senior_admin_window.h"
+#include "../client/include/client_senior_admin.hpp"
+#include "../client/include/common_for_all.hpp"
 #include <QString>
 #include "utils.h"
 #include <QJsonObject>
@@ -7,8 +9,6 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <nlohmann/json.hpp>
-#include "../client/include/client_senior_admin.hpp"
-#include "../client/include/common_for_all.hpp"
 
 SeniorAdminWindow::SeniorAdminWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -58,7 +58,7 @@ void SeniorAdminWindow::on_add_junior_administrator_button_clicked()
         {"phone", phone_number},
         {"user_type", "junior admin"}
     };
-    // Преобразование QJsonObject в строку, если функция add_junior_admin принимает std::string
+
     QByteArray jsonData = QJsonDocument(junior_admin_data).toJson();
     std::string jsonString = jsonData.toStdString();
     nlohmann::json j = nlohmann::json::parse(jsonString);
@@ -121,20 +121,17 @@ void SeniorAdminWindow::on_add_new_hospital_button_clicked()
 void SeniorAdminWindow::on_get_users_table_button_clicked()
 {
     senior_admin::senior_admin_client client(get_user_id());
-    // Получаем данные в формате nlohmann::json
+
     nlohmann::json jsonData = client.get_users_table();
 
-    // Преобразуем в строку
     std::string jsonString = jsonData.dump();
 
-    // Создаем QJsonDocument из строки
     QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));
     if (jsonDoc.isNull()) {
         qDebug() << "Ошибка при разборе JSON!";
         return;
     }
 
-    // Получаем корневой объект JSON
     QJsonObject rootObject = jsonDoc.object();
     if (!rootObject.contains("users") || !rootObject["users"].isArray()) {
         qDebug() << "Ключ 'users' отсутствует или не является массивом!";
@@ -144,7 +141,6 @@ void SeniorAdminWindow::on_get_users_table_button_clicked()
     QWidget *contentWidget = new QWidget(ui->users_table_scroll);
     QVBoxLayout *layout = new QVBoxLayout(contentWidget);
 
-    // Добавляем данные в виджет
     for (const QJsonValue &userValue : usersArray) {
         if (userValue.isObject()) {
             QJsonObject userObj = userValue.toObject();

@@ -1,5 +1,6 @@
 #include "homepage.h"
 #include "ui_homepage.h"
+#include "../client/include/common_for_all.hpp"
 #include <QString>
 #include <QJsonObject>
 #include <QJsonObject>
@@ -7,7 +8,6 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <nlohmann/json.hpp>
-#include "../client/include/common_for_all.hpp"
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
 #include <string>

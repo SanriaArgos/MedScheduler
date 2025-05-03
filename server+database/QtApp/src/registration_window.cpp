@@ -1,16 +1,17 @@
-#include "registrationwindow.h"
-#include "ui_registrationwindow.h"
+#include "registration_window.h"
+#include "ui_registration_window.h"
+#include "client_auth.hpp"
+#include "client_doctor.hpp"
+#include "client_junior_admin.hpp"
+#include "client_senior_admin.hpp"
+#include "client_patient.hpp"
 #include <QString>
 #include <utils.h>
 #include <QJsonObject>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include "client_auth.hpp"
-#include "client_doctor.hpp"
-#include "client_junior_admin.hpp"
-#include "client_senior_admin.hpp"
-#include "client_patient.hpp"
+
 RegistrationWindow::RegistrationWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::RegistrationWindow)

@@ -1,5 +1,5 @@
-#ifndef DOCTORWINDOW_H
-#define DOCTORWINDOW_H
+#ifndef DOCTOR_WINDOW_H
+#define DOCTOR_WINDOW_H
 
 #include <QMainWindow>
 
@@ -24,4 +24,4 @@ private:
     int user_id = 0;
 };
 
-#endif // DOCTORWINDOW_H
+#endif // DOCTOR_WINDOW_H

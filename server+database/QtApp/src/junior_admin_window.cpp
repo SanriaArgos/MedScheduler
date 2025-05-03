@@ -1,11 +1,11 @@
-#include "junioradminwindow.h"
-#include "ui_junioradminwindow.h"
+#include "junior_admin_window.h"
+#include "ui_junior_admin_window.h"
+#include "../client/src/client_junior_admin.cpp"
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QString>
 #include <utils.h>
 #include <nlohmann/json.hpp>
-#include "../client/src/client_junior_admin.cpp"
 
 JuniorAdminWindow::JuniorAdminWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -37,30 +37,37 @@ void JuniorAdminWindow::on_add_doctor_button_clicked()
     QString education = ui->education_form->text();
     QString specialty = ui->specialty_form->text();
     QString experience = ui->experience_form->text();
+
     if(!is_latin_or_dash(last_name)){
         ui->add_doctor_error->setText("Incorrect format for the last name.");
         return;
     }
+
     if(!is_latin_or_dash(first_name)){
         ui->add_doctor_error->setText("Incorrect format for the first name.");
         return;
     }
+
     if(!is_latin_or_dash(middle_name)){
         ui->add_doctor_error->setText("Incorrect format for the middle name. If there is no middle name, enter '-'.");
         return;
     }
+
     if(!is_validated_phone(phone_number)){
         ui->add_doctor_error->setText("Incorrect format for the phone number.");
         return;
     }
+
     if(!is_latin_or_dash(specialty)){
         ui->add_doctor_error->setText("Incorrect format for specialty.");
         return;
     }
+
     if(!is_number(experience)){
         ui->add_doctor_error->setText("Incorrect format for experience.");
         return;
     }
+
     QJsonObject json;
     json["last_name"]=last_name;
     json["first_name"] = first_name;
@@ -69,6 +76,7 @@ void JuniorAdminWindow::on_add_doctor_button_clicked()
     json["education"] = education;
     json["specialty"] = specialty;
     json["experience"] = experience.toInt();
+
     QJsonDocument doc(json);
     QString jsonString = doc.toJson(QJsonDocument::Compact);
     nlohmann::json doctor_data = nlohmann::json::parse(jsonString.toStdString());
@@ -176,16 +184,19 @@ void JuniorAdminWindow::on_get_schedule_button_clicked()//TODO
 {
     ui->error_schedule->setText("");
     QString doctor_id=ui->doctor_id_schedule_form->text();
+
     if(!is_number(doctor_id)){
         ui->error_schedule->setText("Incorrect format for doctor id.");
         return;
     }
+
     junior_admin::junior_admin_client client(get_user_id());
     nlohmann::json full_response  = client.get_doctor_schedule(doctor_id.toInt());
     std::string jsonString = full_response.dump();
     QJsonDocument jsonDoc = QJsonDocument::fromJson(QByteArray::fromStdString(jsonString));
     QJsonObject rootObject = jsonDoc.object();
-    qDebug() << "Full JSON:" << jsonDoc.toJson(QJsonDocument::Indented);//
+    qDebug() << "Full JSON:" << jsonDoc.toJson(QJsonDocument::Indented);
+    
     if (!rootObject.contains("schedule") || !rootObject["schedule"].isArray()) {
         qDebug() << "Ключ 'schedule' отсутствует или не является массивом!";
         return;

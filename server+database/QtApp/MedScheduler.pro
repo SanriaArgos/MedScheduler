@@ -9,13 +9,13 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/doctorwindow.cpp \
+    src/doctor_window.cpp \
     src/homepage.cpp \
-    src/junioradminwindow.cpp \
+    src/junior_admin_window.cpp \
     src/main.cpp \
-    src/mainwindow.cpp \
-    src/registrationwindow.cpp \
-    src/senioradminwindow.cpp \
+    src/main_window.cpp \
+    src/registration_window.cpp \
+    src/senior_admin_window.cpp \
     src/utils.cpp \
     ../client/src/client_auth.cpp \
     ../client/src/client_doctor.cpp \
@@ -25,12 +25,12 @@ SOURCES += \
     ../client/src/common_for_all.cpp
 
 HEADERS += \
-    include/doctorwindow.h \
+    include/doctor_window.h \
     include/homepage.h \
-    include/junioradminwindow.h \
-    include/mainwindow.h \
-    include/registrationwindow.h \
-    include/senioradminwindow.h \
+    include/junior_admin_window.h \
+    include/main_window.h \
+    include/registration_window.h \
+    include/senior_admin_window.h \
     include/utils.h \
     ../client/include/client_auth.hpp \
     ../client/include/client_doctor.hpp \
@@ -40,12 +40,12 @@ HEADERS += \
     ../client/include/common_for_all.hpp
 
 FORMS += \
-    forms/doctorwindow.ui \
+    forms/doctor_window.ui \
     forms/homepage.ui \
-    forms/junioradminwindow.ui \
-    forms/mainwindow.ui \
-    forms/registrationwindow.ui \
-    forms/senioradminwindow.ui
+    forms/junior_admin_window.ui \
+    forms/main_window.ui \
+    forms/registration_window.ui \
+    forms/senior_admin_window.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

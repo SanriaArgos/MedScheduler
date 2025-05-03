@@ -3,7 +3,7 @@
 #include <cctype>
 #include <QString>
 #include <QRegularExpression>
-// Функция is_cyrillic теперь проверяет, что строка содержит только латинские буквы и символ '-'
+
 bool is_latin_or_dash(const QString &str) {
     std::string s=str.toStdString();
     if (s.empty()) return false;
@@ -67,10 +67,8 @@ bool is_valid_time(const QString &str){
 void add_json_to_users(const QJsonObject &json){
     QString filePath = "users.json";
 
-    // Чтение существующего файла
     QFile file(filePath);
 
-    // Проверяем, существует ли файл
     if (!file.exists())
     {
         qDebug() << "File does not exist.";
@@ -83,21 +81,18 @@ void add_json_to_users(const QJsonObject &json){
         return;
     }
 
-    // Загружаем данные из файла
     QByteArray fileData = file.readAll();
     file.close();
 
-    // Преобразуем данные в JSON-документ
     QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
     if (jsonDoc.isNull())
     {
         qDebug() << "Json decomposing error!";
         return;
     }
-    // Получаем корневой объект JSON
+
     QJsonObject rootObject = jsonDoc.object();
 
-    // Проверяем, существует ли массив "users"
     if (!rootObject.contains("users"))
     {
         qDebug() << "Key 'users' does not exist!";
@@ -108,23 +103,19 @@ void add_json_to_users(const QJsonObject &json){
         return;
     }
 
-    // Получаем массив пользователей
     QJsonArray usersArray = rootObject["users"].toArray();
 
     usersArray.append(json);
     rootObject["users"] = usersArray;
 
-    // Преобразуем обновленный объект обратно в JSON-документ
     jsonDoc.setObject(rootObject);
 
-    // Открываем файл для записи
     if (!file.open(QIODevice::WriteOnly))
     {
         qDebug() << "Opening file for write error!";
         return;
     }
 
-    // Записываем обновленный JSON в файл
     file.write(jsonDoc.toJson(QJsonDocument::Indented));
     file.close();
     qDebug() << "New user is succesfully added!";
@@ -132,10 +123,8 @@ void add_json_to_users(const QJsonObject &json){
 void add_json_to_hospitals(const QJsonObject &json){
     QString filePath = "hospitals.json";
 
-    // Чтение существующего файла
     QFile file(filePath);
 
-    // Проверяем, существует ли файл
     if (!file.exists())
     {
         qDebug() << "File does not exist.";
@@ -148,21 +137,18 @@ void add_json_to_hospitals(const QJsonObject &json){
         return;
     }
 
-    // Загружаем данные из файла
     QByteArray fileData = file.readAll();
     file.close();
 
-    // Преобразуем данные в JSON-документ
     QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
     if (jsonDoc.isNull())
     {
         qDebug() << "Json decomposing error!";
         return;
     }
-    // Получаем корневой объект JSON
+
     QJsonObject rootObject = jsonDoc.object();
 
-    // Проверяем, существует ли массив "users"
     if (!rootObject.contains("hospitals"))
     {
         qDebug() << "Key 'hospitals' does not exist!";
@@ -173,23 +159,19 @@ void add_json_to_hospitals(const QJsonObject &json){
         return;
     }
 
-    // Получаем массив пользователей
     QJsonArray hospitalsArray = rootObject["hospitals"].toArray();
 
     hospitalsArray.append(json);
     rootObject["hospitals"] = hospitalsArray;
 
-    // Преобразуем обновленный объект обратно в JSON-документ
     jsonDoc.setObject(rootObject);
 
-    // Открываем файл для записи
     if (!file.open(QIODevice::WriteOnly))
     {
         qDebug() << "Opening file for write error!";
         return;
     }
 
-    // Записываем обновленный JSON в файл
     file.write(jsonDoc.toJson(QJsonDocument::Indented));
     file.close();
     qDebug() << "New hospital is succesfully added!";

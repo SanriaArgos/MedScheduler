@@ -1,5 +1,5 @@
-#ifndef JUNIORADMINWINDOW_H
-#define JUNIORADMINWINDOW_H
+#ifndef JUNIOR_ADMIN_WINDOW_H
+#define JUNIOR_ADMIN_WINDOW_H
 
 #include <QMainWindow>
 
