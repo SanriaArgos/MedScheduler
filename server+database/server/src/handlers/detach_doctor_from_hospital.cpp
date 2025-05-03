@@ -14,7 +14,7 @@ using json = nlohmann::json;
 
 extern database_handler* global_db;
 
-void detach_hospital_from_doctor(
+void detach_doctor_from_hospital(
     const json &data,
     http::response<http::string_body> &res,
     database_handler &db_handler
@@ -22,9 +22,9 @@ void detach_hospital_from_doctor(
     json response;
 
     if (!data.contains("doctor_id") || !data.contains("hospital_id") ||
-        !data.contains("junior_admin_id")) {
+        !data.contains("admin_id")) {
         std::cerr << "Error: Missing required fields for "
-                     "detach_hospital_from_doctor\n";
+                     "detach_doctor_from_hospital\n";
         response["success"] = false;
         response["error"] = "Missing required fields";
 
@@ -37,7 +37,7 @@ void detach_hospital_from_doctor(
     std::cerr << 193 << "" << "\n";
     int doctor_id = data["doctor_id"];
     int hospital_id = data["hospital_id"];
-    int junior_admin_id = data["junior_admin_id"];
+    int junior_admin_id = data["admin_id"];
 
     std::string doctor_id_str = std::to_string(doctor_id);
     const char *params_doc[1] = {doctor_id_str.c_str()};

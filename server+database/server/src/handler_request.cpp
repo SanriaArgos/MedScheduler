@@ -122,7 +122,7 @@ void handle_request(
             } else if (req.target() == "/add_record_slot") {
                 add_record_slot(body, res, db_handler);
             } else if (req.target() == "/detach_doctor_from_hospital") {
-                detach_hospital_from_doctor(body, res, db_handler);
+                detach_doctor_from_hospital(body, res, db_handler);
             } else if (req.target() == "/view_doctor_schedule_for_patient") {
                 view_doctor_schedule_for_patient(body, res, db_handler);
             } else if (req.target() == "/post_doctor_rating") {
