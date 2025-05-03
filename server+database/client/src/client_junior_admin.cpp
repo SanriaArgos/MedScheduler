@@ -41,6 +41,10 @@ json junior_admin_client::get_doctor_schedule(int doctor_id) {
 
 void junior_admin_client::add_doctor(const json &data) {
     std::string url = "http://localhost:8080/add_doctor";
+<<<<<<< HEAD
+=======
+    std::cerr << "goodbye\n";
+>>>>>>> origin/QtApp
     std::string response = send_post_request(url, data);
 }
 
@@ -56,6 +60,7 @@ void junior_admin_client::attach_doctor_to_hospital_class(const json &data) {
         return;
     }
 
+<<<<<<< HEAD
     if (!check_doctor_exists(doctor_id)) {
         std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
         return;
@@ -67,6 +72,25 @@ void junior_admin_client::attach_doctor_to_hospital_class(const json &data) {
         return;
     }
 
+=======
+    // if (!check_doctor_exists(doctor_id)) {
+    //     std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
+    //     return;
+    // }
+
+    // if (!check_hospital_exists(hospital_id)) {
+    //     std::cerr << "Error: Hospital with ID " << hospital_id
+    //               << " not found.\n";
+    //     return;
+    // }
+
+    // if (is_doctor_attached_to_hospital(doctor_id, hospital_id)) {
+    //     std::cerr << "Error: Doctor with ID " << doctor_id << " is already
+    //     attached to hospital with ID " << hospital_id << ".\n"; return;
+    // } потом надо ее вернуть - пока что обойдемся так
+
+    // std::string json_data = data.dump();
+>>>>>>> origin/QtApp
     std::string url = "http://localhost:8080/attach_doctor_to_hospital";
     std::string response = send_post_request(url, data);
 }
@@ -78,7 +102,11 @@ void junior_admin_client::add_record_slot(const json &data) {
 
 bool junior_admin_client::check_doctor_exists(int doctor_id) {
     std::string url =
+<<<<<<< HEAD
         "http://localhost:8080/doctors_exist/" + std::to_string(doctor_id);
+=======
+        "http://localhost:8080/doctors/" + std::to_string(doctor_id);
+>>>>>>> origin/QtApp
     std::string response = send_get_request(url);
 
     if (response.empty()) {
@@ -102,7 +130,11 @@ bool junior_admin_client::check_doctor_exists(int doctor_id) {
 
 bool junior_admin_client::check_hospital_exists(int hospital_id) {
     std::string url =
+<<<<<<< HEAD
         "http://localhost:8080/hospitals_exist/" + std::to_string(hospital_id);
+=======
+        "http://localhost:8080/hospitals/" + std::to_string(hospital_id);
+>>>>>>> origin/QtApp
     std::string response = send_get_request(url);
 
     if (response.empty()) {
@@ -149,26 +181,40 @@ bool junior_admin_client::is_doctor_attached_to_hospital(
 void junior_admin_client::detach_doctor_from_hospital(const json &data) {
     int doctor_id = data.value("doctor_id", -1);
     int hospital_id = data.value("hospital_id", -1);
+<<<<<<< HEAD
     // int junior_admin_id = data.value("junior_admin_id", -1);
+=======
+>>>>>>> origin/QtApp
 
     if (!check_doctor_exists(doctor_id)) {
         std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
         return;
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/QtApp
     if (!check_hospital_exists(hospital_id)) {
         std::cerr << "Error: Hospital with ID " << hospital_id
                   << " not found.\n";
         return;
     }
 
+<<<<<<< HEAD
+=======
+    // std::string json_data = data.dump();
+>>>>>>> origin/QtApp
     std::string url = "http://localhost:8080/detach_doctor_from_hospital";
     std::string response = send_post_request(url, data);
 }
 
 json junior_admin_client::get_doctors_table() {
+<<<<<<< HEAD
     std::string url = "http://localhost:8080/get_doctors";
+=======
+    std::string url = "http://localhost:8080/display_doctors";
+>>>>>>> origin/QtApp
     std::string response = send_get_request(url);
 
     try {
@@ -181,7 +227,11 @@ json junior_admin_client::get_doctors_table() {
 }
 
 json junior_admin_client::get_users_table() {
+<<<<<<< HEAD
     std::string url = "http://localhost:8080/get_users";
+=======
+    std::string url = "http://localhost:8080/display_users";
+>>>>>>> origin/QtApp
     std::string response = send_get_request(url);
 
     try {
@@ -193,4 +243,8 @@ json junior_admin_client::get_users_table() {
     }
 }
 
+<<<<<<< HEAD
 }  // namespace junior_admin
+=======
+}  // namespace junior_admin
+>>>>>>> origin/QtApp

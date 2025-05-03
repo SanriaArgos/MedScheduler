@@ -19,4 +19,8 @@ private:
 
 }  // namespace doctor
 
+<<<<<<< HEAD
 #endif  // DOCTOR_CLIENT_HPP
+=======
+#endif  // DOCTOR_CLIENT_HPP
+>>>>>>> origin/QtApp
