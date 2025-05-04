@@ -28,6 +28,11 @@ public:
     json get_hospital_full_names();
     json get_specialties();
 
+    json get_doctor_average_ratings();
+    json get_doctor_feedback_items(int doctor_id);
+    json get_doctor_feedback_calculated(int doctor_id)
+    json get_doctor_clinics(int doctor_id);
+
 private:
     int user_id_;
 };
