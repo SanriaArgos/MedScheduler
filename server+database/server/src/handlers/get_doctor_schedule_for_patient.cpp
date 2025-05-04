@@ -26,16 +26,23 @@ void get_doctor_schedule_for_patient(
     PGresult* pgres = PQexecParams(
         db_handler.get_connection(),
         R"(
-            SELECT appointment_date,
-                   appointment_time,
-                   cabinet_number,
-                   patient_id
-              FROM records
-             WHERE doctor_id   = $1::int
-               AND hospital_id = $2::int
-               AND appointment_date BETWEEN CURRENT_DATE
-                                       AND (CURRENT_DATE + INTERVAL '7 day')
-             ORDER BY appointment_date, appointment_time
+          SELECT
+            r.appointment_date,
+            r.appointment_time,
+            h.region,
+            h.settlement_type,
+            h.settlement_name,
+            h.street,
+            h.house,
+            h.full_name,
+            u.phone           AS junior_admin_phone,
+            CASE WHEN r.patient_id IS NULL THEN 'open' ELSE 'close' END AS slot_status
+          FROM records r
+          JOIN hospitals h ON r.hospital_id = h.hospital_id
+          JOIN users     u ON h.administrator_id = u.id
+          WHERE r.doctor_id   = $1::int
+            AND r.hospital_id = $2::int
+          ORDER BY r.appointment_date, r.appointment_time
         )",
         2,        // количество параметров
         nullptr,  // разрешить PG автоматически определять типы
@@ -60,12 +67,18 @@ void get_doctor_schedule_for_patient(
     int rows = PQntuples(pgres);
     json schedule = json::array();
     for (int i = 0; i < rows; ++i) {
-        schedule.push_back({
-            {"appointment_date",  PQgetvalue(pgres, i, 0)},
-            {"appointment_time",  PQgetvalue(pgres, i, 1)},
-            {"cabinet_number",    PQgetvalue(pgres, i, 2)},
-            {"patient_id",        PQgetvalue(pgres, i, 3)}
-        });
+        json slot;
+        slot["appointment_date"]   = PQgetvalue(pgres, i, 0);
+        slot["appointment_time"]   = PQgetvalue(pgres, i, 1);
+        slot["region"]             = PQgetvalue(pgres, i, 2);
+        slot["settlement_type"]    = PQgetvalue(pgres, i, 3);
+        slot["settlement_name"]    = PQgetvalue(pgres, i, 4);
+        slot["street"]             = PQgetvalue(pgres, i, 5);
+        slot["house"]              = PQgetvalue(pgres, i, 6);
+        slot["full_name"]          = PQgetvalue(pgres, i, 7);
+        slot["junior_admin_phone"] = PQgetvalue(pgres, i, 8);
+        slot["slot_status"]        = PQgetvalue(pgres, i, 9);
+        schedule.push_back(std::move(slot));
     }
     PQclear(pgres);
 

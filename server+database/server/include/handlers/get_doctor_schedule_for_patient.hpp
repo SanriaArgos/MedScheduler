@@ -8,8 +8,21 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-// Функция для просмотра расписания врача для пациента возвращает JSON.
-// Ожидается, что передаются два параметра: doctor_id и hospital_id.
+// GET /get_doctor_schedule_for_patient
+// Возвращает расписание врача в конкретной больнице с полями:
+//   appointment_date,
+//   appointment_time,
+//   region,
+//   settlement_type,
+//   settlement_name,
+//   street,
+//   house,
+//   full_name,               — название клиники
+//   junior_admin_phone,      — телефон младшего администратора
+//   slot_status              — "open" если patient_id IS NULL, иначе "close"
+//
+// Параметры:
+//   doctor_id, hospital_id
 void get_doctor_schedule_for_patient(
     int doctor_id,
     int hospital_id,

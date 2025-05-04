@@ -18,7 +18,7 @@ void get_doctors_table(
     PGresult *res_query = PQexecParams(
         conn,
         "SELECT d.doctor_id, d.user_id, u.last_name, u.first_name, "
-        "u.patronymic, u.phone, d.education, d.specialty, d.experience "
+        "u.patronymic, u.phone, d.education, d.specialty, d.experience, d.price "
         "FROM doctors d JOIN users u ON d.user_id = u.id ORDER BY d.doctor_id",
         0, nullptr, nullptr, nullptr, nullptr, 0
     );
@@ -51,6 +51,7 @@ void get_doctors_table(
         doc["education"] = PQgetvalue(res_query, i, 6);
         doc["specialty"] = PQgetvalue(res_query, i, 7);
         doc["experience"] = PQgetvalue(res_query, i, 8);
+        doc["price"]     = PQgetvalue(res_query, i, 9);
         doctors.push_back(doc);
     }
 

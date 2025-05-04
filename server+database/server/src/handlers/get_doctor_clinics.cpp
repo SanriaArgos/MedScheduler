@@ -7,8 +7,8 @@ void get_doctor_clinics(
     database_handler &db_handler
 ) {
     json response;
-    std::string did = std::to_string(doctor_id);
-    const char *params[1] = {did.c_str()};
+    std::string doctor_id_str = std::to_string(doctor_id);
+    const char *params[1] = {doctor_id_str.c_str()};
 
     PGresult *pgres = PQexecParams(
         db_handler.get_connection(),

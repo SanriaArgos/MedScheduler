@@ -53,3 +53,14 @@ CREATE TABLE IF NOT EXISTS rating (
     rate INT NOT NULL CHECK (rate BETWEEN 0 AND 5),
     address TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS waitlist (
+  id           SERIAL PRIMARY KEY,
+  doctor_id    INT REFERENCES doctors(doctor_id),
+  patient_id   INT REFERENCES users(id),
+  last_name    TEXT,
+  first_name   TEXT,
+  patronymic   TEXT,
+  phone        TEXT,
+  request_date DATE NOT NULL DEFAULT CURRENT_DATE
+);
