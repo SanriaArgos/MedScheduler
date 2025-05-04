@@ -41,6 +41,10 @@ qmake MedScheduler.pro
 make
 ./MedScheduler
 ```
- 
+
+ ## Команда для форматирования
+  ```bash
+ find . -type f \( -iname '*.cpp' -o -iname '*.hpp' -o -iname '*.h' -o -iname '*.c' \) -print -exec clang-format-15 -i {} +
+```
 
 

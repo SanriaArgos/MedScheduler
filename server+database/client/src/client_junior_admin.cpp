@@ -162,6 +162,7 @@ void junior_admin_client::detach_doctor_from_hospital(const json &data) {
         std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
         return;
     }
+
     if (!check_hospital_exists(hospital_id)) {
         std::cerr << "Error: Hospital with ID " << hospital_id
                   << " not found.\n";
