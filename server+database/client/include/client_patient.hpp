@@ -16,6 +16,9 @@ namespace patient {
         // { "hospital_id":<int>, "doctor_id":<int> }
         // → { "success":…, "schedule":[…] }
         json view_doctor_schedule(const json &request_data);
+
+        // GET /doctors/{doctor_id}/clinics
+        json get_doctor_clinics(int doctor_id);
     
         // POST /post_doctor_rating
         // { "doctor_ref_id", "text", "name", "date", "rate", "address" }

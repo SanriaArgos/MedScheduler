@@ -30,6 +30,23 @@ namespace patient {
         }
     }
     
+    json patient_client::get_doctor_clinics(int doctor_id) {
+        std::string url = "http://localhost:8080/doctors/" +
+                          std::to_string(doctor_id) +
+                          "/clinics";
+        std::string resp = send_get_request(url);
+        try {
+            json j = json::parse(resp);
+            if (!j.contains("success")) {
+                j["success"] = false;
+                j["error"]   = "Missing field 'success'";
+            }
+            return j;
+        } catch (...) {
+            return {{"success", false}, {"error", "Invalid JSON"}};
+        }
+    }
+    
     json patient_client::post_doctor_feedback_client(const json &request_data) {
         std::string resp = send_post_request(
             "http://localhost:8080/post_doctor_rating",
