@@ -1,8 +1,8 @@
 #ifndef GET_DOCTOR_FEEDBACK_CALCULATED_HPP_
 #define GET_DOCTOR_FEEDBACK_CALCULATED_HPP_
 
-#include <nlohmann/json.hpp>
 #include <boost/beast/http.hpp>
+#include <nlohmann/json.hpp>
 #include "../database.hpp"
 
 void get_doctor_rating_calculated(
@@ -11,4 +11,4 @@ void get_doctor_rating_calculated(
     database_handler &db_handler
 );
 
-#endif // GET_DOCTOR_FEEDBACK_CALCULATED_HPP_
+#endif  // GET_DOCTOR_FEEDBACK_CALCULATED_HPP_

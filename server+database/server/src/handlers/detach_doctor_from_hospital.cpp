@@ -12,15 +12,14 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
+extern database_handler *global_db;
 
 void detach_doctor_from_hospital(
     const json &data,
     http::response<http::string_body> &res,
     database_handler &db_handler
 ) {
-    std::cerr << "DEBUG detach received JSON: " 
-          << data.dump() << std::endl;
+    std::cerr << "DEBUG detach received JSON: " << data.dump() << std::endl;
 
     json response;
 
@@ -37,7 +36,8 @@ void detach_doctor_from_hospital(
         return;
     }
 
-    std::cerr << 193 << "" << "\n";
+    std::cerr << 193 << ""
+              << "\n";
     int doctor_id = data["doctor_id"];
     int hospital_id = data["hospital_id"];
     int junior_admin_id = data["junior_admin_id"];
@@ -117,7 +117,8 @@ void detach_doctor_from_hospital(
     }
     PQclear(res_check);
 
-    std::cerr << 277 << "" << "\n";
+    std::cerr << 277 << ""
+              << "\n";
 
     const char *params_update[2] = {
         doctor_id_str.c_str(), hospital_id_str.c_str()};
@@ -142,7 +143,6 @@ void detach_doctor_from_hospital(
         return;
     }
     PQclear(res_update);
-
 
     std::cerr << "Hospital ID removed from doctor's list\n";
     response["success"] = true;

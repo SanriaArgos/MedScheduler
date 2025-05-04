@@ -7,8 +7,7 @@ namespace senior_admin {
 
 using json = nlohmann::json;
 
-senior_admin_client::senior_admin_client(int admin_id) : admin_id(admin_id) {
-};
+senior_admin_client::senior_admin_client(int admin_id) : admin_id(admin_id){};
 
 void senior_admin_client::add_junior_admin(const json &json_data) {
     std::string url = "http://localhost:8080/add_junior_admin";
@@ -33,7 +32,6 @@ json senior_admin_client::get_users_table() {
     }
 }
 
-
 json senior_admin_client::get_hospitals_table() {
     std::string url = "http://localhost:8080/get_hospitals";
     std::string response = send_get_request(url);
@@ -42,7 +40,8 @@ json senior_admin_client::get_hospitals_table() {
         json hospitals = json::parse(response);
         return hospitals;
     } catch (const std::exception &e) {
-        std::cerr << "Error fetching hospitals table: " << e.what() << std::endl;
+        std::cerr << "Error fetching hospitals table: " << e.what()
+                  << std::endl;
         return json();
     }
 }

@@ -12,9 +12,11 @@ void get_hospital_full_names(
         "SELECT DISTINCT full_name FROM hospitals ORDER BY full_name"
     );
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
-        if (pgres) PQclear(pgres);
+        if (pgres) {
+            PQclear(pgres);
+        }
         response["success"] = false;
-        response["error"]   = "Database error";
+        response["error"] = "Database error";
         res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
@@ -26,8 +28,8 @@ void get_hospital_full_names(
     }
     PQclear(pgres);
 
-    response["success"]              = true;
-    response["hospital_full_names"]  = arr;
+    response["success"] = true;
+    response["hospital_full_names"] = arr;
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");
     res.body() = response.dump();

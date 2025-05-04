@@ -1,15 +1,19 @@
 #include "../../include/handlers/login.hpp"
-#include "../../include/handlers/auth_handler.hpp"
-#include "../../include/database.hpp"
+#include <boost/beast/http.hpp>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <boost/beast/http.hpp>
+#include "../../include/database.hpp"
+#include "../../include/handlers/auth_handler.hpp"
 
 namespace http = boost::beast::http;
 
-extern database_handler* global_db; 
+extern database_handler *global_db;
 
-void login(const nlohmann::json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void login(
+    const nlohmann::json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     nlohmann::json response;
 
     if (!data.contains("phone") || !data.contains("password")) {

@@ -14,9 +14,11 @@ void get_doctor_average_ratings(
         "ORDER BY avg_rate DESC"
     );
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
-        if (pgres) PQclear(pgres);
+        if (pgres) {
+            PQclear(pgres);
+        }
         response["success"] = false;
-        response["error"]   = "Database error";
+        response["error"] = "Database error";
         res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
@@ -28,8 +30,8 @@ void get_doctor_average_ratings(
     }
     PQclear(pgres);
 
-    response["success"]                   = true;
-    response["doctor_average_ratings"]    = arr;
+    response["success"] = true;
+    response["doctor_average_ratings"] = arr;
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");
     res.body() = response.dump();

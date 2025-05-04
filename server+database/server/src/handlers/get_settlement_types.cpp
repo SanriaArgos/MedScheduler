@@ -9,12 +9,15 @@ void get_settlement_types(
     json response;
     PGresult *pgres = PQexec(
         db_handler.get_connection(),
-        "SELECT DISTINCT settlement_type FROM hospitals ORDER BY settlement_type"
+        "SELECT DISTINCT settlement_type FROM hospitals ORDER BY "
+        "settlement_type"
     );
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
-        if (pgres) PQclear(pgres);
+        if (pgres) {
+            PQclear(pgres);
+        }
         response["success"] = false;
-        response["error"]   = "Database error";
+        response["error"] = "Database error";
         res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
@@ -26,7 +29,7 @@ void get_settlement_types(
     }
     PQclear(pgres);
 
-    response["success"]          = true;
+    response["success"] = true;
     response["settlement_types"] = arr;
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");

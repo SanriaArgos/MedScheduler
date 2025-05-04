@@ -8,7 +8,7 @@ void get_doctor_clinics(
 ) {
     json response;
     std::string did = std::to_string(doctor_id);
-    const char *params[1] = { did.c_str() };
+    const char *params[1] = {did.c_str()};
 
     PGresult *pgres = PQexecParams(
         db_handler.get_connection(),
@@ -32,32 +32,28 @@ void get_doctor_clinics(
     );
 
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
-        if (pgres) PQclear(pgres);
-        response = {
-            {"success", false},
-            {"error", "Cannot fetch clinics"}
-        };
+        if (pgres) {
+            PQclear(pgres);
+        }
+        response = {{"success", false}, {"error", "Cannot fetch clinics"}};
         res.result(http::status::internal_server_error);
     } else {
         json arr = json::array();
         for (int i = 0; i < PQntuples(pgres); ++i) {
             json item;
-            item["hospital_id"]        = std::stoi(PQgetvalue(pgres, i, 0));
-            item["region"]             = PQgetvalue(pgres, i, 1);
-            item["settlement_type"]    = PQgetvalue(pgres, i, 2);
-            item["settlement_name"]    = PQgetvalue(pgres, i, 3);
-            item["street"]             = PQgetvalue(pgres, i, 4);
-            item["house"]              = PQgetvalue(pgres, i, 5);
-            item["full_name"]          = PQgetvalue(pgres, i, 6);
-            item["time_open"]          = PQgetvalue(pgres, i, 7);
+            item["hospital_id"] = std::stoi(PQgetvalue(pgres, i, 0));
+            item["region"] = PQgetvalue(pgres, i, 1);
+            item["settlement_type"] = PQgetvalue(pgres, i, 2);
+            item["settlement_name"] = PQgetvalue(pgres, i, 3);
+            item["street"] = PQgetvalue(pgres, i, 4);
+            item["house"] = PQgetvalue(pgres, i, 5);
+            item["full_name"] = PQgetvalue(pgres, i, 6);
+            item["time_open"] = PQgetvalue(pgres, i, 7);
             item["junior_admin_phone"] = PQgetvalue(pgres, i, 8);
             arr.push_back(item);
         }
         PQclear(pgres);
-        response = {
-            {"success", true},
-            {"clinics", arr}
-        };
+        response = {{"success", true}, {"clinics", arr}};
         res.result(http::status::ok);
     }
 

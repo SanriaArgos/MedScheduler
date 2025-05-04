@@ -3,4 +3,4 @@
 
 int get_hospital_id_admin(int admin_id);
 
-#endif //GET_HOSPITAL_ID_HPP
+#endif  // GET_HOSPITAL_ID_HPP

@@ -1,14 +1,14 @@
 #include "../../include/handlers/add_junior_admin.hpp"
-#include "../../include/handlers/auth_handler.hpp"
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include "../../include/handlers/auth_handler.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
+extern database_handler *global_db;
 
 void add_junior_admin(
     const json &data,
@@ -49,8 +49,9 @@ void add_junior_admin(
 
     const std::string default_password = "0987654321";
     // Регистрация пользователя с дефолтным паролем
-    if (!register_user(*global_db, 
-            last_name, first_name, patronymic, phone, default_password
+    if (!register_user(
+            *global_db, last_name, first_name, patronymic, phone,
+            default_password
         )) {
         std::cerr << "Error adding junior administrator\n";
         response["success"] = false;
@@ -78,7 +79,8 @@ void add_junior_admin(
         response["success"] = false;
         response["error"] = "Error updating user type";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
         return;

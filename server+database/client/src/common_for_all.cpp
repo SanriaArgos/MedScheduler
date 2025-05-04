@@ -1,6 +1,7 @@
 #include "../include/common_for_all.hpp"
 
-size_t write_callback(void *contents, size_t size, size_t nmemb, std::string *s) {
+size_t
+write_callback(void *contents, size_t size, size_t nmemb, std::string *s) {
     size_t new_length = size * nmemb;
     try {
         s->append((char *)contents, new_length);
@@ -38,7 +39,7 @@ send_post_request(const std::string &url, const nlohmann::json &json_data) {
     CURLcode res;
     std::string response;
 
-    curl = curl_easy_init();  
+    curl = curl_easy_init();
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 

@@ -1,12 +1,14 @@
 #include "utils.h"
-#include <string>
-#include <cctype>
-#include <QString>
 #include <QRegularExpression>
+#include <QString>
+#include <cctype>
+#include <string>
 
 bool is_latin_or_dash(const QString &str) {
-    std::string s=str.toStdString();
-    if (s.empty()) return false;
+    std::string s = str.toStdString();
+    if (s.empty()) {
+        return false;
+    }
     for (char c : s) {
         if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c == '-'))) {
             return false;
@@ -16,8 +18,10 @@ bool is_latin_or_dash(const QString &str) {
 }
 
 bool is_valid_password(const QString &str) {
-    std::string s=str.toStdString();
-    if (s.empty()) return false;
+    std::string s = str.toStdString();
+    if (s.empty()) {
+        return false;
+    }
     for (char c : s) {
         if (!std::isprint(static_cast<unsigned char>(c))) {
             return false;
@@ -39,9 +43,11 @@ bool is_validated_phone(const QString &str) {
     return true;
 }
 
-bool is_number(const QString &str){
-    std::string s=str.toStdString();
-    if (s.empty()) return false;
+bool is_number(const QString &str) {
+    std::string s = str.toStdString();
+    if (s.empty()) {
+        return false;
+    }
     for (char c : s) {
         if (!(c >= '0' && c <= '9')) {
             return false;
@@ -50,33 +56,34 @@ bool is_number(const QString &str){
     return true;
 }
 
-bool is_valid_date(const QString &str){
-    QRegularExpression regex("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$");
+bool is_valid_date(const QString &str) {
+    QRegularExpression regex("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+    );
     if (regex.match(str).hasMatch()) {
         return true;
     }
     return false;
 }
-bool is_valid_time(const QString &str){
+
+bool is_valid_time(const QString &str) {
     QRegularExpression regex("^([01]?[0-9]|2[0-3]):[0-5][0-9]$");
     if (regex.match(str).hasMatch()) {
         return true;
     }
     return false;
 }
-void add_json_to_users(const QJsonObject &json){
+
+void add_json_to_users(const QJsonObject &json) {
     QString filePath = "users.json";
 
     QFile file(filePath);
 
-    if (!file.exists())
-    {
+    if (!file.exists()) {
         qDebug() << "File does not exist.";
         return;
     }
 
-    if (!file.open(QIODevice::ReadOnly))
-    {
+    if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Opening file for read error!";
         return;
     }
@@ -85,20 +92,18 @@ void add_json_to_users(const QJsonObject &json){
     file.close();
 
     QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
-    if (jsonDoc.isNull())
-    {
+    if (jsonDoc.isNull()) {
         qDebug() << "Json decomposing error!";
         return;
     }
 
     QJsonObject rootObject = jsonDoc.object();
 
-    if (!rootObject.contains("users"))
-    {
+    if (!rootObject.contains("users")) {
         qDebug() << "Key 'users' does not exist!";
         return;
     }
-    if(!rootObject["users"].isArray()){
+    if (!rootObject["users"].isArray()) {
         qDebug() << "users is not array";
         return;
     }
@@ -110,8 +115,7 @@ void add_json_to_users(const QJsonObject &json){
 
     jsonDoc.setObject(rootObject);
 
-    if (!file.open(QIODevice::WriteOnly))
-    {
+    if (!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Opening file for write error!";
         return;
     }
@@ -120,19 +124,18 @@ void add_json_to_users(const QJsonObject &json){
     file.close();
     qDebug() << "New user is succesfully added!";
 }
-void add_json_to_hospitals(const QJsonObject &json){
+
+void add_json_to_hospitals(const QJsonObject &json) {
     QString filePath = "hospitals.json";
 
     QFile file(filePath);
 
-    if (!file.exists())
-    {
+    if (!file.exists()) {
         qDebug() << "File does not exist.";
         return;
     }
 
-    if (!file.open(QIODevice::ReadOnly))
-    {
+    if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Opening file for read error!";
         return;
     }
@@ -141,20 +144,18 @@ void add_json_to_hospitals(const QJsonObject &json){
     file.close();
 
     QJsonDocument jsonDoc = QJsonDocument::fromJson(fileData);
-    if (jsonDoc.isNull())
-    {
+    if (jsonDoc.isNull()) {
         qDebug() << "Json decomposing error!";
         return;
     }
 
     QJsonObject rootObject = jsonDoc.object();
 
-    if (!rootObject.contains("hospitals"))
-    {
+    if (!rootObject.contains("hospitals")) {
         qDebug() << "Key 'hospitals' does not exist!";
         return;
     }
-    if(!rootObject["hospitals"].isArray()){
+    if (!rootObject["hospitals"].isArray()) {
         qDebug() << "hospitals is not array";
         return;
     }
@@ -166,8 +167,7 @@ void add_json_to_hospitals(const QJsonObject &json){
 
     jsonDoc.setObject(rootObject);
 
-    if (!file.open(QIODevice::WriteOnly))
-    {
+    if (!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Opening file for write error!";
         return;
     }

@@ -19,7 +19,7 @@ user_info login(const std::string &phone, const std::string &password) {
         std::cerr << "Error sending login request: " << e.what() << "\n";
         return {-1, ""};
     }
-  
+
     json response_j;
     try {
         response_j = nlohmann::json::parse(response);
@@ -29,7 +29,8 @@ user_info login(const std::string &phone, const std::string &password) {
     }
 
     if (!response_j.value("success", false)) {
-        std::cerr << "Login failed: " << response_j.value("error", "Unknown error") << "\n";
+        std::cerr << "Login failed: "
+                  << response_j.value("error", "Unknown error") << "\n";
         return {-1, ""};
     }
 
@@ -53,7 +54,8 @@ user_info login(const std::string &phone, const std::string &password) {
     std::string type_response;
     try {
         type_response = send_get_request(
-            "http://localhost:8080/get_user_type?phone=" + phone);
+            "http://localhost:8080/get_user_type?phone=" + phone
+        );
     } catch (const std::exception &e) {
         std::cerr << "Error fetching user type: " << e.what() << "\n";
         return {-1, ""};

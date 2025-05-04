@@ -1,16 +1,16 @@
 #include "../../include/handlers/junior_admin_schedule.hpp"
-#include "../../include/handlers/add_record_slot.hpp"
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <sstream>
 #include <string>
+#include "../../include/handlers/add_record_slot.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
+extern database_handler *global_db;
 
 void junior_admin_schedule(
     const json &data,
@@ -63,7 +63,7 @@ void junior_admin_schedule(
         response["success"] = false;
         response["error"] = "Schedule not available";
 
-        res.result(http::status::internal_server_error); 
+        res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
 

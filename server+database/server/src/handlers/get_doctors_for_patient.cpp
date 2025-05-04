@@ -1,4 +1,4 @@
-#include "../../include/handlers/patient_schedule.hpp"
+#include "../../include/handlers/get_doctors_for_patient.hpp"
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <iostream>
@@ -8,9 +8,13 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
+extern database_handler *global_db;
 
-void view_doctor_schedule_for_patient(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void get_doctors_for_patient(
+    const json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     json response;
 
     // Проверка наличия необходимых полей
@@ -23,7 +27,7 @@ void view_doctor_schedule_for_patient(const json &data, http::response<http::str
         res.body() = response.dump();
         return;
     }
- 
+
     // Извлечение параметров
     int hospital_id = data["hospital_id"];
     int doctor_id = data["doctor_id"];
@@ -51,7 +55,8 @@ void view_doctor_schedule_for_patient(const json &data, http::response<http::str
         response["success"] = false;
         response["error"] = "Schedule not available";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
 

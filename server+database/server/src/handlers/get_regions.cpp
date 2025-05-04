@@ -11,9 +11,11 @@ void get_regions(
         "SELECT DISTINCT region FROM hospitals ORDER BY region"
     );
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
-        if (pgres) PQclear(pgres);
+        if (pgres) {
+            PQclear(pgres);
+        }
         response["success"] = false;
-        response["error"]   = "Database error";
+        response["error"] = "Database error";
         res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();

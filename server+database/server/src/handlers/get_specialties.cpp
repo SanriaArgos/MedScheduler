@@ -12,9 +12,11 @@ void get_specialties(
         "SELECT DISTINCT specialty FROM doctors ORDER BY specialty"
     );
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
-        if (pgres) PQclear(pgres);
+        if (pgres) {
+            PQclear(pgres);
+        }
         response["success"] = false;
-        response["error"]   = "Database error";
+        response["error"] = "Database error";
         res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
@@ -26,7 +28,7 @@ void get_specialties(
     }
     PQclear(pgres);
 
-    response["success"]     = true;
+    response["success"] = true;
     response["specialties"] = arr;
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");

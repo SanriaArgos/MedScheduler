@@ -7,7 +7,7 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
+extern database_handler *global_db;
 
 int get_junior_admin_hospital_id(int junior_admin_id) {
     int hospital_id = -1;
@@ -166,7 +166,8 @@ void add_record_slot(
         response["success"] = false;
         response["error"] = "Error adding appointment slot";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
     }

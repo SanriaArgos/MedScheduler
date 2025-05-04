@@ -1,10 +1,10 @@
 #ifndef SESSION_HPP_
 #define SESSION_HPP_
 
-#include "database.hpp"
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
 #include <memory>
+#include "database.hpp"
 
 namespace beast = boost::beast;
 namespace http = boost::beast::http;
