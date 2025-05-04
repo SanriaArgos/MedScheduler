@@ -1,5 +1,5 @@
-#ifndef PATIENT_SCHEDULE_HPP_
-#define PATIENT_SCHEDULE_HPP_
+#ifndef GET_DOCTORS_FOR_PATIENT_HPP_
+#define GET_DOCTORS_FOR_PATIENT_HPP_
 
 #include <boost/beast/http.hpp>
 #include <nlohmann/json.hpp>
@@ -17,4 +17,4 @@ void get_doctors_for_patient(
     database_handler &db_handler
 );
 
-#endif  // PATIENT_SCHEDULE_HPP_
+#endif  // GET_DOCTORS_FOR_PATIENT_HPP_

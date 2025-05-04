@@ -12,9 +12,6 @@ class patient_client {
 public:
     explicit patient_client(int user_id);
 
-    // POST /view_doctor_schedule_for_patient
-    // { "hospital_id":<int>, "doctor_id":<int> }
-    // → { "success":…, "schedule":[…] }
     json get_doctors_for_patient(const json &request_data);
 
     // GET /doctors/{doctor_id}/clinics
@@ -24,6 +21,12 @@ public:
     // { "doctor_ref_id", "text", "name", "date", "rate", "address" }
     // → { "success": true, "id":… } или error
     json post_doctor_feedback_client(const json &request_data);
+
+    json get_regions();
+    json get_settlemet_types();
+    json get_settlemet_names();
+    json get_hospital_full_names();
+    json get_specialties();
 
 private:
     int user_id_;

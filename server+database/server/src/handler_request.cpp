@@ -22,7 +22,9 @@
 #include "../include/handlers/doctor_exists.hpp"
 #include "../include/handlers/doctor_schedule.hpp"
 #include "../include/handlers/get_doctor_average_ratings.hpp"
+#include "../include/handlers/get_doctor_schedule_for_patient.hpp"
 #include "../include/handlers/get_doctor_clinics.hpp"
+#include "../include/handlers/get_doctors_for_patient.hpp"
 #include "../include/handlers/get_doctors.hpp"
 #include "../include/handlers/get_hospital_full_names.hpp"
 #include "../include/handlers/get_hospitals.hpp"
@@ -144,26 +146,6 @@ void handle_request(
                     detach_doctor_from_hospital(body, res, db_handler);
                 }
 
-                else if (req.target() == "/regions") {
-                    get_regions(res, db_handler);
-                }
-
-                else if (req.target() == "/settlement_types") {
-                    get_settlement_types(res, db_handler);
-                }
-
-                else if (req.target() == "/settlement_names") {
-                    get_settlement_names(res, db_handler);
-                }
-
-                else if (req.target() == "/hospital_full_names") {
-                    get_hospital_full_names(res, db_handler);
-                }
-
-                else if (req.target() == "/specialties") {
-                    get_specialties(res, db_handler);
-                }
-
                 else if (req.target() == "/doctor_average_ratings") {
                     get_doctor_average_ratings(res, db_handler);
                 }
@@ -213,6 +195,57 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
+            }
+
+           else if (req.target().starts_with("/get_doctor_schedule_for_patient")) {
+    try {
+        // Получаем строку запроса
+        std::string url = std::string(req.target());
+        
+        // Парсим параметры
+        size_t doctor_pos = url.find("doctor_id=");
+        size_t hospital_pos = url.find("&hospital_id=");
+        
+        if (doctor_pos == std::string::npos || hospital_pos == std::string::npos) {
+            throw std::runtime_error("Missing required parameters");
+        }
+        
+        // Извлекаем значения параметров
+        int doctor_id = std::stoi(url.substr(doctor_pos + 10, hospital_pos - doctor_pos - 10));
+        int hospital_id = std::stoi(url.substr(hospital_pos + 13));
+        
+        // Вызываем функцию с распарсенными параметрами
+        get_doctor_schedule_for_patient(doctor_id, hospital_id, res, db_handler);
+        
+    } catch (const std::exception& e) {
+        // Обработка ошибок парсинга
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = json{
+            {"success", false},
+            {"error", std::string("Invalid request: ") + e.what()}
+        }.dump();
+    }
+}
+
+            else if (req.target() == "/get_regions") {
+                    get_regions(res, db_handler);
+                }
+
+            else if (req.target() == "/get_settlement_types") {
+                get_settlement_types(res, db_handler);
+            }
+
+            else if (req.target() == "/get_settlement_names") {
+                get_settlement_names(res, db_handler);
+            }
+
+            else if (req.target() == "/get_hospital_full_names") {
+                get_hospital_full_names(res, db_handler);
+            }
+
+            else if (req.target() == "/get_specialties") {
+                get_specialties(res, db_handler);
             }
 
             else if (req.target().starts_with("/doctors_exist/")) {
