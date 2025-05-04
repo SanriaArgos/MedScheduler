@@ -15,6 +15,12 @@
 
 #include "../include/database.hpp"
 #include "../include/get_hospital_id.hpp"
+#include "../include/handlers/get_regions.hpp"
+#include "../include/handlers/get_settlement_types.hpp"
+#include "../include/handlers/get_settlement_names.hpp"
+#include "../include/handlers/get_hospital_full_names.hpp"
+#include "../include/handlers/get_specialties.hpp"
+#include "../include/handlers/get_doctor_average_ratings.hpp"
 #include "../include/check_doctor_hospital.hpp" 
 #include "../include/handlers/add_doctor.hpp"
 #include "../include/handlers/add_hospital.hpp"
@@ -123,6 +129,20 @@ void handle_request(
                 add_record_slot(body, res, db_handler);
             } else if (req.target() == "/detach_doctor_from_hospital") {
                 detach_doctor_from_hospital(body, res, db_handler);
+
+            } else if (req.target() == "/regions") {
+                get_regions(res, db_handler);
+            } else if (req.target() == "/settlement_types") {
+                get_settlement_types(res, db_handler);
+            } else if (req.target() == "/settlement_names") {
+                get_settlement_names(res, db_handler);
+            } else if (req.target() == "/hospital_full_names") {
+                get_hospital_full_names(res, db_handler);
+            } else if (req.target() == "/specialties") {
+                get_specialties(res, db_handler);
+            } else if (req.target() == "/doctor_average_ratings") {
+                get_doctor_average_ratings(res, db_handler);
+                
             } else if (req.target() == "/view_doctor_schedule_for_patient") {
                 view_doctor_schedule_for_patient(body, res, db_handler);
             } else if (req.target() == "/post_doctor_rating") {
