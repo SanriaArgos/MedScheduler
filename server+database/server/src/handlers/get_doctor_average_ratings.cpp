@@ -25,6 +25,7 @@ void get_doctor_average_ratings(
         return;
     }
     json arr = json::array();
+    arr.push_back("-");
     for (int i = 0; i < PQntuples(pgres); ++i) {
         arr.push_back(std::stod(PQgetvalue(pgres, i, 0)));
     }

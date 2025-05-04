@@ -22,6 +22,7 @@ void get_regions(
         return;
     }
     json arr = json::array();
+    arr.push_back("-");
     for (int i = 0; i < PQntuples(pgres); ++i) {
         arr.push_back(PQgetvalue(pgres, i, 0));
     }
