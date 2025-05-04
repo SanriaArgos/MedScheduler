@@ -10,7 +10,6 @@ public:
     ~database_handler();
 
     bool connect();
-
     bool initialize_database();
 
     PGconn *get_connection() const;

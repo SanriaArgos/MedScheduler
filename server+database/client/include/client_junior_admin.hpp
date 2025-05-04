@@ -16,7 +16,6 @@ public:
     void add_record_slot(const json &data);
     void attach_doctor_to_hospital_class(const json &data);
     void detach_doctor_from_hospital(const json &data);
-
     bool check_doctor_exists(int doctor_id);
     bool check_hospital_exists(int hospital_id);
     json get_doctors_table();
