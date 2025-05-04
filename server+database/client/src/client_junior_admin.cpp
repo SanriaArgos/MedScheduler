@@ -11,30 +11,38 @@ junior_admin_client::junior_admin_client(int admin_id) : admin_id(admin_id) {
 }
 
 json junior_admin_client::get_doctor_schedule(int doctor_id) {
-    std::string check_url = "http://localhost:8080/check_doctor_admin_hospital?doctor_id=" + std::to_string(doctor_id) + "&admin_id=" + std::to_string(admin_id);
+    std::string check_url =
+        "http://localhost:8080/check_doctor_admin_hospital?doctor_id=" +
+        std::to_string(doctor_id) + "&admin_id=" + std::to_string(admin_id);
     std::string check_response = send_get_request(check_url);
     try {
-        std::cerr << "Raw response: " << check_response << std::endl;  
+        std::cerr << "Raw response: " << check_response << std::endl;
         json check_result = json::parse(check_response);
         if (!check_result.value("is_valid", false)) {
-            std::cerr << "Error: Doctor and admin are not associated with the same hospital.\n"; 
+            std::cerr << "Error: Doctor and admin are not associated with the "
+                         "same hospital.\n";
             return json();
         }
-        // вывести в интерфейсе что-то по типу "вы не можете посмотреть расписание у этого врача, так как он не прикреплен к вашей больнице"
-    } catch (const std::exception& e) {
-        std::cerr << "Error checking hospital association: " << e.what() << std::endl;
+        // вывести в интерфейсе что-то по типу "вы не можете посмотреть
+        // расписание у этого врача, так как он не прикреплен к вашей больнице"
+    } catch (const std::exception &e) {
+        std::cerr << "Error checking hospital association: " << e.what()
+                  << std::endl;
         return json();
     }
 
-    std::string schedule_url = "http://localhost:8080/get_doctor_schedule?doctor_id=" + std::to_string(doctor_id);
+    std::string schedule_url =
+        "http://localhost:8080/get_doctor_schedule?doctor_id=" +
+        std::to_string(doctor_id);
     std::string schedule_response = send_get_request(schedule_url);
 
     try {
-        std::cerr << "Raw response: " << schedule_response << std::endl;  
+        std::cerr << "Raw response: " << schedule_response << std::endl;
         json schedule = json::parse(schedule_response);
         return schedule;
     } catch (const std::exception &e) {
-        std::cerr << "Error fetching doctor's schedule: " << e.what() << std::endl;
+        std::cerr << "Error fetching doctor's schedule: " << e.what()
+                  << std::endl;
         return json();
     }
 }
@@ -56,19 +64,14 @@ void junior_admin_client::attach_doctor_to_hospital_class(const json &data) {
         return;
     }
 
-    if (!check_doctor_exists(doctor_id)) {
-        std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
-        return;
-    }
-
-    if (!check_hospital_exists(hospital_id)) {
-        std::cerr << "Error: Hospital with ID " << hospital_id
-                  << " not found.\n";
-        return;
-    }
+    json payload = {
+        {"doctor_id", doctor_id},
+        {"hospital_id", hospital_id},
+        {"junior_admin_id", admin_id}};
 
     std::string url = "http://localhost:8080/attach_doctor_to_hospital";
-    std::string response = send_post_request(url, data);
+    std::string response = send_post_request(url, payload);
+    std::cerr << "attach response: " << response << std::endl;
 }
 
 void junior_admin_client::add_record_slot(const json &data) {
@@ -149,8 +152,12 @@ bool junior_admin_client::is_doctor_attached_to_hospital(
 void junior_admin_client::detach_doctor_from_hospital(const json &data) {
     int doctor_id = data.value("doctor_id", -1);
     int hospital_id = data.value("hospital_id", -1);
-    // int junior_admin_id = data.value("junior_admin_id", -1);
 
+    if (doctor_id < 0 || hospital_id < 0) {
+        std::cerr << "Invalid JSON: missing or wrong type for doctor_id / "
+                     "hospital_id\n";
+        return;
+    }
     if (!check_doctor_exists(doctor_id)) {
         std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
         return;
@@ -162,8 +169,15 @@ void junior_admin_client::detach_doctor_from_hospital(const json &data) {
         return;
     }
 
+    json payload = {
+        {"doctor_id", doctor_id},
+        {"hospital_id", hospital_id},
+        {"junior_admin_id", admin_id}  // <— make sure the server sees it!
+    };
+
     std::string url = "http://localhost:8080/detach_doctor_from_hospital";
-    std::string response = send_post_request(url, data);
+    std::string response = send_post_request(url, payload);
+    std::cerr << "detach response: " << response << std::endl;
 }
 
 json junior_admin_client::get_doctors_table() {

@@ -1,5 +1,4 @@
 #include "../../include/handlers/add_doctor.hpp"
-#include "../../include/handlers/auth_handler.hpp"
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <cstdlib>
@@ -7,13 +6,18 @@
 #include <nlohmann/json.hpp>
 #include <regex>
 #include <sstream>
+#include "../../include/handlers/auth_handler.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
+extern database_handler *global_db;
 
-void add_doctor(const json &data, http::response<http::string_body> &res, database_handler &db_handler) {
+void add_doctor(
+    const json &data,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     nlohmann::json response;
 
     // Проверка на наличие обязательных полей
@@ -51,14 +55,16 @@ void add_doctor(const json &data, http::response<http::string_body> &res, databa
     const std::string default_password = "987654321";
 
     // Регистрация пользователя
-    if (!register_user(*global_db,
-            last_name, first_name, patronymic, phone, default_password
+    if (!register_user(
+            *global_db, last_name, first_name, patronymic, phone,
+            default_password
         )) {
         std::cerr << "Error: Could not add doctor to Users table\n";
         response["success"] = false;
         response["error"] = "Could not add doctor to Users table";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
         return;
@@ -78,7 +84,8 @@ void add_doctor(const json &data, http::response<http::string_body> &res, databa
         response["success"] = false;
         response["error"] = "Could not update user type";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
         return;
@@ -133,7 +140,8 @@ void add_doctor(const json &data, http::response<http::string_body> &res, databa
         response["success"] = false;
         response["error"] = "Could not add data to Doctors table";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
     }
 
     res.set(http::field::content_type, "application/json");

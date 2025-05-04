@@ -7,7 +7,7 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
+extern database_handler *global_db;
 
 int get_junior_admin_hospital_id(int junior_admin_id) {
     int hospital_id = -1;
@@ -107,6 +107,7 @@ void add_record_slot(
         return;
     }
     PQclear(res_check);
+
     int my_hospital_id = get_junior_admin_hospital_id(junior_admin_id);
     if (my_hospital_id == -1) {
         std::cerr << "Error: Your hospital not found\n";
@@ -142,6 +143,27 @@ void add_record_slot(
     }
     PQclear(res_check_doc);
 
+    const char *params_check_slot[3] = {
+        doctor_id_str.c_str(), date.c_str(), time_val.c_str()};
+    PGresult *res_check_slot = PQexecParams(
+        db_handler.get_connection(),
+        "SELECT 1 FROM records WHERE doctor_id = $1 AND appointment_date=$2 AND appointment_time=$3",
+        3, NULL, params_check_slot, NULL, NULL, 0
+    );
+    if (PQresultStatus(res_check_slot) == PGRES_TUPLES_OK &&
+          PQntuples(res_check_slot) > 0) {
+        std::cerr << "Error: The slot for this date and time already exists\n";
+        PQclear(res_check_slot);
+        response["success"] = false;
+        response["error"] = "The slot for this date and time already exists";
+
+        res.result(http::status::forbidden);  // 403 Forbidden
+        res.set(http::field::content_type, "application/json");
+        res.body() = response.dump();
+        return;
+    }
+    PQclear(res_check_slot);
+
     std::string cabinet_str = std::to_string(cabinet);
     const char *params_ins[5] = {
         doctor_id_str.c_str(), date.c_str(), time_val.c_str(),
@@ -166,7 +188,8 @@ void add_record_slot(
         response["success"] = false;
         response["error"] = "Error adding appointment slot";
 
-        res.result(http::status::internal_server_error);  // 500 Internal Server Error
+        res.result(http::status::internal_server_error
+        );  // 500 Internal Server Error
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
     }

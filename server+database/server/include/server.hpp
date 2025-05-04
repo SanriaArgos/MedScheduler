@@ -1,10 +1,10 @@
 #ifndef SERVER_HPP_
 #define SERVER_HPP_
 
-#include "database.hpp"
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
 #include <memory>
+#include "database.hpp"
 
 namespace http = boost::beast::http;
 using tcp = boost::asio::ip::tcp;
@@ -19,7 +19,7 @@ public:
         database_handler &db_handler
     );
     void run_server();
-    
+
 private:
     void accept();
 

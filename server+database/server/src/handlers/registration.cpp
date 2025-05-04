@@ -1,12 +1,12 @@
 #include "../../include/handlers/registration.hpp"
-#include "../../include/handlers/auth_handler.hpp"
 #include <boost/beast/http.hpp>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include "../../include/handlers/auth_handler.hpp"
 
 namespace http = boost::beast::http;
 
-extern database_handler* global_db; 
+extern database_handler *global_db;
 
 void registration(
     const nlohmann::json &data,
@@ -33,8 +33,8 @@ void registration(
     std::string phone = data["phone"];
     std::string password = data["password"];
 
-    bool success = register_user(*global_db,
-        last_name, first_name, patronymic, phone, password
+    bool success = register_user(
+        *global_db, last_name, first_name, patronymic, phone, password
     );
     response["success"] = success;
     response["action"] = "registration";

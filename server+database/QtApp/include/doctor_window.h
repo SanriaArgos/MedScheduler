@@ -7,8 +7,7 @@ namespace Ui {
 class DoctorWindow;
 }
 
-class DoctorWindow : public QMainWindow
-{
+class DoctorWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -24,4 +23,4 @@ private:
     int user_id = 0;
 };
 
-#endif // DOCTOR_WINDOW_H
+#endif  // DOCTOR_WINDOW_H

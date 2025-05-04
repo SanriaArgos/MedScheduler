@@ -6,6 +6,10 @@
 
 namespace http = boost::beast::http;
 
-void hospital_exists(int hospital_id, http::response<http::string_body>& res, database_handler& db_handler);
+void hospital_exists(
+    int hospital_id,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+);
 
-#endif // HOSPITAL_EXISTS_HPP
+#endif  // HOSPITAL_EXISTS_HPP

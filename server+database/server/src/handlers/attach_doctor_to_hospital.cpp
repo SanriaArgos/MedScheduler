@@ -37,16 +37,16 @@ void attach_doctor_to_hospital(
     }
 
     // Проверяем, есть ли уже hospital_id в hospital_ids у данного доктора
-    const char* check_params[1] = {std::to_string(doctor_id).c_str()};
-    PGresult* check_res = PQexecParams(conn,
-        "SELECT hospital_ids FROM doctors WHERE doctor_id = $1",
-        1, nullptr, check_params, nullptr, nullptr, 0);
+    const char *check_params[1] = {std::to_string(doctor_id).c_str()};
+    PGresult *check_res = PQexecParams(
+        conn, "SELECT hospital_ids FROM doctors WHERE doctor_id = $1", 1,
+        nullptr, check_params, nullptr, nullptr, 0
+    );
 
     if (!check_res || PQresultStatus(check_res) != PGRES_TUPLES_OK) {
         result = {
             {"success", false},
-            {"error", "Failed to check existing hospitals"}
-        };
+            {"error", "Failed to check existing hospitals"}};
         res.result(http::status::internal_server_error);
         PQclear(check_res);
         res.set(http::field::content_type, "application/json");
@@ -59,11 +59,10 @@ void attach_doctor_to_hospital(
 
     // Проверяем, есть ли уже hospital_id в списке hospital_ids
     if (hospital_ids_str.find(std::to_string(hospital_id)) !=
-    std::string::npos) {
+        std::string::npos) {
         result = {
             {"success", false},
-            {"error", "Doctor is already attached to this hospital"}
-        };
+            {"error", "Doctor is already attached to this hospital"}};
         res.result(http::status::conflict);
         res.set(http::field::content_type, "application/json");
         res.body() = result.dump();

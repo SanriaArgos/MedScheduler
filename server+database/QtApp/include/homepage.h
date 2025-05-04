@@ -7,8 +7,7 @@ namespace Ui {
 class homepage;
 }
 
-class homepage : public QMainWindow
-{
+class homepage : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -38,4 +37,4 @@ private:
     int user_id = 0;
 };
 
-#endif // HOMEPAGE_H
+#endif  // HOMEPAGE_H

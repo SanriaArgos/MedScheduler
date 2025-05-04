@@ -8,7 +8,7 @@
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
-extern database_handler* global_db;
+extern database_handler *global_db;
 
 void get_doctor_schedule(
     const json &data,

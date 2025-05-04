@@ -1,18 +1,25 @@
 #include "../../include/handlers/auth_handler.hpp"
-#include "../../include/database.hpp"
-#include <iostream>
 #include <libpq-fe.h>
+#include <iostream>
+#include "../../include/database.hpp"
 
-std::string login_user(database_handler &db, const std::string &phone, const std::string &password) {
+std::string login_user(
+    database_handler &db,
+    const std::string &phone,
+    const std::string &password
+) {
     PGconn *conn = db.get_connection();
     const char *paramValues[1] = {phone.c_str()};
     PGresult *res = PQexecParams(
         conn,
-        "SELECT id, user_type, hashed_password, salt FROM users WHERE phone = $1",
+        "SELECT id, user_type, hashed_password, salt FROM users WHERE phone = "
+        "$1",
         1, NULL, paramValues, NULL, NULL, 0
     );
     if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
-        if (res) PQclear(res);
+        if (res) {
+            PQclear(res);
+        }
         return "";
     }
 
@@ -23,16 +30,28 @@ std::string login_user(database_handler &db, const std::string &phone, const std
     PQclear(res);
 
     std::string attempt_hash = db.hash_password(password, db_salt);
-    if (attempt_hash != db_hash) return "";
+    if (attempt_hash != db_hash) {
+        return "";
+    }
 
-    if (user_type == "patient") return "patient:" + user_id;
-    if (user_type == "senior administrator") return "senior:" + user_id;
-    if (user_type == "junior administrator") return "junior:" + user_id;
+    if (user_type == "patient") {
+        return "patient:" + user_id;
+    }
+    if (user_type == "senior administrator") {
+        return "senior:" + user_id;
+    }
+    if (user_type == "junior administrator") {
+        return "junior:" + user_id;
+    }
     if (user_type == "doctor") {
-        std::string query2 = "SELECT doctor_id FROM doctors WHERE user_id = " + user_id;
+        std::string query2 =
+            "SELECT doctor_id FROM doctors WHERE user_id = " + user_id;
         PGresult *res2 = PQexec(conn, query2.c_str());
-        if (!res2 || PQresultStatus(res2) != PGRES_TUPLES_OK || PQntuples(res2) == 0) {
-            if (res2) PQclear(res2);
+        if (!res2 || PQresultStatus(res2) != PGRES_TUPLES_OK ||
+            PQntuples(res2) == 0) {
+            if (res2) {
+                PQclear(res2);
+            }
             return "";
         }
         std::string doctor_id = PQgetvalue(res2, 0, 0);
@@ -43,39 +62,40 @@ std::string login_user(database_handler &db, const std::string &phone, const std
     return "success";
 }
 
-bool register_user(database_handler &db,
-                   const std::string &last_name,
-                   const std::string &first_name,
-                   const std::string &patronymic,
-                   const std::string &phone,
-                   const std::string &password) {
+bool register_user(
+    database_handler &db,
+    const std::string &last_name,
+    const std::string &first_name,
+    const std::string &patronymic,
+    const std::string &phone,
+    const std::string &password
+) {
     std::string salt = db.generate_salt(16);
     std::string hashed_pass = db.hash_password(password, salt);
     std::string query =
         "INSERT INTO users (last_name, first_name, patronymic, phone, "
         "hashed_password, salt, user_type) VALUES ('" +
-        db.prepare_query(last_name) + "', '" + db.prepare_query(first_name) + "', '" +
-        db.prepare_query(patronymic) + "', '" + db.prepare_query(phone) + "', '" +
-        db.prepare_query(hashed_pass) + "', '" + db.prepare_query(salt) +
-        "', 'patient')";
+        db.prepare_query(last_name) + "', '" + db.prepare_query(first_name) +
+        "', '" + db.prepare_query(patronymic) + "', '" +
+        db.prepare_query(phone) + "', '" + db.prepare_query(hashed_pass) +
+        "', '" + db.prepare_query(salt) + "', 'patient')";
 
     PGresult *res = PQexec(db.get_connection(), query.c_str());
     bool success = (PQresultStatus(res) == PGRES_COMMAND_OK);
     if (!success) {
-        std::cerr << "Ошибка регистрации: " << PQerrorMessage(db.get_connection()) << "\n";
+        std::cerr << "Ошибка регистрации: "
+                  << PQerrorMessage(db.get_connection()) << "\n";
     }
     PQclear(res);
     return success;
 }
 
-
-
-std::string get_user_type_by_phone(database_handler &db, const std::string &phone
-) {
+std::string
+get_user_type_by_phone(database_handler &db, const std::string &phone) {
     const char *params[1] = {phone.c_str()};
     PGresult *res = PQexecParams(
-        db.get_connection(), "SELECT user_type FROM users WHERE phone = $1", 1, nullptr,
-        params, nullptr, nullptr, 0
+        db.get_connection(), "SELECT user_type FROM users WHERE phone = $1", 1,
+        nullptr, params, nullptr, nullptr, 0
     );
     if (PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
         if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -93,8 +113,8 @@ std::string get_user_type_by_phone(database_handler &db, const std::string &phon
 int get_user_id_by_phone(database_handler &db, const std::string &phone) {
     const char *params[1] = {phone.c_str()};
     PGresult *res = PQexecParams(
-        db.get_connection(), "SELECT id FROM users WHERE phone = $1", 1, nullptr,
-        params, nullptr, nullptr, 0
+        db.get_connection(), "SELECT id FROM users WHERE phone = $1", 1,
+        nullptr, params, nullptr, nullptr, 0
     );
     if (PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
         if (PQresultStatus(res) != PGRES_TUPLES_OK) {

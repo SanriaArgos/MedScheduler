@@ -8,6 +8,10 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void attach_doctor_to_hospital(const json& body, http::response<http::string_body>& res, database_handler& db_handler);
+void attach_doctor_to_hospital(
+    const json &body,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+);
 
-#endif // ATTACH_DOCTOR_TO_HOSPITAL_HPP
+#endif  // ATTACH_DOCTOR_TO_HOSPITAL_HPP

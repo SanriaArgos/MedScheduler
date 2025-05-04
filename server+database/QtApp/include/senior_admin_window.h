@@ -7,8 +7,7 @@ namespace Ui {
 class SeniorAdminWindow;
 }
 
-class SeniorAdminWindow : public QMainWindow
-{
+class SeniorAdminWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -30,4 +29,4 @@ private:
     int user_id = 0;
 };
 
-#endif // SENIORADMINWINDOW_H
+#endif  // SENIORADMINWINDOW_H
