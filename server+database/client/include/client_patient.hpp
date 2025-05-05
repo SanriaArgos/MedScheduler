@@ -14,9 +14,6 @@ public:
 
     json get_doctors_for_patient(const json &request_data);
 
-    // GET /doctors/{doctor_id}/clinics
-    // json get_doctor_clinics(int doctor_id);
-
     // POST /post_doctor_rating
     // { "doctor_ref_id", "text", "name", "date", "rate", "address" }
     // → { "success": true, "id":… } или error
@@ -31,7 +28,7 @@ public:
     json get_doctor_average_ratings();
     json get_doctor_feedback_items(int doctor_id);
     json get_doctor_feedback_calculated(int doctor_id)
-    json get_doctor_clinics(int doctor_id);
+    json get_doctor_hospitals(int doctor_id);
 
 private:
     int user_id_;

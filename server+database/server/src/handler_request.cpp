@@ -23,7 +23,7 @@
 #include "../include/handlers/doctor_schedule.hpp"
 #include "../include/handlers/get_doctor_average_ratings.hpp"
 #include "../include/handlers/get_doctor_schedule_for_patient.hpp"
-#include "../include/handlers/get_doctor_clinics.hpp"
+#include "../include/handlers/get_doctor_hospitals.hpp"
 #include "../include/handlers/get_doctors_for_patient.hpp"
 #include "../include/handlers/get_doctors.hpp"
 #include "../include/handlers/get_hospital_full_names.hpp"
@@ -241,7 +241,7 @@ else if (req.target().starts_with("/get_doctor_hospitals")) {
         int doctor_id = std::stoi(id_str);
 
         // Вызываем обработчик
-        get_doctor_clinics(doctor_id, res, db_handler);
+        get_doctor_hospitals(doctor_id, res, db_handler);
 
     } catch (const std::exception &e) {
         handle_error(e, res);
