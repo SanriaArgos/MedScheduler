@@ -16,9 +16,9 @@ public:
 
     // Фильтры для поиска врачей
     json get_doctors_for_patient(const json &request_data);
-    json get_regions();              // region
-    json get_settlement_types();     // settlement_type
-    json get_settlement_names();     // settlement_name
+    json get_regions();           // region
+    json get_settlement_types();  // settlement_type
+    json get_settlement_names();  // settlement_name
 
     // Просмотр расписания у выбранного врача в выбранной клинике
     json get_doctor_schedule_for_patient(int doctor_id, int hospital_id);
@@ -33,13 +33,12 @@ public:
 
     json patient_appointments(const json &request_data);
 
-    // (устаревшая) просмотр расписания через POST
-    // void view_doctor_schedule(const json &request_data);
-
     json get_doctor_average_ratings();
     json get_doctor_feedback_items(int doctor_id);
-    json get_doctor_feedback_calculated(int doctor_id)
+    json get_doctor_feedback_calculated(int doctor_id);
     json get_doctor_hospitals(int doctor_id);
+
+    json edit_doctor_feedback(const json &request_data);
 
 private:
     int user_id_;

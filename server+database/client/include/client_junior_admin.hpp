@@ -26,6 +26,8 @@ public:
 
     json get_waitlist(int doctor_id, int junior_admin_id);
 
+    json delete_doctor_feedback(const json &data);
+
 private:
     int admin_id;
 };

@@ -22,7 +22,6 @@ void post_doctor_rating(
 ) {
     json response;
 
-    // 1. Проверяем обязательные поля
     const std::vector<std::string> required = {
         "doctor_ref_id", "text", "name", "date", "rate", "address"};
     for (const auto &field : required) {
@@ -36,7 +35,6 @@ void post_doctor_rating(
         }
     }
 
-    // 2. Извлекаем данные из JSON
     std::string doc_str = std::to_string(data["doctor_ref_id"].get<int>());
     std::string text = data["text"];
     std::string name = data["name"];
@@ -44,7 +42,6 @@ void post_doctor_rating(
     std::string rate_str = std::to_string(data["rate"].get<int>());
     std::string address = data["address"];
 
-    // 3. Выполняем INSERT и возвращаем созданный ID
     const char *params[6] = {doc_str.c_str(),  text.c_str(),
                              name.c_str(),     date.c_str(),
                              rate_str.c_str(), address.c_str()};
@@ -69,7 +66,6 @@ void post_doctor_rating(
     int new_id = std::stoi(PQgetvalue(pgres, 0, 0));
     PQclear(pgres);
 
-    // 4. Отправляем ответ 201 Created
     response["success"] = true;
     response["id"] = new_id;
     res.result(http::status::created);

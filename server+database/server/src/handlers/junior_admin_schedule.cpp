@@ -83,7 +83,7 @@ void junior_admin_schedule(
         record["appointment_time"] = PQgetvalue(res_query, i, 2);
         record["cabinet_number"] = PQgetvalue(res_query, i, 3);
         record["patient_id"] = PQgetvalue(res_query, i, 4);
-        record["price"]             = PQgetvalue(res_query, i, 5);
+        record["price"] = PQgetvalue(res_query, i, 5);
         schedule.push_back(record);
     }
 

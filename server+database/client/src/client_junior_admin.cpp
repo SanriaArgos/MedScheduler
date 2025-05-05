@@ -162,7 +162,7 @@ void junior_admin_client::detach_doctor_from_hospital(const json &data) {
         std::cerr << "Error: Doctor with ID " << doctor_id << " not found.\n";
         return;
     }
-    
+
     if (!check_hospital_exists(hospital_id)) {
         std::cerr << "Error: Hospital with ID " << hospital_id
                   << " not found.\n";
@@ -207,14 +207,29 @@ json junior_admin_client::get_users_table() {
 }
 
 json junior_admin_client::get_waitlist(int doctor_id, int junior_admin_id) {
-    std::string url = "http://localhost:8080/get_waitlist?doctor_id" + std::to_string(doctor_id) + "&junior_admin_id=" + std::to_string(junior_admin_id);
+    std::string url = "http://localhost:8080/get_waitlist?doctor_id" +
+                      std::to_string(doctor_id) +
+                      "&junior_admin_id=" + std::to_string(junior_admin_id);
     std::string response = send_get_request(url);
 
-     try {
+    try {
         json users = json::parse(response);
         return users;
     } catch (const std::exception &e) {
         std::cerr << "Error fetching waitlist: " << e.what() << std::endl;
+        return json();
+    }
+}
+
+json junior_admin_client::delete_doctor_feedback(const json &data) {
+    std::string url = "http://localhost:8080/delete_doctor_feedback";
+    std::string response = send_delete_request(url, data);
+
+    try {
+        json users = json::parse(response);
+        return users;
+    } catch (const std::exception &e) {
+        std::cerr << "Error with feedback: " << e.what() << std::endl;
         return json();
     }
 }

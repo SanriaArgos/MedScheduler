@@ -65,3 +65,98 @@ send_post_request(const std::string &url, const nlohmann::json &json_data) {
     }
     return response;
 }
+
+std::string send_delete_request(const std::string &url) {
+    CURL *curl;
+    CURLcode res;
+    std::string response;
+
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(
+            curl, CURLOPT_CUSTOMREQUEST, "DELETE"
+        ); 
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        struct curl_slist *headers = nullptr;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            std::cerr << "Ошибка cURL: " << curl_easy_strerror(res)
+                      << std::endl;
+        }
+
+        curl_easy_cleanup(curl);
+        curl_slist_free_all(headers);
+    }
+    return response;
+}
+
+std::string
+send_delete_request(const std::string &url, const nlohmann::json &json_data) {
+    CURL *curl;
+    CURLcode res;
+    std::string response;
+
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+        std::string post_data = json_data.dump();
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        struct curl_slist *headers = nullptr;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            std::cerr << "Ошибка cURL: " << curl_easy_strerror(res)
+                      << std::endl;
+        }
+
+        curl_easy_cleanup(curl);
+        curl_slist_free_all(headers);
+    }
+    return response;
+}
+
+std::string send_patch_request(const std::string &url, const nlohmann::json &json_data) {
+    CURL *curl;
+    CURLcode res;
+    std::string response;
+
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
+
+        std::string patch_data = json_data.dump();
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, patch_data.c_str());
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
+        struct curl_slist *headers = nullptr;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            std::cerr << "cURL error: " << curl_easy_strerror(res) << std::endl;
+        }
+
+        curl_easy_cleanup(curl);
+        curl_slist_free_all(headers);
+    }
+    return response;
+}

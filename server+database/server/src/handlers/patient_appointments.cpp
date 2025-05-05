@@ -3,9 +3,9 @@
 #include <sstream>
 
 void patient_appointments(
-    int patient_id, 
-    http::response<http::string_body>& res,
-    database_handler& db_handler
+    int patient_id,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
 ) {
     json response;
 
@@ -33,21 +33,17 @@ void patient_appointments(
      ORDER BY r.appointment_date, r.appointment_time
     )";
 
-    const char* paramValues[1] = { std::to_string(patient_id).c_str() };
-    
+    const char *paramValues[1] = {std::to_string(patient_id).c_str()};
+
     PGresult *pgres = PQexecParams(
-        db_handler.get_connection(),
-        sql.str().c_str(),
-        1,  
-        nullptr, 
-        paramValues,
-        nullptr,
-        nullptr,
-        0
+        db_handler.get_connection(), sql.str().c_str(), 1, nullptr, paramValues,
+        nullptr, nullptr, 0
     );
 
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
-        if (pgres) PQclear(pgres);
+        if (pgres) {
+            PQclear(pgres);
+        }
         response["success"] = false;
         response["error"] = "Database error";
         res.result(http::status::internal_server_error);
@@ -71,7 +67,7 @@ void patient_appointments(
         record["specialty"] = PQgetvalue(pgres, i, 9);
         record["price"] = PQgetvalue(pgres, i, 10);
         record["doctor_name"] = PQgetvalue(pgres, i, 11);
-        
+
         appointments.push_back(std::move(record));
     }
     PQclear(pgres);

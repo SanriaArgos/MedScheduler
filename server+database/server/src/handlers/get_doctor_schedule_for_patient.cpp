@@ -7,23 +7,23 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-extern database_handler* global_db;
+extern database_handler *global_db;
 
 void get_doctor_schedule_for_patient(
     int doctor_id,
     int hospital_id,
-    http::response<http::string_body>& res,
-    database_handler& db_handler
+    http::response<http::string_body> &res,
+    database_handler &db_handler
 ) {
     json response;
 
     // Подготовка параметров для SQL
-    std::string doctor_id_str   = std::to_string(doctor_id);
+    std::string doctor_id_str = std::to_string(doctor_id);
     std::string hospital_id_str = std::to_string(hospital_id);
-    const char* params[2]       = {doctor_id_str.c_str(), hospital_id_str.c_str()};
+    const char *params[2] = {doctor_id_str.c_str(), hospital_id_str.c_str()};
 
     // Выполнение запроса
-    PGresult* pgres = PQexecParams(
+    PGresult *pgres = PQexecParams(
         db_handler.get_connection(),
         R"(
           SELECT
@@ -54,8 +54,10 @@ void get_doctor_schedule_for_patient(
 
     if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
         response["success"] = false;
-        response["error"]   = "Schedule not available";
-        if (pgres) PQclear(pgres);
+        response["error"] = "Schedule not available";
+        if (pgres) {
+            PQclear(pgres);
+        }
 
         res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");
@@ -68,22 +70,22 @@ void get_doctor_schedule_for_patient(
     json schedule = json::array();
     for (int i = 0; i < rows; ++i) {
         json slot;
-        slot["appointment_date"]   = PQgetvalue(pgres, i, 0);
-        slot["appointment_time"]   = PQgetvalue(pgres, i, 1);
-        slot["region"]             = PQgetvalue(pgres, i, 2);
-        slot["settlement_type"]    = PQgetvalue(pgres, i, 3);
-        slot["settlement_name"]    = PQgetvalue(pgres, i, 4);
-        slot["street"]             = PQgetvalue(pgres, i, 5);
-        slot["house"]              = PQgetvalue(pgres, i, 6);
-        slot["full_name"]          = PQgetvalue(pgres, i, 7);
+        slot["appointment_date"] = PQgetvalue(pgres, i, 0);
+        slot["appointment_time"] = PQgetvalue(pgres, i, 1);
+        slot["region"] = PQgetvalue(pgres, i, 2);
+        slot["settlement_type"] = PQgetvalue(pgres, i, 3);
+        slot["settlement_name"] = PQgetvalue(pgres, i, 4);
+        slot["street"] = PQgetvalue(pgres, i, 5);
+        slot["house"] = PQgetvalue(pgres, i, 6);
+        slot["full_name"] = PQgetvalue(pgres, i, 7);
         slot["junior_admin_phone"] = PQgetvalue(pgres, i, 8);
-        slot["slot_status"]        = PQgetvalue(pgres, i, 9);
+        slot["slot_status"] = PQgetvalue(pgres, i, 9);
         schedule.push_back(std::move(slot));
     }
     PQclear(pgres);
 
     // Отправляем ответ
-    response["success"]  = true;
+    response["success"] = true;
     response["schedule"] = schedule;
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");
