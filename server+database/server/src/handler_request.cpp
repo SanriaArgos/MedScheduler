@@ -39,6 +39,11 @@
 #include "../include/handlers/get_doctors_for_patient.hpp"
 #include "../include/handlers/post_doctor_feedback.hpp"
 #include "../include/handlers/registration.hpp"
+#include "../include/handlers/book_appointment.hpp"
+#include "../include/handlers/search_doctors.hpp"
+#include "../include/handlers/patient_appointments.hpp"
+#include "../include/handlers/add_patient_to_waitlist.hpp"
+#include "../include/handlers/get_waitlist.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -164,6 +169,18 @@ void handle_request(
                     post_doctor_rating(body, res, db_handler);
                 }
 
+                else if (req.target() == "/book_appointment") {
+                    book_appointment(body, res, db_handler);
+                }
+
+                else if (req.target() == "/search_doctors") {
+                    search_doctors(body, res, db_handler);
+                }
+
+                else if (req.target() == "/add_patient_to_waitlist") {
+                    add_patient_to_waitlist(body, res, db_handler);
+                }
+
                 else {
                     handle_not_found(res);
                 }
@@ -228,6 +245,55 @@ void handle_request(
     }
 }
 
+else if (req.target().starts_with("/get_patient_appointments")) {
+    try {
+        std::string url = std::string(req.target());
+        
+        // Находим начало параметров
+        size_t query_start = url.find('?');
+        if (query_start == std::string::npos) {
+            throw std::runtime_error("Missing query parameters");
+        }
+
+        // Ищем patient_id
+        size_t pid_pos = url.find("patient_id=", query_start);
+        if (pid_pos == std::string::npos) {
+            throw std::runtime_error("Missing patient_id parameter");
+        }
+
+        // Извлекаем чистое значение параметра
+        pid_pos += 10; // Длина "patient_id="
+        size_t pid_end = url.find('&', pid_pos);
+        std::string pid_str = url.substr(
+            pid_pos,
+            (pid_end == std::string::npos) ? std::string::npos : pid_end - pid_pos
+        );
+
+        // Удаляем возможные пробелы и спецсимволы
+        pid_str.erase(std::remove_if(pid_str.begin(), pid_str.end(), 
+                     [](char c) { return !std::isdigit(c); }), 
+                     pid_str.end());
+
+        if (pid_str.empty()) {
+            throw std::invalid_argument("Empty patient_id");
+        }
+
+        int patient_id = std::stoi(pid_str);
+        std::cerr << "patinet_id" << patient_id << "\n";
+        patient_appointments(patient_id, res, db_handler);
+
+    } catch (const std::invalid_argument&) {
+        json error = {{"success", false}, {"error", "Patient ID must be a number"}};
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = error.dump();
+    } catch (const std::exception& e) {
+        json error = {{"success", false}, {"error", e.what()}};
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = error.dump();
+    }
+}
             else if (req.target() == "/get_regions") {
                     get_regions(res, db_handler);
                 }
@@ -380,6 +446,47 @@ void handle_request(
                     handle_error(e, res);
                 }
             }
+
+            else if (req.target().starts_with("/get_waitlist")) {
+    try {
+        std::string url = std::string(req.target());
+        
+        // Лямбда для парсинга параметров URL
+        auto parse_param = [&](const std::string &key) -> int {
+            size_t start = url.find(key + "=");
+            if (start == std::string::npos) {
+                throw std::runtime_error("Missing parameter: " + key);
+            }
+            start += key.length() + 1;
+            size_t end = url.find('&', start);
+            std::string value = (end == std::string::npos) 
+                ? url.substr(start) 
+                : url.substr(start, end - start);
+            
+            try {
+                return std::stoi(value);
+            } catch (...) {
+                throw std::runtime_error("Invalid " + key + " format - must be integer");
+            }
+        };
+
+        // Парсим обязательные параметры
+        int doctor_id = parse_param("doctor_id");
+        int junior_admin_id = parse_param("junior_admin_id");
+
+        // Вызываем функцию обработки
+        get_waitlist(doctor_id, junior_admin_id, res, db_handler);
+
+    } catch (const std::exception &e) {
+        json error;
+        error["success"] = false;
+        error["error"] = std::string("Failed to process request: ") + e.what();
+
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = error.dump();
+    }
+}
 
             else if (req.target().starts_with("/get_user_id")) {
                 try {

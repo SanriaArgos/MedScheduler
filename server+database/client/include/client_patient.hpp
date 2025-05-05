@@ -26,8 +26,15 @@ public:
     // Оставить отзыв (возвращает JSON успех/ошибка)
     json post_doctor_feedback_client(const json &request_data);
 
+    json book_appointment(const json &request_data);
+    json search_doctors(const json &request_data);
+
+    json patient_appointments(int patient_id);
+
+    json patient_appointments(const json &request_data);
+
     // (устаревшая) просмотр расписания через POST
-    void view_doctor_schedule(const json &request_data);
+    // void view_doctor_schedule(const json &request_data);
 
 private:
     int user_id_;

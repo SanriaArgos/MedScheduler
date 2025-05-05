@@ -151,6 +151,7 @@ bool initialize_system(const std::string &superuser_connect_info) {
     execute_sql(conn2, "ALTER TABLE records OWNER TO meduser");
     execute_sql(conn2, "ALTER TABLE doctors OWNER TO meduser");
     execute_sql(conn2, "ALTER TABLE rating OWNER TO meduser");
+    execute_sql(conn2, "ALTER TABLE waitlist OWNER TO meduser;");
     PQfinish(conn2);
 
     // Подключаемся ещё раз к medscheduler под meduser для создания старшего

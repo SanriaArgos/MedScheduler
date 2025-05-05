@@ -1,8 +1,8 @@
-#include "../../include/handlers/request_waitlist.hpp"
+#include "../../include/handlers/add_patient_to_waitlist.hpp"
 #include <libpq-fe.h>
 #include <iostream>
 
-void request_waitlist(
+void add_patient_to_waitlist(
     const json &data,
     http::response<http::string_body> &res,
     database_handler &db_handler

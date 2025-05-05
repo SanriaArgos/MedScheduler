@@ -3,25 +3,12 @@
 #include <sstream>
 
 void patient_appointments(
-    const http::request<http::string_body>& req,
+    int patient_id, 
     http::response<http::string_body>& res,
     database_handler& db_handler
 ) {
-    // 1) Вытаскиваем patient_id из URL
-    auto target = req.target().to_string();
-    auto pos = target.find("patient_id=");
     json response;
-    if (pos == std::string::npos) {
-        response["success"] = false;
-        response["error"]   = "Missing patient_id";
-        res.result(http::status::bad_request);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
-    int patient_id = std::stoi(target.substr(pos+11));
 
-    // 2) SQL — JOIN records↔hospitals↔users(админ)↔doctors↔users(врач)
     std::ostringstream sql;
     sql << R"(
       SELECT
@@ -42,42 +29,55 @@ void patient_appointments(
       JOIN users     u1 ON h.administrator_id = u1.id
       JOIN doctors   d  ON r.doctor_id = d.doctor_id
       JOIN users     u2 ON d.user_id = u2.id
-     WHERE r.patient_id = )" << patient_id << R"(
+     WHERE r.patient_id = $1
      ORDER BY r.appointment_date, r.appointment_time
     )";
 
-    PGresult *pgres = PQexec(db_handler.get_connection(), sql.str().c_str());
-    if (!pgres || PQresultStatus(pgres)!=PGRES_TUPLES_OK) {
+    const char* paramValues[1] = { std::to_string(patient_id).c_str() };
+    
+    PGresult *pgres = PQexecParams(
+        db_handler.get_connection(),
+        sql.str().c_str(),
+        1,  
+        nullptr, 
+        paramValues,
+        nullptr,
+        nullptr,
+        0
+    );
+
+    if (!pgres || PQresultStatus(pgres) != PGRES_TUPLES_OK) {
         if (pgres) PQclear(pgres);
         response["success"] = false;
-        response["error"]   = "DB error";
+        response["error"] = "Database error";
         res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
         return;
     }
 
-    json arr = json::array();
-    for (int i=0; i<PQntuples(pgres); ++i) {
-        json r;
-        r["appointment_date"]     = PQgetvalue(pgres,i,0);
-        r["appointment_time"]     = PQgetvalue(pgres,i,1);
-        r["region"]               = PQgetvalue(pgres,i,2);
-        r["settlement_type"]      = PQgetvalue(pgres,i,3);
-        r["settlement_name"]      = PQgetvalue(pgres,i,4);
-        r["street"]               = PQgetvalue(pgres,i,5);
-        r["house"]                = PQgetvalue(pgres,i,6);
-        r["full_name"]            = PQgetvalue(pgres,i,7);
-        r["junior_admin_phone"]   = PQgetvalue(pgres,i,8);
-        r["specialty"]            = PQgetvalue(pgres,i,9);
-        r["price"]                = PQgetvalue(pgres, i, 10);
-        r["doctor_name"]          = PQgetvalue(pgres,i,10);
-        arr.push_back(std::move(r));
+    json appointments = json::array();
+    for (int i = 0; i < PQntuples(pgres); ++i) {
+        json record;
+        record["appointment_date"] = PQgetvalue(pgres, i, 0);
+        record["appointment_time"] = PQgetvalue(pgres, i, 1);
+        record["region"] = PQgetvalue(pgres, i, 2);
+        record["settlement_type"] = PQgetvalue(pgres, i, 3);
+        record["settlement_name"] = PQgetvalue(pgres, i, 4);
+        record["street"] = PQgetvalue(pgres, i, 5);
+        record["house"] = PQgetvalue(pgres, i, 6);
+        record["hospital_name"] = PQgetvalue(pgres, i, 7);
+        record["admin_phone"] = PQgetvalue(pgres, i, 8);
+        record["specialty"] = PQgetvalue(pgres, i, 9);
+        record["price"] = PQgetvalue(pgres, i, 10);
+        record["doctor_name"] = PQgetvalue(pgres, i, 11);
+        
+        appointments.push_back(std::move(record));
     }
     PQclear(pgres);
 
-    response["success"]      = true;
-    response["appointments"] = std::move(arr);
+    response["success"] = true;
+    response["appointments"] = appointments;
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");
     res.body() = response.dump();

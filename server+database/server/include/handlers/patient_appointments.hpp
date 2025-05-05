@@ -10,7 +10,7 @@ using json = nlohmann::json;
 
 // GET /patient_appointments?patient_id=<int>
 void patient_appointments(
-    const http::request<http::string_body>& req,
+    int patient_id,
     http::response<http::string_body>& res,
     database_handler& db_handler
 );
