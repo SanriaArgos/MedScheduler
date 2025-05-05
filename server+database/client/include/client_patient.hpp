@@ -36,6 +36,11 @@ public:
     // (устаревшая) просмотр расписания через POST
     // void view_doctor_schedule(const json &request_data);
 
+    json get_doctor_average_ratings();
+    json get_doctor_feedback_items(int doctor_id);
+    json get_doctor_feedback_calculated(int doctor_id)
+    json get_doctor_hospitals(int doctor_id);
+
 private:
     int user_id_;
 };

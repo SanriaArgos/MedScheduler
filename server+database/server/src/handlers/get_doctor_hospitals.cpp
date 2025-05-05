@@ -1,7 +1,7 @@
-#include "../../include/handlers/get_doctor_clinics.hpp"
+#include "../../include/handlers/get_doctor_hospitals.hpp"
 #include <libpq-fe.h>
 
-void get_doctor_clinics(
+void get_doctor_hospitals(
     int doctor_id,
     http::response<http::string_body> &res,
     database_handler &db_handler
@@ -35,7 +35,7 @@ void get_doctor_clinics(
         if (pgres) {
             PQclear(pgres);
         }
-        response = {{"success", false}, {"error", "Cannot fetch clinics"}};
+        response = {{"success", false}, {"error", "Cannot fetch hospitals"}};
         res.result(http::status::internal_server_error);
     } else {
         json arr = json::array();
@@ -53,7 +53,7 @@ void get_doctor_clinics(
             arr.push_back(item);
         }
         PQclear(pgres);
-        response = {{"success", true}, {"clinics", arr}};
+        response = {{"success", true}, {"hospitals", arr}};
         res.result(http::status::ok);
     }
 

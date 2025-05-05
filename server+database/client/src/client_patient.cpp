@@ -110,6 +110,7 @@ json patient_client::get_settlement_names() {
 }
 
 json patient_client::get_doctor_schedule_for_patient(int doctor_id, int hospital_id) {
+<<<<<<< HEAD
     // Формируем URL с параметрами
     std::string url = "http://localhost:8080/get_doctor_schedule_for_patient?";
     url += "doctor_id=" + std::to_string(doctor_id);
@@ -117,14 +118,20 @@ json patient_client::get_doctor_schedule_for_patient(int doctor_id, int hospital
 
     // Отправляем GET-запрос
     std::string resp = send_get_request(url);
+=======
+    std::string url = "http://localhost:8080/get_doctor_schedule_for_patient?" +
+                     "doctor_id=" + std::to_string(doctor_id) + 
+                     "&hospital_id=" + std::to_string(hospital_id);
+    std::string response = send_get_request(url);
+>>>>>>> add/getters
 
     try {
-        json j = json::parse(resp);
-        if (!j.contains("success")) {
-            j["success"] = false;
-            j["error"] = "Missing field 'success'";
+        json schedule = json::parse(response);
+        if (!schedule.contains("success")) {
+            schedule["success"] = false;
+            schedule["error"] = "Missing field 'success'";
         }
-        return j;
+        return schedule;
     } catch (const std::exception &e) {
         return {
             {"success", false},
@@ -182,6 +189,54 @@ json patient_appointments(const json &request_data) {
         return {
             {"success", false},
             {"error", std::string("Invalid JSON from server: ") + e.what()}};
+
+json patient_client::get_doctor_average_ratings() {
+    std::string url = "http://localhost:8080/get_doctor_average_ratings";
+    std::string response = send_get_request(url);
+}
+
+
+json patient_client::get_doctor_feedback_items(int doctor_id) {
+    std::string url = "http://localhost:8080/get_doctor_feedback_items?doctor_id=" + std::to_string(doctor_id);
+    std::string response = send_get_request(url);
+    
+    try {
+        return json::parse(response);
+    } catch (const std::exception& e) {
+        return {
+            {"success", false},
+            {"error", "Failed to parse response: " + std::string(e.what())}
+        };
+    }
+}
+
+json patient_client::get_doctor_feedback_calculated(int doctor_id) {
+    std::string url = "http://localhost:8080/get_doctor_feedback_calculated?doctor_id=" + std::to_string(doctor_id);
+    std::string response = send_get_request(url);
+    
+    try {
+        return json::parse(response);
+    } catch (const std::exception& e) {
+        return {
+            {"success", false},
+            {"error", "Failed to parse response: " + std::string(e.what())}
+        };
+    }
+}
+
+json patient_client::get_doctor_hospitals(int doctor_id) {
+    std::string url = "http://localhost:8080/get_doctor_hospitals?doctor_id=" + std::to_string(doctor_id);
+    std::string response = send_get_request(url);
+
+    try {
+        json json_doctor_hospitals = json::parse(response);
+        if (!json_doctor_hospitals.contains("success")) {
+            json_doctor_hospitals["success"] = false;
+            json_doctor_hospitals["error"] = "Missing field 'success'";
+        }
+        return j;
+    } catch (...) {
+        return {{"success", false}, {"error", "Invalid JSON"}};
     }
 }
 

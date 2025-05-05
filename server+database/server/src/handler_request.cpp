@@ -23,7 +23,7 @@
 #include "../include/handlers/doctor_schedule.hpp"
 #include "../include/handlers/get_doctor_average_ratings.hpp"
 #include "../include/handlers/get_doctor_schedule_for_patient.hpp"
-#include "../include/handlers/get_doctor_clinics.hpp"
+#include "../include/handlers/get_doctor_hospitals.hpp"
 #include "../include/handlers/get_doctors_for_patient.hpp"
 #include "../include/handlers/get_doctors.hpp"
 #include "../include/handlers/get_hospital_full_names.hpp"
@@ -32,6 +32,8 @@
 #include "../include/handlers/get_settlement_names.hpp"
 #include "../include/handlers/get_settlement_types.hpp"
 #include "../include/handlers/get_specialties.hpp"
+#include "../include/handlers/get_doctor_feedback_items.hpp"
+#include "../include/handlers/get_doctor_feedback_calculated.hpp"
 #include "../include/handlers/get_users.hpp"
 #include "../include/handlers/hospital_exists.hpp"
 #include "../include/handlers/junior_admin_schedule.hpp"
@@ -151,19 +153,6 @@ void handle_request(
                     detach_doctor_from_hospital(body, res, db_handler);
                 }
 
-                else if (req.target() == "/doctor_average_ratings") {
-                    get_doctor_average_ratings(res, db_handler);
-                }
-
-                else if (req.target().starts_with("/doctors/") && req.target().ends_with("/clinics")) {
-                    try {
-                        std::string s = std::string(req.target());
-                        int id = std::stoi(s.substr(9, s.size() - 17));
-                        get_doctor_clinics(id, res, db_handler);
-                    } catch (const std::exception &e) {
-                        handle_error(e, res);
-                    }
-                }
 
                 else if (req.target() == "/post_doctor_rating") {
                     post_doctor_rating(body, res, db_handler);
@@ -294,9 +283,44 @@ else if (req.target().starts_with("/get_patient_appointments")) {
         res.body() = error.dump();
     }
 }
+else if (req.target().starts_with("/get_doctor_hospitals")) {
+    try {
+        // Полный URL-запрос (например: "/get_doctor_hospitals?doctor_id=123")
+        std::string url = std::string(req.target());
+        
+        // Ищем параметр doctor_id в URL
+        size_t param_pos = url.find("doctor_id=");
+        if (param_pos == std::string::npos) {
+            throw std::runtime_error("Missing doctor_id parameter");
+        }
+
+        // Извлекаем значение параметра
+        size_t value_start = param_pos + 10; // 10 - длина "doctor_id="
+        size_t value_end = url.find('&', value_start);
+        
+        // Выделяем подстроку с ID
+        std::string id_str = (value_end == std::string::npos) 
+                           ? url.substr(value_start) 
+                           : url.substr(value_start, value_end - value_start);
+
+        // Конвертируем в число
+        int doctor_id = std::stoi(id_str);
+
+        // Вызываем обработчик
+        get_doctor_hospitals(doctor_id, res, db_handler);
+
+    } catch (const std::exception &e) {
+        handle_error(e, res);
+    }
+}
+
             else if (req.target() == "/get_regions") {
-                    get_regions(res, db_handler);
-                }
+                get_regions(res, db_handler);
+            }
+
+            else if (req.target() == "/get_doctor_average_ratings") {
+                get_doctor_average_ratings(res, db_handler);
+            }
 
             else if (req.target() == "/get_settlement_types") {
                 get_settlement_types(res, db_handler);
@@ -314,6 +338,73 @@ else if (req.target().starts_with("/get_patient_appointments")) {
                 get_specialties(res, db_handler);
             }
 
+            else if (req.target().starts_with("/get_doctor_feedback_items")) {
+    try {
+        // 1. Парсим параметры из URL (GET-запрос)
+        std::string url = std::string(req.target());
+        size_t param_pos = url.find("?doctor_id=");
+        
+        if (param_pos == std::string::npos) {
+            throw std::runtime_error("Missing doctor_id parameter");
+        }
+
+        // 2. Извлекаем doctor_id из URL
+        int doctor_id = std::stoi(url.substr(param_pos + 11)); // 11 - длина "?doctor_id="
+
+        // 3. Формируем входные данные для функции
+        json request_data = {
+            {"doctor_id", doctor_id}
+        };
+
+        // 4. Вызываем функцию обработки
+        get_doctor_rating_items(request_data, res, db_handler);
+
+    } catch (const std::exception& e) {
+        // Обработка ошибок
+        json error_response = {
+            {"success", false},
+            {"error", std::string("Bad request: ") + e.what()}
+        };
+        
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = error_response.dump();
+    }
+}
+
+else if (req.target().starts_with("/get_doctor_feedback_calculated")) {
+    try {
+        // 1. Парсим параметры из URL (GET-запрос)
+        std::string url = std::string(req.target());
+        size_t param_pos = url.find("?doctor_id=");
+        
+        if (param_pos == std::string::npos) {
+            throw std::runtime_error("Missing doctor_id parameter");
+        }
+
+        // 2. Извлекаем doctor_id из URL
+        int doctor_id = std::stoi(url.substr(param_pos + 11)); // 11 - длина "?doctor_id="
+
+        // 3. Формируем входные данные для функции
+        json request_data = {
+            {"doctor_id", doctor_id}
+        };
+
+        // 4. Вызываем функцию обработки
+        get_doctor_rating_calculated(request_data, res, db_handler);
+
+    } catch (const std::exception& e) {
+        // Обработка ошибок
+        json error_response = {
+            {"success", false},
+            {"error", std::string("Bad request: ") + e.what()}
+        };
+        
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = error_response.dump();
+    }
+}
             else if (req.target().starts_with("/doctors_exist/")) {
                 try {
                     std::string target = std::string(req.target());

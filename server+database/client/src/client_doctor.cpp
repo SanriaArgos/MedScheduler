@@ -16,8 +16,8 @@ json doctor_client::get_schedule() {
     std::string response = send_get_request(url);
 
     try {
-        json full_response = json::parse(response);
-        return full_response;
+        json schedule = json::parse(response);
+        return schedule;
     } catch (const std::exception &e) {
         std::cerr << "Error fetching doctor_schedule: " << e.what()
                   << std::endl;
