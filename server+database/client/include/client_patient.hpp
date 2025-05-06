@@ -21,10 +21,10 @@ public:
     // { "doctor_ref_id", "text", "name", "date", "rate", "address" }
     // → { "success": true, "id":… } или error
     json post_doctor_feedback_client(const json &request_data);
-
+    json get_doctor_schedule_for_patient(int doctor_id, int hospital_id);
     json get_regions();
-    json get_settlemet_types();
-    json get_settlemet_names();
+    json get_settlement_types();
+    json get_settlement_names();
     json get_hospital_full_names();
     json get_specialties();
 
