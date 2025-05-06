@@ -334,7 +334,7 @@ font: 9pt &quot;Arial&quot;;</string>
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="appointments_page">
        <property name="styleSheet">
@@ -368,7 +368,7 @@ font: 9pt &quot;Arial&quot;;</string>
            </sizepolicy>
           </property>
           <property name="title">
-           <string>View doctor's schedule</string>
+           <string>Set up filtres</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
@@ -379,7 +379,7 @@ font: 9pt &quot;Arial&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="region_enter"/>
+            <widget class="QComboBox" name="combo_box_region"/>
            </item>
            <item>
             <widget class="QLabel" name="settlement_type_label">
@@ -389,7 +389,7 @@ font: 9pt &quot;Arial&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="settlement_type_enter"/>
+            <widget class="QComboBox" name="combo_box_settlement_type"/>
            </item>
            <item>
             <widget class="QLabel" name="settlement_name_label">
@@ -399,7 +399,17 @@ font: 9pt &quot;Arial&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="settlement_name_enter"/>
+            <widget class="QComboBox" name="combo_box_settlement_name"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="hospital_label">
+             <property name="text">
+              <string>Hospital</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="combo_box_hospital"/>
            </item>
            <item>
             <widget class="QLabel" name="specialty_label">
@@ -409,27 +419,20 @@ font: 9pt &quot;Arial&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="specialty_enter"/>
+            <widget class="QComboBox" name="combo_box_specialty"/>
            </item>
            <item>
-            <widget class="QLabel" name="hospital_id_label">
+            <widget class="QLabel" name="label_2">
              <property name="text">
-              <string>Hospital id</string>
+              <string>Rating range</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="hospital_id_enter"/>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
            </item>
            <item>
-            <widget class="QLabel" name="doctor_id_label">
-             <property name="text">
-              <string>Doctor id</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="doctor_id_enter"/>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
            </item>
            <item>
             <widget class="QLabel" name="view_schedule_error_label">
@@ -451,9 +454,9 @@ font: 9pt &quot;Arial&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="view_schedule_button">
+            <widget class="QPushButton" name="apply_filtres_button">
              <property name="text">
-              <string>View schedule</string>
+              <string>Apply</string>
              </property>
             </widget>
            </item>

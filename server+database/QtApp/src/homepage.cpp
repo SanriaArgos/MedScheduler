@@ -10,7 +10,7 @@
 #include <string>
 #include "../client/include/common_for_all.hpp"
 #include "ui_homepage.h"
-
+#include <vector>
 homepage::homepage(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::homepage) {
     ui->setupUi(this);
@@ -109,6 +109,7 @@ void homepage::on_doctors_button_clicked() {
         "   border-radius: 10px;"
         "}"
     );
+    //ui->combo_box_settlement_type->addItem("тип"); таким образом позаполнять все combo_box
 }
 
 void homepage::on_hospitals_button_clicked() {
@@ -168,64 +169,113 @@ void homepage::on_settings_button_clicked() {
     );
 }
 
-void homepage::on_view_schedule_button_clicked() {
-    ui->view_schedule_error_label->setText("");
-    QString region = ui->region_enter->text();
-    QString settlement_type = ui->settlement_type_enter->text();
-    QString settlement_name = ui->settlement_name_enter->text();
-    QString specialty = ui->specialty_enter->text();
-    QString hospital_id = ui->hospital_id_enter->text();
-    QString doctor_id = ui->doctor_id_enter->text();
-    QJsonObject doctor_data = {
-        {"region", region},
-        {"settlement_type", settlement_type},
-        {"settlement_name", settlement_name},
-        {"specialty", specialty},
-        {"hospital_id", hospital_id},
-        {"doctor_id", doctor_id}};
 
-    QByteArray jsonData = QJsonDocument(doctor_data).toJson();
-    std::string jsonString = jsonData.toStdString();
-    nlohmann::json j = nlohmann::json::parse(jsonString);
-    std::string response = send_post_request(
-        "http://localhost:8080/view_doctor_schedule_for_patient", j
-    );
-    nlohmann::json schedule = nlohmann::json::parse(response);
-    QWidget *containerWidget = new QWidget();
-    QVBoxLayout *containerLayout = new QVBoxLayout(containerWidget);
+void homepage::on_combo_box_region_currentTextChanged(const QString &region_name)
+{
+    //nlohmann::json types = get_settlement_types();
+    //циклом добавить ui->combo_box_settlement_type->addItem("тип");
+}
 
-    for (const auto &entry : schedule["schedule"]) {
-        QWidget *entryWidget = new QWidget();
-        QHBoxLayout *entryLayout = new QHBoxLayout(entryWidget);
 
-        // Добавляем информацию о записи
-        QLabel *dateLabel = new QLabel(QString::fromStdString(
-            "Date: " + entry["appointment_date"].get<std::string>()
-        ));
-        QLabel *timeLabel = new QLabel(QString::fromStdString(
-            "Time: " + entry["appointment_time"].get<std::string>()
-        ));
-        QLabel *cabinetLabel = new QLabel(QString::fromStdString(
-            "Cabinet: " + entry["cabinet_number"].get<std::string>()
-        ));
+void homepage::on_combo_box_settlement_type_currentTextChanged(const QString &settlement_type)
+{
+    //nlohmann::json names = get_settlement_names();
+    //циклом добавить ui->combo_box_settlement_name>addItem("город");
+}
 
-        // Добавляем элементы в layout виджета записи
-        entryLayout->addWidget(dateLabel);
-        entryLayout->addWidget(timeLabel);
-        entryLayout->addWidget(cabinetLabel);
 
-        // Добавляем виджет записи в контейнер
-        containerLayout->addWidget(entryWidget);
+void homepage::on_combo_box_settlement_name_currentTextChanged(const QString &settlement_name)
+{
+    //nlohmann::json specialties = get_specialties();
+    //циклом добавить ui->combo_box_settlement_name>addItem("город");
+}
 
-        // Добавляем разделитель (опционально)
-        containerLayout->addWidget(new QFrame());
-        containerLayout->widget()->setObjectName("separator");
-        containerLayout->widget()->setStyleSheet(
-            "QFrame { border: 1px solid gray; }"
-        );
+
+void homepage::on_combo_box_specialty_currentTextChanged(const QString &specialty)
+{
+
+}
+
+
+void homepage::on_apply_filtres_button_clicked()
+{
+    QString region = ui->combo_box_region->currentText();
+    QString settlement_type = ui->combo_box_settlement_type->currentText();
+    QString settlement_name = ui->combo_box_settlement_name->currentText();
+    QString specialty = ui->combo_box_specialty->currentText();
+    QJsonObject json;
+    json["region"] = region;
+    json["settlement_type"] = settlement_type;
+    json["settlemnet_name"] = settlement_name;
+    json["specialty"] = specialty;
+    QJsonDocument doc(json);
+    QString jsonString = doc.toJson(QJsonDocument::Compact);
+    nlohmann::json filtre_data = nlohmann::json::parse(jsonString.toStdString());
+    //тут надо отправить запрос и получить джейсон
+    QJsonArray array;
+    std::vector<Doctor> doctor_array;
+    doctor_array = {
+        {"Иванов", "Алексей", "Петрович", "Кардиолог", "ГКБ №1", "МГМУ", 2500, 101, 15, 4.8},
+        {"Петрова", "Мария", "Сергеевна", "Невролог", "Поликлиника №3", "РНИМУ", 1800, 102, 8, 4.6}
+    };
+    QWidget *scrollContent = new QWidget();
+    QVBoxLayout *scrollLayout = new QVBoxLayout(scrollContent);
+    scrollLayout->setAlignment(Qt::AlignTop);
+
+    // Добавляем карточки
+    for (const Doctor &doctor : doctor_array) {
+        create_doctor_card(doctor, scrollLayout);
     }
 
-    // Устанавливаем контейнер в QScrollArea
-    ui->doctor_schedule->setWidget(containerWidget);
+    // Настраиваем ScrollArea
+    ui->doctor_schedule->setWidget(scrollContent);
     ui->doctor_schedule->setWidgetResizable(true);
+
+    // Устанавливаем отступы
+    scrollContent->setStyleSheet("padding: 5px;");
 }
+
+
+void homepage::on_combo_box_hospital_currentTextChanged(const QString &hospital)
+{
+
+}
+
+void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
+    // Создаем контейнер для карточки
+    QWidget *card = new QWidget();
+    card->setStyleSheet("border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 2px; background: white;");
+
+    QVBoxLayout *cardLayout = new QVBoxLayout(card);
+
+    // ФИО врача
+    QLabel *nameLabel = new QLabel(
+        QString("<b>%1 %2 %3</b>").arg(doctor.last_name, doctor.first_name, doctor.patronym)
+        );
+    nameLabel->setStyleSheet("font-size: 16px; color: #333;");
+    cardLayout->addWidget(nameLabel);
+
+    // Основная информация
+    cardLayout->addWidget(new QLabel("Specialty: " + doctor.specialty));
+    cardLayout->addWidget(new QLabel("Hospital: " + doctor.hospital_name));
+
+    // Доп. информация в строку
+    QHBoxLayout *infoLayout = new QHBoxLayout();
+    infoLayout->addWidget(new QLabel("Experience: " + QString::number(doctor.experience) + " years"));
+    infoLayout->addWidget(new QLabel("Rating: " + QString::number(doctor.rating, 'f', 1)));
+    infoLayout->addWidget(new QLabel("Price from " + QString::number(doctor.price) + " ₽"));
+    cardLayout->addLayout(infoLayout);
+
+    // Кнопка записи
+    QPushButton *appointmentBtn = new QPushButton("Make an appointment");
+    appointmentBtn->setStyleSheet(
+        "QPushButton {background-color:rgb(87, 203, 95); color: white; border: none; padding: 8px; border-radius: 4px;}"
+        "QPushButton:hover {"
+        "   background-color: rgb(124, 239, 132);"
+        "}"
+        );
+
+    cardLayout->addWidget(appointmentBtn);
+    layout->addWidget(card);
+}
+
