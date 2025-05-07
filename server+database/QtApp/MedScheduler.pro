@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/appointment.cpp \
     src/doctor_window.cpp \
     src/homepage.cpp \
     src/junior_admin_window.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     ../client/src/common_for_all.cpp
 
 HEADERS += \
+    include/appointment.h \
     include/doctor_window.h \
     include/homepage.h \
     include/junior_admin_window.h \
@@ -40,6 +42,7 @@ HEADERS += \
     ../client/include/common_for_all.hpp
 
 FORMS += \
+    forms/appointment.ui \
     forms/doctor_window.ui \
     forms/homepage.ui \
     forms/junior_admin_window.ui \

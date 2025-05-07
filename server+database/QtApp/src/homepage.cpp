@@ -1,10 +1,12 @@
 #include "homepage.h"
+#include "appointment.h"
 #include <curl/curl.h>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QString>
+#include <QPushButton>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -274,6 +276,11 @@ void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
         "   background-color: rgb(124, 239, 132);"
         "}"
         );
+    QAbstractButton::connect(appointmentBtn, &QPushButton::clicked, [doctor]() {
+        Appointment *appointmentWindow = new Appointment(); // Создаем окно
+        appointmentWindow->show();
+        appointmentWindow->doctor_id=doctor.doctor_id;
+    });
 
     cardLayout->addWidget(appointmentBtn);
     layout->addWidget(card);
