@@ -147,11 +147,12 @@ void add_record_slot(
         doctor_id_str.c_str(), date.c_str(), time_val.c_str()};
     PGresult *res_check_slot = PQexecParams(
         db_handler.get_connection(),
-        "SELECT 1 FROM records WHERE doctor_id = $1 AND appointment_date=$2 AND appointment_time=$3",
+        "SELECT 1 FROM records WHERE doctor_id = $1 AND appointment_date=$2 "
+        "AND appointment_time=$3",
         3, NULL, params_check_slot, NULL, NULL, 0
     );
     if (PQresultStatus(res_check_slot) == PGRES_TUPLES_OK &&
-          PQntuples(res_check_slot) > 0) {
+        PQntuples(res_check_slot) > 0) {
         std::cerr << "Error: The slot for this date and time already exists\n";
         PQclear(res_check_slot);
         response["success"] = false;

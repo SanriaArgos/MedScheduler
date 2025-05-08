@@ -49,13 +49,14 @@ void junior_admin_schedule(
     const char *params[2] = {doctor_id_str.c_str(), hospital_id_str.c_str()};
     PGresult *res_query = PQexecParams(
         db_handler.get_connection(),
-        "SELECT record_id, appointment_date, appointment_time, cabinet_number, "
-        "patient_id "
-        "FROM records "
-        "WHERE doctor_id = $1 AND hospital_id = $2 "
-        "AND appointment_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + "
-        "INTERVAL '7 day') "
-        "ORDER BY appointment_date, appointment_time",
+        "SELECT r.record_id, r.appointment_date, r.appointment_time, "
+        "r.cabinet_number, r.patient_id, d.price "
+        "FROM records r "
+        "JOIN doctors d ON r.doctor_id = d.doctor_id "
+        "WHERE r.doctor_id = $1 AND r.hospital_id = $2 "
+        "AND r.appointment_date BETWEEN CURRENT_DATE "
+        "AND (CURRENT_DATE + INTERVAL '7 day') "
+        "ORDER BY r.appointment_date, r.appointment_time",
         2, nullptr, params, nullptr, nullptr, 0
     );
 
@@ -82,6 +83,7 @@ void junior_admin_schedule(
         record["appointment_time"] = PQgetvalue(res_query, i, 2);
         record["cabinet_number"] = PQgetvalue(res_query, i, 3);
         record["patient_id"] = PQgetvalue(res_query, i, 4);
+        record["price"] = PQgetvalue(res_query, i, 5);
         schedule.push_back(record);
     }
 
