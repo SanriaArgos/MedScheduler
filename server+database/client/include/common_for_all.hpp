@@ -12,4 +12,12 @@ std::string
 send_post_request(const std::string &url, const nlohmann::json &json_data);
 std::string send_get_request(const std::string &url);
 
+std::string send_delete_request(const std::string &url);
+
+std::string
+send_delete_request(const std::string &url, const nlohmann::json &json_data);
+
+std::string
+send_patch_request(const std::string &url, const nlohmann::json &json_data);
+
 #endif  // COMMON_FOR_ALL_HPP_

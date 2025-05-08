@@ -24,6 +24,10 @@ public:
 
     bool is_doctor_attached_to_hospital(int doctor_id, int hospital_id);
 
+    json get_waitlist(int doctor_id, int junior_admin_id);
+
+    json delete_doctor_feedback(const json &data);
+
 private:
     int admin_id;
 };

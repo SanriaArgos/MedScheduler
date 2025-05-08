@@ -18,14 +18,13 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void edit_doctor_rating(
+void edit_doctor_feedback(
     const json &data,
     http::response<http::string_body> &res,
     database_handler &db_handler
 ) {
     json response;
 
-    // 1. Проверяем наличие всех обязательных полей
     const std::vector<std::string> required = {
         "rating_id", "doctor_ref_id", "text",    "name",
         "date",      "rate",          "address", "user_id"};
@@ -49,7 +48,6 @@ void edit_doctor_rating(
     int rate = data["rate"];
     std::string address = data["address"];
 
-    // 2. Проверяем, что отзыв существует и получаем его автора
     std::string rid_str = std::to_string(rating_id);
     const char *auth_params[1] = {rid_str.c_str()};
     PGresult *auth_res = PQexecParams(
@@ -71,7 +69,6 @@ void edit_doctor_rating(
     int author_id = std::stoi(PQgetvalue(auth_res, 0, 0));
     PQclear(auth_res);
 
-    // 3. Разрешаем редактирование только автору
     if (user_id != author_id) {
         response["success"] = false;
         response["error"] = "Permission denied: only author can edit";
@@ -81,7 +78,6 @@ void edit_doctor_rating(
         return;
     }
 
-    // 4. Выполняем UPDATE полей отзыва
     const char *upd_params[7] = {
         std::to_string(doctor_ref_id).c_str(),
         text.c_str(),
@@ -111,7 +107,6 @@ void edit_doctor_rating(
     }
     PQclear(upd_res);
 
-    // 5. Подтверждаем успешное обновление
     response["success"] = true;
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");

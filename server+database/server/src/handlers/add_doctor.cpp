@@ -23,7 +23,8 @@ void add_doctor(
     // Проверка на наличие обязательных полей
     if (!data.contains("last_name") || !data.contains("first_name") ||
         !data.contains("phone") || !data.contains("education") ||
-        !data.contains("specialty") || !data.contains("experience")) {
+        !data.contains("specialty") || !data.contains("experience") ||
+        !data.contains("price")) {
         std::cerr << "Error: Missing required fields for add_doctor\n";
         response["success"] = false;
         response["error"] = "Missing required fields";
@@ -40,6 +41,7 @@ void add_doctor(
     std::string education = data["education"];
     std::string specialty = data["specialty"];
     int experience = data["experience"];
+    int price = data["price"].get<int>();
 
     // Проверка, если номер телефона уже зарегистрирован
     if (user_exists(db_handler, phone)) {
@@ -118,14 +120,16 @@ void add_doctor(
     // Добавление информации о докторе в таблицу Doctors
     std::string user_id_str = std::to_string(user_id);
     std::string experience_str = std::to_string(experience);
-    const char *params_ins[5] = {
-        user_id_str.c_str(), education.c_str(), specialty.c_str(),
-        experience_str.c_str(), "{}"};
+    std::string price_str = std::to_string(price);
+    const char *params_ins[6] = {user_id_str.c_str(), education.c_str(),
+                                 specialty.c_str(),   experience_str.c_str(),
+                                 price_str.c_str(),   "{}"};
     res_db = PQexecParams(
         db_handler.get_connection(),
         "INSERT INTO doctors (user_id, education, specialty, experience, "
-        "hospital_ids) VALUES ($1, $2, $3, $4, $5)",
-        5, NULL, params_ins, NULL, NULL, 0
+        "price, "
+        "hospital_ids) VALUES ($1, $2, $3, $4, $5, $6)",
+        6, NULL, params_ins, NULL, NULL, 0
     );
     if (PQresultStatus(res_db) == PGRES_COMMAND_OK) {
         std::cerr << "Doctor data successfully added to Doctors table\n";

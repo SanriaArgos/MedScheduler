@@ -46,10 +46,22 @@ CREATE TABLE IF NOT EXISTS records (
 
 CREATE TABLE IF NOT EXISTS rating (
     id SERIAL PRIMARY KEY,
-    doctor_ref_id INT NOT NULL REFERENCES doctors(doctor_id),
+    doctor_ref_id INT NOT NULL REFERENCES doctors(doctor_id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,  -- Связь с users
     text TEXT NOT NULL,
     name TEXT NOT NULL,
     date TEXT NOT NULL,
     rate INT NOT NULL CHECK (rate BETWEEN 0 AND 5),
     address TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS waitlist (
+  id           SERIAL PRIMARY KEY,
+  doctor_id    INT REFERENCES doctors(doctor_id),
+  patient_id   INT REFERENCES users(id),
+  last_name    TEXT,
+  first_name   TEXT,
+  patronymic   TEXT,
+  phone        TEXT,
+  request_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
