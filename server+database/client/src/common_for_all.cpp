@@ -74,9 +74,7 @@ std::string send_delete_request(const std::string &url) {
     curl = curl_easy_init();
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(
-            curl, CURLOPT_CUSTOMREQUEST, "DELETE"
-        ); 
+        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -130,7 +128,8 @@ send_delete_request(const std::string &url, const nlohmann::json &json_data) {
     return response;
 }
 
-std::string send_patch_request(const std::string &url, const nlohmann::json &json_data) {
+std::string
+send_patch_request(const std::string &url, const nlohmann::json &json_data) {
     CURL *curl;
     CURLcode res;
     std::string response;

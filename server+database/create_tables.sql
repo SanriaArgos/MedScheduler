@@ -46,7 +46,8 @@ CREATE TABLE IF NOT EXISTS records (
 
 CREATE TABLE IF NOT EXISTS rating (
     id SERIAL PRIMARY KEY,
-    doctor_ref_id INT NOT NULL REFERENCES doctors(doctor_id),
+    doctor_ref_id INT NOT NULL REFERENCES doctors(doctor_id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,  -- Связь с users
     text TEXT NOT NULL,
     name TEXT NOT NULL,
     date TEXT NOT NULL,

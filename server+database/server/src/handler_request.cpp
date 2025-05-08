@@ -24,6 +24,7 @@
 #include "../include/handlers/detach_doctor_from_hospital.hpp"
 #include "../include/handlers/doctor_exists.hpp"
 #include "../include/handlers/doctor_schedule.hpp"
+#include "../include/handlers/edit_doctor_feedback.hpp"
 #include "../include/handlers/get_doctor_average_ratings.hpp"
 #include "../include/handlers/get_doctor_feedback_calculated.hpp"
 #include "../include/handlers/get_doctor_feedback_items.hpp"
@@ -46,8 +47,6 @@
 #include "../include/handlers/post_doctor_feedback.hpp"
 #include "../include/handlers/registration.hpp"
 #include "../include/handlers/search_doctors.hpp"
-#include "../include/handlers/delete_doctor_feedback.hpp"
-#include "../include/handlers/edit_doctor_feedback.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -253,7 +252,7 @@ void handle_request(
                         );
                     }
 
-                    pid_pos += 10;  
+                    pid_pos += 10;
                     size_t pid_end = url.find('&', pid_pos);
                     std::string pid_str = url.substr(
                         pid_pos, (pid_end == std::string::npos)
@@ -299,8 +298,7 @@ void handle_request(
                         throw std::runtime_error("Missing doctor_id parameter");
                     }
 
-                    size_t value_start =
-                        param_pos + 10;  
+                    size_t value_start = param_pos + 10;
                     size_t value_end = url.find('&', value_start);
 
                     std::string id_str =
@@ -350,8 +348,7 @@ void handle_request(
                         throw std::runtime_error("Missing doctor_id parameter");
                     }
 
-                    int doctor_id = std::stoi(url.substr(param_pos + 11)
-                    );  
+                    int doctor_id = std::stoi(url.substr(param_pos + 11));
 
                     json request_data = {{"doctor_id", doctor_id}};
 
@@ -378,8 +375,7 @@ void handle_request(
                         throw std::runtime_error("Missing doctor_id parameter");
                     }
 
-                    int doctor_id = std::stoi(url.substr(param_pos + 11)
-                    );  
+                    int doctor_id = std::stoi(url.substr(param_pos + 11));
 
                     json request_data = {{"doctor_id", doctor_id}};
 
@@ -626,7 +622,7 @@ void handle_request(
         else if (req.method() == http::verb::delete_) {
             if (req.target() == "/delete_doctor_feedback") {
                 try {
-                    json body = json::parse(req.body()); 
+                    json body = json::parse(req.body());
                     delete_doctor_feedback(body, res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
@@ -639,13 +635,12 @@ void handle_request(
         else if (req.method() == http::verb::patch) {
             if (req.target() == "/edit_doctor_feedback") {
                 try {
-                    json body = json::parse(req.body()); 
+                    json body = json::parse(req.body());
                     edit_doctor_feedback(body, res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            } 
-            else {
+            } else {
                 handle_not_found(res);
             }
         }
