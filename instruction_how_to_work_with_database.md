@@ -73,9 +73,19 @@ psql -U meduser -d medscheduler -f create_tables.sql
   И, введя пароль, передать команду ```SELECT * FROM *название таблицы*;```
 
 ---
-# 3. Сборка и запуск приложения
+# 3. Как открыть контейнер базы данных в Docker?
 ```
-cmake .
-make
-./MedScheduler
+docker exec -it serverdatabase-db-1 psql -U meduser -d medscheduler
+```
+Запускать команду из папки server+database
+
+# 4. Как снести базу данных в контейнере?
+```
+docker system prune --volumes 
+docker-compose down -v
+```
+
+Для сборки контейнера используем привычную команду:
+```
+docker-compose up --build
 ```
