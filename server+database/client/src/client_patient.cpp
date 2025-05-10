@@ -108,15 +108,51 @@ json patient_client::get_settlement_names() {
     }
 }
 
+json patient_client::get_specialties() {
+    try {
+        std::string url = "http://localhost:8080/get_specialties";
+        std::string response = send_get_request(url);
+        json json_response = json::parse(response);
+
+        if (!json_response.contains("success")) {
+            json_response["success"] = false;
+            json_response["error"] = "Missing field 'success'";
+        }
+        return json_response;
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Error getting specialties: ") + e.what()}
+        };
+    }
+}
+
+json patient_client::get_hospital_full_names() {
+    try {
+        std::string url = "http://localhost:8080/get_hospital_full_names";
+        std::string response = send_get_request(url);
+        json json_response = json::parse(response);
+
+        if (!json_response.contains("success")) {
+            json_response["success"] = false;
+            json_response["error"] = "Missing field 'success'";
+        }
+        return json_response;
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Error getting hospitals: ") + e.what()}
+        };
+    }
+}
+
 json patient_client::get_doctor_schedule_for_patient(
-    int doctor_id,
-    int hospital_id
+    int doctor_id
 ) {
 
     // Формируем URL с параметрами
     std::string url = "http://localhost:8080/get_doctor_schedule_for_patient?";
     url += "doctor_id=" + std::to_string(doctor_id);
-    url += "&hospital_id=" + std::to_string(hospital_id);
 
     // Отправляем GET-запрос
     std::string response = send_get_request(url);
@@ -162,7 +198,7 @@ json patient_client::search_doctors(const json &request_data) {
 }
 
 json patient_client::patient_appointments(int patient_id) {
-    std::string url = "http://localhost:8080/get_patient_appointments" +
+    std::string url = "http://localhost:8080/get_patient_appointments?patient_id=" +
                       std::to_string(patient_id);
     std::string response = send_get_request(url);
 

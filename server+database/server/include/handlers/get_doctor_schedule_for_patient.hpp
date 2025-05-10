@@ -25,7 +25,6 @@ using json = nlohmann::json;
 //   doctor_id, hospital_id
 void get_doctor_schedule_for_patient(
     int doctor_id,
-    int hospital_id,
     http::response<http::string_body> &res,
     database_handler &db_handler
 );
