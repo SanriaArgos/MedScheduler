@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QString>
+#include "../client/include/client_patient.hpp"
 QDate today = QDate::currentDate();
 Appointment::Appointment(QWidget *parent)
     : QWidget(parent), ui(new Ui::Appointment) {

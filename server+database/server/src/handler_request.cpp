@@ -209,20 +209,18 @@ void handle_request(
                     std::string url = std::string(req.target());
 
                     size_t doctor_pos = url.find("doctor_id=");
-                    size_t hospital_pos = url.find("&hospital_id=");
+                    //size_t hospital_pos = url.find("&hospital_id=");
 
-                    if (doctor_pos == std::string::npos ||
-                        hospital_pos == std::string::npos) {
+                    if (doctor_pos == std::string::npos) {
                         throw std::runtime_error("Missing required parameters");
                     }
 
                     int doctor_id = std::stoi(url.substr(
-                        doctor_pos + 10, hospital_pos - doctor_pos - 10
-                    ));
-                    int hospital_id = std::stoi(url.substr(hospital_pos + 13));
+                        doctor_pos + 10));
+                    //int hospital_id = std::stoi(url.substr(hospital_pos + 13));
 
                     get_doctor_schedule_for_patient(
-                        doctor_id, hospital_id, res, db_handler
+                        doctor_id, res, db_handler
                     );
 
                 } catch (const std::exception &e) {
