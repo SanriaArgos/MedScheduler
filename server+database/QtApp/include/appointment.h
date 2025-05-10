@@ -52,6 +52,7 @@ struct slot{
     QString settlement_type;
     QString slot_status;
     QString street;
+    int hospital_id;
 };
 
 #endif  // APPOINTMENT_H

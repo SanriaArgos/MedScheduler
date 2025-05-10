@@ -5,6 +5,7 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <string>
 #include <QPushButton>
 #include <QMessageBox>
 #include <QString>
@@ -93,6 +94,7 @@ void Appointment::handle_day_clicked(QPushButton* clicked_button,int days) {
         sl.settlement_type = QString::fromStdString(slot_json["settlement_type"]);
         sl.slot_status = QString::fromStdString(slot_json["slot_status"]);
         sl.street = QString::fromStdString(slot_json["street"]);
+        sl.hospital_id=std::stoi(slot_json["hospital_id"].get<std::string>());
         slot_vector.push_back(sl);
     }
     if (ui->appointments_scroll->widget()) {
@@ -149,17 +151,30 @@ void Appointment::handle_day_clicked(QPushButton* clicked_button,int days) {
             "}"
             );
         // Подключаем кнопку (с захватом текущего слота)
-        connect(bookBtn, &QPushButton::clicked, [this, s]() {
+        connect(bookBtn, &QPushButton::clicked, [this, s,&clicked_button,&days]() {
             patient::patient_client client1(user_id);
             nlohmann::json j;
             j["doctor_id"]=doctor_id;
-            j["hospital_id"]=1;//s.hospital_id;
+            j["hospital_id"]=s.hospital_id;
             j["patient_id"]=user_id;
             j["appointment_date"]=s.appointment_date.toString("yyyy-MM-dd").toStdString();;
             j["appointment_time"]=s.appointment_time.toString("HH:mm").toStdString();;
             nlohmann::json response = client1.book_appointment(j);
-            qDebug() << QString::fromStdString(response.dump());
-            qDebug() << QString::fromStdString(j.dump());
+            if (response.value("success", false)) {
+            QMessageBox::information(
+                this, 
+                "Success", 
+                "You booked the appointment!\n"
+                "Date: " + s.appointment_date.toString("dd.MM.yyyy") + "\n" +
+                "Time: " + s.appointment_time.toString("HH:mm")
+            );
+        } else {
+            QMessageBox::warning(
+                this, 
+                "Error", 
+                "Failed to book an appointment!"
+            );
+        }
         });
                slotLayout->addWidget(bookBtn);
         }
