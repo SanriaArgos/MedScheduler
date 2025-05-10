@@ -147,14 +147,12 @@ json patient_client::get_hospital_full_names() {
 }
 
 json patient_client::get_doctor_schedule_for_patient(
-    int doctor_id,
-    int hospital_id
+    int doctor_id
 ) {
 
     // Формируем URL с параметрами
     std::string url = "http://localhost:8080/get_doctor_schedule_for_patient?";
     url += "doctor_id=" + std::to_string(doctor_id);
-    url += "&hospital_id=" + std::to_string(hospital_id);
 
     // Отправляем GET-запрос
     std::string response = send_get_request(url);
