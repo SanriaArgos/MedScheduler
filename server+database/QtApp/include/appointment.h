@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QDate>
 #include <QTime>
+#include <QPushButton>
 namespace Ui {
 class Appointment;
 }
@@ -18,6 +19,7 @@ public:
     int user_id;
 
 private slots:
+
     void on_date0_clicked();
 
     void on_date1_clicked();
@@ -36,14 +38,20 @@ private slots:
 
 private:
     Ui::Appointment *ui;
+    void handle_day_clicked(QPushButton* clicked_button, int days);
 };
 
 struct slot{
-    QDate date;
-    QTime time;
-    QString hospital;
-    QString adress;
-    int cabinet;
+    QDate appointment_date;
+    QTime appointment_time;
+    QString full_name;
+    QString house;
+    QString junior_admin_phone;
+    QString region;
+    QString settlement_name;
+    QString settlement_type;
+    QString slot_status;
+    QString street;
 };
 
 #endif  // APPOINTMENT_H

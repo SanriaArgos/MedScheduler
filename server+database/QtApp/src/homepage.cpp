@@ -146,6 +146,7 @@ void homepage::on_doctors_button_clicked() {
     for (const auto& spec : hospital_names_array) {
         ui->combo_box_hospital->addItem(QString::fromStdString(spec));
     }
+    on_apply_filtres_button_clicked();
 }
 
 void homepage::on_hospitals_button_clicked() {
@@ -251,7 +252,7 @@ void homepage::on_apply_filtres_button_clicked()
 }
 
 
-void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
+void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
     // Создаем контейнер для карточки
     QWidget *card = new QWidget();
     card->setStyleSheet("border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 2px; background: white;");
@@ -281,6 +282,7 @@ void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
         "   background-color: rgb(124, 239, 132);"
         "}"
         );
+    patient_id=get_user_id();
     QAbstractButton::connect(appointmentBtn, &QPushButton::clicked, [&]() {
         Appointment *appointmentWindow = new Appointment(); // Создаем окно
         appointmentWindow->show();
