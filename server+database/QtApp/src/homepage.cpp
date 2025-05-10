@@ -76,6 +76,79 @@ void homepage::on_appointments_button_clicked() {
         "   border-radius: 10px;"
         "}"
     );
+    patient::patient_client client(get_user_id());
+    nlohmann::json appointments_json = client.patient_appointments(get_user_id());
+    
+        QWidget *container = new QWidget();
+        QVBoxLayout *mainLayout = new QVBoxLayout(container);
+        mainLayout->setAlignment(Qt::AlignTop);
+        mainLayout->setSpacing(10);
+        mainLayout->setContentsMargins(5, 5, 5, 5);
+
+        // Обработка записей (как в вашем коде)
+        auto appointments_array = appointments_json["appointments"];
+        if (appointments_array.empty()) {
+            QLabel *noAppointmentsLabel = new QLabel("You don't have any appointments");
+            noAppointmentsLabel->setAlignment(Qt::AlignCenter);
+            mainLayout->addWidget(noAppointmentsLabel);
+        } else {
+            for (const auto& appt : appointments_array) {
+                QWidget *apptWidget = new QWidget();
+                apptWidget->setStyleSheet(
+                    "border: 1px solid #ddd; border-radius: 5px; padding: 10px;"
+                    "background-color: #f9f9f9; margin-bottom: 10px;"
+                );
+
+                QVBoxLayout *apptLayout = new QVBoxLayout(apptWidget);
+                apptLayout->setSpacing(5);
+
+                // Форматируем дату и время
+                QDate date = QDate::fromString(
+                    QString::fromStdString(appt["appointment_date"]), "yyyy-MM-dd");
+                QTime time = QTime::fromString(
+                    QString::fromStdString(appt["appointment_time"]), "HH:mm:ss");
+
+                // Основная информация
+                QLabel *header = new QLabel(
+                    QString("<b>%1 %2</b> from %3 ₽.")
+                        .arg(date.toString("dd.MM.yyyy"))
+                        .arg(time.toString("HH:mm"))
+                        .arg(QString::fromStdString(appt["price"]))
+                );
+                header->setStyleSheet("font-size: 14px;");
+                
+                QLabel *doctorInfo = new QLabel(
+                    QString("<b>%1</b> (%2)")
+                        .arg(QString::fromStdString(appt["doctor_name"]))
+                        .arg(QString::fromStdString(appt["specialty"]))
+                );
+                doctorInfo->setStyleSheet("font-size: 13px;");
+
+                QLabel *hospitalInfo = new QLabel(
+                    QString("%1, %2 %3, %4")
+                        .arg(QString::fromStdString(appt["hospital_name"]))
+                        .arg(QString::fromStdString(appt["street"]))
+                        .arg(QString::fromStdString(appt["house"]))
+                        .arg(QString::fromStdString(appt["settlement_name"]))
+                );
+                hospitalInfo->setStyleSheet("font-size: 12px; color: #555;");
+
+                QLabel *contactLabel = new QLabel(
+                    QString("Phone number: %1")
+                        .arg(QString::fromStdString(appt["admin_phone"]))
+                );
+                contactLabel->setStyleSheet("font-size: 12px;");
+                apptLayout->addWidget(header);
+                apptLayout->addWidget(doctorInfo);
+                apptLayout->addWidget(hospitalInfo);
+                apptLayout->addWidget(contactLabel);
+                mainLayout->addWidget(apptWidget);
+            }
+        }
+
+        // Устанавливаем новый виджет в scroll area
+        ui->appointments_scroll->setWidget(container);
+        ui->appointments_scroll->setWidgetResizable(true);
 }
 
 void homepage::on_profile_button_clicked() {

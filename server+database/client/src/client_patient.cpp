@@ -198,7 +198,7 @@ json patient_client::search_doctors(const json &request_data) {
 }
 
 json patient_client::patient_appointments(int patient_id) {
-    std::string url = "http://localhost:8080/get_patient_appointments" +
+    std::string url = "http://localhost:8080/get_patient_appointments?patient_id=" +
                       std::to_string(patient_id);
     std::string response = send_get_request(url);
 

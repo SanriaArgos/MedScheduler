@@ -334,25 +334,107 @@ font: 9pt &quot;Arial&quot;;</string>
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="appointments_page">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
-       <widget class="QLabel" name="label">
-        <property name="geometry">
-         <rect>
-          <x>70</x>
-          <y>30</y>
-          <width>161</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Appointments</string>
-        </property>
-       </widget>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="upcoming_button">
+             <property name="text">
+              <string>Upcoming</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="completed_button">
+             <property name="text">
+              <string>Completed</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="all_button">
+             <property name="text">
+              <string>All</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>50</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>Sort by date (Newest)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sort by date (Oldest)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QScrollArea" name="appointments_scroll">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_3">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1037</width>
+             <height>626</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="doctors_page">
        <property name="styleSheet">
