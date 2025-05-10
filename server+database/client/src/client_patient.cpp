@@ -108,6 +108,44 @@ json patient_client::get_settlement_names() {
     }
 }
 
+json patient_client::get_specialties() {
+    try {
+        std::string url = "http://localhost:8080/get_specialties";
+        std::string response = send_get_request(url);
+        json json_response = json::parse(response);
+
+        if (!json_response.contains("success")) {
+            json_response["success"] = false;
+            json_response["error"] = "Missing field 'success'";
+        }
+        return json_response;
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Error getting specialties: ") + e.what()}
+        };
+    }
+}
+
+json patient_client::get_hospital_full_names() {
+    try {
+        std::string url = "http://localhost:8080/get_hospital_full_names";
+        std::string response = send_get_request(url);
+        json json_response = json::parse(response);
+
+        if (!json_response.contains("success")) {
+            json_response["success"] = false;
+            json_response["error"] = "Missing field 'success'";
+        }
+        return json_response;
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Error getting hospitals: ") + e.what()}
+        };
+    }
+}
+
 json patient_client::get_doctor_schedule_for_patient(
     int doctor_id,
     int hospital_id

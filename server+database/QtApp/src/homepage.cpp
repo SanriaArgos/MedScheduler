@@ -13,10 +13,14 @@
 #include "../client/include/common_for_all.hpp"
 #include "ui_homepage.h"
 #include <vector>
+#include "../client/include/client_patient.hpp"
+#include <QDebug>
+int patient_id=0;
 homepage::homepage(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::homepage) {
     ui->setupUi(this);
     on_appointments_button_clicked();
+    patient_id=get_user_id();
 }
 
 void homepage::set_user_id(int id) {
@@ -111,7 +115,37 @@ void homepage::on_doctors_button_clicked() {
         "   border-radius: 10px;"
         "}"
     );
-    //ui->combo_box_settlement_type->addItem("тип"); таким образом позаполнять все combo_box
+    patient::patient_client client(get_user_id());
+    nlohmann::json regions=client.get_regions();
+    auto regions_array = regions["regions"].get<std::vector<std::string>>();
+    ui->combo_box_region->clear();
+    for (const auto& name : regions_array) {
+        ui->combo_box_region->addItem(QString::fromStdString(name));
+    }
+    nlohmann::json types=client.get_settlement_types();
+    auto settlement_types_array = types["settlement_types"].get<std::vector<std::string>>();
+    ui->combo_box_settlement_type->clear();
+    for (const auto& name : settlement_types_array) {
+        ui->combo_box_settlement_type->addItem(QString::fromStdString(name));
+    }
+    nlohmann::json settlement_names=client.get_settlement_names();
+    auto settlement_names_array = settlement_names["settlement_names"].get<std::vector<std::string>>();
+    ui->combo_box_settlement_name->clear();
+    for (const auto& name : settlement_names_array) {
+        ui->combo_box_settlement_name->addItem(QString::fromStdString(name));
+    }
+    nlohmann::json specialties=client.get_specialties();
+    auto specialties_array = specialties["specialties"].get<std::vector<std::string>>();
+    ui->combo_box_specialty->clear();
+    for (const auto& spec : specialties_array) {
+        ui->combo_box_specialty->addItem(QString::fromStdString(spec));
+    }
+    nlohmann::json hospital_names=client.get_hospital_full_names();
+    auto hospital_names_array = hospital_names["hospital_full_names"].get<std::vector<std::string>>();
+    ui->combo_box_hospital->clear();
+    for (const auto& spec : hospital_names_array) {
+        ui->combo_box_hospital->addItem(QString::fromStdString(spec));
+    }
 }
 
 void homepage::on_hospitals_button_clicked() {
@@ -171,34 +205,6 @@ void homepage::on_settings_button_clicked() {
     );
 }
 
-
-void homepage::on_combo_box_region_currentTextChanged(const QString &region_name)
-{
-    //nlohmann::json types = get_settlement_types();
-    //циклом добавить ui->combo_box_settlement_type->addItem("тип");
-}
-
-
-void homepage::on_combo_box_settlement_type_currentTextChanged(const QString &settlement_type)
-{
-    //nlohmann::json names = get_settlement_names();
-    //циклом добавить ui->combo_box_settlement_name>addItem("город");
-}
-
-
-void homepage::on_combo_box_settlement_name_currentTextChanged(const QString &settlement_name)
-{
-    //nlohmann::json specialties = get_specialties();
-    //циклом добавить ui->combo_box_settlement_name>addItem("город");
-}
-
-
-void homepage::on_combo_box_specialty_currentTextChanged(const QString &specialty)
-{
-
-}
-
-
 void homepage::on_apply_filtres_button_clicked()
 {
     QString region = ui->combo_box_region->currentText();
@@ -213,13 +219,20 @@ void homepage::on_apply_filtres_button_clicked()
     QJsonDocument doc(json);
     QString jsonString = doc.toJson(QJsonDocument::Compact);
     nlohmann::json filtre_data = nlohmann::json::parse(jsonString.toStdString());
-    //тут надо отправить запрос и получить джейсон
-    QJsonArray array;
+    patient::patient_client client(get_user_id());
+    nlohmann::json response = client.search_doctors(filtre_data);
+    const auto& doctors = response["doctors"];
     std::vector<Doctor> doctor_array;
-    doctor_array = {
-        {"Иванов", "Алексей", "Петрович", "Кардиолог", "ГКБ №1", "МГМУ", 2500, 101, 15, 4.8},
-        {"Петрова", "Мария", "Сергеевна", "Невролог", "Поликлиника №3", "РНИМУ", 1800, 102, 8, 4.6}
-    };
+    for (const auto& doctor_json : doctors) {
+        Doctor doc;
+        doc.doctor_id = doctor_json["doctor_id"].get<int>();
+        doc.rating = doctor_json["average_rate"].get<double>();
+        doc.experience = doctor_json["experience"].get<int>();
+        doc.name = QString::fromStdString(doctor_json["fio"].get<std::string>());
+        doc.price = doctor_json["price"].get<int>();
+        doc.specialty = QString::fromStdString(doctor_json["specialty"].get<std::string>());
+        doctor_array.push_back(doc);
+    }
     QWidget *scrollContent = new QWidget();
     QVBoxLayout *scrollLayout = new QVBoxLayout(scrollContent);
     scrollLayout->setAlignment(Qt::AlignTop);
@@ -238,11 +251,6 @@ void homepage::on_apply_filtres_button_clicked()
 }
 
 
-void homepage::on_combo_box_hospital_currentTextChanged(const QString &hospital)
-{
-
-}
-
 void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
     // Создаем контейнер для карточки
     QWidget *card = new QWidget();
@@ -251,20 +259,17 @@ void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
     QVBoxLayout *cardLayout = new QVBoxLayout(card);
 
     // ФИО врача
-    QLabel *nameLabel = new QLabel(
-        QString("<b>%1 %2 %3</b>").arg(doctor.last_name, doctor.first_name, doctor.patronym)
-        );
+    QLabel *nameLabel = new QLabel(doctor.name);
     nameLabel->setStyleSheet("font-size: 16px; color: #333;");
     cardLayout->addWidget(nameLabel);
 
     // Основная информация
     cardLayout->addWidget(new QLabel("Specialty: " + doctor.specialty));
-    cardLayout->addWidget(new QLabel("Hospital: " + doctor.hospital_name));
 
     // Доп. информация в строку
     QHBoxLayout *infoLayout = new QHBoxLayout();
     infoLayout->addWidget(new QLabel("Experience: " + QString::number(doctor.experience) + " years"));
-    infoLayout->addWidget(new QLabel("Rating: " + QString::number(doctor.rating, 'f', 1)));
+    infoLayout->addWidget(new QLabel("Rating: " + (QString::number(doctor.rating, 'f', 1)=="0.0"?"-":QString::number(doctor.rating, 'f', 1))));
     infoLayout->addWidget(new QLabel("Price from " + QString::number(doctor.price) + " ₽"));
     cardLayout->addLayout(infoLayout);
 
@@ -276,10 +281,11 @@ void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
         "   background-color: rgb(124, 239, 132);"
         "}"
         );
-    QAbstractButton::connect(appointmentBtn, &QPushButton::clicked, [doctor]() {
+    QAbstractButton::connect(appointmentBtn, &QPushButton::clicked, [&]() {
         Appointment *appointmentWindow = new Appointment(); // Создаем окно
         appointmentWindow->show();
         appointmentWindow->doctor_id=doctor.doctor_id;
+        appointmentWindow->user_id=patient_id;
     });
 
     cardLayout->addWidget(appointmentBtn);

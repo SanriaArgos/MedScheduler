@@ -15,6 +15,7 @@ public:
     explicit Appointment(QWidget *parent = nullptr);
     ~Appointment();
     int doctor_id;
+    int user_id;
 
 private slots:
     void on_date0_clicked();

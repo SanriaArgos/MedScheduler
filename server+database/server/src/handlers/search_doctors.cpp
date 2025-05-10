@@ -80,6 +80,7 @@ void search_doctors(
     // 3) Собираем финальный SQL
     std::ostringstream sql;
     sql << "SELECT "
+           "d.doctor_id, "
            "u.last_name || ' ' || u.first_name || "
            "COALESCE(' ' || u.patronymic, '') AS fio, "
            "d.specialty, d.experience, d.price, "
@@ -122,11 +123,12 @@ void search_doctors(
     json doctors = json::array();
     for (int i = 0; i < rows; ++i) {
         json doc;
-        doc["fio"] = PQgetvalue(pgres, i, 0);
-        doc["specialty"] = PQgetvalue(pgres, i, 1);
-        doc["experience"] = std::stoi(PQgetvalue(pgres, i, 2));
-        doc["price"] = std::stoi(PQgetvalue(pgres, i, 3));
-        doc["average_rate"] = std::stod(PQgetvalue(pgres, i, 4));
+        doc["doctor_id"] = std::stoi(PQgetvalue(pgres, i, 0));  // doctor_id теперь первый столбец
+        doc["fio"] = PQgetvalue(pgres, i, 1);           // смещение остальных полей +1
+        doc["specialty"] = PQgetvalue(pgres, i, 2);
+        doc["experience"] = std::stoi(PQgetvalue(pgres, i, 3));
+        doc["price"] = std::stoi(PQgetvalue(pgres, i, 4));
+        doc["average_rate"] = std::stod(PQgetvalue(pgres, i, 5));
         doctors.push_back(std::move(doc));
     }
     PQclear(pgres);
