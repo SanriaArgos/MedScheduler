@@ -41,15 +41,38 @@ CREATE TABLE IF NOT EXISTS records (
     appointment_time TIME NOT NULL CHECK (EXTRACT(HOUR FROM appointment_time) BETWEEN 0 AND 23 AND EXTRACT(MINUTE FROM appointment_time) BETWEEN 0 AND 59),
     hospital_id INT NOT NULL REFERENCES hospitals(hospital_id),
     cabinet_number INT NOT NULL CHECK (cabinet_number >= 1),
-    patient_id INT REFERENCES users(id)
+    patient_id INT REFERENCES users(id),
+    cancelled BOOLEAN NOT NULL DEFAULT FALSE,
+    cancelled_at TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS rating (
     id SERIAL PRIMARY KEY,
-    doctor_ref_id INT NOT NULL REFERENCES doctors(doctor_id),
+    doctor_ref_id INT NOT NULL REFERENCES doctors(doctor_id) ON DELETE CASCADE,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE, 
     text TEXT NOT NULL,
     name TEXT NOT NULL,
     date TEXT NOT NULL,
-    rate INT NOT NULL CHECK (rate BETWEEN 0 AND 5),
-    address TEXT NOT NULL
+    rate INT NOT NULL CHECK (rate BETWEEN 1 AND 5),
+    address TEXT NOT NULL,
+    UNIQUE (doctor_ref_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS waitlist (
+  id           SERIAL PRIMARY KEY,
+  doctor_id    INT REFERENCES doctors(doctor_id),
+  patient_id   INT REFERENCES users(id),
+  last_name    TEXT,
+  first_name   TEXT,
+  patronymic   TEXT,
+  phone        TEXT,
+  requested_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  notified_at  TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS waitlist_expiry (
+    waitlist_id INT       NOT NULL REFERENCES waitlist(id) ON DELETE CASCADE,
+    expire_at   TIMESTAMP NOT NULL,
+    notified    BOOLEAN   NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (waitlist_id)
 );
