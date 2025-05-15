@@ -20,6 +20,8 @@
 #include "../include/handlers/attach_doctor_to_hospital.hpp"
 #include "../include/handlers/auth_handler.hpp"
 #include "../include/handlers/book_appointment.hpp"
+#include "../include/handlers/cancel_appointment.hpp"
+#include "../include/handlers/cancel_waitlist.hpp"
 #include "../include/handlers/delete_doctor_feedback.hpp"
 #include "../include/handlers/detach_doctor_from_hospital.hpp"
 #include "../include/handlers/doctor_exists.hpp"
@@ -170,6 +172,10 @@ void handle_request(
                     add_patient_to_waitlist(body, res, db_handler);
                 }
 
+                else if (req.target() == "/cancel_appointment_from_waitlist") {
+                    cancel_waitlist(body, res, db_handler);
+                }
+
                 else {
                     handle_not_found(res);
                 }
@@ -209,19 +215,17 @@ void handle_request(
                     std::string url = std::string(req.target());
 
                     size_t doctor_pos = url.find("doctor_id=");
-                    //size_t hospital_pos = url.find("&hospital_id=");
+                    // size_t hospital_pos = url.find("&hospital_id=");
 
                     if (doctor_pos == std::string::npos) {
                         throw std::runtime_error("Missing required parameters");
                     }
 
-                    int doctor_id = std::stoi(url.substr(
-                        doctor_pos + 10));
-                    //int hospital_id = std::stoi(url.substr(hospital_pos + 13));
+                    int doctor_id = std::stoi(url.substr(doctor_pos + 10));
+                    // int hospital_id = std::stoi(url.substr(hospital_pos +
+                    // 13));
 
-                    get_doctor_schedule_for_patient(
-                        doctor_id, res, db_handler
-                    );
+                    get_doctor_schedule_for_patient(doctor_id, res, db_handler);
 
                 } catch (const std::exception &e) {
                     res.result(http::status::bad_request);
@@ -625,7 +629,9 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            } else {
+            }
+
+            else {
                 handle_not_found(res);
             }
         }
@@ -638,7 +644,18 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            } else {
+            }
+
+            if (req.target() == "/cancel_appointment") {
+                try {
+                    json body = json::parse(req.body());
+                    cancel_appointment(body, res, db_handler);
+                } catch (const std::exception &e) {
+                    handle_error(e, res);
+                }
+            }
+
+            else {
                 handle_not_found(res);
             }
         }

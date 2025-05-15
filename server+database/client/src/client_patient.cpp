@@ -122,8 +122,7 @@ json patient_client::get_specialties() {
     } catch (const std::exception &e) {
         return {
             {"success", false},
-            {"error", std::string("Error getting specialties: ") + e.what()}
-        };
+            {"error", std::string("Error getting specialties: ") + e.what()}};
     }
 }
 
@@ -141,15 +140,11 @@ json patient_client::get_hospital_full_names() {
     } catch (const std::exception &e) {
         return {
             {"success", false},
-            {"error", std::string("Error getting hospitals: ") + e.what()}
-        };
+            {"error", std::string("Error getting hospitals: ") + e.what()}};
     }
 }
 
-json patient_client::get_doctor_schedule_for_patient(
-    int doctor_id
-) {
-
+json patient_client::get_doctor_schedule_for_patient(int doctor_id) {
     // Формируем URL с параметрами
     std::string url = "http://localhost:8080/get_doctor_schedule_for_patient?";
     url += "doctor_id=" + std::to_string(doctor_id);
@@ -198,8 +193,9 @@ json patient_client::search_doctors(const json &request_data) {
 }
 
 json patient_client::patient_appointments(int patient_id) {
-    std::string url = "http://localhost:8080/get_patient_appointments?patient_id=" +
-                      std::to_string(patient_id);
+    std::string url =
+        "http://localhost:8080/get_patient_appointments?patient_id=" +
+        std::to_string(patient_id);
     std::string response = send_get_request(url);
 
     try {
@@ -300,6 +296,32 @@ json patient_client::post_doctor_feedback_client(const json &request_data) {
 json patient_client::edit_doctor_feedback(const json &request_data) {
     std::string url = "http://localhost:8080/edit_doctor_feedback";
     std::string response = send_patch_request(url, request_data);
+
+    try {
+        return json::parse(response);
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Invalid JSON from server: ") + e.what()}};
+    }
+}
+
+json patient_client::cancel_appointment(const json &data) {
+    std::string url = "http://localhost:8080/cancel_appointment";
+    std::string response = send_patch_request(url, data);
+
+    try {
+        return json::parse(response);
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Invalid JSON from server: ") + e.what()}};
+    }
+}
+
+json patient_client::cancel_waitlist(const json &data) {
+    std::string url = "http://localhost:8080/cancel_appointment_from_waitlist";
+    std::string response = send_post_request(url, data);
 
     try {
         return json::parse(response);

@@ -42,6 +42,11 @@ public:
 
     json edit_doctor_feedback(const json &request_data);
 
+    json cancel_appointment(const json &data);
+
+    json cancel_waitlist(const json &data);
+    json delete_self_account();
+
 private:
     int user_id_;
 };

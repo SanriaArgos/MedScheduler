@@ -7,14 +7,16 @@
 namespace Ui {
 class homepage;
 }
+
 struct Doctor {
-    QString name="-";
-    QString specialty="-";
-    int price=0;
-    int doctor_id=0;
-    int experience=0;
-    double rating=0.0;
+    QString name = "-";
+    QString specialty = "-";
+    int price = 0;
+    int doctor_id = 0;
+    int experience = 0;
+    double rating = 0.0;
 };
+
 class homepage : public QMainWindow {
     Q_OBJECT
 

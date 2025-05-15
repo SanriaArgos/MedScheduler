@@ -9,13 +9,12 @@ void cancel_appointment(
     json response;
     if (!data.contains("record_id") || !data.contains("patient_id")) {
         response["success"] = false;
-        response["error"]   = "Missing record_id or patient_id";
+        response["error"] = "Missing record_id or patient_id";
         res.result(http::status::bad_request);
     } else {
         const char *p[2] = {
             std::to_string(data["record_id"].get<int>()).c_str(),
-            std::to_string(data["patient_id"].get<int>()).c_str()
-        };
+            std::to_string(data["patient_id"].get<int>()).c_str()};
         PGresult *r = PQexecParams(
             db_handler.get_connection(),
             "UPDATE records SET cancelled = TRUE, cancelled_at = NOW() "
@@ -29,10 +28,12 @@ void cancel_appointment(
             res.result(http::status::ok);
         } else {
             response["success"] = false;
-            response["error"]   = "Cancel failed";
+            response["error"] = "Cancel failed";
             res.result(http::status::internal_server_error);
         }
-        if (r) PQclear(r);
+        if (r) {
+            PQclear(r);
+        }
     }
     res.set(http::field::content_type, "application/json");
     res.body() = response.dump();

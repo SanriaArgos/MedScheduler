@@ -4,7 +4,7 @@
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
-extern database_handler* global_db;
+extern database_handler *global_db;
 
 void get_doctor_average_ratings(
     http::response<http::string_body> &res,
@@ -25,20 +25,22 @@ void get_doctor_average_ratings(
           ORDER BY avg_rate DESC
         )SQL"
     );
-    if (!r || PQresultStatus(r)!=PGRES_TUPLES_OK) {
-        if (r) PQclear(r);
+    if (!r || PQresultStatus(r) != PGRES_TUPLES_OK) {
+        if (r) {
+            PQclear(r);
+        }
         response["success"] = false;
-        response["error"]   = "DB error";
+        response["error"] = "DB error";
         res.result(http::status::internal_server_error);
     } else {
         int n = PQntuples(r);
         json arr = json::array();
         arr.push_back("-");  // плейсхолдер
         for (int i = 0; i < n; ++i) {
-            arr.push_back(std::stod(PQgetvalue(r,i,0)));
+            arr.push_back(std::stod(PQgetvalue(r, i, 0)));
         }
         PQclear(r);
-        response["success"]                = true;
+        response["success"] = true;
         response["doctor_average_ratings"] = std::move(arr);
         res.result(http::status::ok);
     }

@@ -1,12 +1,12 @@
 #ifndef DELETE_USER_BY_PHONE_HPP_
 #define DELETE_USER_BY_PHONE_HPP_
 
-#include "../database.hpp"
-#include <nlohmann/json.hpp>
 #include <boost/beast/http.hpp>
+#include <nlohmann/json.hpp>
+#include "../database.hpp"
 
-namespace http  = boost::beast::http;
-using   json  = nlohmann::json;
+namespace http = boost::beast::http;
+using json = nlohmann::json;
 
 /*
  POST /delete_user_by_phone
@@ -14,7 +14,7 @@ using   json  = nlohmann::json;
    "phone": "<string>",    // телефон пользователя, которого удаляем
    "admin_id": <int>       // id того, кто делает удаление
  }
- 
+
  Удаление по типу пользователя:
  1) patient       – удаляем его и все связанные записи
  2) junior admin  – удаляем его, его больницу, чистим hospital_ids у врачей
