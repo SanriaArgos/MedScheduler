@@ -34,6 +34,13 @@ std::string login_user(
         return "";
     }
 
+    {
+        std::string upd_sql =
+            "UPDATE users SET last_login = NOW() WHERE id = " + user_id;
+        PGresult *r_up = PQexec(conn, upd_sql.c_str());
+        if (r_up) PQclear(r_up);
+    }
+
     if (user_type == "patient") {
         return "patient:" + user_id;
     }

@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20) NOT NULL UNIQUE,
     user_type VARCHAR(30) NOT NULL DEFAULT 'patient',
     hashed_password  TEXT NOT NULL,
-    salt TEXT NOT NULL
+    salt TEXT NOT NULL,
+    last_login      TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS hospitals (
@@ -75,4 +76,13 @@ CREATE TABLE IF NOT EXISTS waitlist_expiry (
     expire_at   TIMESTAMP NOT NULL,
     notified    BOOLEAN   NOT NULL DEFAULT FALSE,
     PRIMARY KEY (waitlist_id)
+);
+
+CREATE TABLE IF NOT EXISTS appointment_notifications (
+  id         SERIAL        PRIMARY KEY,
+  record_id  INT           NOT NULL  REFERENCES records(record_id)  ON DELETE CASCADE,
+  user_id    INT           NOT NULL  REFERENCES users(id)          ON DELETE CASCADE,
+  send_time  TIMESTAMPTZ   NOT NULL,
+  payload    JSONB         NOT NULL,
+  sent       BOOLEAN       NOT NULL  DEFAULT FALSE
 );
