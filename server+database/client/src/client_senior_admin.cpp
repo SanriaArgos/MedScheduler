@@ -46,4 +46,17 @@ json senior_admin_client::get_hospitals_table() {
     }
 }
 
+json senior_admin_client::delete_user_by_phone(const std::string& user_phone) {
+    std::string url = "http://localhost:8080/delete_user_by_phone?user_phone=" + user_phone;
+    std::string response = send_get_request(url);
+
+    try {
+        return json::parse(response);
+    } catch (const std::exception &e) {
+        std::cerr << "Error fetching hospitals table: " << e.what()
+                  << std::endl;
+        return json();
+    }
+}
+
 }  // namespace senior_admin

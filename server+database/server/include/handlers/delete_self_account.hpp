@@ -13,7 +13,7 @@ using json = nlohmann::json;
 // Пользователь типа patient или doctor может удалить свой аккаунт и все
 // связанные данные. Другие типы (junior/senior admin) здесь не обрабатываются.
 void delete_self_account(
-    const json &data,
+    int user_id,
     http::response<http::string_body> &res,
     database_handler &db_handler
 );

@@ -49,6 +49,9 @@
 #include "../include/handlers/post_doctor_feedback.hpp"
 #include "../include/handlers/registration.hpp"
 #include "../include/handlers/search_doctors.hpp"
+#include "../include/handlers/delete_self_account.hpp"
+#include "../include/handlers/delete_user_by_phone.hpp"
+#include "../include/handlers/get_cancelled_slots.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -616,7 +619,62 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            } else {
+            } 
+
+
+            else if (req.target().starts_with("/get_cancelled_slots")) {
+    try {
+        // Извлекаем doctor_id из query параметров
+        std::string url = std::string(req.target());
+        size_t param_pos = url.find("doctor_id=");
+        
+        if (param_pos == std::string::npos) {
+            json error_response = {
+                {"success", false},
+                {"error", "Missing doctor_id parameter"}
+            };
+            res.result(http::status::bad_request);
+            res.set(http::field::content_type, "application/json");
+            res.body() = error_response.dump();
+            return;
+        }
+
+        // Парсим doctor_id
+        int doctor_id;
+        try {
+            size_t value_start = param_pos + 10; // длина "doctor_id="
+            size_t value_end = url.find('&', value_start);
+            std::string id_str = (value_end == std::string::npos) 
+                ? url.substr(value_start) 
+                : url.substr(value_start, value_end - value_start);
+            
+            doctor_id = std::stoi(id_str);
+        } catch (const std::exception& e) {
+            json error_response = {
+                {"success", false},
+                {"error", "Invalid doctor_id format - must be integer"}
+            };
+            res.result(http::status::bad_request);
+            res.set(http::field::content_type, "application/json");
+            res.body() = error_response.dump();
+            return;
+        }
+
+        // Вызываем основную функцию
+        get_cancelled_slots(doctor_id, res, db_handler);
+
+    } catch (const std::exception& e) {
+        json error_response = {
+            {"success", false},
+            {"error", std::string("Internal server error: ") + e.what()}
+        };
+        res.result(http::status::internal_server_error);
+        res.set(http::field::content_type, "application/json");
+        res.body() = error_response.dump();
+    }
+}
+            
+            else {
                 handle_not_found(res);
             }
         }
@@ -631,12 +689,81 @@ void handle_request(
                 }
             }
 
+            else if (req.target().starts_with("/delete_self_account")) {
+                try {
+                    // Получаем user_id из query параметров
+                    std::string url = std::string(req.target());
+                    size_t param_pos = url.find("user_id=");
+
+                    if (param_pos == std::string::npos) {
+                        json error = {
+                            {"success", false},
+                            {"error", "Missing user_id parameter"}};
+                        res.result(http::status::bad_request);
+                        res.body() = error.dump();
+                        return;
+                    }
+
+                    int user_id = std::stoi(url.substr(param_pos + 8)
+                    );  // 8 = длина "user_id="
+
+                    // Создаем json с user_id для совместимости с существующей
+                    // функцией
+                    delete_self_account(user_id, res, db_handler);
+
+                } catch (const std::exception &e) {
+                    json error = {
+                        {"success", false},
+                        {"error", std::string("Invalid request: ") + e.what()}};
+                    res.result(http::status::bad_request);
+                    res.body() = error.dump();
+                }
+            } 
+
+               else if (req.target().starts_with("/delete_user_by_phone")) {
+    try {
+        std::string url = std::string(req.target());
+        
+        auto parse_string_param = [&](const std::string &key) -> std::string {
+            size_t start = url.find(key + "=");
+            if (start == std::string::npos) {
+                throw std::runtime_error("Missing parameter: " + key);
+            }
+            start += key.length() + 1;
+            size_t end = url.find('&', start);
+            return (end == std::string::npos) 
+                ? url.substr(start) 
+                : url.substr(start, end - start);
+        };
+
+        std::string phone = parse_string_param("phone");
+        
+        phone.erase(std::remove(phone.begin(), phone.end(), '"'), phone.end());
+        phone.erase(std::remove(phone.begin(), phone.end(), ' '), phone.end());
+        
+        if (phone.empty()) {
+            throw std::runtime_error("Phone number cannot be empty");
+        }
+
+        delete_user_by_phone(phone, res, db_handler);
+
+    } catch (const std::exception &e) {
+        json error_response = {
+            {"success", false},
+            {"error", std::string("Bad request: ") + e.what()}
+        };
+        res.result(http::status::bad_request);
+        res.set(http::field::content_type, "application/json");
+        res.body() = error_response.dump();
+    }
+}
+            
             else {
                 handle_not_found(res);
             }
         }
-
-        else if (req.method() == http::verb::patch) {
+        
+         else if (req.method() == http::verb::patch) {
             if (req.target() == "/edit_doctor_feedback") {
                 try {
                     json body = json::parse(req.body());

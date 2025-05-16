@@ -45,7 +45,9 @@ public:
     json cancel_appointment(const json &data);
 
     json cancel_waitlist(const json &data);
-    json delete_self_account();
+    json delete_self_account(int patient_id);
+
+    json get_cancelled_slots(int doctor_id);
 
 private:
     int user_id_;

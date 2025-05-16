@@ -2,159 +2,128 @@
 #include <libpq-fe.h>
 #include <boost/beast/http.hpp>
 #include <iostream>
-#include <nlohmann/json.hpp>
 #include "../../include/database.hpp"
 
 namespace http = boost::beast::http;
-using json = nlohmann::json;
 extern database_handler *global_db;
 
 void delete_self_account(
-    const json &data,
+    int user_id,
     http::response<http::string_body> &res,
     database_handler &db_handler
 ) {
-    json response;
+    // Устанавливаем Content-Type один раз в начале
+    res.set(http::field::content_type, "application/json");
 
-    // 1) Проверяем входные данные
-    if (!data.contains("user_id")) {
-        response["success"] = false;
-        response["error"] = "Missing user_id";
-        res.result(http::status::bad_request);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
-
-    int user_id = data["user_id"].get<int>();
-
-    // 2) Узнаём тип пользователя
+    // 1) Получаем тип пользователя
     std::string user_type;
     {
-        const char *p = std::to_string(user_id).c_str();
-        PGresult *r = PQexecParams(
+        const char *param = std::to_string(user_id).c_str();
+        PGresult *result = PQexecParams(
             db_handler.get_connection(),
-            "SELECT user_type FROM users WHERE id = $1::int", 1, nullptr, &p,
-            nullptr, nullptr, 0
+            "SELECT user_type FROM users WHERE id = $1::int", 
+            1, nullptr, &param, nullptr, nullptr, 0
         );
-        if (!r || PQntuples(r) == 0) {
-            response["success"] = false;
-            response["error"] = "User not found";
+
+        if (!result || PQntuples(result) == 0) {
+            json error_response = {
+                {"success", false}, 
+                {"error", "User not found"}
+            };
             res.result(http::status::not_found);
-            res.set(http::field::content_type, "application/json");
-            if (r) {
-                PQclear(r);
-            }
-            res.body() = response.dump();
+            res.body() = error_response.dump();
+            if (result) PQclear(result);
             return;
         }
-        user_type = PQgetvalue(r, 0, 0);
-        PQclear(r);
+
+        user_type = PQgetvalue(result, 0, 0);
+        PQclear(result);
     }
 
-    // 3) В зависимости от типа удаляем связанные записи
+    // 2) Обработка в зависимости от типа
     if (user_type == "patient") {
-        // Удаляем все записи пациента
-        {
-            const char *p = std::to_string(user_id).c_str();
-            PGresult *r = PQexecParams(
-                db_handler.get_connection(),
-                "DELETE FROM records WHERE patient_id = $1::int", 1, nullptr,
-                &p, nullptr, nullptr, 0
-            );
-            if (r) {
-                PQclear(r);
-            }
-        }
-        // Удаляем из очереди ожидания
-        {
-            const char *p = std::to_string(user_id).c_str();
-            PGresult *r = PQexecParams(
-                db_handler.get_connection(),
-                "DELETE FROM waitlist WHERE patient_id = $1::int", 1, nullptr,
-                &p, nullptr, nullptr, 0
-            );
-            if (r) {
-                PQclear(r);
-            }
-        }
+        const char *patient_param = std::to_string(user_id).c_str();
+        
+        // Удаляем связанные данные
+        PGresult *records_result = PQexecParams(
+            db_handler.get_connection(),
+            "DELETE FROM records WHERE patient_id = $1::int",
+            1, nullptr, &patient_param, nullptr, nullptr, 0
+        );
+        if (records_result) PQclear(records_result);
+
+        PGresult *waitlist_result = PQexecParams(
+            db_handler.get_connection(),
+            "DELETE FROM waitlist WHERE patient_id = $1::int",
+            1, nullptr, &patient_param, nullptr, nullptr, 0
+        );
+        if (waitlist_result) PQclear(waitlist_result);
 
     } else if (user_type == "doctor") {
-        // Сначала находим doctor_id по user_id
+        // Получаем doctor_id
         int doctor_id = -1;
-        {
-            const char *p = std::to_string(user_id).c_str();
-            PGresult *r = PQexecParams(
-                db_handler.get_connection(),
-                "SELECT doctor_id FROM doctors WHERE user_id = $1::int", 1,
-                nullptr, &p, nullptr, nullptr, 0
-            );
-            if (r && PQntuples(r) > 0) {
-                doctor_id = std::stoi(PQgetvalue(r, 0, 0));
-            }
-            if (r) {
-                PQclear(r);
-            }
-        }
-        if (doctor_id >= 0) {
-            const char *pdoc = std::to_string(doctor_id).c_str();
-            // Удаляем все записи этого врача
-            PGresult *r1 = PQexecParams(
-                db_handler.get_connection(),
-                "DELETE FROM records WHERE doctor_id = $1::int", 1, nullptr,
-                &pdoc, nullptr, nullptr, 0
-            );
-            if (r1) {
-                PQclear(r1);
-            }
-            // Удаляем заявки на ожидание для этого врача
-            PGresult *r2 = PQexecParams(
-                db_handler.get_connection(),
-                "DELETE FROM waitlist WHERE doctor_id = $1::int", 1, nullptr,
-                &pdoc, nullptr, nullptr, 0
-            );
-            if (r2) {
-                PQclear(r2);
-            }
-        }
-        // Замечание: сама таблица doctors имеет FOREIGN KEY ON DELETE CASCADE
-        // на users, так что удаление пользователя удалит строку из doctors.
+        const char *user_param = std::to_string(user_id).c_str();
+        PGresult *doctor_result = PQexecParams(
+            db_handler.get_connection(),
+            "SELECT doctor_id FROM doctors WHERE user_id = $1::int",
+            1, nullptr, &user_param, nullptr, nullptr, 0
+        );
 
+        if (doctor_result && PQntuples(doctor_result) > 0) {
+            doctor_id = std::stoi(PQgetvalue(doctor_result, 0, 0));
+        }
+        if (doctor_result) PQclear(doctor_result);
+
+        if (doctor_id >= 0) {
+            const char *doctor_param = std::to_string(doctor_id).c_str();
+            
+            PGresult *doctor_records = PQexecParams(
+                db_handler.get_connection(),
+                "DELETE FROM records WHERE doctor_id = $1::int",
+                1, nullptr, &doctor_param, nullptr, nullptr, 0
+            );
+            if (doctor_records) PQclear(doctor_records);
+
+            PGresult *doctor_waitlist = PQexecParams(
+                db_handler.get_connection(),
+                "DELETE FROM waitlist WHERE doctor_id = $1::int",
+                1, nullptr, &doctor_param, nullptr, nullptr, 0
+            );
+            if (doctor_waitlist) PQclear(doctor_waitlist);
+        }
     } else {
-        // Другие типы (junior/senior) не могут удалить свой аккаунт через этот
-        // маршрут
-        response["success"] = false;
-        response["error"] = "Forbidden for user type";
+        json error_response = {
+            {"success", false},
+            {"error", "Forbidden for user type: " + user_type}
+        };
         res.result(http::status::forbidden);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
+        res.body() = error_response.dump();
         return;
     }
 
-    // 4) Удаляем запись из users
-    {
-        const char *p = std::to_string(user_id).c_str();
-        PGresult *r = PQexecParams(
-            db_handler.get_connection(), "DELETE FROM users WHERE id = $1::int",
-            1, nullptr, &p, nullptr, nullptr, 0
-        );
-        if (!r || PQresultStatus(r) != PGRES_COMMAND_OK) {
-            if (r) {
-                PQclear(r);
-            }
-            response["success"] = false;
-            response["error"] = "Failed to delete user";
-            res.result(http::status::internal_server_error);
-            res.set(http::field::content_type, "application/json");
-            res.body() = response.dump();
-            return;
-        }
-        PQclear(r);
+    // 3) Удаляем пользователя
+    const char *user_param = std::to_string(user_id).c_str();
+    PGresult *delete_result = PQexecParams(
+        db_handler.get_connection(),
+        "DELETE FROM users WHERE id = $1::int",
+        1, nullptr, &user_param, nullptr, nullptr, 0
+    );
+
+    if (!delete_result || PQresultStatus(delete_result) != PGRES_COMMAND_OK) {
+        json error_response = {
+            {"success", false},
+            {"error", "Database deletion failed"}
+        };
+        res.result(http::status::internal_server_error);
+        res.body() = error_response.dump();
+        if (delete_result) PQclear(delete_result);
+        return;
     }
 
-    // 5) Успешно
-    response["success"] = true;
+    PQclear(delete_result);
+
+    // 4) Успешный ответ
+    json success_response = {{"success", true}};
     res.result(http::status::ok);
-    res.set(http::field::content_type, "application/json");
-    res.body() = response.dump();
+    res.body() = success_response.dump();
 }

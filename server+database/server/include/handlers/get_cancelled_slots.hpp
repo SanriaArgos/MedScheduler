@@ -9,7 +9,7 @@ namespace http = boost::beast::http;
 using json = nlohmann::json;
 
 void get_cancelled_slots(
-    const http::request<http::string_body> &req,
+    int doctor_id,
     http::response<http::string_body> &res,
     database_handler &db_handler
 );
