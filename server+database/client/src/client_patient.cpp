@@ -347,9 +347,23 @@ json patient_client::delete_self_account(int patient_id) {
 }
 
 json patient_client::get_cancelled_slots(int doctor_id) {
-    std::string url = "http://localhost:8080/dget_cancelled_slots&doctor_id=" +
+    std::string url = "http://localhost:8080/get_cancelled_slots?doctor_id=" +
                       std::to_string(doctor_id);
     std::string response = send_delete_request(url);
+
+    try {
+        return json::parse(response);
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Invalid JSON from server: ") + e.what()}};
+    }
+}
+
+json patient_client::get_waitlist_count(int doctor_id) {
+    std::string url = "http://localhost:8080/get_waitlist_count?doctor_id=" +
+                      std::to_string(doctor_id);
+    std::string response = send_get_request(url);
 
     try {
         return json::parse(response);

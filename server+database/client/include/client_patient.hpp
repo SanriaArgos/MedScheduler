@@ -49,6 +49,8 @@ public:
 
     json get_cancelled_slots(int doctor_id);
 
+    json get_waitlist_count(int doctor_id);
+
 private:
     int user_id_;
 };
