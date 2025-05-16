@@ -8,7 +8,7 @@ void add_patient_to_waitlist(
     database_handler &db_handler
 ) {
     json response;
-    
+
     // Проверка обязательных полей
     for (auto &f :
          {"doctor_id", "patient_id", "last_name", "first_name", "patronymic",
@@ -31,15 +31,18 @@ void add_patient_to_waitlist(
     std::string phone_user_str = data["phone"].get<std::string>();
 
     // Проверяем, не находится ли пациент уже в листе ожидания у этого врача
-    const char *check_params[2] = {doctor_id_str.c_str(), patient_id_str.c_str()};
+    const char *check_params[2] = {
+        doctor_id_str.c_str(), patient_id_str.c_str()};
     PGresult *check_result = PQexecParams(
         db_handler.get_connection(),
-        "SELECT 1 FROM waitlist WHERE doctor_id = $1 AND patient_id = $2",
-        2, nullptr, check_params, nullptr, nullptr, 0
+        "SELECT 1 FROM waitlist WHERE doctor_id = $1 AND patient_id = $2", 2,
+        nullptr, check_params, nullptr, nullptr, 0
     );
 
     if (!check_result || PQresultStatus(check_result) != PGRES_TUPLES_OK) {
-        if (check_result) PQclear(check_result);
+        if (check_result) {
+            PQclear(check_result);
+        }
         response["success"] = false;
         response["error"] = "Database error while checking existing entry";
         res.result(http::status::internal_server_error);
@@ -52,7 +55,8 @@ void add_patient_to_waitlist(
     if (PQntuples(check_result) > 0) {
         PQclear(check_result);
         response["success"] = false;
-        response["error"] = "Patient is already in the waitlist for this doctor";
+        response["error"] =
+            "Patient is already in the waitlist for this doctor";
         res.result(http::status::bad_request);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
@@ -65,7 +69,7 @@ void add_patient_to_waitlist(
         doctor_id_str.c_str(),        patient_id_str.c_str(),
         last_name_user_str.c_str(),   first_name_user_str.c_str(),
         middle_name_user_str.c_str(), phone_user_str.c_str()};
-    
+
     PGresult *insert_result = PQexecParams(
         db_handler.get_connection(),
         "INSERT INTO waitlist "
@@ -75,7 +79,9 @@ void add_patient_to_waitlist(
     );
 
     if (!insert_result || PQresultStatus(insert_result) != PGRES_COMMAND_OK) {
-        if (insert_result) PQclear(insert_result);
+        if (insert_result) {
+            PQclear(insert_result);
+        }
         response["success"] = false;
         response["error"] = "Failed to add patient to waitlist";
         res.result(http::status::internal_server_error);

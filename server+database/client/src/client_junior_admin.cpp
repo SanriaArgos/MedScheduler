@@ -234,4 +234,19 @@ json junior_admin_client::delete_doctor_feedback(const json &data) {
     }
 }
 
+json junior_admin_client::get_waitlist(int doctor_id, int junior_admin_id) {
+    std::string url = "http://localhost:8080/get_waitlist?doctor_id=" +
+                      std::to_string(doctor_id) + "&junior_admin_id" +
+                      std::to_string(junior_admin_id);
+    std::string response = send_get_request(url);
+
+    try {
+        json users = json::parse(response);
+        return users;
+    } catch (const std::exception &e) {
+        std::cerr << "Error with feedback: " << e.what() << std::endl;
+        return json();
+    }
+}
+
 }  // namespace junior_admin

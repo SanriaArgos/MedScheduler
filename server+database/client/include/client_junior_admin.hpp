@@ -28,6 +28,8 @@ public:
 
     json delete_doctor_feedback(const json &data);
 
+    json get_waitlist(int doctor_id, int junior_admin_id);
+
 private:
     int admin_id;
 };

@@ -78,8 +78,9 @@ void get_doctor_schedule_for_patient(
         slot["full_name"] = PQgetvalue(pgres, i, 7);
         slot["junior_admin_phone"] = PQgetvalue(pgres, i, 8);
         slot["slot_status"] = PQgetvalue(pgres, i, 9);
-        slot["hospital_id"] = PQgetvalue(pgres, i, 10);  // Добавляем hospital_id
-        
+        slot["hospital_id"] =
+            PQgetvalue(pgres, i, 10);  // Добавляем hospital_id
+
         schedule.push_back(std::move(slot));
     }
     PQclear(pgres);

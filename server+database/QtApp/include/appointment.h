@@ -1,10 +1,11 @@
 #ifndef APPOINTMENT_H
 #define APPOINTMENT_H
 
-#include <QWidget>
 #include <QDate>
-#include <QTime>
 #include <QPushButton>
+#include <QTime>
+#include <QWidget>
+
 namespace Ui {
 class Appointment;
 }
@@ -38,10 +39,10 @@ private slots:
 
 private:
     Ui::Appointment *ui;
-    void handle_day_clicked(QPushButton* clicked_button, int days);
+    void handle_day_clicked(QPushButton *clicked_button, int days);
 };
 
-struct slot{
+struct slot {
     QDate appointment_date;
     QTime appointment_time;
     QString full_name;
