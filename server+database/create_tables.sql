@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS rating (
     name TEXT NOT NULL,
     date TEXT NOT NULL,
     rate INT NOT NULL CHECK (rate BETWEEN 1 AND 5),
-    address TEXT NOT NULL,
+    address TEXT,
     UNIQUE (doctor_ref_id, user_id)
 );
 
