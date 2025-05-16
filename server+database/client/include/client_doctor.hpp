@@ -13,6 +13,8 @@ public:
     doctor_client(int doctor_id);
     json get_schedule();
 
+    json delete_self_account(int doctor_id);
+
 private:
     int doctor_id;
 };

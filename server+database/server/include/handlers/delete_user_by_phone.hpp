@@ -22,7 +22,7 @@ using json = nlohmann::json;
  Преференция: только senior administrator может вызывать этот метод.
 */
 void delete_user_by_phone(
-    const json &data,
+    const std::string &phone,
     http::response<http::string_body> &res,
     database_handler &db_handler
 );
