@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20) NOT NULL UNIQUE,
     user_type VARCHAR(30) NOT NULL DEFAULT 'patient',
     hashed_password  TEXT NOT NULL,
-    salt TEXT NOT NULL
+    salt TEXT NOT NULL,
+    last_login      TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS hospitals (
@@ -41,18 +42,21 @@ CREATE TABLE IF NOT EXISTS records (
     appointment_time TIME NOT NULL CHECK (EXTRACT(HOUR FROM appointment_time) BETWEEN 0 AND 23 AND EXTRACT(MINUTE FROM appointment_time) BETWEEN 0 AND 59),
     hospital_id INT NOT NULL REFERENCES hospitals(hospital_id),
     cabinet_number INT NOT NULL CHECK (cabinet_number >= 1),
-    patient_id INT REFERENCES users(id)
+    patient_id INT REFERENCES users(id),
+    cancelled BOOLEAN NOT NULL DEFAULT FALSE,
+    cancelled_at TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS rating (
     id SERIAL PRIMARY KEY,
     doctor_ref_id INT NOT NULL REFERENCES doctors(doctor_id) ON DELETE CASCADE,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,  -- Связь с users
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE, 
     text TEXT NOT NULL,
     name TEXT NOT NULL,
     date TEXT NOT NULL,
-    rate INT NOT NULL CHECK (rate BETWEEN 0 AND 5),
-    address TEXT NOT NULL
+    rate INT NOT NULL CHECK (rate BETWEEN 1 AND 5),
+    address TEXT,
+    UNIQUE (doctor_ref_id, user_id)
 );
 
 CREATE TABLE IF NOT EXISTS waitlist (
@@ -63,5 +67,22 @@ CREATE TABLE IF NOT EXISTS waitlist (
   first_name   TEXT,
   patronymic   TEXT,
   phone        TEXT,
-  request_date DATE NOT NULL DEFAULT CURRENT_DATE
+  requested_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  notified_at  TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS waitlist_expiry (
+    waitlist_id INT       NOT NULL REFERENCES waitlist(id) ON DELETE CASCADE,
+    expire_at   TIMESTAMP NOT NULL,
+    notified    BOOLEAN   NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (waitlist_id)
+);
+
+CREATE TABLE IF NOT EXISTS appointment_notifications (
+  id         SERIAL        PRIMARY KEY,
+  record_id  INT           NOT NULL  REFERENCES records(record_id)  ON DELETE CASCADE,
+  user_id    INT           NOT NULL  REFERENCES users(id)          ON DELETE CASCADE,
+  send_time  TIMESTAMPTZ   NOT NULL,
+  payload    JSONB         NOT NULL,
+  sent       BOOLEAN       NOT NULL  DEFAULT FALSE
 );

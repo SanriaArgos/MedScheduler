@@ -17,6 +17,8 @@ public:
     json get_hospitals_table();
     json get_users_table();
 
+    json delete_user_by_phone(const std::string &user_phone);
+
 private:
     int admin_id;
 };
