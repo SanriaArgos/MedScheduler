@@ -11,6 +11,7 @@ JuniorAdminWindow::JuniorAdminWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::JuniorAdminWindow) {
     ui->setupUi(this);
     make_all_basic();
+    on_button_get_users_clicked();
 }
 
 void JuniorAdminWindow::set_user_id(int id) {
