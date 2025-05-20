@@ -30,6 +30,20 @@ private slots:
 
     void on_get_doctors_table_button_clicked();
 
+    void make_all_basic();
+
+    void on_button_get_users_clicked();
+
+    void on_button_get_doctors_clicked();
+
+    void on_button_add_doctor_clicked();
+
+    void on_button_attach_doctor_clicked();
+
+    void on_button_add_appointment_clicked();
+
+    void on_button_get_schedule_clicked();
+
 private:
     Ui::JuniorAdminWindow *ui;
     int user_id = 0;

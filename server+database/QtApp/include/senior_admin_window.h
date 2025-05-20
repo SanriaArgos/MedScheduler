@@ -24,6 +24,16 @@ private slots:
 
     void on_get_hospitals_table_button_clicked();
 
+    void make_all_basic();
+
+    void on_button_get_hospitals_clicked();
+
+    void on_button_get_users_clicked();
+
+    void on_button_add_hospital_clicked();
+
+    void on_button_add_junior_admin_clicked();
+
 private:
     Ui::SeniorAdminWindow *ui;
     int user_id = 0;
