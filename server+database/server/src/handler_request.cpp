@@ -826,16 +826,8 @@ void handle_request(
         }
 
         else if (req.method() == http::verb::patch) {
-            if (req.target() == "/edit_doctor_feedback") {
-                try {
-                    json body = json::parse(req.body());
-                    edit_doctor_feedback(body, res, db_handler);
-                } catch (const std::exception &e) {
-                    handle_error(e, res);
-                }
-            }
 
-            else if (req.target() == "/edit_doctor_profile") {
+            if (req.target() == "/edit_doctor_profile") {
                 try {
                     json body = json::parse(req.body());
                     edit_doctor_profile(body, res, db_handler);
@@ -844,6 +836,14 @@ void handle_request(
                 }
             }
 
+            if (req.target() == "/edit_doctor_feedback") {
+                try {
+                    json body = json::parse(req.body());
+                    edit_doctor_feedback(body, res, db_handler);
+                } catch (const std::exception &e) {
+                    handle_error(e, res);
+                }
+            }
 
             else if (req.target() == "/edit_junior_admin_profile") {
                 try {
