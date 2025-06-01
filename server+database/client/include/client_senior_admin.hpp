@@ -19,6 +19,8 @@ public:
 
     json delete_user_by_phone(const std::string &user_phone);
 
+    json edit_senior_admin_profile(const json &request_data);
+
 private:
     int admin_id;
 };

@@ -374,4 +374,17 @@ json patient_client::get_waitlist_count(int doctor_id) {
     }
 }
 
+json doctor_client::edit_patient_profile(const json &request_data) {
+    std::string url = "http://localhost:8080/edit_patient_profile";
+    std::string response = send_patch_request(url, request_data);
+
+    try {
+        return json::parse(response);
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Invalid JSON from server: ") + e.what()}};
+    }
+}
+
 }  // namespace patient

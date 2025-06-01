@@ -1,6 +1,6 @@
 SELECT cron.schedule(
   'expire_waitlisters',
-  '* * * * *',
+  '* * * * *',  -- Каждую минуту
   $$
     -- Обновляем статус устаревших записей
     UPDATE waitlist_expiry SET notified = TRUE
@@ -21,14 +21,12 @@ SELECT cron.schedule(
         AND notified = TRUE
     );
 
-    -- Уведомляем следующих в очереди (если функция существует)
-    PERFORM (
-      SELECT notify_next_waitlister(doctor_id)
-      FROM waitlist_expiry we
-      JOIN waitlist w ON w.id = we.waitlist_id
-      WHERE NOW() > we.expire_at
-        AND we.notified = TRUE
-      LIMIT 1
-    );
+    -- Уведомляем следующих в очереди (используем SELECT вместо PERFORM)
+    SELECT notify_next_waitlister(doctor_id)
+    FROM waitlist_expiry we
+    JOIN waitlist w ON w.id = we.waitlist_id
+    WHERE NOW() > we.expire_at
+      AND we.notified = TRUE
+    LIMIT 1;
   $$
 );

@@ -28,6 +28,8 @@ public:
 
     json delete_doctor_feedback(const json &data);
 
+    json edit_junior_admin_profile(const json &data);
+
 private:
     int admin_id;
 };

@@ -39,4 +39,17 @@ json doctor_client::delete_self_account(int doctor_id) {
     }
 }
 
+json doctor_client::edit_doctor_profile(const json &request_data) {
+    std::string url = "http://localhost:8080/edit_doctor_profile";
+    std::string response = send_patch_request(url, request_data);
+
+    try {
+        return json::parse(response);
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Invalid JSON from server: ") + e.what()}};
+    }
+}
+
 }  // namespace doctor

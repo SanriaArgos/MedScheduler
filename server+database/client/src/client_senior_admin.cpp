@@ -60,4 +60,17 @@ json senior_admin_client::delete_user_by_phone(const std::string &user_phone) {
     }
 }
 
+json doctor_client::edit_senior_admin_profile(const json &request_data) {
+    std::string url = "http://localhost:8080/edit_senior_admin_profile";
+    std::string response = send_patch_request(url, request_data);
+
+    try {
+        return json::parse(response);
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Invalid JSON from server: ") + e.what()}};
+    }
+}
+
 }  // namespace senior_admin

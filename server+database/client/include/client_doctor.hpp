@@ -12,13 +12,13 @@ class doctor_client {
 public:
     doctor_client(int doctor_id);
     json get_schedule();
-
     json delete_self_account(int doctor_id);
+    
+    json edit_doctor_profile(const json &request_data);
 
 private:
     int doctor_id;
 };
-
 }  // namespace doctor
 
 #endif  // DOCTOR_CLIENT_HPP

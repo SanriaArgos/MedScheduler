@@ -234,6 +234,19 @@ json junior_admin_client::delete_doctor_feedback(const json &data) {
     }
 }
 
+json junior_admin_client::edit_junior_admin_profile(const json &data) {
+    std::string url = "http://localhost:8080/edit_junior_admin_profile";
+    std::string response = send_patch_request(url, data);
+
+    try {
+        json users = json::parse(response);
+        return users;
+    } catch (const std::exception &e) {
+        std::cerr << "Error with feedback: " << e.what() << std::endl;
+        return json();
+    }
+}
+
 json junior_admin_client::get_waitlist(int doctor_id, int junior_admin_id) {
     std::string url = "http://localhost:8080/get_waitlist?doctor_id=" +
                       std::to_string(doctor_id) + "&junior_admin_id" +

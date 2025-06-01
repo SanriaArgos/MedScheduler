@@ -51,6 +51,8 @@ public:
 
     json get_waitlist_count(int doctor_id);
 
+    json edit_patient_profile(const json &request_data);
+
 private:
     int user_id_;
 };

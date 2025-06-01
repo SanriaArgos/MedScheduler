@@ -53,6 +53,10 @@
 #include "../include/handlers/post_doctor_feedback.hpp"
 #include "../include/handlers/registration.hpp"
 #include "../include/handlers/search_doctors.hpp"
+#include "../include/handlers/edit_patient_profile.hpp"
+#include "../include/handlers/edit_doctor_profile.hpp"
+#include "../include/handlers/edit_senior_admin_profile.hpp"
+#include "../include/handlers/edit_junior_admin_profile.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -831,7 +835,44 @@ void handle_request(
                 }
             }
 
-            if (req.target() == "/cancel_appointment") {
+            else if (req.target() == "/edit_doctor_profile") {
+                try {
+                    json body = json::parse(req.body());
+                    edit_doctor_profile(body, res, db_handler);
+                } catch (const std::exception &e) {
+                    handle_error(e, res);
+                }
+            }
+
+
+            else if (req.target() == "/edit_junior_admin_profile") {
+                try {
+                    json body = json::parse(req.body());
+                    edit_junior_admin_profile(body, res, db_handler);
+                } catch (const std::exception &e) {
+                    handle_error(e, res);
+                }
+            }
+
+            else if (req.target() == "/edit_senior_admin_profile") {
+                try {
+                    json body = json::parse(req.body());
+                    edit_senior_admin_profile(body, res, db_handler);
+                } catch (const std::exception &e) {
+                    handle_error(e, res);
+                }
+            }
+
+            else if (req.target() == "/edit_patient_profile") {
+                try {
+                    json body = json::parse(req.body());
+                    edit_patient_profile(body, res, db_handler);
+                } catch (const std::exception &e) {
+                    handle_error(e, res);
+                }
+            }
+
+            else if (req.target() == "/cancel_appointment") {
                 try {
                     json body = json::parse(req.body());
                     cancel_appointment(body, res, db_handler);
@@ -839,6 +880,7 @@ void handle_request(
                     handle_error(e, res);
                 }
             }
+            
 
             else {
                 handle_not_found(res);
