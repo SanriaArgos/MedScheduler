@@ -14,11 +14,11 @@ services:
       - ./sql/0-create_tables.sql:/docker-entrypoint-initdb.d/0-create_tables.sql # Явно указываем имя файла
       - ./sql/00-init-user.sql:/docker-entrypoint-initdb.d/00-init-user.sql # Добавлен скрипт инициализации пользователя
       - ./sql/00-init-cron.sql:/docker-entrypoint-initdb.d/00-init-cron.sql
-      - ./10-cleanup_old_data.sql:/docker-entrypoint-initdb.d/10-cleanup_old_data.sql
-      - ./20-cleanup_waitlist.sql:/docker-entrypoint-initdb.d/20-cleanup_waitlist.sql
-      - ./30-expire_waitlisters.sql:/docker-entrypoint-initdb.d/30-expire_waitlisters.sql
-      - ./40-notify_about_record.sql:/docker-entrypoint-initdb.d/40-notify_about_record.sql
-      - ./50-notify_waitlist.sql:/docker-entrypoint-initdb.d/50-notify_waitlist.sql
+      - ./sql/10-cleanup_old_data.sql:/docker-entrypoint-initdb.d/10-cleanup_old_data.sql
+      - ./sql/20-cleanup_waitlist.sql:/docker-entrypoint-initdb.d/20-cleanup_waitlist.sql
+      - ./sql/30-expire_waitlisters.sql:/docker-entrypoint-initdb.d/30-expire_waitlisters.sql
+      - ./sql/40-notify_about_record.sql:/docker-entrypoint-initdb.d/40-notify_about_record.sql
+      - ./sql/50-notify_waitlist.sql:/docker-entrypoint-initdb.d/50-notify_waitlist.sql
     command: 
       - "postgres"
       - "-c"
