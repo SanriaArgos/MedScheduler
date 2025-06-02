@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Устанавливаем необходимые пакеты
 RUN apt-get update && apt-get install -y --fix-missing \
+    curl \
     cmake \
     wget \
     git \
@@ -15,6 +16,7 @@ RUN apt-get update && apt-get install -y --fix-missing \
     postgresql-contrib \
     build-essential \
     nlohmann-json3-dev \
+    libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Устанавливаем рабочую директорию

@@ -58,6 +58,7 @@
 #include "../include/handlers/edit_senior_admin_profile.hpp"
 #include "../include/handlers/edit_junior_admin_profile.hpp"
 #include "../include/handlers/get_doctor_statistics.hpp"
+#include "../include/handlers/send_notification.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -175,6 +176,9 @@ void handle_request(
                 }
                 else if (req.target() == "/get_doctor_statistics") {
                     get_doctor_statistics(body, res, db_handler);
+                }
+                else if (req.target() == "/send_notification") {
+                    send_notification_handler(body, res, db_handler);
                 }
                 else {
                     handle_not_found(res);
@@ -751,3 +755,4 @@ void handle_request(
     }
     res.prepare_payload();
 }
+
