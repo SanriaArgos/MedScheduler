@@ -11,7 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
-      - ./0-create_tables.sql:/docker-entrypoint-initdb.d/0--create_tables.sql
+      - ./0-create_tables.sql:/docker-entrypoint-initdb.d/
       - ./00-init-cron.sql:/docker-entrypoint-initdb.d/00-init-cron.sql
       - ./10-cleanup_old_data.sql:/docker-entrypoint-initdb.d/10-cleanup_old_data.sql
       - ./20-cleanup_waitlist.sql:/docker-entrypoint-initdb.d/20-cleanup_waitlist.sql
