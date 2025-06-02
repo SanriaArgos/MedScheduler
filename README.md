@@ -85,3 +85,5 @@ server_name api.medscheduler.ru www.medscheduler.ru medscheduler.ru; # managed b
     ssl_certificate_key /etc/letsencrypt/live/medscheduler.ru/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
