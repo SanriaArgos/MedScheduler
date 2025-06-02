@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.DEPLOY_PASS }}
           port: 22
           source: "deployServer.tar"
-          target: "/root/"
+          target: "/home/githubuser/"
 
       - name: Deploy application on server
         uses: appleboy/ssh-action@master
@@ -38,17 +38,17 @@ jobs:
           port: 22
           script: |
             echo "Ensuring database data directory exists..."
-            mkdir -p /root/dbData
+            mkdir -p /home/githubuser/dbData
 
             echo "Cleaning up old deployment directory..."
-            rm -rf /root/medscheduler_app || true
-            mkdir -p /root/medscheduler_app
+            rm -rf /home/githubuser/medscheduler_app || true
+            mkdir -p /home/githubuser/medscheduler_app
 
             echo "Extracting archive..."
-            tar -xvf /root/deployServer.tar -C /root/medscheduler_app
+            tar -xvf /home/githubuser/deployServer.tar -C /home/githubuser/medscheduler_app
 
             echo "Navigating to the application directory..."
-            cd /root/medscheduler_app/server+database
+            cd /home/githubuser/medscheduler_app/server+database
 
             echo "Stopping existing services (if any)..."
             docker-compose down || true
@@ -58,7 +58,7 @@ jobs:
 
             echo "Deployment complete. Services should be up and running."
             echo "To check logs, SSH into the server and run:"
-            echo "cd /root/medscheduler_app/server+database"
+            echo "cd /home/githubuser/medscheduler_app/server+database"
             echo "docker-compose logs -f server"
             echo "docker-compose logs -f db"
 

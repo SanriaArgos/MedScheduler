@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /root/dbData:/var/lib/postgresql/data  # Изменено на прямой маппинг папки
+      - /home/githubuser/dbData:/var/lib/postgresql/data  # Изменено на прямой маппинг папки
       - ./sql/0-create_tables.sql:/docker-entrypoint-initdb.d/0-create_tables.sql # Явно указываем имя файла
       - ./sql/00-init-user.sql:/docker-entrypoint-initdb.d/00-init-user.sql # Добавлен скрипт инициализации пользователя
       - ./sql/00-init-cron.sql:/docker-entrypoint-initdb.d/00-init-cron.sql

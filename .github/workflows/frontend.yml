@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.DEPLOY_PASS }}
           port: 22
           source: "deployFront.tar"
-          target: "/root/"
+          target: "/home/githubuser/"
 
       - name: Run Docker CMD
         uses: appleboy/ssh-action@master
@@ -41,11 +41,11 @@ jobs:
           password: ${{ secrets.DEPLOY_PASS }}
           port: 22
           script: |
-            rm -rf /root/medscheduler-frontend-build
-            mkdir /root/medscheduler-frontend-build
-            cd /root/medscheduler-frontend-build
+            rm -rf /home/githubuser/medscheduler-frontend-build
+            mkdir /home/githubuser/medscheduler-frontend-build
+            cd /home/githubuser/medscheduler-frontend-build
             tar -xvf ../deployFront.tar
-            cd /root/medscheduler-frontend-build/build
+            cd /home/githubuser/medscheduler-frontend-build/build
             docker build . --tag medscheduler-frontend:latest
             docker stop medscheduler-frontend || true  && docker rm medscheduler-frontend || true
             docker run -p 127.0.0.1:3091:3000 -d --name=medscheduler-frontend --restart unless-stopped medscheduler-frontend:latest
