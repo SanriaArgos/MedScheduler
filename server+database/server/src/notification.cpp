@@ -14,14 +14,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-// Функция для отправки SMS
-// Принимает:
-// - phoneNumber: Номер телефона получателя
-// - textMessage: Текст сообщения
-// Возвращает: Строку с ответом от сервера
-std::string sendSms(const std::string& phoneNumber, const std::string& textMessage) {
-    return sendSmsWithAuth(SMS_API_LOGIN, SMS_API_PASSWORD, phoneNumber, textMessage);
-}
+
 
 // Функция для отправки SMS с указанными учетными данными
 // Принимает:
@@ -103,3 +96,11 @@ std::string sendSmsWithAuth(const std::string& login, const std::string& passwor
     return readBuffer; // Возвращаем ответ сервера
 }
 
+// Функция для отправки SMS
+// Принимает:
+// - phoneNumber: Номер телефона получателя
+// - textMessage: Текст сообщения
+// Возвращает: Строку с ответом от сервера
+std::string sendSms(const std::string& phoneNumber, const std::string& textMessage) {
+    return sendSmsWithAuth(SMS_API_LOGIN, SMS_API_PASSWORD, phoneNumber, textMessage);
+}
