@@ -10,7 +10,9 @@ using json = nlohmann::json;
 
 // POST /search_doctors
 // Тело JSON может содержать любые из полей:
-//   region, settlement_type, settlement_name, full_name, specialty, rate
+//   region, settlement_type, settlement_name, full_name, specialty,
+// а также опционально:
+//   sort_by_rating: true/false — если true, сортировать по рейтингу DESC
 //
 // В ответ отдаётся:
 // {
