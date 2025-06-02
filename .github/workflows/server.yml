@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'server+database/**'
+      - 'server+database/*'
       - '.github/workflows/server.yml'
   workflow_dispatch:
 
