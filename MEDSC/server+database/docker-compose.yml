@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db-data:/var/lib/postgre  sql/data
+      - db-data:/var/lib/postgresql/data
       - ./0-create_tables.sql:/docker-entrypoint-initdb.d/
       - ./00-init-cron.sql:/docker-entrypoint-initdb.d/00-init-cron.sql
       - ./10-cleanup_old_data.sql:/docker-entrypoint-initdb.d/10-cleanup_old_data.sql
