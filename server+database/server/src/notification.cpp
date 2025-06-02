@@ -96,6 +96,7 @@ std::string sendSmsWithAuth(const std::string& login, const std::string& passwor
     return readBuffer; // Возвращаем ответ сервера
 }
 
+
 // Функция для отправки SMS
 // Принимает:
 // - phoneNumber: Номер телефона получателя
