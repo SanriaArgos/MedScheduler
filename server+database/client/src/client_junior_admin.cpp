@@ -262,4 +262,17 @@ json junior_admin_client::get_waitlist(int doctor_id, int junior_admin_id) {
     }
 }
 
+json junior_admin_client::get_doctor_statistics(const json &data) {
+    std::string url = "http://localhost:8080/get_doctor_statistics";
+    std::string response = send_post_request(url, data);
+
+    try {
+        json users = json::parse(response);
+        return users;
+    } catch (const std::exception &e) {
+        std::cerr << "Error with feedback: " << e.what() << std::endl;
+        return json();
+    }
+}
+
 }  // namespace junior_admin
