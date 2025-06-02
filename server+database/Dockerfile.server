@@ -22,7 +22,7 @@ WORKDIR /app
 
 # Копируем файлы проекта в контейнер
 COPY server ./server
-COPY 0-create_tables.sql /app/create_tables.sql
+COPY sql/0-create_tables.sql /app/create_tables.sql
 
 # Удаляем старые артефакты сборки, если они есть
 RUN rm -rf build CMakeCache.txt CMakeFiles

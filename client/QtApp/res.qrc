@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/star-of-life-svgrepo-com.svg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>images/icon-512.png</file>
+    </qresource>
+</RCC>
