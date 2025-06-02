@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  #pull_request:
+  #  branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        run: |
+          mkdir ../build
+          cp -TR frontend/ ../build
+          tar -cvf deployFront.tar ../build/
+
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASS }}
+          port: 22
+          source: "deployFront.tar"
+          target: "/root/"
+
+      - name: Run Docker CMD
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASS }}
+          port: 22
+          script: |
+            rm -rf /root/medscheduler-frontend-build
+            mkdir /root/medscheduler-frontend-build
+            cd /root/medscheduler-frontend-build
+            tar -xvf ../deployFront.tar
+            cd /root/medscheduler-frontend-build/build
+            docker build . --tag medscheduler-frontend:latest
+            docker stop medscheduler-frontend || true  && docker rm medscheduler-frontend || true
+            docker run -p 127.0.0.1:3091:3000 -d --name=medscheduler-frontend --restart unless-stopped medscheduler-frontend:latest
+
