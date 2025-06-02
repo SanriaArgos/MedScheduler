@@ -49,5 +49,5 @@ jobs:
             cd /home/githubuser/medscheduler-frontend-build/build
             docker build . --tag medscheduler-frontend:latest
             docker stop medscheduler-frontend || true  && docker rm medscheduler-frontend || true
-            docker run -p 127.0.0.1:3091:3000 -d --name=medscheduler-frontend --restart unless-stopped medscheduler-frontend:latest
+            docker run -p 3091:3000 -d --name=medscheduler-frontend --restart unless-stopped medscheduler-frontend:latest
 
