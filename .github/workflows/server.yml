@@ -62,4 +62,5 @@ jobs:
             echo "cd /home/githubuser/medscheduler_app/server+database"
             echo "docker-compose logs -f server"
             echo "docker-compose logs -f db"
+            
 
