@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Поиск зависимостей
 find_package(Boost REQUIRED COMPONENTS system)
-
 find_package(PostgreSQL REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(nlohmann_json REQUIRED)
+find_package(CURL REQUIRED)  # ← добавлено
 
 # Указываем пути к заголовочным файлам
 include_directories(${Boost_INCLUDE_DIRS} ${PostgreSQL_INCLUDE_DIRS} include)
@@ -26,4 +26,5 @@ target_link_libraries(boost_api_server
     ${PostgreSQL_LIBRARIES}
     OpenSSL::Crypto
     nlohmann_json::nlohmann_json
+    CURL::libcurl  # ← добавлено
 )
