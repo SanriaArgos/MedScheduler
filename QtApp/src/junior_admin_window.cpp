@@ -4,7 +4,7 @@
 #include <QJsonObject>
 #include <QString>
 #include <nlohmann/json.hpp>
-#include "../client/src/client_junior_admin.cpp"
+#include "client_junior_admin.hpp"
 #include "ui_junior_admin_window.h"
 
 JuniorAdminWindow::JuniorAdminWindow(QWidget *parent)

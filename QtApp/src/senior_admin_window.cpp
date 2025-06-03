@@ -5,8 +5,8 @@
 #include <QJsonObject>
 #include <QString>
 #include <nlohmann/json.hpp>
-#include "../client/include/client_senior_admin.hpp"
-#include "../client/include/common_for_all.hpp"
+#include "client_senior_admin.hpp"
+#include "common_for_all.hpp"
 #include "ui_senior_admin_window.h"
 #include "utils.h"
 

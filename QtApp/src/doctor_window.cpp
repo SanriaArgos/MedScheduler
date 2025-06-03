@@ -8,7 +8,7 @@
 #include <QVBoxLayout>  // Added for QVBoxLayout
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "../client/src/client_doctor.cpp"
+#include "client_doctor.hpp"
 #include "ui_doctor_window.h"
 
 DoctorWindow::DoctorWindow(QWidget *parent)

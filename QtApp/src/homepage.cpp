@@ -11,8 +11,8 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
-#include "../client/include/client_patient.hpp"
-#include "../client/include/common_for_all.hpp"
+#include "client_patient.hpp"
+#include "common_for_all.hpp"
 #include "appointment.h"
 #include "ui_homepage.h"
 int patient_id = 0;

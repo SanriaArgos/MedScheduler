@@ -10,7 +10,7 @@
 #include <QVector>
 #include <string>
 #include <vector>
-#include "../client/include/client_patient.hpp"
+#include "client_patient.hpp"
 #include "ui_appointment.h"
 QDate today = QDate::currentDate();
 

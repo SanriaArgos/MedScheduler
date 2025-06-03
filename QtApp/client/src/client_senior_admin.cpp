@@ -1,7 +1,7 @@
-#include "../include/client_senior_admin.hpp"
+#include "client_senior_admin.hpp"
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "../include/common_for_all.hpp"
+#include "common_for_all.hpp"
 
 namespace senior_admin {
 
@@ -60,7 +60,7 @@ json senior_admin_client::delete_user_by_phone(const std::string &user_phone) {
     }
 }
 
-json doctor_client::edit_senior_admin_profile(const json &request_data) {
+json senior_admin_client::edit_senior_admin_profile(const json &request_data) {
     std::string url = "http://localhost:8080/edit_senior_admin_profile";
     std::string response = send_patch_request(url, request_data);
 

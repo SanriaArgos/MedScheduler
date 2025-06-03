@@ -18,12 +18,13 @@ SOURCES += \
     src/registration_window.cpp \
     src/senior_admin_window.cpp \
     src/utils.cpp \
-    ../client/src/client_auth.cpp \
-    ../client/src/client_doctor.cpp \
-    ../client/src/client_junior_admin.cpp \
-    ../client/src/client_patient.cpp \
-    ../client/src/client_senior_admin.cpp \
-    ../client/src/common_for_all.cpp
+    client/src/client_auth.cpp \
+    client/src/client_doctor.cpp \
+    client/src/client_junior_admin.cpp \
+    client/src/client_patient.cpp \
+    client/src/client_senior_admin.cpp \
+    client/src/common_for_all.cpp \
+    client/src/get_by_phone.cpp
 
 HEADERS += \
     include/appointment.h \
@@ -34,12 +35,13 @@ HEADERS += \
     include/registration_window.h \
     include/senior_admin_window.h \
     include/utils.h \
-    ../client/include/client_auth.hpp \
-    ../client/include/client_doctor.hpp \
-    ../client/include/client_junior_admin.hpp \
-    ../client/include/client_patient.hpp \
-    ../client/include/client_senior_admin.hpp \
-    ../client/include/common_for_all.hpp
+    client/include/client_auth.hpp \
+    client/include/client_doctor.hpp \
+    client/include/client_junior_admin.hpp \
+    client/include/client_patient.hpp \
+    client/include/client_senior_admin.hpp \
+    client/include/common_for_all.hpp \
+    client/include/get_by_phone.hpp
 
 FORMS += \
     forms/appointment.ui \
@@ -60,6 +62,5 @@ RESOURCES += \
 
 LIBS += -lcurl
 
-INCLUDEPATH += $$PWD/server+database/client/include
 INCLUDEPATH += $$PWD/include
-INCLUDEPATH += $$PWD/../client/include
+INCLUDEPATH += $$PWD/client/include
