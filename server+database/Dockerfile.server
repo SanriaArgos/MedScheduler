@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Устанавливаем необходимые пакеты
 RUN apt-get update && apt-get install -y --fix-missing \
+    curl \
     cmake \
     wget \
     git \
@@ -15,6 +16,7 @@ RUN apt-get update && apt-get install -y --fix-missing \
     postgresql-contrib \
     build-essential \
     nlohmann-json3-dev \
+    libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Устанавливаем рабочую директорию
@@ -22,7 +24,7 @@ WORKDIR /app
 
 # Копируем файлы проекта в контейнер
 COPY server ./server
-COPY create_tables.sql /app/create_tables.sql
+COPY sql/0-create_tables.sql /app/create_tables.sql
 
 # Удаляем старые артефакты сборки, если они есть
 RUN rm -rf build CMakeCache.txt CMakeFiles

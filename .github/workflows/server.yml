@@ -1,0 +1,65 @@
+name: Deploy Server and Database
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'server+database/**'
+      - '.github/workflows/server.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create archive
+        run: |
+          tar -cvf deployServer.tar server+database/
+
+      - name: Copy archive via ssh
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASS }}
+          port: 22
+          source: "deployServer.tar"
+          target: "/home/githubuser/"
+
+      - name: Deploy application on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASS }}
+          port: 22
+          script: |
+            echo "Ensuring database data directory exists..."
+            mkdir -p /home/githubuser/dbData
+
+            echo "Cleaning up old deployment directory..."
+            rm -rf /home/githubuser/medscheduler_app || true
+            mkdir -p /home/githubuser/medscheduler_app
+
+            echo "Extracting archive..."
+            tar -xvf /home/githubuser/deployServer.tar -C /home/githubuser/medscheduler_app
+
+            echo "Navigating to the application directory..."
+            cd /home/githubuser/medscheduler_app/server+database
+
+            echo "Stopping existing services (if any)..."
+            docker-compose down || true
+
+            echo "Building and starting new services..."
+            docker-compose up --build -d
+
+            echo "Deployment complete. Services should be up and running."
+            echo "To check logs, SSH into the server and run:"
+            echo "cd /home/githubuser/medscheduler_app/server+database"
+            echo "docker-compose logs -f server"
+            echo "docker-compose logs -f db"
+            
+
