@@ -10,6 +10,8 @@
 JuniorAdminWindow::JuniorAdminWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::JuniorAdminWindow) {
     ui->setupUi(this);
+    make_all_basic();
+    on_button_get_users_clicked();
 }
 
 void JuniorAdminWindow::set_user_id(int id) {
@@ -33,6 +35,7 @@ void JuniorAdminWindow::on_add_doctor_button_clicked() {
     QString education = ui->education_form->text();
     QString specialty = ui->specialty_form->text();
     QString experience = ui->experience_form->text();
+    QString price = ui->price_form->text();
 
     if (!is_latin_or_dash(last_name)) {
         ui->add_doctor_error->setText("Incorrect format for the last name.");
@@ -66,6 +69,10 @@ void JuniorAdminWindow::on_add_doctor_button_clicked() {
         ui->add_doctor_error->setText("Incorrect format for experience.");
         return;
     }
+    if (!is_number(price)) {
+        ui->add_doctor_error->setText("Incorrect format for price.");
+        return;
+    }
 
     QJsonObject json;
     json["last_name"] = last_name;
@@ -75,6 +82,7 @@ void JuniorAdminWindow::on_add_doctor_button_clicked() {
     json["education"] = education;
     json["specialty"] = specialty;
     json["experience"] = experience.toInt();
+    json["price"] = price.toInt();
 
     QJsonDocument doc(json);
     QString jsonString = doc.toJson(QJsonDocument::Compact);
@@ -324,12 +332,13 @@ void JuniorAdminWindow::on_get_doctors_table_button_clicked() {
             QString education = userObj["education"].toString();
             QString specialty = userObj["specialty"].toString();
             QString experience = userObj["experience"].toString();
+            QString price = userObj["price"].toString();
 
             // Создаем QLabel для отображения данных
             QLabel *label = new QLabel(contentWidget);
             label->setText(
                 id + ", " + fullName + ", " + phoneNumber + ", " + education +
-                ", " + specialty + ", " + experience
+                    ", " + specialty + ", " + experience+", "+price
             );
             label->setStyleSheet("border: 1px solid black; padding: 5px;");
 
@@ -342,3 +351,152 @@ void JuniorAdminWindow::on_get_doctors_table_button_clicked() {
     // Устанавливаем contentWidget в QScrollArea
     ui->doctors_scroll->setWidget(contentWidget);
 }
+void JuniorAdminWindow::make_all_basic() {
+    const QString baseStyle =
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: transparent;"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgba(64, 64, 80, 100);"
+        "   border-radius: 10px;"
+        "}";
+
+    ui->button_add_appointment->setStyleSheet(baseStyle);
+    ui->button_add_doctor->setStyleSheet(baseStyle);
+    ui->button_attach_doctor->setStyleSheet(baseStyle);
+    ui->button_get_users->setStyleSheet(baseStyle);
+    ui->button_get_schedule->setStyleSheet(baseStyle);
+    ui->button_get_doctors->setStyleSheet(baseStyle);
+}
+void JuniorAdminWindow::on_button_get_users_clicked()
+{
+    on_get_users_table_button_clicked();
+    ui->stackedWidget->setCurrentWidget(ui->page_get_users);
+    make_all_basic();
+    ui->button_get_users->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void JuniorAdminWindow::on_button_get_doctors_clicked()
+{
+    on_get_doctors_table_button_clicked();
+    ui->stackedWidget->setCurrentWidget(ui->page_get_doctors);
+    make_all_basic();
+    ui->button_get_doctors->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void JuniorAdminWindow::on_button_add_doctor_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_add_doctor);
+    make_all_basic();
+    ui->button_add_doctor->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void JuniorAdminWindow::on_button_attach_doctor_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_attach_doctor);
+    make_all_basic();
+    ui->button_attach_doctor->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void JuniorAdminWindow::on_button_add_appointment_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_add_appointment);
+    make_all_basic();
+    ui->button_add_appointment->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void JuniorAdminWindow::on_button_get_schedule_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_get_schedule);
+    make_all_basic();
+    ui->button_get_schedule->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+

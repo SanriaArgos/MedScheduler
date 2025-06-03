@@ -13,6 +13,7 @@
 SeniorAdminWindow::SeniorAdminWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::SeniorAdminWindow) {
     ui->setupUi(this);
+    on_button_get_users_clicked();
 }
 
 void SeniorAdminWindow::set_user_id(int id) {
@@ -224,3 +225,107 @@ void SeniorAdminWindow::on_get_hospitals_table_button_clicked() {
     // Устанавливаем contentWidget в QScrollArea
     ui->hospitals_table_scroll->setWidget(contentWidget);
 }
+void SeniorAdminWindow::make_all_basic() {
+    const QString baseStyle =
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: transparent;"
+        "   border: none;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgba(64, 64, 80, 100);"
+        "   border-radius: 10px;"
+        "}";
+
+    ui->button_get_hospitals->setStyleSheet(baseStyle);
+    ui->button_get_users->setStyleSheet(baseStyle);
+    ui->button_add_hospital->setStyleSheet(baseStyle);
+    ui->button_add_junior_admin->setStyleSheet(baseStyle);
+}
+void SeniorAdminWindow::on_button_get_hospitals_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_get_hospitals);
+    make_all_basic();
+    ui->button_get_hospitals->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+
+}
+
+
+void SeniorAdminWindow::on_button_get_users_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_get_users);
+    make_all_basic();
+    ui->button_get_users->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void SeniorAdminWindow::on_button_add_hospital_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_add_hospital);
+    make_all_basic();
+    ui->button_add_hospital->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void SeniorAdminWindow::on_button_add_junior_admin_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_add_junior_admin);
+    make_all_basic();
+    ui->button_add_junior_admin->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
