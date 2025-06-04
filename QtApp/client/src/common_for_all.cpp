@@ -1,5 +1,7 @@
 #include "common_for_all.hpp"
 
+const std::string base_url = "http://localhost:8080";
+
 size_t
 write_callback(void *contents, size_t size, size_t nmemb, std::string *s) {
     size_t new_length = size * nmemb;

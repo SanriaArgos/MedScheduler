@@ -10,7 +10,7 @@ using json = nlohmann::json;
 user_info login(const std::string &phone, const std::string &password) {
     json login_data = {{"phone", phone}, {"password", password}};
 
-    std::string url = "http://localhost:8080/login";
+    std::string url = base_url+"/login";
 
     std::string response;
     try {
@@ -54,7 +54,7 @@ user_info login(const std::string &phone, const std::string &password) {
     std::string type_response;
     try {
         type_response = send_get_request(
-            "http://localhost:8080/get_user_type?phone=" + phone
+            base_url+"/get_user_type?phone=" + phone
         );
     } catch (const std::exception &e) {
         std::cerr << "Error fetching user type: " << e.what() << "\n";
@@ -85,7 +85,7 @@ user_info register_user(
                           {"patronymic", patronymic}, {"user_type", "patient"}};
 
     std::string response =
-        send_post_request("http://localhost:8080/registration", register_data);
+        send_post_request(base_url+"/registration", register_data);
 
     // Проверяем успешность регистрации
     try {
@@ -105,7 +105,7 @@ user_info register_user(
 
     // GET ID
     std::string resp_id =
-        send_get_request("http://localhost:8080/get_user_id?phone=" + phone_1);
+        send_get_request(base_url+"/get_user_id?phone=" + phone_1);
     int id = -1;
     try {
         auto j = nlohmann::json::parse(resp_id);
@@ -116,7 +116,7 @@ user_info register_user(
 
     // GET user_type
     std::string resp_type = send_get_request(
-        "http://localhost:8080/get_user_type?phone=" + phone_1
+        base_url+"/get_user_type?phone=" + phone_1
     );
     std::string user_type;
     try {
