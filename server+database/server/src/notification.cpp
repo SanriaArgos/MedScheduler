@@ -5,7 +5,7 @@
 
 // Объявляем константы для данных аутентификации SMS API
 const std::string SMS_API_LOGIN = "89128870195";
-const std::string SMS_API_PASSWORD = "Butterfly311006";
+const std::string SMS_API_PASSWORD = "medscheduler";
 
 // Callback функция для обработки ответа от сервера
 // libcurl будет вызывать эту функцию для записи полученных данных
