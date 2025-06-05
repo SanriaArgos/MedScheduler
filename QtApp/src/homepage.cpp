@@ -317,6 +317,9 @@ void homepage::on_apply_filtres_button_clicked() {
             QString::fromStdString(doctor_json["specialty"].get<std::string>());
         doctor_array.push_back(doc);
     }
+    if (ui->doctor_schedule->widget()) {
+    delete ui->doctor_schedule->widget();
+}
     QWidget *scrollContent = new QWidget();
     QVBoxLayout *scrollLayout = new QVBoxLayout(scrollContent);
     scrollLayout->setAlignment(Qt::AlignTop);
@@ -377,12 +380,13 @@ void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
         "}"
     );
     patient_id = get_user_id();
-    QAbstractButton::connect(appointmentBtn, &QPushButton::clicked, [&]() {
-        Appointment *appointmentWindow = new Appointment(doctor.doctor_id);  // Создаем окно
-        appointmentWindow->show();
-        //appointmentWindow->doctor_id = doctor.doctor_id;
-        appointmentWindow->user_id = patient_id;
-    });
+    int local_patient_id = patient_id;
+QAbstractButton::connect(appointmentBtn, &QPushButton::clicked, [doctor, local_patient_id]() {
+    Appointment *appointmentWindow = new Appointment(doctor.doctor_id);
+    appointmentWindow->show();
+    //appointmentWindow->doctor_id = doctor.doctor_id;
+    appointmentWindow->user_id = local_patient_id;
+});
 
     cardLayout->addWidget(appointmentBtn);
     layout->addWidget(card);
