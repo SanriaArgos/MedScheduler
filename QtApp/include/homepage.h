@@ -42,6 +42,8 @@ private slots:
 
     void on_apply_filtres_button_clicked();
 
+    void on_edit_profile_button_clicked();
+
 private:
     void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout);
     Ui::homepage *ui;

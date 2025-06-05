@@ -22,6 +22,7 @@ homepage::homepage(QWidget *parent)
     ui->setupUi(this);
     on_appointments_button_clicked();
     patient_id = get_user_id();
+    ui->profile_parametrs_box->hide();
 }
 
 void homepage::set_user_id(int id) {
@@ -171,7 +172,7 @@ void homepage::on_profile_button_clicked() {
         "   border-radius: 10px;"
         "}"
     );
-    ui->label_5->setText("Your id: " + QString::number(get_user_id()));
+
 }
 
 void homepage::on_doctors_button_clicked() {
@@ -377,12 +378,24 @@ void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
     );
     patient_id = get_user_id();
     QAbstractButton::connect(appointmentBtn, &QPushButton::clicked, [&]() {
-        Appointment *appointmentWindow = new Appointment();  // Создаем окно
+        Appointment *appointmentWindow = new Appointment(doctor.doctor_id);  // Создаем окно
         appointmentWindow->show();
-        appointmentWindow->doctor_id = doctor.doctor_id;
+        //appointmentWindow->doctor_id = doctor.doctor_id;
         appointmentWindow->user_id = patient_id;
     });
 
     cardLayout->addWidget(appointmentBtn);
     layout->addWidget(card);
 }
+
+void homepage::on_edit_profile_button_clicked()
+{
+    if (ui->profile_parametrs_box->isVisible()) {
+        ui->profile_parametrs_box->hide();
+        ui->label_for_enter_data->setText("");
+    } else {
+        ui->profile_parametrs_box->show();
+        ui->label_for_enter_data->setText("Enter data you want to change");
+    }
+}
+

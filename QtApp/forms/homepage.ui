@@ -334,7 +334,7 @@ font: 9pt &quot;Arial&quot;;</string>
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="appointments_page">
        <property name="styleSheet">
@@ -571,19 +571,183 @@ font: 9pt &quot;Arial&quot;;</string>
        </layout>
       </widget>
       <widget class="QWidget" name="profile_page">
-       <widget class="QLabel" name="label_5">
-        <property name="geometry">
-         <rect>
-          <x>80</x>
-          <y>50</y>
-          <width>91</width>
-          <height>41</height>
-         </rect>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>20</number>
         </property>
-        <property name="text">
-         <string>profile</string>
-        </property>
-       </widget>
+        <item>
+         <widget class="QLabel" name="hello_label">
+          <property name="styleSheet">
+           <string notr="true">font: 16pt &quot;Segoe UI&quot;;</string>
+          </property>
+          <property name="text">
+           <string>Hello, Last-name First-name Middle-name</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="you_phone_number">
+          <property name="text">
+           <string>Your phone number:+7XXXXXXXXXX</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="edit_profile_button">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>60</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Edit profile</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_for_enter_data">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="profile_parametrs_box">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>100</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QFormLayout" name="formLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="edit_last_name_label">
+             <property name="text">
+              <string>Last name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="last_name_line_edit">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(203, 203, 203);</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="edit_first_name_label">
+             <property name="text">
+              <string>First name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="first_name_line_edit">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(203, 203, 203);</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="edit_middle_name_label">
+             <property name="text">
+              <string>Middle name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="middle_name_line_edit">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(203, 203, 203);</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="edit_phone_number_label">
+             <property name="text">
+              <string>Phone number</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="phone_number_line_edit">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(203, 203, 203);</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="edit_new_password_label">
+             <property name="text">
+              <string>New password</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="new_password_line_edit">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(203, 203, 203);</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="edit_new_password_again_label">
+             <property name="text">
+              <string>Enter new password again</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="new_password_again_edit">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(203, 203, 203);</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0" colspan="2">
+            <widget class="QLabel" name="confirm_password_label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Enter current password to confirm changes</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0" colspan="2">
+            <widget class="QLineEdit" name="confirm_changes_line_edit">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(203, 203, 203);</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0" colspan="2">
+            <widget class="QPushButton" name="apply_changes_edit">
+             <property name="text">
+              <string>Apply changes</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="notifications_page">
        <widget class="QLabel" name="label_4">
