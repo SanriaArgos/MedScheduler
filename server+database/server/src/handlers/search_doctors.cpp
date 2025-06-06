@@ -12,6 +12,8 @@ void search_doctors(
     json response;
 
     try {
+        std::cerr << "Получен запрос search_doctors" << std::endl;
+        
         // 1) Считываем фильтры и флаг сортировки
         std::string region = data.value("region", "-");
         std::string settlement_type = data.value("settlement_type", "-");
@@ -20,6 +22,15 @@ void search_doctors(
         std::string specialty = data.value("specialty", "-");
         bool sort_by_rating = data.value("sort_by_rating", false);
 
+        std::cerr << "Параметры запроса: " 
+                  << "region=" << region << ", "
+                  << "settlement_type=" << settlement_type << ", "
+                  << "settlement_name=" << settlement_name << ", "
+                  << "full_name=" << full_name << ", "
+                  << "specialty=" << specialty << ", "
+                  << "sort_by_rating=" << (sort_by_rating ? "true" : "false") 
+                  << std::endl;
+
         // 2) Строим WHERE-условия и параметры
         std::vector<std::string> clauses;
         // Сохраняем копии строк параметров, чтобы избежать проблем с указателями
@@ -27,10 +38,11 @@ void search_doctors(
         std::vector<const char *> paramValues;
         int idx = 1;
 
+        // Изменим условия для hospital_ids, чтобы обрабатывать NULL значения и пустые массивы
         if (region != "-") {
             clauses.push_back(
                 "EXISTS (SELECT 1 FROM hospitals h "
-                " WHERE h.hospital_id = ANY(d.hospital_ids) "
+                " WHERE h.hospital_id = ANY(COALESCE(d.hospital_ids, ARRAY[]::integer[])) "
                 "   AND h.region = $" +
                 std::to_string(idx) + "::text)"
             );
@@ -41,7 +53,7 @@ void search_doctors(
         if (settlement_type != "-") {
             clauses.push_back(
                 "EXISTS (SELECT 1 FROM hospitals h "
-                " WHERE h.hospital_id = ANY(d.hospital_ids) "
+                " WHERE h.hospital_id = ANY(COALESCE(d.hospital_ids, ARRAY[]::integer[])) "
                 "   AND h.settlement_type = $" +
                 std::to_string(idx) + "::text)"
             );
@@ -52,7 +64,7 @@ void search_doctors(
         if (settlement_name != "-") {
             clauses.push_back(
                 "EXISTS (SELECT 1 FROM hospitals h "
-                " WHERE h.hospital_id = ANY(d.hospital_ids) "
+                " WHERE h.hospital_id = ANY(COALESCE(d.hospital_ids, ARRAY[]::integer[])) "
                 "   AND h.settlement_name = $" +
                 std::to_string(idx) + "::text)"
             );
@@ -63,7 +75,7 @@ void search_doctors(
         if (full_name != "-") {
             clauses.push_back(
                 "EXISTS (SELECT 1 FROM hospitals h "
-                " WHERE h.hospital_id = ANY(d.hospital_ids) "
+                " WHERE h.hospital_id = ANY(COALESCE(d.hospital_ids, ARRAY[]::integer[])) "
                 "   AND h.full_name = $" +
                 std::to_string(idx) + "::text)"
             );
@@ -84,8 +96,8 @@ void search_doctors(
                "d.doctor_id, "
                "u.last_name || ' ' || u.first_name || "
                "COALESCE(' ' || u.patronymic, '') AS fio, "
-               "d.specialty, d.experience, d.price, "
-               "COALESCE(avg_r.avg_rate,0) AS average_rate "
+               "d.specialty, COALESCE(d.experience, 0) AS experience, COALESCE(d.price, 0) AS price, "
+               "COALESCE(avg_r.avg_rate, 0) AS average_rate "
             << "FROM doctors d "
                "JOIN users u ON u.id = d.user_id "
                "LEFT JOIN ("
@@ -107,54 +119,52 @@ void search_doctors(
             sql << " ORDER BY fio";
         }
 
+        std::string sqlQuery = sql.str();
+        std::cerr << "SQL запрос: " << sqlQuery << std::endl;
+        std::cerr << "Количество параметров: " << paramValues.size() << std::endl;
+
         // 5) Выполняем запрос
         PGresult *pgres = PQexecParams(
-            db_handler.get_connection(), sql.str().c_str(), (int)paramValues.size(),
+            db_handler.get_connection(), sqlQuery.c_str(), static_cast<int>(paramValues.size()),
             nullptr, paramValues.empty() ? nullptr : paramValues.data(), nullptr,
             nullptr, 0
         );
         
         if (!pgres) {
+            std::cerr << "Ошибка подключения к базе данных" << std::endl;
             throw std::runtime_error("Failed to execute query: connection error");
         }
         
-        if (PQresultStatus(pgres) != PGRES_TUPLES_OK) {
+        auto status = PQresultStatus(pgres);
+        if (status != PGRES_TUPLES_OK) {
             std::string errorMsg = PQresultErrorMessage(pgres);
+            std::cerr << "Ошибка SQL: " << errorMsg << " (статус: " << status << ")" << std::endl;
             PQclear(pgres);
             throw std::runtime_error("Database error: " + errorMsg);
         }
 
         // 6) Формируем JSON
         int rows = PQntuples(pgres);
+        std::cerr << "Найдено врачей: " << rows << std::endl;
+        
         json doctors = json::array();
         for (int i = 0; i < rows; ++i) {
             json doc;
             
             // Добавляем проверки на NULL и безопасное преобразование
-            doc["doctor_id"] = PQgetisnull(pgres, i, 0) ? 0 : std::stoi(PQgetvalue(pgres, i, 0));
-            doc["fio"] = PQgetisnull(pgres, i, 1) ? "" : PQgetvalue(pgres, i, 1);
-            doc["specialty"] = PQgetisnull(pgres, i, 2) ? "" : PQgetvalue(pgres, i, 2);
-            
-            // Безопасное преобразование числовых значений
             try {
+                doc["doctor_id"] = PQgetisnull(pgres, i, 0) ? 0 : std::stoi(PQgetvalue(pgres, i, 0));
+                doc["fio"] = PQgetisnull(pgres, i, 1) ? "" : PQgetvalue(pgres, i, 1);
+                doc["specialty"] = PQgetisnull(pgres, i, 2) ? "" : PQgetvalue(pgres, i, 2);
                 doc["experience"] = PQgetisnull(pgres, i, 3) ? 0 : std::stoi(PQgetvalue(pgres, i, 3));
-            } catch (const std::exception&) {
-                doc["experience"] = 0;
-            }
-            
-            try {
                 doc["price"] = PQgetisnull(pgres, i, 4) ? 0 : std::stoi(PQgetvalue(pgres, i, 4));
-            } catch (const std::exception&) {
-                doc["price"] = 0;
-            }
-            
-            try {
                 doc["average_rate"] = PQgetisnull(pgres, i, 5) ? 0.0 : std::stod(PQgetvalue(pgres, i, 5));
-            } catch (const std::exception&) {
-                doc["average_rate"] = 0.0;
+                
+                doctors.push_back(doc);
+            } catch (const std::exception& e) {
+                std::cerr << "Ошибка при обработке строки " << i << ": " << e.what() << std::endl;
+                // Пропускаем некорректную запись и продолжаем
             }
-            
-            doctors.push_back(std::move(doc));
         }
         PQclear(pgres);
 
@@ -162,10 +172,11 @@ void search_doctors(
         response["success"] = true;
         response["doctors"] = std::move(doctors);
         res.result(http::status::ok);
+        std::cerr << "Ответ успешно сформирован" << std::endl;
         
     } catch (const std::exception& e) {
         // Логируем ошибку и формируем ответ с ошибкой
-        std::cerr << "Error in search_doctors: " << e.what() << std::endl;
+        std::cerr << "Критическая ошибка в search_doctors: " << e.what() << std::endl;
         response["success"] = false;
         response["error"] = std::string("Error processing request: ") + e.what();
         res.result(http::status::internal_server_error);
@@ -173,4 +184,5 @@ void search_doctors(
     
     res.set(http::field::content_type, "application/json");
     res.body() = response.dump();
+    std::cerr << "Отправка ответа клиенту" << std::endl;
 }
