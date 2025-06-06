@@ -59,7 +59,7 @@
 ### 5. Функционал для Старшего Администратора (Senior Admin)
 - [x] Профиль старшего администратора (`/senior-admin/profile`)
     - [x] Просмотр и редактирование данных
-- [x] Управлен��е пользователями (`/senior-admin/users`)
+- [x] Управление пользователями (`/senior-admin/users`)
     - [x] Просмотр списка всех пользователей
     - [x] Удаление пользователей по номеру телефона
 - [x] Управление младшими администраторами (`/senior-admin/junior-admins`)
@@ -127,4 +127,4 @@ bun dev
 
 Самый простой способ развернуть ваше приложение Next.js - использовать [платформу Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) от создателей Next.js.
 
-Ознакомьтесь с нашей [документацией по развертыванию Next.js](https://nextjs.org/docs/app/building-your-application/deploying) для получения более подробной ��нформации.
+Ознакомьтесь с нашей [документацией по развертыванию Next.js](https://nextjs.org/docs/app/building-your-application/deploying) для получения более подробной информации.
