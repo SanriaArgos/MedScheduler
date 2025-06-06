@@ -20,11 +20,15 @@ void add_cors_headers(http::response<Body>& res) {
     
     // Разрешаем заголовки, обычно используемые в запросах
     res.set(http::field::access_control_allow_headers, 
-            "Content-Type, Authorization, X-Requested-With, Accept");
-    
+            "Content-Type, Authorization, X-Requested-With, Accept, Origin");
+
+    // Разрешаем экспозицию определенных заголовков клиенту
+    res.set(http::field::access_control_expose_headers,
+            "Content-Length, Content-Type");
+
     // Время кеширования результатов preflight-запроса (в секундах)
-    res.set(http::field::access_control_max_age, "60"); // 60 секунд
-    
+    res.set(http::field::access_control_max_age, "3600"); // Увеличено до 1 часа
+
     // Разрешаем передачу учетных данных (cookies, headers)
     res.set(http::field::access_control_allow_credentials, "true");
 }

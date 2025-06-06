@@ -133,17 +133,18 @@ void handle_request(
     database_handler &db_handler
 ) {
     try {
-        // Добавим CORS-заголовки ко всем ответам
-        add_cors_headers(res);
-        
-        // Обрабатываем OPTIONS запросы (preflight запросы)
+        // Обрабатываем OPTIONS запросы (preflight запросы) в первую очередь
         if (req.method() == http::verb::options) {
             res.result(http::status::no_content);
             res.set(http::field::content_type, "text/plain");
             res.body() = "";
+            add_cors_headers(res);
             res.prepare_payload();
-            return;
+            return; // Важно: выходим из функции после обработки OPTIONS
         }
+
+        // Добавляем CORS-заголовки ко всем ответам
+        add_cors_headers(res);
 
         if (req.method() == http::verb::post) {
             try {
@@ -151,7 +152,7 @@ void handle_request(
                 if (req.body().empty()) {
                     res.result(http::status::bad_request);
                     res.set(http::field::content_type, "application/json");
-                    res.body() = R"({"error": "Empty request body"})";
+                    res.body() = R"({"error": "Empty request body", "success": false})";
                     return;
                 }
 
@@ -163,7 +164,7 @@ void handle_request(
                     std::cerr << "Request body: " << req.body() << std::endl;
                     res.result(http::status::bad_request);
                     res.set(http::field::content_type, "application/json");
-                    res.body() = R"({"error": "Invalid JSON format"})";
+                    res.body() = R"({"error": "Invalid JSON format", "success": false})";
                     return;
                 }
 
@@ -218,7 +219,7 @@ void handle_request(
             } catch (const json::parse_error& e) {
                 res.result(http::status::bad_request);
                 res.set(http::field::content_type, "application/json");
-                res.body() = R"({"error": "Invalid JSON format"})";
+                res.body() = R"({"error": "Invalid JSON format", "success": false})";
             } catch (const std::exception &e) {
                 handle_error(e, res);
             }
