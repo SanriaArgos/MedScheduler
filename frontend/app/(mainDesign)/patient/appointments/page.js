@@ -11,6 +11,7 @@ export default function PatientAppointmentsPage() {
     const [cancelingId, setCancelingId] = useState(null);
     const [cancelSuccess, setCancelSuccess] = useState("");
     const router = useRouter();
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
         // Проверка аутентификации
@@ -22,6 +23,7 @@ export default function PatientAppointmentsPage() {
             return;
         }
 
+        setUserId(userData.userId);
         fetchAppointments(userData.userId);
     }, [router]);
 
@@ -50,18 +52,16 @@ export default function PatientAppointmentsPage() {
         }
     };
 
-    const handleCancelAppointment = async (recordId) => {
-        setCancelingId(recordId);
+    const handleCancelAppointment = async (appointmentId) => {
+        setCancelingId(appointmentId);
         setError("");
         setCancelSuccess("");
 
         try {
-            const patientId = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}').userId;
-
             const response = await fetch('https://api.medscheduler.ru/cancel_appointment', {
-                method: 'PATCH',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ record_id: recordId, patient_id: patientId }),
+                body: JSON.stringify({ appointment_id: appointmentId, patient_id: userId }),
             });
 
             const data = await response.json();
@@ -70,7 +70,7 @@ export default function PatientAppointmentsPage() {
                 setCancelSuccess("Запись успешно отменена");
 
                 // Обновляем список записей (удаляем отмененную)
-                setAppointments(appointments.filter(app => app.record_id !== recordId));
+                setAppointments(appointments.filter(app => app.appointment_id !== appointmentId));
 
                 // Сбрасываем сообщение об успехе через 3 секунды
                 setTimeout(() => {
@@ -87,7 +87,7 @@ export default function PatientAppointmentsPage() {
         }
     };
 
-    // Форматирование даты в удобочитаемый формат
+    // Форматирование даты
     const formatDate = (dateStr) => {
         const date = new Date(dateStr);
         return date.toLocaleDateString('ru-RU', {
@@ -100,12 +100,6 @@ export default function PatientAppointmentsPage() {
     // Форматирование времени
     const formatTime = (timeStr) => {
         return timeStr.substring(0, 5); // Берем только HH:MM из HH:MM:SS
-    };
-
-    // Проверка, прошла ли уже дата приема
-    const isPastAppointment = (dateStr, timeStr) => {
-        const appointmentDate = new Date(`${dateStr}T${timeStr}`);
-        return appointmentDate < new Date();
     };
 
     if (loading) {
@@ -136,89 +130,69 @@ export default function PatientAppointmentsPage() {
                 <div className="bg-white shadow-md rounded-lg p-6 text-center">
                     <p className="text-lg text-gray-600 mb-4">У вас нет активных записей к врачам</p>
                     <Link href="/search" className="px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors">
-                        Найти врача и записаться
+                        Найти врача
                     </Link>
                 </div>
             ) : (
-                <div>
-                    <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Врач
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Специальность
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Клиника
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Дата и время
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Кабинет
-                                    </th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Действия
-                                    </th>
+                <div className="bg-white shadow-md rounded-lg overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Врач
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Клиника
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Дата и время
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Кабинет
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Действия
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {appointments.map((appointment) => (
+                                <tr key={appointment.appointment_id}>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <Link href={`/doctor/${appointment.doctor_id}`} className="text-main hover:text-main2">
+                                            <div className="text-sm font-medium">{appointment.doctor_name}</div>
+                                            <div className="text-sm text-gray-500">{appointment.specialty}</div>
+                                        </Link>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-gray-500">{appointment.hospital_name}</div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-gray-900">{formatDate(appointment.appointment_date)}</div>
+                                        <div className="text-sm text-gray-500">{formatTime(appointment.appointment_time)}</div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-gray-900">{appointment.cabinet}</div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button
+                                            onClick={() => handleCancelAppointment(appointment.appointment_id)}
+                                            disabled={cancelingId === appointment.appointment_id}
+                                            className="text-red-600 hover:text-red-900 disabled:opacity-50"
+                                        >
+                                            {cancelingId === appointment.appointment_id ? "Отмена..." : "Отменить запись"}
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {appointments.map((appointment) => {
-                                    const isPast = isPastAppointment(appointment.appointment_date, appointment.appointment_time);
-
-                                    return (
-                                        <tr key={appointment.record_id} className={isPast ? "bg-gray-50" : ""}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-medium text-gray-900">
-                                                    {appointment.doctor_last_name} {appointment.doctor_first_name} {appointment.doctor_patronymic}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-500">{appointment.specialty}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-500">{appointment.hospital_name}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-900">
-                                                    {formatDate(appointment.appointment_date)}
-                                                </div>
-                                                <div className="text-sm text-gray-500">
-                                                    {formatTime(appointment.appointment_time)}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {appointment.cabinet}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                {!isPast && (
-                                                    <button
-                                                        onClick={() => handleCancelAppointment(appointment.record_id)}
-                                                        disabled={cancelingId === appointment.record_id}
-                                                        className="text-red-600 hover:text-red-900 disabled:opacity-50"
-                                                    >
-                                                        {cancelingId === appointment.record_id ? "Отмена..." : "Отменить"}
-                                                    </button>
-                                                )}
-                                                {isPast && (
-                                                    <span className="text-gray-400">Прошедшая запись</span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             )}
 
             <div className="flex justify-between mt-8">
-                <Link href="/patient/profile" className="text-main hover:text-main2 transition-colors">
-                    ← Мой профиль
+                <Link href="/dashboard" className="text-main hover:text-main2 transition-colors">
+                    ← Вернуться в личный кабинет
                 </Link>
                 <Link href="/patient/waitlist" className="text-main hover:text-main2 transition-colors">
                     Лист ожидания →

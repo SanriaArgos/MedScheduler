@@ -33,28 +33,58 @@ export default function PatientProfilePage() {
             return;
         }
 
-        // Здесь будет запрос на получение данных профиля пациента
-        // Поскольку API не предоставляет метод для получения профиля по ID,
-        // мы будем использовать моковые данные или данные из localStorage
+        // Получаем данные пациента из API
+        const fetchPatientProfile = async () => {
+            try {
+                // Запрос к API для получения данных профиля по ID
+                const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${userData.userId}`);
+                const data = await response.json();
 
-        // В реальном приложении здесь был бы API-запрос для получения данных пациента
-        const mockProfileData = {
-            userId: userData.userId,
-            firstName: "Анна",
-            lastName: "Петрова",
-            patronymic: "Ивановна",
-            phone: userData.phone || "79001234567"
+                if (response.ok && data.success) {
+                    // Формируем объект профиля из полученных данных
+                    const profileData = {
+                        userId: userData.userId,
+                        firstName: data.first_name || "",
+                        lastName: data.last_name || "",
+                        patronymic: data.patronymic || "",
+                        phone: data.phone || userData.phone
+                    };
+
+                    setProfile(profileData);
+
+                    // Инициализация полей формы редактирования
+                    setLastName(profileData.lastName);
+                    setFirstName(profileData.firstName);
+                    setPatronymic(profileData.patronymic);
+                    setPhone(profileData.phone);
+                } else {
+                    throw new Error(data.error || "Не удалось получить данные профиля");
+                }
+            } catch (err) {
+                console.error("Error fetching profile:", err);
+                // В случае ошибки API используем данные из localStorage для основной информации
+                const profileData = {
+                    userId: userData.userId,
+                    firstName: "",
+                    lastName: "",
+                    patronymic: "",
+                    phone: userData.phone
+                };
+                setProfile(profileData);
+
+                // Инициализация полей формы редактирования
+                setLastName(profileData.lastName);
+                setFirstName(profileData.firstName);
+                setPatronymic(profileData.patronymic);
+                setPhone(profileData.phone);
+
+                setError("Не удалось загрузить полные данные профиля. Показана базовая информация.");
+            } finally {
+                setLoading(false);
+            }
         };
 
-        setProfile(mockProfileData);
-
-        // Инициализация полей формы редактирования
-        setLastName(mockProfileData.lastName);
-        setFirstName(mockProfileData.firstName);
-        setPatronymic(mockProfileData.patronymic || "");
-        setPhone(mockProfileData.phone);
-
-        setLoading(false);
+        fetchPatientProfile();
     }, [router]);
 
     const handleEditToggle = () => {
@@ -205,11 +235,11 @@ export default function PatientProfilePage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <p className="text-sm text-gray-500">Фамилия</p>
-                                <p className="text-lg">{profile.lastName}</p>
+                                <p className="text-lg">{profile.lastName || "—"}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Имя</p>
-                                <p className="text-lg">{profile.firstName}</p>
+                                <p className="text-lg">{profile.firstName || "—"}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Отчество</p>
@@ -405,8 +435,8 @@ export default function PatientProfilePage() {
             </div>
 
             <div className="flex justify-between mt-8">
-                <Link href="/" className="text-main hover:text-main2 transition-colors">
-                    ← Вернуться на главную
+                <Link href="/dashboard" className="text-main hover:text-main2 transition-colors">
+                    ← Вернуться в личный кабинет
                 </Link>
                 <Link href="/search" className="text-main hover:text-main2 transition-colors">
                     Найти врача →

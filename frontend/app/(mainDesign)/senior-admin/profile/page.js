@@ -27,33 +27,61 @@ export default function SeniorAdminProfilePage() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior_admin') {
+        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior') {
             router.push('/login');
             return;
         }
 
-        // Здесь будет загрузка данных профиля старшего администратора
-        // В реальном приложении здесь будет API-запрос для получения данных
-        // На данный момент, поскольку у нас нет API для получения полного профиля,
-        // мы просто используем имитацию данных профиля
+        // Загружаем данные профиля из API
+        const fetchProfile = async () => {
+            try {
+                const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${userData.userId}`);
+                const data = await response.json();
 
-        const mockProfileData = {
-            userId: userData.userId,
-            firstName: "Михаил",
-            lastName: "Николаев",
-            patronymic: "Сергеевич",
-            phone: userData.phone || "79001234567"
+                if (response.ok && data.success) {
+                    // Устанавливаем данные профиля
+                    const profileData = {
+                        userId: userData.userId,
+                        firstName: data.first_name || "",
+                        lastName: data.last_name || "",
+                        patronymic: data.patronymic || "",
+                        phone: data.phone || userData.phone
+                    };
+
+                    setProfile(profileData);
+
+                    // Инициализация полей формы редактирования
+                    setLastName(profileData.lastName);
+                    setFirstName(profileData.firstName);
+                    setPatronymic(profileData.patronymic);
+                    setPhone(profileData.phone);
+                } else {
+                    throw new Error(data.error || "Не удалось получить данные профиля");
+                }
+            } catch (err) {
+                console.error("Error fetching profile:", err);
+                // В случае ошибки используем базовые данные из localStorage
+                const profileData = {
+                    userId: userData.userId,
+                    firstName: "",
+                    lastName: "",
+                    patronymic: "",
+                    phone: userData.phone || ""
+                };
+
+                setProfile(profileData);
+                setLastName(profileData.lastName);
+                setFirstName(profileData.firstName);
+                setPatronymic(profileData.patronymic);
+                setPhone(profileData.phone);
+
+                setError("Не удалось загрузить полные данные профиля. Показана базовая информация.");
+            } finally {
+                setLoading(false);
+            }
         };
 
-        setProfile(mockProfileData);
-
-        // Инициализация полей формы редактирования
-        setLastName(mockProfileData.lastName);
-        setFirstName(mockProfileData.firstName);
-        setPatronymic(mockProfileData.patronymic);
-        setPhone(mockProfileData.phone);
-
-        setLoading(false);
+        fetchProfile();
     }, [router]);
 
     const handleEditToggle = () => {

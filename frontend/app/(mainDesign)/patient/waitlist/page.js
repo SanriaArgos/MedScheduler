@@ -24,38 +24,27 @@ export default function PatientWaitlistPage() {
         }
 
         setUserId(userData.userId);
-
-        // Здесь будет запрос на получение данных о листе ожидания
-        // Но поскольку API не предоставляет метод для получения листа ожидания конкретного пациента,
-        // мы будем использовать моковые данные
-
-        // В реальном приложении здесь был бы API-запрос для получения данных пациента в листах ожидания
-        const mockWaitlistData = [
-            {
-                waitlist_id: 1,
-                doctor_id: 101,
-                doctor_name: "Иванов Петр Сергеевич",
-                specialty: "Терапевт",
-                hospital_id: 201,
-                hospital_name: "Городская поликлиника №1",
-                added_date: "2025-06-05",
-                position: 3
-            },
-            {
-                waitlist_id: 2,
-                doctor_id: 102,
-                doctor_name: "Сидорова Мария Александровна",
-                specialty: "Невролог",
-                hospital_id: 202,
-                hospital_name: "Медицинский центр 'Здоровье'",
-                added_date: "2025-06-01",
-                position: 1
-            }
-        ];
-        
-        setWaitlistItems(mockWaitlistData);
-        setLoading(false);
+        fetchWaitlist(userData.userId);
     }, [router]);
+
+    const fetchWaitlist = async (patientId) => {
+        try {
+            // Запрос на получение данных листа ожидания
+            const response = await fetch(`https://api.medscheduler.ru/get_patient_waitlist?patient_id=${patientId}`);
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setWaitlistItems(data.waitlist || []);
+            } else {
+                setError(data.error || "Ошибка при получении данных листа ожидания");
+            }
+        } catch (err) {
+            console.error("Error fetching waitlist:", err);
+            setError("Не удалось подключиться к серверу");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleCancelWaitlist = async (waitlistId) => {
         setCancelingId(waitlistId);
@@ -78,7 +67,7 @@ export default function PatientWaitlistPage() {
                 // Обновляем список записей (удаляем отмененную)
                 setWaitlistItems(waitlistItems.filter(item => item.waitlist_id !== waitlistId));
                 
-                // Сбрасываем сообщение об успехе через 3 секунды
+                // С��расываем сообщение об успехе через 3 секунды
                 setTimeout(() => {
                     setCancelSuccess("");
                 }, 3000);
@@ -204,7 +193,7 @@ export default function PatientWaitlistPage() {
             <div className="mt-8">
                 <p className="text-sm text-gray-600 mb-4">
                     <strong>Что такое лист ожидания?</strong> Если у выбранного врача нет свободных слотов для записи,
-                    вы можете добавить себя в лист ожидания. Когда появится свободное время для приема (например,
+                    вы можете добавить себя в лист ожидания. Когд�� появится свободное время для приема (например,
                     если кто-то отменит запись), вам будет предложено записаться на освободившееся время в порядке очереди.
                 </p>
             </div>

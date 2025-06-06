@@ -34,7 +34,7 @@ export default function SeniorAdminJuniorAdminsPage() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior_admin') {
+        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior') {
             router.push('/login');
             return;
         }
@@ -65,42 +65,24 @@ export default function SeniorAdminJuniorAdminsPage() {
 
     const fetchJuniorAdmins = async () => {
         try {
-            // В реальном приложении здесь будет API-запрос для получения
-            // списка младших администраторов.
-            // Поскольку у нас нет готового API для этого, используем моковые данные
+            // Запрос к API для получения списка младших администраторов
+            const response = await fetch('https://api.medscheduler.ru/get_junior_admins');
+            const data = await response.json();
 
-            const mockAdmins = [
-                {
-                    user_id: 1,
-                    last_name: "Смирнова",
-                    first_name: "Анна",
-                    patronymic: "Ивановна",
-                    phone: "79001234567",
-                    hospital_name: "Городская поликлиника №1"
-                },
-                {
-                    user_id: 2,
-                    last_name: "Козлов",
-                    first_name: "Петр",
-                    patronymic: "Сергеевич",
-                    phone: "79002345678",
-                    hospital_name: "Медицинский центр 'Здоровье'"
-                },
-                {
-                    user_id: 3,
-                    last_name: "Новикова",
-                    first_name: "Елена",
-                    patronymic: "Александровна",
-                    phone: "79003456789",
-                    hospital_name: "Областная клиническая больница"
-                }
-            ];
-
-            setJuniorAdmins(mockAdmins);
-            setFilteredAdmins(mockAdmins);
+            if (response.ok && data.success) {
+                setJuniorAdmins(data.junior_admins);
+                setFilteredAdmins(data.junior_admins);
+            } else {
+                console.error("API error:", data.error);
+                setError(data.error || "Ошибка при получении списка младших администраторов");
+                setJuniorAdmins([]);
+                setFilteredAdmins([]);
+            }
         } catch (err) {
             console.error("Error fetching junior admins:", err);
             setError("Не удалось загрузить список младших администраторов");
+            setJuniorAdmins([]);
+            setFilteredAdmins([]);
         } finally {
             setLoading(false);
         }
@@ -148,7 +130,7 @@ export default function SeniorAdminJuniorAdminsPage() {
             if (response.ok && data.success) {
                 setSuccess("Младший администратор успешно добавлен");
 
-                // Сбрасываем форму
+                // Сбрасываем форм��
                 setNewAdmin({
                     lastName: "",
                     firstName: "",

@@ -43,7 +43,7 @@ export default function SeniorAdminHospitalsPage() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior_admin') {
+        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior') {
             router.push('/login');
             return;
         }
@@ -123,19 +123,27 @@ export default function SeniorAdminHospitalsPage() {
 
     const fetchJuniorAdmins = async () => {
         try {
-            // В реальном приложении здесь должен быть запрос к API
-            // для получения списка младших администраторов
+            // Запрос к API для получения списка младших администраторов
+            const response = await fetch('https://api.medscheduler.ru/get_junior_admins');
+            const data = await response.json();
 
-            // Моковые данные для примера
-            const mockAdmins = [
-                { user_id: 1, full_name: "Смирнова Анна Ивановна", phone: "79001234567" },
-                { user_id: 2, full_name: "Козлов Петр Сергеевич", phone: "79002345678" },
-                { user_id: 3, full_name: "Новикова Елена Александровна", phone: "79003456789" }
-            ];
-
-            setJuniorAdmins(mockAdmins);
+            if (response.ok && data.success) {
+                // Форматируем данные для использования в форме выбора
+                const formattedAdmins = data.junior_admins.map(admin => ({
+                    user_id: admin.user_id,
+                    full_name: `${admin.last_name} ${admin.first_name} ${admin.patronymic || ""}`,
+                    phone: admin.phone
+                }));
+                setJuniorAdmins(formattedAdmins);
+            } else {
+                console.error("API error:", data.error);
+                setError(data.error || "Ошибка при получении списка младших администраторов");
+                setJuniorAdmins([]);
+            }
         } catch (err) {
             console.error("Error fetching junior admins:", err);
+            setError("Не удалось загрузить список младших администраторов");
+            setJuniorAdmins([]);
         }
     };
 
@@ -174,7 +182,7 @@ export default function SeniorAdminHospitalsPage() {
         // Валидация данных
         if (!newHospital.region || !newHospital.settlementType || !newHospital.settlementName ||
             !newHospital.street || !newHospital.house || !newHospital.fullName || !newHospital.adminId) {
-            setError("Пожал��йста, заполните все поля");
+            setError("Пожалуйста, заполните все поля");
             return;
         }
 
@@ -455,7 +463,7 @@ export default function SeniorAdminHospitalsPage() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm text-gray-500">
-                                                    {/* В реальном приложении здесь будет имя администратора */}
+                                                    {/* В реальном приложении з��есь будет имя администратора */}
                                                     {hospital.admin_name || "Не назначен"}
                                                 </div>
                                             </td>

@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from "next/link";
 
 export default function SearchPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [doctors, setDoctors] = useState([]);
     const [error, setError] = useState("");
-    const [retryCount, setRetryCount] = useState(0);
     const [serverDown, setServerDown] = useState(false);
 
     // Фильтры
@@ -32,11 +32,12 @@ export default function SearchPage() {
 
     // Состояние для загрузки врачей
     const [loadingDoctors, setLoadingDoctors] = useState(false);
-
-    // Убираем режим отладки по умолчанию, поскольку бэкенд исправлен
-    const [debugMode, setDebugMode] = useState(false);
+    const [initialQueryApplied, setInitialQueryApplied] = useState(false);
 
     useEffect(() => {
+        // Получение query параметра из URL
+        const query = searchParams.get('query');
+
         // Загрузка фильтров при первом рендере
         const fetchFilters = async () => {
             try {
@@ -47,7 +48,7 @@ export default function SearchPage() {
                     setRegions(regionsData.regions);
                 }
 
-                // Загрузка типов населенных пунктов
+                // Загрузка типов населенных пункто��
                 const settlementTypesResponse = await fetch('https://api.medscheduler.ru/get_settlement_types');
                 const settlementTypesData = await settlementTypesResponse.json();
                 if (settlementTypesResponse.ok && settlementTypesData.success) {
@@ -75,10 +76,32 @@ export default function SearchPage() {
                     setSpecialties(specialtiesData.specialties);
                 }
 
-                // Поиск докторов с пустыми фильтрами для начального отображения
-                // Не делаем начальный поиск, так как он может привести к краху сервера
-                // Вместо этого ждем явного действия пользователя
                 setLoading(false);
+
+                // Если есть поисковый запрос, применяем его к специальности или названию больницы
+                if (query && !initialQueryApplied) {
+                    // Проверяем, совпадает ли запрос с какой-либо специальностью
+                    const matchedSpecialty = specialtiesData.specialties.find(
+                        spec => spec.toLowerCase().includes(query.toLowerCase())
+                    );
+
+                    // Проверяем, совпадает ли запрос с каким-либо названием больницы
+                    const matchedHospital = hospitalNamesData.hospital_full_names.find(
+                        hospital => hospital.toLowerCase().includes(query.toLowerCase())
+                    );
+
+                    if (matchedSpecialty) {
+                        setSelectedSpecialty(matchedSpecialty);
+                    } else if (matchedHospital) {
+                        setSelectedHospital(matchedHospital);
+                    }
+
+                    // Выполняем поиск с примененными фильтрами
+                    setTimeout(() => {
+                        handleSearch();
+                        setInitialQueryApplied(true);
+                    }, 500);
+                }
 
             } catch (err) {
                 console.error("Error fetching filters:", err);
@@ -88,43 +111,18 @@ export default function SearchPage() {
         };
 
         fetchFilters();
-    }, []);
+    }, [searchParams]);
 
     const searchDoctors = async (filters) => {
         setLoadingDoctors(true);
         setError("");
         setServerDown(false);
 
-        // Проверяем параметры запроса перед отправкой
-        let filteredParams = {};
-        Object.keys(filters).forEach(key => {
-            // Проверяем, что значения не содержат тестовых данных
-            if (typeof filters[key] === 'string' && 
-                (filters[key].includes('test') || 
-                 filters[key].includes('-test'))) {
-                // Заменяем тестовые значения на дефолтные "-"
-                filteredParams[key] = "-";
-            } else {
-                filteredParams[key] = filters[key];
-            }
-        });
-
-        // Если включен режим отладки, используем мок-данные вместо реального запроса
-        if (debugMode) {
-            console.log("Debug mode: using mock data instead of API call");
-            setTimeout(() => {
-                setDoctors(mockDoctors);
-                setLoadingDoctors(false);
-            }, 500);
-            return;
-        }
-
         try {
-            console.log("Sending filtered params:", filteredParams);
             const response = await fetch('https://api.medscheduler.ru/search_doctors', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(filteredParams)
+                body: JSON.stringify(filters)
             });
             
             const data = await response.json();
@@ -140,7 +138,7 @@ export default function SearchPage() {
                     experience: doc.experience || 0,
                     price: doc.price || 0,
                     average_rating: doc.average_rate || 0,
-                    hospitals: [{ full_name: "Клиника не указана" }]
+                    hospitals: [{ full_name: doc.hospital_name || "Клиника не указана" }]
                 }));
                 setDoctors(formattedDoctors);
             } else {
@@ -163,34 +161,7 @@ export default function SearchPage() {
         }
     };
 
-    // Мок-данные для отладки
-    const mockDoctors = [
-        {
-            doctor_id: 1,
-            last_name: "Иванов",
-            first_name: "Иван",
-            patronymic: "Иванович",
-            specialty: "Терапевт",
-            experience: 5,
-            price: 1500,
-            average_rating: 4.7,
-            hospitals: [{ full_name: "Городская клиника №1" }]
-        },
-        {
-            doctor_id: 2,
-            last_name: "Петрова",
-            first_name: "Елена",
-            patronymic: "Сергеевна",
-            specialty: "Кардиолог",
-            experience: 10,
-            price: 2500,
-            average_rating: 4.9,
-            hospitals: [{ full_name: "Медицинский центр Здоровье" }]
-        }
-    ];
-
     const handleSearch = () => {
-        setRetryCount(prev => prev + 1);
         const filters = {
             region: selectedRegion,
             settlement_type: selectedSettlementType,
@@ -211,7 +182,6 @@ export default function SearchPage() {
         setSelectedSpecialty("-");
         setSortByRating(false);
 
-        // Не выполняем автоматический поиск при сбросе
         setDoctors([]);
         setError("");
     };
@@ -239,15 +209,6 @@ export default function SearchPage() {
                                     className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-fit"
                                 >
                                     Повторить попытку
-                                </button>
-                                <button 
-                                    onClick={() => {
-                                        setDebugMode(true);
-                                        handleSearch();
-                                    }}
-                                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 w-fit"
-                                >
-                                    Использовать тестовые данные
                                 </button>
                             </div>
                         )}
@@ -371,34 +332,6 @@ export default function SearchPage() {
                                     Сбросить
                                 </button>
                             </div>
-                            
-                            {/* Скрываем переключатель режима отладки, т.к. бэкенд исправлен */}
-                            {process.env.NODE_ENV === 'development' && (
-                                <div className="flex items-center justify-between pt-2">
-                                    <label htmlFor="debugMode" className="text-sm text-gray-700">
-                                        Режим отладки
-                                    </label>
-                                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                                        <input 
-                                            type="checkbox" 
-                                            id="debugMode" 
-                                            checked={debugMode}
-                                            onChange={() => setDebugMode(!debugMode)}
-                                            className="opacity-0 absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                                        />
-                                        <label 
-                                            htmlFor="debugMode"
-                                            className={`block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer ${
-                                                debugMode ? 'bg-green-400' : ''
-                                            }`}
-                                        >
-                                            <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${
-                                                debugMode ? 'translate-x-4' : ''
-                                            }`}></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>

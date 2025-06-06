@@ -18,7 +18,7 @@ export default function SeniorAdminUsersPage() {
     const [filteredUsers, setFilteredUsers] = useState([]);
 
     // Фильтр по типу пользователя
-    const [userTypeFilter, setUserTypeFilter] = useState("all"); // "all", "patient", "doctor", "junior_admin", "senior_admin"
+    const [userTypeFilter, setUserTypeFilter] = useState("all"); // "all", "patient", "doctor", "junior_admin", "senior"
 
     // Состояние для удаления пользователя
     const [deletingUser, setDeletingUser] = useState(null);
@@ -29,7 +29,7 @@ export default function SeniorAdminUsersPage() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior_admin') {
+        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior') {
             router.push('/login');
             return;
         }
@@ -72,49 +72,16 @@ export default function SeniorAdminUsersPage() {
                 setFilteredUsers(data.users);
             } else {
                 setError(data.error || "Ошибка при получении списка пользователей");
+                // Используем пустой массив, если от сервера пришла ошибка
+                setUsers([]);
+                setFilteredUsers([]);
             }
         } catch (err) {
             console.error("Error fetching users:", err);
             setError("Не удалось подключиться к серверу");
-
-            // Используем моковые данные для отображения
-            const mockUsers = [
-                {
-                    user_id: 1,
-                    last_name: "Иванов",
-                    first_name: "Алексей",
-                    patronymic: "Петрович",
-                    phone: "79001234567",
-                    user_type: "doctor"
-                },
-                {
-                    user_id: 2,
-                    last_name: "Петрова",
-                    first_name: "Елена",
-                    patronymic: "Сергеевна",
-                    phone: "79002345678",
-                    user_type: "patient"
-                },
-                {
-                    user_id: 3,
-                    last_name: "Смирнова",
-                    first_name: "Анна",
-                    patronymic: "Ивановна",
-                    phone: "79003456789",
-                    user_type: "junior_admin"
-                },
-                {
-                    user_id: 4,
-                    last_name: "Николаев",
-                    first_name: "Михаил",
-                    patronymic: "Сергеевич",
-                    phone: "79004567890",
-                    user_type: "senior_admin"
-                }
-            ];
-
-            setUsers(mockUsers);
-            setFilteredUsers(mockUsers);
+            // Если соединение с сервером не удалось, используем пустой массив вместо моков
+            setUsers([]);
+            setFilteredUsers([]);
         } finally {
             setLoading(false);
         }
@@ -167,7 +134,7 @@ export default function SeniorAdminUsersPage() {
                 return 'Врач';
             case 'junior_admin':
                 return 'Младший администратор';
-            case 'senior_admin':
+            case 'senior':
                 return 'Старший администратор';
             default:
                 return 'Неизвестно';
@@ -244,9 +211,9 @@ export default function SeniorAdminUsersPage() {
                                 Мл. администраторы
                             </button>
                             <button
-                                onClick={() => setUserTypeFilter("senior_admin")}
+                                onClick={() => setUserTypeFilter("senior")}
                                 className={`px-3 py-1 rounded-md ${
-                                    userTypeFilter === "senior_admin"
+                                    userTypeFilter === "senior"
                                     ? "bg-main text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                 }`}
@@ -359,7 +326,7 @@ export default function SeniorAdminUsersPage() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                {user.user_type !== 'senior_admin' && (
+                                                {user.user_type !== 'senior' && (
                                                     <button
                                                         onClick={() => setDeletingUser(user)}
                                                         className="text-red-600 hover:text-red-900"
@@ -381,7 +348,7 @@ export default function SeniorAdminUsersPage() {
                 <h2 className="text-xl font-semibold text-main2 mb-4">Информация об удалении пользователей</h2>
                 <div className="prose prose-sm max-w-none text-gray-600">
                     <p>
-                        <strong>Внимание:</strong> Удаление пользователя приведет к необратимому удалению всех связанных данных:
+                        <strong>Внимание:</strong> Удаление пользователя приведет к необрат��мому удалению всех связанных данных:
                     </p>
                     <ul>
                         <li>Для пациентов: все записи на прием, записи в листах ожидания и отзывы</li>
