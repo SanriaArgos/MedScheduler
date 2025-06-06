@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from "next/link";
 
-export default function SearchPage() {
+function SearchContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [loading, setLoading] = useState(true);
@@ -78,7 +78,7 @@ export default function SearchPage() {
 
                 setLoading(false);
 
-                // Если есть поисковый запрос, применяем его к специальности или названию больницы
+                // Если есть поисковый запро��, применяем его к специальности или названию больницы
                 if (query && !initialQueryApplied) {
                     // Проверяем, совпадает ли запрос с какой-либо специальностью
                     const matchedSpecialty = specialtiesData.specialties.find(
@@ -133,7 +133,7 @@ export default function SearchPage() {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Преобразуем данные для совместимости с интерфейсом
+                // Преобразуем данные для совместимости с интерфейс��м
                 const formattedDoctors = data.doctors.map(doc => ({
                     doctor_id: doc.doctor_id || 0,
                     last_name: doc.fio?.split(' ')[0] || '',
@@ -417,3 +417,17 @@ export default function SearchPage() {
         </div>
     );
 }
+
+// Основной компонент с Suspense
+export default function SearchPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-[calc(80vh-theme(space.36))] flex items-center justify-center">
+                <div className="text-xl text-gray-600">Загрузка страницы поиска...</div>
+            </div>
+        }>
+            <SearchContent />
+        </Suspense>
+    );
+}
+
