@@ -43,7 +43,8 @@ void get_doctor_profile(int doctor_id, http::response<http::string_body> &res, d
 
     json profile;
     profile["success"] = true;
-    profile["user_id"] = doctor_id;
+    profile["doctor_id"] = doctor_id;
+    profile["user_id"] = std::stoi(PQgetvalue(result, 0, 0)); // Это ID из таблицы users
     profile["last_name"] = PQgetvalue(result, 0, 1);
     profile["first_name"] = PQgetvalue(result, 0, 2);
 
