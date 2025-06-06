@@ -48,7 +48,7 @@ export default function SearchPage() {
                     setRegions(regionsData.regions);
                 }
 
-                // Загрузка типов населенных пункто��
+                // Загрузка типов населенных пунктов
                 const settlementTypesResponse = await fetch('https://api.medscheduler.ru/get_settlement_types');
                 const settlementTypesData = await settlementTypesResponse.json();
                 if (settlementTypesResponse.ok && settlementTypesData.success) {
@@ -100,6 +100,11 @@ export default function SearchPage() {
                     setTimeout(() => {
                         handleSearch();
                         setInitialQueryApplied(true);
+                    }, 500);
+                } else {
+                    // Автоматически запускаем поиск сразу после загрузки фильтров, даже если нет поискового запроса
+                    setTimeout(() => {
+                        handleSearch();
                     }, 500);
                 }
 
