@@ -50,19 +50,26 @@ void get_patient_waitlist(int patient_id, http::response<http::string_body> &res
         item["requested_at"] = PQgetvalue(result, i, 2);
         item["doctor_specialty"] = PQgetvalue(result, i, 3);
 
-        std::string doctor_name = PQgetvalue(result, i, 4) + " " + PQgetvalue(result, i, 5);
+        std::string last_name = PQgetvalue(result, i, 4);
+        std::string first_name = PQgetvalue(result, i, 5);
+        std::string doctor_name = last_name + " " + first_name;
+
         if (!PQgetisnull(result, i, 6)) {
-            doctor_name += " " + std::string(PQgetvalue(result, i, 6));
+            std::string patronymic = PQgetvalue(result, i, 6);
+            doctor_name += " " + patronymic;
         }
         item["doctor_name"] = doctor_name;
 
         item["hospital_name"] = PQgetvalue(result, i, 7);
 
-        std::string address = PQgetvalue(result, i, 8) + ", " +
-                             PQgetvalue(result, i, 9) + " " +
-                             PQgetvalue(result, i, 10) + ", " +
-                             PQgetvalue(result, i, 11) + " " +
-                             PQgetvalue(result, i, 12);
+        std::string region = PQgetvalue(result, i, 8);
+        std::string settlement_type = PQgetvalue(result, i, 9);
+        std::string settlement_name = PQgetvalue(result, i, 10);
+        std::string street = PQgetvalue(result, i, 11);
+        std::string house = PQgetvalue(result, i, 12);
+
+        std::string address = region + ", " + settlement_type + " " +
+                            settlement_name + ", " + street + " " + house;
         item["hospital_address"] = address;
 
         waitlist_items.push_back(item);
