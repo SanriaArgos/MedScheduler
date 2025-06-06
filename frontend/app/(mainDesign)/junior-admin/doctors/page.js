@@ -16,7 +16,7 @@ export default function JuniorAdminDoctorsPage() {
     const [hospitalId, setHospitalId] = useState(null);
     const [hospitalName, setHospitalName] = useState("");
 
-    // Состояни�� для добавления нового врача
+    // Состояние для добавления нового врача
     const [isAddingDoctor, setIsAddingDoctor] = useState(false);
     const [newDoctor, setNewDoctor] = useState({
         lastName: "",
@@ -51,17 +51,30 @@ export default function JuniorAdminDoctorsPage() {
 
         setAdminId(userData.userId);
 
-        // Здесь должен быть запрос для получения ID больницы, привязанной к администратору
-        // Поскольку у нас нет такого API, мы используем моковые данные
-        const mockHospitalData = {
-            hospitalId: 1,
-            fullName: "Городская поликлиника №1"
+        // Получаем ID больницы, привязанной к администратору
+        const fetchHospitalInfo = async () => {
+            try {
+                const response = await fetch(`https://api.medscheduler.ru/get_admin_hospital?admin_id=${userData.userId}`);
+                const data = await response.json();
+
+                if (response.ok && data.success && data.hospital) {
+                    setHospitalId(data.hospital.hospital_id);
+                    setHospitalName(data.hospital.full_name);
+
+                    // После получения информации о больнице загружаем врачей
+                    fetchDoctors();
+                } else {
+                    setError("Не удалось получить информацию о больнице");
+                    setLoading(false);
+                }
+            } catch (err) {
+                console.error("Error fetching hospital info:", err);
+                setError("Не удалось получить информацию о больнице");
+                setLoading(false);
+            }
         };
 
-        setHospitalId(mockHospitalData.hospitalId);
-        setHospitalName(mockHospitalData.fullName);
-
-        fetchDoctors();
+        fetchHospitalInfo();
     }, [router]);
 
     useEffect(() => {

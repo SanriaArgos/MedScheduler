@@ -34,40 +34,70 @@ export default function JuniorAdminProfilePage() {
             return;
         }
 
-        // Здесь будет загрузка данных профиля младшего администратора
-        // В реальном приложении здесь будет API-запрос для получения данных
-        // На данный момент, поскольку у нас нет API для получения полного профиля,
-        // мы просто используем имитацию данных профиля
+        // Загрузка данных профиля младшего администратора
+        const fetchProfile = async () => {
+            try {
+                // Получаем данные профиля
+                const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${userData.userId}`);
+                const data = await response.json();
 
-        const mockProfileData = {
-            userId: userData.userId,
-            firstName: "Анна",
-            lastName: "Смирнова",
-            patronymic: "Ивановна",
-            phone: userData.phone || "79001234567"
+                if (response.ok && data.success) {
+                    const profileData = {
+                        userId: userData.userId,
+                        firstName: data.first_name || "",
+                        lastName: data.last_name || "",
+                        patronymic: data.patronymic || "",
+                        phone: data.phone || userData.phone || ""
+                    };
+
+                    setProfile(profileData);
+
+                    // Инициализация полей формы редактирования
+                    setLastName(profileData.lastName);
+                    setFirstName(profileData.firstName);
+                    setPatronymic(profileData.patronymic);
+
+                    // Получаем информацию о больнице
+                    fetchHospitalInfo(userData.userId);
+                } else {
+                    throw new Error(data.error || "Не удалось получить данные профиля");
+                }
+            } catch (err) {
+                console.error("Error fetching profile:", err);
+                // Используем данные из localStorage для базовой информации
+                const profileData = {
+                    userId: userData.userId,
+                    firstName: "",
+                    lastName: "",
+                    patronymic: "",
+                    phone: userData.phone || ""
+                };
+                setProfile(profileData);
+                setLastName(profileData.lastName);
+                setFirstName(profileData.firstName);
+                setPatronymic(profileData.patronymic);
+
+                setError("Не удалось загрузить полные данные профиля. Показана базовая информация.");
+            }
         };
 
-        setProfile(mockProfileData);
+        const fetchHospitalInfo = async (adminId) => {
+            try {
+                // Получаем ID больницы, привязанной к администратору
+                const response = await fetch(`https://api.medscheduler.ru/get_admin_hospital?admin_id=${adminId}`);
+                const data = await response.json();
 
-        // Инициализация полей формы редактирования
-        setLastName(mockProfileData.lastName);
-        setFirstName(mockProfileData.firstName);
-        setPatronymic(mockProfileData.patronymic);
-
-        // Имитация данных о больнице
-        const mockHospitalData = {
-            hospitalId: 1,
-            fullName: "Городская поликлиника №1",
-            region: "Москва",
-            settlementType: "город",
-            settlementName: "Москва",
-            street: "Ленина",
-            house: "15"
+                if (response.ok && data.success && data.hospital) {
+                    setHospital(data.hospital);
+                }
+            } catch (err) {
+                console.error("Error fetching hospital info:", err);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        setHospital(mockHospitalData);
-
-        setLoading(false);
+        fetchProfile();
     }, [router]);
 
     const handleEditToggle = () => {
@@ -337,7 +367,7 @@ export default function JuniorAdminProfilePage() {
                         <div className="space-y-4">
                             <div>
                                 <p className="text-sm text-gray-500">Название</p>
-                                <p className="text-lg">{hospital.fullName}</p>
+                                <p className="text-lg">{hospital.full_name}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Регион</p>
@@ -345,7 +375,7 @@ export default function JuniorAdminProfilePage() {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Населенный пункт</p>
-                                <p className="text-lg">{hospital.settlementType} {hospital.settlementName}</p>
+                                <p className="text-lg">{hospital.settlement_type} {hospital.settlement_name}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Адрес</p>
