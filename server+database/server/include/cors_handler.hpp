@@ -24,6 +24,9 @@ void add_cors_headers(http::response<Body>& res) {
     
     // Время кеширования результатов preflight-запроса (в секундах)
     res.set(http::field::access_control_max_age, "60"); // 60 секунд
+    
+    // Разрешаем передачу учетных данных (cookies, headers)
+    res.set(http::field::access_control_allow_credentials, "true");
 }
 
 /**
@@ -31,8 +34,9 @@ void add_cors_headers(http::response<Body>& res) {
  * 
  * @return HTTP-ответ на preflight запрос
  */
+template <class Body>
 inline http::response<http::empty_body> 
-create_options_response(const http::request<http::string_body>& req) {
+create_options_response(const http::request<Body>& req) {
     http::response<http::empty_body> res{http::status::no_content, req.version()};
     add_cors_headers(res);
     res.prepare_payload();
