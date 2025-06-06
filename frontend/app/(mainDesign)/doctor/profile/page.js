@@ -37,36 +37,36 @@ export default function DoctorProfilePage() {
             return;
         }
 
-        // Здесь будет загрузка данных профиля врача
-        // В реальном приложении здесь будет API-запрос для получения данных
-        // На данный момент, поскольку у нас нет API для получения полного профиля,
-        // мы просто используем имитацию данных профиля
+        // Загрузка данных профиля врача через API
+        const fetchDoctorProfile = async () => {
+            try {
+                const response = await fetch(`https://api.medscheduler.ru/get_doctor_profile?user_id=${userData.userId}`);
+                const data = await response.json();
 
-        const mockProfileData = {
-            userId: userData.userId,
-            firstName: "Алексей",
-            lastName: "Иванов",
-            patronymic: "Петрович",
-            phone: userData.phone || "79001234567",
-            education: "Первый московский государственный медицинский университет имени И.М. Сеченова",
-            specialty: "Кардиолог",
-            experience: 15,
-            price: 2500
+                if (response.ok && data.success) {
+                    setProfile(data.profile);
+
+                    // Инициализация полей формы редактирования
+                    setLastName(data.profile.lastName || data.profile.last_name);
+                    setFirstName(data.profile.firstName || data.profile.first_name);
+                    setPatronymic(data.profile.patronymic);
+                    setPhone(data.profile.phone);
+                    setEducation(data.profile.education);
+                    setSpecialty(data.profile.specialty);
+                    setExperience(data.profile.experience);
+                    setPrice(data.profile.price);
+                } else {
+                    setError(data.error || "Не удалось загрузить профиль");
+                }
+            } catch (err) {
+                console.error("Error fetching doctor profile:", err);
+                setError("Не удалось подключиться к серверу");
+            } finally {
+                setLoading(false);
+            }
         };
 
-        setProfile(mockProfileData);
-
-        // Инициализация полей формы редактирования
-        setLastName(mockProfileData.lastName);
-        setFirstName(mockProfileData.firstName);
-        setPatronymic(mockProfileData.patronymic);
-        setPhone(mockProfileData.phone);
-        setEducation(mockProfileData.education);
-        setSpecialty(mockProfileData.specialty);
-        setExperience(mockProfileData.experience);
-        setPrice(mockProfileData.price);
-
-        setLoading(false);
+        fetchDoctorProfile();
     }, [router]);
 
     const handleEditToggle = () => {
@@ -400,7 +400,7 @@ export default function DoctorProfilePage() {
                             </div>
                             <div>
                                 <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Цена при��ма (₽)
+                                    Цена приема (₽)
                                 </label>
                                 <input
                                     type="number"
