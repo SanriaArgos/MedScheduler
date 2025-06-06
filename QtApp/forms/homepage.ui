@@ -334,23 +334,62 @@ font: 9pt &quot;Arial&quot;;</string>
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="appointments_page">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <layout class="QFormLayout" name="formLayout">
+        <item row="1" column="0" colspan="2">
+         <widget class="QScrollArea" name="appointments_scroll">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="appointments_container">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1037</width>
+             <height>640</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="sortCombo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>50</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>Sort by date (Newest)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sort by date (Oldest)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string/>
+           </property>
+          </item>
+         </widget>
+        </item>
         <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QWidget" name="widget_2" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="title">
-           <string/>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <property name="spacing">
@@ -390,48 +429,6 @@ font: 9pt &quot;Arial&quot;;</string>
             </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboBox">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>50</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <item>
-           <property name="text">
-            <string>Sort by date (Newest)</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Sort by date (Oldest)</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string/>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QScrollArea" name="appointments_scroll">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents_3">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>59</width>
-             <height>16</height>
-            </rect>
-           </property>
-          </widget>
          </widget>
         </item>
        </layout>
@@ -619,7 +616,7 @@ font: 9pt &quot;Arial&quot;;</string>
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="profile_parametrs_box">
+         <widget class="QWidget" name="profile_parametrs_box" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -628,9 +625,6 @@ font: 9pt &quot;Arial&quot;;</string>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
-          </property>
-          <property name="title">
-           <string/>
           </property>
           <layout class="QFormLayout" name="formLayout_2">
            <item row="0" column="0">
