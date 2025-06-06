@@ -162,11 +162,11 @@ export default function DashboardPage() {
             dashboardTitle = "Кабинет врача";
             dashboardContent = <DoctorDashboard />;
             break;
-        case 'junior administrator':
+        case 'junior':
             dashboardTitle = "Панель младшего администратора";
             dashboardContent = <JuniorAdminDashboard />;
             break;
-        case 'senior administrator':
+        case 'senior':
             dashboardTitle = "Панель старшего администратора";
             dashboardContent = <SeniorAdminDashboard />;
             break;
