@@ -16,7 +16,7 @@ void get_doctor_profile(int doctor_id, http::response<http::string_body> &res, d
                         "d.education, d.specialty, d.experience, d.price "
                         "FROM users u "
                         "JOIN doctors d ON u.id = d.user_id "
-                        "WHERE d.id = $1 AND u.user_type = 'doctor'";
+                        "WHERE d.doctor_id = $1 AND u.user_type = 'doctor'";
 
     const char* param_values[1];
     std::string doctor_id_str = std::to_string(doctor_id);
