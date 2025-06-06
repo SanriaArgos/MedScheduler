@@ -9,6 +9,8 @@ export default function SearchPage() {
     const [loading, setLoading] = useState(true);
     const [doctors, setDoctors] = useState([]);
     const [error, setError] = useState("");
+    const [retryCount, setRetryCount] = useState(0);
+    const [serverDown, setServerDown] = useState(false);
 
     // Фильтры
     const [regions, setRegions] = useState([]);
@@ -30,6 +32,9 @@ export default function SearchPage() {
 
     // Состояние для загрузки врачей
     const [loadingDoctors, setLoadingDoctors] = useState(false);
+
+    // Убираем режим отладки по умолчанию, поскольку бэкенд исправлен
+    const [debugMode, setDebugMode] = useState(false);
 
     useEffect(() => {
         // Загрузка фильтров при первом рендере
@@ -71,19 +76,13 @@ export default function SearchPage() {
                 }
 
                 // Поиск докторов с пустыми фильтрами для начального отображения
-                await searchDoctors({
-                    region: "-",
-                    settlement_type: "-",
-                    settlement_name: "-",
-                    full_name: "-",
-                    specialty: "-",
-                    sort_by_rating: false
-                });
+                // Не делаем начальный поиск, так как он может привести к краху сервера
+                // Вместо этого ждем явного действия пользователя
+                setLoading(false);
 
             } catch (err) {
                 console.error("Error fetching filters:", err);
                 setError("Не удалось загрузить фильтры. Проверьте соединение с сервером.");
-            } finally {
                 setLoading(false);
             }
         };
@@ -94,32 +93,104 @@ export default function SearchPage() {
     const searchDoctors = async (filters) => {
         setLoadingDoctors(true);
         setError("");
+        setServerDown(false);
+
+        // Проверяем параметры запроса перед отправкой
+        let filteredParams = {};
+        Object.keys(filters).forEach(key => {
+            // Проверяем, что значения не содержат тестовых данных
+            if (typeof filters[key] === 'string' && 
+                (filters[key].includes('test') || 
+                 filters[key].includes('-test'))) {
+                // Заменяем тестовые значения на дефолтные "-"
+                filteredParams[key] = "-";
+            } else {
+                filteredParams[key] = filters[key];
+            }
+        });
+
+        // Если включен режим отладки, используем мок-данные вместо реального запроса
+        if (debugMode) {
+            console.log("Debug mode: using mock data instead of API call");
+            setTimeout(() => {
+                setDoctors(mockDoctors);
+                setLoadingDoctors(false);
+            }, 500);
+            return;
+        }
 
         try {
+            console.log("Sending filtered params:", filteredParams);
             const response = await fetch('https://api.medscheduler.ru/search_doctors', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(filters),
+                body: JSON.stringify(filteredParams)
             });
-
+            
             const data = await response.json();
 
             if (response.ok && data.success) {
-                setDoctors(data.doctors);
+                // Преобразуем данные для совместимости с интерфейсом
+                const formattedDoctors = data.doctors.map(doc => ({
+                    doctor_id: doc.doctor_id || 0,
+                    last_name: doc.fio?.split(' ')[0] || '',
+                    first_name: doc.fio?.split(' ')[1] || '',
+                    patronymic: doc.fio?.split(' ')[2] || '',
+                    specialty: doc.specialty || '',
+                    experience: doc.experience || 0,
+                    price: doc.price || 0,
+                    average_rating: doc.average_rate || 0,
+                    hospitals: [{ full_name: "Клиника не указана" }]
+                }));
+                setDoctors(formattedDoctors);
             } else {
                 setError(data.error || "Ошибка при поиске врачей");
                 setDoctors([]);
             }
         } catch (err) {
             console.error("Error searching doctors:", err);
-            setError("Не удалось выполнить поиск. Проверьте соединение с сервером.");
+            
+            if (err.message === 'Failed to fetch' || !window.navigator.onLine) {
+                setServerDown(true);
+                setError("Сервер временно недоступен. Пожалуйста, повторите попытку позже.");
+            } else {
+                setError("Не удалось выполнить поиск. Проверьте соединение с сервером.");
+            }
+            
             setDoctors([]);
         } finally {
             setLoadingDoctors(false);
         }
     };
 
+    // Мок-данные для отладки
+    const mockDoctors = [
+        {
+            doctor_id: 1,
+            last_name: "Иванов",
+            first_name: "Иван",
+            patronymic: "Иванович",
+            specialty: "Терапевт",
+            experience: 5,
+            price: 1500,
+            average_rating: 4.7,
+            hospitals: [{ full_name: "Городская клиника №1" }]
+        },
+        {
+            doctor_id: 2,
+            last_name: "Петрова",
+            first_name: "Елена",
+            patronymic: "Сергеевна",
+            specialty: "Кардиолог",
+            experience: 10,
+            price: 2500,
+            average_rating: 4.9,
+            hospitals: [{ full_name: "Медицинский центр Здоровье" }]
+        }
+    ];
+
     const handleSearch = () => {
+        setRetryCount(prev => prev + 1);
         const filters = {
             region: selectedRegion,
             settlement_type: selectedSettlementType,
@@ -140,14 +211,9 @@ export default function SearchPage() {
         setSelectedSpecialty("-");
         setSortByRating(false);
 
-        searchDoctors({
-            region: "-",
-            settlement_type: "-",
-            settlement_name: "-",
-            full_name: "-",
-            specialty: "-",
-            sort_by_rating: false
-        });
+        // Не выполняем автоматический поиск при сбросе
+        setDoctors([]);
+        setError("");
     };
 
     if (loading) {
@@ -164,7 +230,28 @@ export default function SearchPage() {
 
             {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-                    {error}
+                    <div className="flex flex-col">
+                        <p>{error}</p>
+                        {serverDown && (
+                            <div className="flex flex-col gap-2 mt-2">
+                                <button 
+                                    onClick={handleSearch}
+                                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 w-fit"
+                                >
+                                    Повторить попытку
+                                </button>
+                                <button 
+                                    onClick={() => {
+                                        setDebugMode(true);
+                                        handleSearch();
+                                    }}
+                                    className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 w-fit"
+                                >
+                                    Использовать тестовые данные
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
 
@@ -284,6 +371,34 @@ export default function SearchPage() {
                                     Сбросить
                                 </button>
                             </div>
+                            
+                            {/* Скрываем переключатель режима отладки, т.к. бэкенд исправлен */}
+                            {process.env.NODE_ENV === 'development' && (
+                                <div className="flex items-center justify-between pt-2">
+                                    <label htmlFor="debugMode" className="text-sm text-gray-700">
+                                        Режим отладки
+                                    </label>
+                                    <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                                        <input 
+                                            type="checkbox" 
+                                            id="debugMode" 
+                                            checked={debugMode}
+                                            onChange={() => setDebugMode(!debugMode)}
+                                            className="opacity-0 absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                                        />
+                                        <label 
+                                            htmlFor="debugMode"
+                                            className={`block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer ${
+                                                debugMode ? 'bg-green-400' : ''
+                                            }`}
+                                        >
+                                            <span className={`block h-6 w-6 rounded-full bg-white shadow transform transition-transform ${
+                                                debugMode ? 'translate-x-4' : ''
+                                            }`}></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -294,7 +409,12 @@ export default function SearchPage() {
                         <div className="flex justify-center items-center min-h-[400px]">
                             <div className="text-xl text-gray-600">Загрузка врачей...</div>
                         </div>
-                    ) : doctors.length === 0 ? (
+                    ) : doctors.length === 0 && !error ? (
+                        <div className="bg-white shadow-md rounded-lg p-8 text-center">
+                            <p className="text-lg text-gray-600 mb-4">Выберите фильтры и нажмите "Найти"</p>
+                            <p className="text-gray-500">Результаты поиска появятся здесь</p>
+                        </div>
+                    ) : doctors.length === 0 && error ? (
                         <div className="bg-white shadow-md rounded-lg p-8 text-center">
                             <p className="text-lg text-gray-600 mb-4">По вашему запросу врачи не найдены</p>
                             <p className="text-gray-500">Попробуйте изменить параметры поиска</p>
