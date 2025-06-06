@@ -30,7 +30,7 @@ export default function DoctorStatsPage() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'junior_admin') {
+        if (!isLoggedIn || !userData.userId || userData.userType !== 'junior') {
             router.push('/login');
             return;
         }

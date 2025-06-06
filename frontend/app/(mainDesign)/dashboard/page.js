@@ -20,8 +20,38 @@ export default function DashboardPage() {
             return;
         }
 
-        setUserData(storedUserData);
-        setLoading(false);
+        // Получение информации о пользователе по API если нужно
+        const fetchUserInfo = async () => {
+            try {
+                // Запрос к API для получения информации о пользователе
+                const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${storedUserData.userId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        // Обновляем данные пользователя с сервера
+                        const updatedUserData = {
+                            ...storedUserData,
+                            firstName: data.first_name || storedUserData.firstName,
+                            lastName: data.last_name || storedUserData.lastName
+                        };
+                        setUserData(updatedUserData);
+                        // Обновляем localStorage с новыми данными
+                        localStorage.setItem('medSchedulerUser', JSON.stringify(updatedUserData));
+                    } else {
+                        setUserData(storedUserData);
+                    }
+                } else {
+                    setUserData(storedUserData);
+                }
+            } catch (err) {
+                console.error("Error fetching user info:", err);
+                setUserData(storedUserData);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserInfo();
     }, [router]);
 
     const handleLogout = () => {
@@ -132,11 +162,11 @@ export default function DashboardPage() {
             dashboardTitle = "Кабинет врача";
             dashboardContent = <DoctorDashboard />;
             break;
-        case 'junior_admin':
+        case 'junior administrator':
             dashboardTitle = "Панель младшего администратора";
             dashboardContent = <JuniorAdminDashboard />;
             break;
-        case 'senior':
+        case 'senior administrator':
             dashboardTitle = "Панель старшего администратора";
             dashboardContent = <SeniorAdminDashboard />;
             break;

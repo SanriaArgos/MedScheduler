@@ -18,7 +18,7 @@ export default function SeniorAdminUsersPage() {
     const [filteredUsers, setFilteredUsers] = useState([]);
 
     // Фильтр по типу пользователя
-    const [userTypeFilter, setUserTypeFilter] = useState("all"); // "all", "patient", "doctor", "junior_admin", "senior"
+    const [userTypeFilter, setUserTypeFilter] = useState("all"); // "all", "patient", "doctor", "junior", "senior"
 
     // Состояние для удаления пользователя
     const [deletingUser, setDeletingUser] = useState(null);
@@ -29,7 +29,7 @@ export default function SeniorAdminUsersPage() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior') {
+        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior administrator') {
             router.push('/login');
             return;
         }
@@ -79,7 +79,7 @@ export default function SeniorAdminUsersPage() {
         } catch (err) {
             console.error("Error fetching users:", err);
             setError("Не удалось подключиться к серверу");
-            // Если соединение с сервером не удалось, используем пустой массив вместо моков
+            // Если соединение с сервером не удалось, используем пустой массив
             setUsers([]);
             setFilteredUsers([]);
         } finally {
@@ -112,7 +112,7 @@ export default function SeniorAdminUsersPage() {
                 setDeletingUser(null);
                 setConfirmPhone("");
 
-                // Сбрасываем сообщение об успехе через 3 секунды
+                // Сбрасы��аем сообщение об успехе через 3 секунды
                 setTimeout(() => {
                     setSuccess("");
                 }, 3000);
@@ -132,9 +132,9 @@ export default function SeniorAdminUsersPage() {
                 return 'Пациент';
             case 'doctor':
                 return 'Врач';
-            case 'junior_admin':
+            case 'junior administrator':
                 return 'Младший администратор';
-            case 'senior':
+            case 'senior administrator':
                 return 'Старший администратор';
             default:
                 return 'Неизвестно';
@@ -201,9 +201,9 @@ export default function SeniorAdminUsersPage() {
                                 Врачи
                             </button>
                             <button
-                                onClick={() => setUserTypeFilter("junior_admin")}
+                                onClick={() => setUserTypeFilter("junior administrator")}
                                 className={`px-3 py-1 rounded-md ${
-                                    userTypeFilter === "junior_admin"
+                                    userTypeFilter === "junior administrator"
                                     ? "bg-main text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                 }`}
@@ -211,9 +211,9 @@ export default function SeniorAdminUsersPage() {
                                 Мл. администраторы
                             </button>
                             <button
-                                onClick={() => setUserTypeFilter("senior")}
+                                onClick={() => setUserTypeFilter("senior administrator")}
                                 className={`px-3 py-1 rounded-md ${
-                                    userTypeFilter === "senior"
+                                    userTypeFilter === "senior administrator"
                                     ? "bg-main text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                 }`}
@@ -319,14 +319,14 @@ export default function SeniorAdminUsersPage() {
                                                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                                                     user.user_type === 'patient' ? 'bg-blue-100 text-blue-800' :
                                                     user.user_type === 'doctor' ? 'bg-green-100 text-green-800' :
-                                                    user.user_type === 'junior_admin' ? 'bg-yellow-100 text-yellow-800' :
+                                                    user.user_type === 'junior administrator' ? 'bg-yellow-100 text-yellow-800' :
                                                     'bg-purple-100 text-purple-800'
                                                 }`}>
                                                     {getUserTypeText(user.user_type)}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                {user.user_type !== 'senior' && (
+                                                {user.user_type !== 'senior administrator' && (
                                                     <button
                                                         onClick={() => setDeletingUser(user)}
                                                         className="text-red-600 hover:text-red-900"
@@ -348,7 +348,7 @@ export default function SeniorAdminUsersPage() {
                 <h2 className="text-xl font-semibold text-main2 mb-4">Информация об удалении пользователей</h2>
                 <div className="prose prose-sm max-w-none text-gray-600">
                     <p>
-                        <strong>Внимание:</strong> Удаление пользователя приведет к необрат��мому удалению всех связанных данных:
+                        <strong>Внимание:</strong> Удаление пользователя приведет к необратимому удалению всех связанных данных:
                     </p>
                     <ul>
                         <li>Для пациентов: все записи на прием, записи в листах ожидания и отзывы</li>

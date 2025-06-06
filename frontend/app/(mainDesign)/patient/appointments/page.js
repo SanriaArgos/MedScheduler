@@ -59,9 +59,9 @@ export default function PatientAppointmentsPage() {
 
         try {
             const response = await fetch('https://api.medscheduler.ru/cancel_appointment', {
-                method: 'POST',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ appointment_id: appointmentId, patient_id: userId }),
+                body: JSON.stringify({ record_id: appointmentId, patient_id: userId }),
             });
 
             const data = await response.json();
@@ -157,7 +157,7 @@ export default function PatientAppointmentsPage() {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {appointments.map((appointment) => (
-                                <tr key={appointment.appointment_id}>
+                                <tr key={appointment.appointment_id || appointment.record_id}>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <Link href={`/doctor/${appointment.doctor_id}`} className="text-main hover:text-main2">
                                             <div className="text-sm font-medium">{appointment.doctor_name}</div>
@@ -176,11 +176,11 @@ export default function PatientAppointmentsPage() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <button
-                                            onClick={() => handleCancelAppointment(appointment.appointment_id)}
-                                            disabled={cancelingId === appointment.appointment_id}
+                                            onClick={() => handleCancelAppointment(appointment.appointment_id || appointment.record_id)}
+                                            disabled={cancelingId === (appointment.appointment_id || appointment.record_id)}
                                             className="text-red-600 hover:text-red-900 disabled:opacity-50"
                                         >
-                                            {cancelingId === appointment.appointment_id ? "Отмена..." : "Отменить запись"}
+                                            {cancelingId === (appointment.appointment_id || appointment.record_id) ? "Отмена..." : "Отменить запись"}
                                         </button>
                                     </td>
                                 </tr>

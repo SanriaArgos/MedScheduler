@@ -36,18 +36,19 @@ export default function LoginPage() {
                 console.log("Login successful", data);
                 const [userType, userId] = data.result.split(':');
 
+                // Сохраняем базовую информацию о пользователе
                 localStorage.setItem('medSchedulerUser', JSON.stringify({
                     userId,
                     userType,
                     phone
                 }));
-                localStorage.setItem('isLoggedIn', 'true'); // Дополнительный флаг для простоты проверки
+                localStorage.setItem('isLoggedIn', 'true');
 
-                // Перенаправляем на дашборд вместо главной страницы
+                // Перенаправляем на дашборд
                 router.push('/dashboard');
             } else {
-                // Ошибка со стороны API (например, неверные учетные данные) или ошибка сети
-                setError(data.error || "Ошибка входа. Пожалуйста, попробуйте снова.");
+                // Ошибка со стороны API
+                setError(data.error || "Неверный логин или пароль. Пожалуйста, попробуйте снова.");
             }
         } catch (err) {
             console.error("Login API error:", err);
