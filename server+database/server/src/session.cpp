@@ -25,24 +25,16 @@ void session::read_request() {
 }
 
 void session::process_request() {
-    // Специальная обработка для preflight OPTIONS запросов
-    if (request_.method() == http::verb::options) {
-        send_options_response();
-        return;
-    }
-
     response_.version(request_.version());
     response_.keep_alive(request_.keep_alive());
 
-    // Обработка запроса
+    // Вся обработка запросов, включая OPTIONS, переносится в handle_request
     handle_request(request_, response_, db_handler);
-    
-    // Добавляем CORS-заголовки ко всем ответам
-    add_cors_headers(response_);
-    
+
+    // Отправляем ответ клиенту
     send_response();
 }
-
+/*
 void session::send_options_response() {
     auto self = shared_from_this();
     auto response = create_options_response(request_);
@@ -56,7 +48,7 @@ void session::send_options_response() {
             }
             self->socket_.shutdown(tcp::socket::shutdown_send, ec);
         });
-}
+}*/
 
 void session::send_response() {
     auto self = shared_from_this();

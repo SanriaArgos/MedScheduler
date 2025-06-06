@@ -139,18 +139,18 @@ void handle_request(
     database_handler &db_handler
 ) {
     try {
-        // Обрабатываем OPTIONS запросы (preflight запросы) в первую очередь
+         // Обрабатываем OPTIONS запросы (preflight)
         if (req.method() == http::verb::options) {
             res.result(http::status::no_content);
             res.set(http::field::content_type, "text/plain");
             res.body() = "";
             add_cors_headers(res);
             res.prepare_payload();
-            return; // Важно: выходим из функции после обработки OPTIONS
+            return; // Важно: выходим после обработки OPTIONS
         }
 
-        // Добавляем CORS-заголовки ко всем ответам
-        add_cors_headers(res);
+        // Удалите эту строку, чтобы избежать добавления заголовков дважды
+        // add_cors_headers(res);
 
         if (req.method() == http::verb::post) {
             try {
@@ -919,7 +919,7 @@ void handle_request(
         handle_error(e, res);
     }
     
-    // Гарантируем, что CORS-заголовки добавлены даже в случае ошибок
+    // Добавляем CORS-заголовки только один раз в конце функции
     add_cors_headers(res);
     res.prepare_payload();
 }

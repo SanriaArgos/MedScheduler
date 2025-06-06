@@ -20,7 +20,7 @@ private:
     void read_request();
     void process_request();
     void send_response();
-    void send_options_response();
+    // Удалить строку: void send_options_response();
 
     tcp::socket socket_;
     beast::flat_buffer buffer_{8192};
