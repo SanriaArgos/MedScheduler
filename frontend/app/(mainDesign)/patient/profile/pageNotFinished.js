@@ -336,6 +336,7 @@ export default function PatientProfilePage() {
         </div>
     );
 }
+/*
                         {updateSuccess && (
                             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                                 {updateSuccess}
@@ -399,3 +400,4 @@ export default function PatientProfilePage() {
                         <div className="mt-4 mb-6">
                             <h3 className="text-lg font-medium mb-2">Изменение пароля (необязательно)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+*/
