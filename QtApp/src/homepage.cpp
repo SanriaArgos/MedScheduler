@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QString>
 #include <iostream>
+#include <QMessageBox>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
@@ -470,5 +471,30 @@ void homepage::on_apply_changes_edit_clicked()
     nlohmann::json response = client.edit_patient_profile(edit_data);
     if(response.contains("error")) ui->edit_error_label->setText(QString::fromStdString(response["error"]));
     else if (response.contains("message")) ui->edit_error_label->setText(QString::fromStdString(response["message"]));
+}
+
+
+void homepage::on_delete_account_button_clicked()
+{
+    QMessageBox::StandardButton reply = QMessageBox::question(
+        this,
+        "Confirm",
+        "Are you sure you want to delete account? You cannot revert this action.",
+        static_cast<QMessageBox::StandardButtons>(QMessageBox::No | QMessageBox::Yes)
+        );
+
+    if (reply == QMessageBox::Yes) {
+        patient::patient_client client(get_user_id());
+        nlohmann::json response = client.delete_self_account(get_user_id());
+        if (response.contains("error")) {
+            QString errorText = QString::fromStdString(response["error"]);
+            std::cerr << "Error: " << errorText.toStdString() << std::endl;
+            QMessageBox::warning(this, "Error", "Failed to delete account:\n" + errorText);
+        } else {
+            QMessageBox::information(this, "Account deleted", "Your account was deleted.");
+            this->close();
+        }
+    }
+
 }
 

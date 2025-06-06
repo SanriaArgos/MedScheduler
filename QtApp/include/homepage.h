@@ -46,6 +46,8 @@ private slots:
 
     void on_apply_changes_edit_clicked();
 
+    void on_delete_account_button_clicked();
+
 private:
     void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout);
     Ui::homepage *ui;

@@ -333,7 +333,7 @@ json patient_client::cancel_waitlist(const json &data) {
 }
 
 json patient_client::delete_self_account(int patient_id) {
-    std::string url = base_url+"/delete_self_account?user_id" +
+    std::string url = base_url+"/delete_self_account?user_id=" +
                       std::to_string(patient_id);
     std::string response = send_delete_request(url);
 
