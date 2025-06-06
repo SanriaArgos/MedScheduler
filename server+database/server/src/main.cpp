@@ -38,6 +38,7 @@ int main() {
         server server(io_context, 8080, db);
 
         std::cout << "Server listening on port 8080..." << std::endl;
+        std::cout << "CORS headers enabled for all origins" << std::endl;
 
         io_context.run();
     } catch (const std::exception &e) {

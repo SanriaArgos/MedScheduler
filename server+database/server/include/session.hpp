@@ -1,15 +1,15 @@
-#ifndef SESSION_HPP_
-#define SESSION_HPP_
+#pragma once
 
 #include <boost/asio.hpp>
-#include <boost/beast.hpp>
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
 #include <memory>
-#include "database.hpp"
+#include "../include/database.hpp"
 
 namespace beast = boost::beast;
-namespace http = boost::beast::http;
-namespace net = boost::asio;
-using tcp = boost::asio::ip::tcp;
+namespace http = beast::http;
+namespace asio = boost::asio;
+using tcp = asio::ip::tcp;
 
 class session : public std::enable_shared_from_this<session> {
 public:
@@ -17,15 +17,14 @@ public:
     void start();
 
 private:
-    tcp::socket socket_;
-    database_handler &db_handler_;
-    beast::flat_buffer buffer_;
-    http::request<http::string_body> request_;
-    http::response<http::string_body> response_;
-
     void read_request();
     void process_request();
-    void write_response();
-};
+    void send_response();
+    void send_options_response();
 
-#endif  // SESSION_HPP_
+    tcp::socket socket_;
+    beast::flat_buffer buffer_{8192};
+    http::request<http::string_body> request_;
+    http::response<http::string_body> response_;
+    database_handler &db_handler;
+};

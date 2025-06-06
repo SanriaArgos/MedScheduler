@@ -59,6 +59,7 @@
 #include "../include/handlers/edit_junior_admin_profile.hpp"
 #include "../include/handlers/get_doctor_statistics.hpp"
 #include "../include/handlers/send_notification.hpp"
+#include "../include/cors_handler.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -104,6 +105,7 @@ void handle_error(
     res.set(http::field::content_type, "application/json");
     res.body() = R"({"error": "Internal server error", "details": ")" +
                 std::string(e.what()) + R"("})";
+    add_cors_headers(res);
     std::cerr << "Exception: " << e.what() << std::endl;
 }
 
@@ -131,6 +133,9 @@ void handle_request(
     database_handler &db_handler
 ) {
     try {
+        // Добавим CORS-заго��овки ко всем ответам
+        add_cors_headers(res);
+        
         if (req.method() == http::verb::post) {
             try {
                 json body = json::parse(req.body());
@@ -753,6 +758,8 @@ void handle_request(
     } catch (const std::exception &e) {
         handle_error(e, res);
     }
+    
+    // Гарантируем, что CORS-заголовки добавлены даже в случае ошибок
+    add_cors_headers(res);
     res.prepare_payload();
 }
-
