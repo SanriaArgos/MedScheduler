@@ -43,51 +43,53 @@ export default function JuniorAdminSchedulePage() {
 
         setAdminId(userData.userId);
 
-        // Здесь должен быть запрос для получения ID больницы, привязанной к администратору
-        // Поскольку у нас нет такого API, мы используем моковые данные
-        const mockHospitalData = {
-            hospitalId: 1,
-            fullName: "Городская поликлиника №1"
+        // Получаем ID больницы, привязанной к администратору
+        const fetchHospitalInfo = async () => {
+            try {
+                const response = await fetch(`https://api.medscheduler.ru/get_admin_hospital?admin_id=${userData.userId}`);
+                const data = await response.json();
+
+                if (response.ok && data.success && data.hospital) {
+                    setHospitalId(data.hospital.hospital_id);
+                    setHospitalName(data.hospital.full_name);
+
+                    // После получения информации о больнице загружаем врачей больницы
+                    fetchDoctors(data.hospital.hospital_id);
+                } else {
+                    setError("Не удалось получить информацию о больнице");
+                    setLoading(false);
+                }
+            } catch (err) {
+                console.error("Error fetching hospital info:", err);
+                setError("Не удалось получить информацию о больнице");
+                setLoading(false);
+            }
         };
 
-        setHospitalId(mockHospitalData.hospitalId);
-        setHospitalName(mockHospitalData.fullName);
-
-        // Получаем список врачей больницы
-        fetchDoctors();
+        fetchHospitalInfo();
     }, [router]);
 
-    const fetchDoctors = async () => {
+    const fetchDoctors = async (hospitalId) => {
         try {
-            // В реальном приложении здесь будет запрос к API для получения
-            // списка врачей, прикрепленных к больнице администратора
+            // Запрос к API для получения списка врачей больницы
+            const response = await fetch(`https://api.medscheduler.ru/get_doctors`);
+            const data = await response.json();
 
-            // Моковые данные для примера
-            const mockDoctors = [
-                {
-                    doctor_id: 1,
-                    last_name: "Иванов",
-                    first_name: "Алексей",
-                    patronymic: "Петрович",
-                    specialty: "Кардиолог"
-                },
-                {
-                    doctor_id: 2,
-                    last_name: "Петрова",
-                    first_name: "Елена",
-                    patronymic: "Сергеевна",
-                    specialty: "Невролог"
-                },
-                {
-                    doctor_id: 3,
-                    last_name: "Сидоров",
-                    first_name: "Иван",
-                    patronymic: "Алексеевич",
-                    specialty: "Терапевт"
-                }
-            ];
+            if (response.ok && data.success) {
+                // Фильтруем врачей, привязанных к больнице
+                // В реальном приложении здесь должен быть отдельный API-метод
+                // для получения врачей конкретной больницы
+                const doctorsOfHospital = data.doctors.filter(doctor => {
+                    // Проверяем, есть ли больница в hospital_ids врача
+                    return doctor.hospital_ids &&
+                           Array.isArray(doctor.hospital_ids) &&
+                           doctor.hospital_ids.includes(hospitalId);
+                });
 
-            setDoctors(mockDoctors);
+                setDoctors(doctorsOfHospital);
+            } else {
+                setError(data.error || "Ошибка при получении списка врачей");
+            }
         } catch (err) {
             console.error("Error fetching doctors:", err);
             setError("Не удалось загрузить список врачей");
