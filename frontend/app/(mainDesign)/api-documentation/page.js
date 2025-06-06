@@ -1,3 +1,7 @@
+export const metadata = {
+    title: "Документация API эндпоинтов | Med Scheduler", description: "На этой странице представлен список API эндпоинтов сервера с кратким описанием",
+};
+
 export default function ApiDocsPage() {
     return <main className="prose prose-lg max-w-5xl mx-auto px-4 py-10">
         <h2>Документация API эндпоинтов</h2>
