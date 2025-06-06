@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 
-void get_doctor_profile(int user_id, http::response<http::string_body> &res, database_handler &db_handler) {
+void get_doctor_profile(int doctor_id, http::response<http::string_body> &res, database_handler &db_handler) {
     PGconn* conn = db_handler.get_connection();
     if (PQstatus(conn) != CONNECTION_OK) {
         res.result(http::status::internal_server_error);
@@ -16,11 +16,11 @@ void get_doctor_profile(int user_id, http::response<http::string_body> &res, dat
                         "d.education, d.specialty, d.experience, d.price "
                         "FROM users u "
                         "JOIN doctors d ON u.id = d.user_id "
-                        "WHERE u.id = $1 AND u.user_type = 'doctor'";
+                        "WHERE d.user_id = $1 AND u.user_type = 'doctor'";
 
     const char* param_values[1];
-    std::string user_id_str = std::to_string(user_id);
-    param_values[0] = user_id_str.c_str();
+    std::string doctor_id_str = std::to_string(doctor_id);
+    param_values[0] = doctor_id_str.c_str();
 
     PGresult* result = PQexecParams(conn, query.c_str(), 1, nullptr, param_values, nullptr, nullptr, 0);
 
@@ -43,7 +43,7 @@ void get_doctor_profile(int user_id, http::response<http::string_body> &res, dat
 
     json profile;
     profile["success"] = true;
-    profile["user_id"] = user_id;
+    profile["user_id"] = doctor_id;
     profile["last_name"] = PQgetvalue(result, 0, 1);
     profile["first_name"] = PQgetvalue(result, 0, 2);
 

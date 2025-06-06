@@ -62,7 +62,7 @@ export default function DoctorPage({ params }) {
     const fetchDoctorInfo = async () => {
         try {
             // Получаем данные о враче
-            const doctorResponse = await fetch(`https://api.medscheduler.ru/get_doctor_profile?user_id=${doctorId}`);
+            const doctorResponse = await fetch(`https://api.medscheduler.ru/get_doctor_profile?doctor_id=${doctorId}`);
 
             if (!doctorResponse.ok) {
                 throw new Error("Не удалось получить информацию о враче");

@@ -8,6 +8,6 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-void get_doctor_profile(int user_id, http::response<http::string_body> &res, database_handler &db_handler);
+void get_doctor_profile(int doctor_id, http::response<http::string_body> &res, database_handler &db_handler);
 
 #endif  // GET_DOCTOR_PROFILE_HPP_

@@ -681,14 +681,14 @@ void handle_request(
             else if (req.target().starts_with("/get_doctor_profile")) {
                 try {
                     std::string url = std::string(req.target());
-                    size_t param_pos = url.find("user_id=");
+                    size_t param_pos = url.find("doctor_id=");
 
                     if (param_pos == std::string::npos) {
-                        throw std::runtime_error("Missing user_id parameter");
+                        throw std::runtime_error("Missing doctor_id parameter");
                     }
 
-                    int user_id = std::stoi(url.substr(param_pos + 8));
-                    get_doctor_profile(user_id, res, db_handler);
+                    int doctor_id = std::stoi(url.substr(param_pos + 10));
+                    get_doctor_profile(doctor_id, res, db_handler);
 
                 } catch (const std::exception &e) {
                     json error_response = {
