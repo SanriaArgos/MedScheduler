@@ -1,4 +1,5 @@
 #include "../../include/handlers/search_doctors.hpp"
+#include <iostream>
 #include <libpq-fe.h>
 #include <sstream>
 #include <vector>
