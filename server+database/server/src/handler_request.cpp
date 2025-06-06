@@ -29,17 +29,23 @@
 #include "../include/handlers/doctor_exists.hpp"
 #include "../include/handlers/doctor_schedule.hpp"
 #include "../include/handlers/edit_doctor_feedback.hpp"
+#include "../include/handlers/get_admin_hospital.hpp"
 #include "../include/handlers/get_cancelled_slots.hpp"
 #include "../include/handlers/get_doctor_average_ratings.hpp"
 #include "../include/handlers/get_doctor_feedback_calculated.hpp"
 #include "../include/handlers/get_doctor_feedback_items.hpp"
 #include "../include/handlers/get_doctor_hospitals.hpp"
+#include "../include/handlers/get_doctor_profile.hpp"
 #include "../include/handlers/get_doctor_schedule_for_patient.hpp"
 #include "../include/handlers/get_doctors.hpp"
 #include "../include/handlers/get_doctors_for_patient.hpp"
 #include "../include/handlers/get_hospital_full_names.hpp"
 #include "../include/handlers/get_hospitals.hpp"
+#include "../include/handlers/get_junior_admin_profile.hpp"
+#include "../include/handlers/get_patient_profile.hpp"
+#include "../include/handlers/get_patient_waitlist.hpp"
 #include "../include/handlers/get_regions.hpp"
+#include "../include/handlers/get_senior_admin_profile.hpp"
 #include "../include/handlers/get_settlement_names.hpp"
 #include "../include/handlers/get_settlement_types.hpp"
 #include "../include/handlers/get_specialties.hpp"
@@ -649,6 +655,132 @@ void handle_request(
                     res.result(http::status::bad_request);
                     res.set(http::field::content_type, "application/json");
                     res.body() = error.dump();
+                }
+            }
+            else if (req.target().starts_with("/get_patient_profile")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t param_pos = url.find("user_id=");
+
+                    if (param_pos == std::string::npos) {
+                        throw std::runtime_error("Missing user_id parameter");
+                    }
+
+                    int user_id = std::stoi(url.substr(param_pos + 8));
+                    get_patient_profile(user_id, res, db_handler);
+
+                } catch (const std::exception &e) {
+                    json error_response = {
+                        {"success", false},
+                        {"error", std::string("Bad request: ") + e.what()}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error_response.dump();
+                }
+            }
+            else if (req.target().starts_with("/get_doctor_profile")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t param_pos = url.find("user_id=");
+
+                    if (param_pos == std::string::npos) {
+                        throw std::runtime_error("Missing user_id parameter");
+                    }
+
+                    int user_id = std::stoi(url.substr(param_pos + 8));
+                    get_doctor_profile(user_id, res, db_handler);
+
+                } catch (const std::exception &e) {
+                    json error_response = {
+                        {"success", false},
+                        {"error", std::string("Bad request: ") + e.what()}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error_response.dump();
+                }
+            }
+            else if (req.target().starts_with("/get_junior_admin_profile")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t param_pos = url.find("user_id=");
+
+                    if (param_pos == std::string::npos) {
+                        throw std::runtime_error("Missing user_id parameter");
+                    }
+
+                    int user_id = std::stoi(url.substr(param_pos + 8));
+                    get_junior_admin_profile(user_id, res, db_handler);
+
+                } catch (const std::exception &e) {
+                    json error_response = {
+                        {"success", false},
+                        {"error", std::string("Bad request: ") + e.what()}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error_response.dump();
+                }
+            }
+            else if (req.target().starts_with("/get_senior_admin_profile")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t param_pos = url.find("user_id=");
+
+                    if (param_pos == std::string::npos) {
+                        throw std::runtime_error("Missing user_id parameter");
+                    }
+
+                    int user_id = std::stoi(url.substr(param_pos + 8));
+                    get_senior_admin_profile(user_id, res, db_handler);
+
+                } catch (const std::exception &e) {
+                    json error_response = {
+                        {"success", false},
+                        {"error", std::string("Bad request: ") + e.what()}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error_response.dump();
+                }
+            }
+            else if (req.target().starts_with("/get_patient_waitlist")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t param_pos = url.find("patient_id=");
+
+                    if (param_pos == std::string::npos) {
+                        throw std::runtime_error("Missing patient_id parameter");
+                    }
+
+                    int patient_id = std::stoi(url.substr(param_pos + 11));
+                    get_patient_waitlist(patient_id, res, db_handler);
+
+                } catch (const std::exception &e) {
+                    json error_response = {
+                        {"success", false},
+                        {"error", std::string("Bad request: ") + e.what()}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error_response.dump();
+                }
+            }
+            else if (req.target().starts_with("/get_admin_hospital")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t param_pos = url.find("admin_id=");
+
+                    if (param_pos == std::string::npos) {
+                        throw std::runtime_error("Missing admin_id parameter");
+                    }
+
+                    int admin_id = std::stoi(url.substr(param_pos + 9));
+                    get_admin_hospital(admin_id, res, db_handler);
+
+                } catch (const std::exception &e) {
+                    json error_response = {
+                        {"success", false},
+                        {"error", std::string("Bad request: ") + e.what()}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error_response.dump();
                 }
             }
             else {
