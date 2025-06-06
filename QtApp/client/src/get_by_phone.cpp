@@ -11,7 +11,7 @@
 // int get_user_id_by_phone(const std::string& phone) {
 //     // URL‑encode номера
 //     char *escaped = curl_easy_escape(nullptr, phone.c_str(), 0);
-//     std::string url = "http://localhost:8080/get_user_id?phone=" +
+//     std::string url = base_url+"/get_user_id?phone=" +
 //     std::string(escaped); curl_free(escaped);
 
 //     std::string resp = send_get_request(url);
@@ -31,7 +31,7 @@
 
 // std::string get_user_type_by_phone(const std::string& phone) {
 //     char *escaped = curl_easy_escape(nullptr, phone.c_str(), 0);
-//     std::string url = "http://localhost:8080/get_user_type?phone=" +
+//     std::string url = base_url+"/get_user_type?phone=" +
 //     std::string(escaped); curl_free(escaped);
 
 //     std::string resp = send_get_request(url);

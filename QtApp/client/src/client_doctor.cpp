@@ -11,7 +11,7 @@ doctor_client::doctor_client(int doctor_id) : doctor_id(doctor_id) {
 }
 
 json doctor_client::get_schedule() {
-    std::string url = "http://localhost:8080/get_doctor_schedule?doctor_id=" +
+    std::string url = base_url+"/get_doctor_schedule?doctor_id=" +
                       std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
@@ -26,7 +26,7 @@ json doctor_client::get_schedule() {
 }
 
 json doctor_client::delete_self_account(int doctor_id) {
-    std::string url = "http://localhost:8080/delete_self_account?user_id" +
+    std::string url = base_url+"/delete_self_account?user_id" +
                       std::to_string(doctor_id);
     std::string response = send_delete_request(url);
 
@@ -40,7 +40,7 @@ json doctor_client::delete_self_account(int doctor_id) {
 }
 
 json doctor_client::edit_doctor_profile(const json &request_data) {
-    std::string url = "http://localhost:8080/edit_doctor_profile";
+    std::string url = base_url+"/edit_doctor_profile";
     std::string response = send_patch_request(url, request_data);
 
     try {

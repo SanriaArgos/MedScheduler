@@ -6,6 +6,8 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+extern const std::string base_url;
+
 size_t
 write_callback(void *contents, size_t size, size_t nmemb, std::string *s);
 std::string

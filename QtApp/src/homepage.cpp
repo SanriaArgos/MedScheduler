@@ -294,7 +294,7 @@ void homepage::on_apply_filtres_button_clicked() {
     QJsonObject json;
     json["region"] = region;
     json["settlement_type"] = settlement_type;
-    json["settlemnet_name"] = settlement_name;
+    json["settlement_name"] = settlement_name;
     json["specialty"] = specialty;
     QJsonDocument doc(json);
     QString jsonString = doc.toJson(QJsonDocument::Compact);

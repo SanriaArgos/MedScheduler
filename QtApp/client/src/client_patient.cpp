@@ -20,7 +20,7 @@ json patient_client::get_doctors_for_patient(const json &request_data) {
         std::string hospital = request_data.value("hospital", "");
         std::string doctor = request_data.value("doctor", "");
 
-        std::string url = "http://localhost:8080/get_doctors_for_patient";
+        std::string url = base_url+"/get_doctors_for_patient";
         url += "?region=" + region + "&settlement_type=" + settlement_type +
                "&settlement_name=" + settlement_name +
                "&specialty=" + specialty + "&hospital=" + hospital +
@@ -44,7 +44,7 @@ json patient_client::get_doctors_for_patient(const json &request_data) {
 
 json patient_client::get_regions() {
     try {
-        std::string url = "http://localhost:8080/get_regions";
+        std::string url = base_url+"/get_regions";
         std::string response = send_get_request(url);
 
         json json_response = json::parse(response);
@@ -66,7 +66,7 @@ json patient_client::get_regions() {
 
 json patient_client::get_settlement_types() {
     try {
-        std::string url = "http://localhost:8080/get_settlement_types";
+        std::string url = base_url+"/get_settlement_types";
         std::string response = send_get_request(url);
 
         json json_response = json::parse(response);
@@ -88,7 +88,7 @@ json patient_client::get_settlement_types() {
 
 json patient_client::get_settlement_names() {
     try {
-        std::string url = "http://localhost:8080/get_settlement_names";
+        std::string url = base_url+"/get_settlement_names";
         std::string response = send_get_request(url);
 
         json json_response = json::parse(response);
@@ -110,7 +110,7 @@ json patient_client::get_settlement_names() {
 
 json patient_client::get_specialties() {
     try {
-        std::string url = "http://localhost:8080/get_specialties";
+        std::string url = base_url+"/get_specialties";
         std::string response = send_get_request(url);
         json json_response = json::parse(response);
 
@@ -128,7 +128,7 @@ json patient_client::get_specialties() {
 
 json patient_client::get_hospital_full_names() {
     try {
-        std::string url = "http://localhost:8080/get_hospital_full_names";
+        std::string url = base_url+"/get_hospital_full_names";
         std::string response = send_get_request(url);
         json json_response = json::parse(response);
 
@@ -146,7 +146,7 @@ json patient_client::get_hospital_full_names() {
 
 json patient_client::get_doctor_schedule_for_patient(int doctor_id) {
     // Формируем URL с параметрами
-    std::string url = "http://localhost:8080/get_doctor_schedule_for_patient?";
+    std::string url = base_url+"/get_doctor_schedule_for_patient?";
     url += "doctor_id=" + std::to_string(doctor_id);
 
     // Отправляем GET-запрос
@@ -167,7 +167,7 @@ json patient_client::get_doctor_schedule_for_patient(int doctor_id) {
 }
 
 json patient_client::book_appointment(const json &request_data) {
-    std::string url = "http://localhost:8080/book_appointment";
+    std::string url = base_url+"/book_appointment";
     std::string response = send_post_request(url, request_data);
 
     try {
@@ -180,7 +180,7 @@ json patient_client::book_appointment(const json &request_data) {
 }
 
 json patient_client::search_doctors(const json &request_data) {
-    std::string url = "http://localhost:8080/search_doctors";
+    std::string url = base_url+"/search_doctors";
     std::string response = send_post_request(url, request_data);
 
     try {
@@ -194,7 +194,7 @@ json patient_client::search_doctors(const json &request_data) {
 
 json patient_client::patient_appointments(int patient_id) {
     std::string url =
-        "http://localhost:8080/get_patient_appointments?patient_id=" +
+        base_url+"/get_patient_appointments?patient_id=" +
         std::to_string(patient_id);
     std::string response = send_get_request(url);
 
@@ -208,7 +208,7 @@ json patient_client::patient_appointments(int patient_id) {
 }
 
 json patient_appointments(const json &request_data) {
-    std::string url = "http://localhost:8080/add_patient_to_waitlist";
+    std::string url = base_url+"/add_patient_to_waitlist";
     std::string response = send_post_request(url, request_data);
 
     try {
@@ -221,7 +221,7 @@ json patient_appointments(const json &request_data) {
 }
 
 json patient_client::get_doctor_average_ratings() {
-    std::string url = "http://localhost:8080/get_doctor_average_ratings";
+    std::string url = base_url+"/get_doctor_average_ratings";
     std::string response = send_get_request(url);
 
     try {
@@ -235,7 +235,7 @@ json patient_client::get_doctor_average_ratings() {
 
 json patient_client::get_doctor_feedback_items(int doctor_id) {
     std::string url =
-        "http://localhost:8080/get_doctor_feedback_items?doctor_id=" +
+        base_url+"/get_doctor_feedback_items?doctor_id=" +
         std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
@@ -250,7 +250,7 @@ json patient_client::get_doctor_feedback_items(int doctor_id) {
 
 json patient_client::get_doctor_feedback_calculated(int doctor_id) {
     std::string url =
-        "http://localhost:8080/get_doctor_feedback_calculated?doctor_id=" +
+        base_url+"/get_doctor_feedback_calculated?doctor_id=" +
         std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
@@ -264,7 +264,7 @@ json patient_client::get_doctor_feedback_calculated(int doctor_id) {
 }
 
 json patient_client::get_doctor_hospitals(int doctor_id) {
-    std::string url = "http://localhost:8080/get_doctor_hospitals?doctor_id=" +
+    std::string url = base_url+"/get_doctor_hospitals?doctor_id=" +
                       std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
@@ -281,7 +281,7 @@ json patient_client::get_doctor_hospitals(int doctor_id) {
 }
 
 json patient_client::post_doctor_feedback_client(const json &request_data) {
-    std::string url = "http://localhost:8080/post_doctor_feedback";
+    std::string url = base_url+"/post_doctor_feedback";
     std::string response = send_post_request(url, request_data);
 
     try {
@@ -294,7 +294,7 @@ json patient_client::post_doctor_feedback_client(const json &request_data) {
 }
 
 json patient_client::edit_doctor_feedback(const json &request_data) {
-    std::string url = "http://localhost:8080/edit_doctor_feedback";
+    std::string url = base_url+"/edit_doctor_feedback";
     std::string response = send_patch_request(url, request_data);
 
     try {
@@ -307,7 +307,7 @@ json patient_client::edit_doctor_feedback(const json &request_data) {
 }
 
 json patient_client::cancel_appointment(const json &data) {
-    std::string url = "http://localhost:8080/cancel_appointment";
+    std::string url = base_url+"/cancel_appointment";
     std::string response = send_patch_request(url, data);
 
     try {
@@ -320,7 +320,7 @@ json patient_client::cancel_appointment(const json &data) {
 }
 
 json patient_client::cancel_waitlist(const json &data) {
-    std::string url = "http://localhost:8080/cancel_appointment_from_waitlist";
+    std::string url = base_url+"/cancel_appointment_from_waitlist";
     std::string response = send_post_request(url, data);
 
     try {
@@ -333,7 +333,7 @@ json patient_client::cancel_waitlist(const json &data) {
 }
 
 json patient_client::delete_self_account(int patient_id) {
-    std::string url = "http://localhost:8080/delete_self_account?user_id" +
+    std::string url = base_url+"/delete_self_account?user_id" +
                       std::to_string(patient_id);
     std::string response = send_delete_request(url);
 
@@ -347,7 +347,7 @@ json patient_client::delete_self_account(int patient_id) {
 }
 
 json patient_client::get_cancelled_slots(int doctor_id) {
-    std::string url = "http://localhost:8080/get_cancelled_slots?doctor_id=" +
+    std::string url = base_url+"/get_cancelled_slots?doctor_id=" +
                       std::to_string(doctor_id);
     std::string response = send_delete_request(url);
 
@@ -361,7 +361,7 @@ json patient_client::get_cancelled_slots(int doctor_id) {
 }
 
 json patient_client::get_waitlist_count(int doctor_id) {
-    std::string url = "http://localhost:8080/get_waitlist_count?doctor_id=" +
+    std::string url = base_url+"/get_waitlist_count?doctor_id=" +
                       std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
@@ -375,7 +375,7 @@ json patient_client::get_waitlist_count(int doctor_id) {
 }
 
 json patient_client::edit_patient_profile(const json &request_data) {
-    std::string url = "http://localhost:8080/edit_patient_profile";
+    std::string url = base_url+"/edit_patient_profile";
     std::string response = send_patch_request(url, request_data);
 
     try {
