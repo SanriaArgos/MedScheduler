@@ -29,7 +29,7 @@ export default function SeniorAdminUsersPage() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior administrator') {
+        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior') {
             router.push('/login');
             return;
         }
