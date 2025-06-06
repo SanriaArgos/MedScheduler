@@ -199,7 +199,7 @@ void handle_request(
                     detach_doctor_from_hospital(body, res, db_handler);
                 }
                 else if (req.target() == "/post_doctor_feedback") {
-                    post_doctor_feedback(body, res, db_handler);
+                    post_doctor_rating(body, res, db_handler);
                 }
                 else if (req.target() == "/book_appointment") {
                     book_appointment(body, res, db_handler);
