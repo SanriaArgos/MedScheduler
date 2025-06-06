@@ -37,19 +37,81 @@ export default function DoctorStatsPage() {
 
         setAdminId(userData.userId);
 
-        // Здесь должен быть запрос для получения ID больницы, привязанной к администратору
-        // Поскольку у нас нет такого API, мы используем моковые данные
-        const mockHospitalData = {
-            hospitalId: 1,
-            fullName: "Городская поликлиника №1"
-        };
-
-        setHospitalId(mockHospitalData.hospitalId);
-        setHospitalName(mockHospitalData.fullName);
-
-        // Получаем список врачей больницы
-        fetchDoctors();
+        // Получаем информацию о больнице администратора
+        fetchAdminHospital(userData.userId);
     }, [router]);
+
+    const fetchAdminHospital = async (adminId) => {
+        try {
+            const response = await fetch(`https://api.medscheduler.ru/get_admin_hospital?admin_id=${adminId}`);
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setHospitalId(data.hospital.hospital_id);
+                setHospitalName(data.hospital.full_name);
+
+                // После получения данных о больнице, загружаем врачей этой больницы
+                fetchDoctors(data.hospital.hospital_id);
+            } else {
+                setError(data.error || "Не удалось получить информацию о больнице");
+                setLoading(false);
+            }
+        } catch (err) {
+            console.error("Error fetching admin hospital:", err);
+            setError("Не удалось подключиться к серверу");
+            setLoading(false);
+        }
+    };
+
+    const fetchDoctors = async (hospitalId) => {
+        try {
+            const response = await fetch(`https://api.medscheduler.ru/get_hospital_doctors?hospital_id=${hospitalId}`);
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setDoctors(data.doctors);
+                setFilteredDoctors(data.doctors);
+
+                // Инициализируем объект для хранения статистики
+                const doctorStatsObj = {};
+
+                // Для каждого врача запрашиваем статистику
+                for (const doctor of data.doctors) {
+                    try {
+                        const statsResponse = await fetch('https://api.medscheduler.ru/get_doctor_statistics', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                junior_admin_id: parseInt(adminId),
+                                doctor_phone: doctor.phone
+                            }),
+                        });
+
+                        const statsData = await statsResponse.json();
+
+                        if (statsResponse.ok && statsData.success) {
+                            doctorStatsObj[doctor.doctor_id] = {
+                                patients_count: statsData.patients_count,
+                                average_rating: statsData.average_rating,
+                                price: statsData.price
+                            };
+                        }
+                    } catch (err) {
+                        console.error(`Error fetching stats for doctor ${doctor.doctor_id}:`, err);
+                    }
+                }
+
+                setDoctorStats(doctorStatsObj);
+            } else {
+                setError(data.error || "Не удалось загрузить список врачей");
+            }
+        } catch (err) {
+            console.error("Error fetching doctors:", err);
+            setError("Не удалось подключиться к серверу");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         // Фильтрация врачей при изменении поискового запроса
@@ -68,61 +130,6 @@ export default function DoctorStatsPage() {
             setFilteredDoctors(doctors);
         }
     }, [searchQuery, doctors]);
-
-    const fetchDoctors = async () => {
-        try {
-            // В реальном приложении здесь будет запрос к API для получения
-            // списка врачей, прикрепленных к больнице администратора
-
-            // Моковые данные для примера
-            const mockDoctors = [
-                {
-                    doctor_id: 1,
-                    last_name: "Иванов",
-                    first_name: "Алексей",
-                    patronymic: "Петрович",
-                    specialty: "Кардиолог",
-                    phone: "79001234567"
-                },
-                {
-                    doctor_id: 2,
-                    last_name: "Петрова",
-                    first_name: "Елена",
-                    patronymic: "Сергеевна",
-                    specialty: "Невролог",
-                    phone: "79002345678"
-                },
-                {
-                    doctor_id: 3,
-                    last_name: "Сидоров",
-                    first_name: "Иван",
-                    patronymic: "Алексеевич",
-                    specialty: "Терапевт",
-                    phone: "79003456789"
-                }
-            ];
-
-            setDoctors(mockDoctors);
-            setFilteredDoctors(mockDoctors);
-
-            // Моковые данные статистики для всех врачей
-            const mockStats = {};
-            mockDoctors.forEach(doctor => {
-                mockStats[doctor.doctor_id] = {
-                    patients_count: Math.floor(Math.random() * 100) + 10,
-                    average_rating: (Math.random() * 2 + 3).toFixed(1), // От 3.0 до 5.0
-                    price: (Math.floor(Math.random() * 20) + 10) * 100 // От 1000 до 3000
-                };
-            });
-
-            setDoctorStats(mockStats);
-        } catch (err) {
-            console.error("Error fetching doctors:", err);
-            setError("Не удалось загрузить список врачей");
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const fetchDoctorStats = async (doctorPhone) => {
         if (!doctorPhone || !adminId) return;
