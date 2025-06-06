@@ -56,9 +56,13 @@ export default function RegistrationPage() {
                 phone: phone,
                 password: password,
             };
-            if (patronymic) {
+
+            // Добавляем patronymic только если оно не пустое
+            if (patronymic && patronymic.trim() !== "") {
                 registrationData.patronymic = patronymic;
             }
+
+            console.log("Отправляемые данные:", JSON.stringify(registrationData));
 
             const response = await fetch('https://api.medscheduler.ru/registration', {
                 method: 'POST',

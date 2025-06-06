@@ -133,13 +133,40 @@ void handle_request(
     database_handler &db_handler
 ) {
     try {
-        // Добавим CORS-заго��овки ко всем ответам
+        // Добавим CORS-заголовки ко всем ответам
         add_cors_headers(res);
         
+        // Обрабатываем OPTIONS запросы (preflight запросы)
+        if (req.method() == http::verb::options) {
+            res.result(http::status::no_content);
+            res.set(http::field::content_type, "text/plain");
+            res.body() = "";
+            res.prepare_payload();
+            return;
+        }
+
         if (req.method() == http::verb::post) {
             try {
-                json body = json::parse(req.body());
-                
+                // Проверяем, что body не пустое
+                if (req.body().empty()) {
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = R"({"error": "Empty request body"})";
+                    return;
+                }
+
+                json body;
+                try {
+                    body = json::parse(req.body());
+                } catch (const json::parse_error& e) {
+                    std::cerr << "JSON parse error: " << e.what() << std::endl;
+                    std::cerr << "Request body: " << req.body() << std::endl;
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = R"({"error": "Invalid JSON format"})";
+                    return;
+                }
+
                 if (req.target() == "/login") {
                     login(body, res, db_handler);
                 }
