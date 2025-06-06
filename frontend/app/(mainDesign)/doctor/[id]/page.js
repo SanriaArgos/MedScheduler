@@ -69,9 +69,10 @@ export default function DoctorPage({ params }) {
             }
 
             const doctorData = await doctorResponse.json();
-
+            console.log(2302908111, doctorData)
             if (doctorData.success) {
-                setDoctor(doctorData.profile);
+                console.log(2302909)
+                setDoctor(doctorData);
             } else {
                 throw new Error(doctorData.error || "Не удалось получить информацию о враче");
             }
