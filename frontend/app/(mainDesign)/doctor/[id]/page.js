@@ -55,33 +55,26 @@ export default function DoctorPage({ params }) {
         setUserId(userData.userId || null);
         setUserType(userData.userType || null);
 
+        // Загрузка информации о враче через API
         fetchDoctorInfo();
     }, [doctorId]);
 
     const fetchDoctorInfo = async () => {
         try {
-            // Здесь должен быть запрос к API для получения информации о враче
-            // Поскольку нет прямого API для получения всех данных о враче, используем мок-данные
+            // Получаем данные о враче
+            const doctorResponse = await fetch(`https://api.medscheduler.ru/get_doctor_profile?user_id=${doctorId}`);
 
-            // В реальном приложении:
-            // 1. Получаем данные о враче через API (если есть)
-            // 2. Получаем список больниц врача
-            // 3. Получаем отзывы и рейтинг
-            // 4. Получаем количество в листе ожидания
+            if (!doctorResponse.ok) {
+                throw new Error("Не удалось получить информацию о враче");
+            }
 
-            // Мок-данные для тестирования
-            const mockDoctor = {
-                doctor_id: doctorId,
-                last_name: "Иванов",
-                first_name: "Алексей",
-                patronymic: "Петрович",
-                specialty: "Кардиолог",
-                education: "Первый московский государственный медицинский университет имени И.М. Сеченова",
-                experience: 15,
-                price: 2500
-            };
+            const doctorData = await doctorResponse.json();
 
-            setDoctor(mockDoctor);
+            if (doctorData.success) {
+                setDoctor(doctorData.profile);
+            } else {
+                throw new Error(doctorData.error || "Не удалось получить информацию о враче");
+            }
 
             // Получаем больницы врача
             const hospitalsResponse = await fetch(`https://api.medscheduler.ru/get_doctor_hospitals?doctor_id=${doctorId}`);
@@ -105,9 +98,19 @@ export default function DoctorPage({ params }) {
                 setWaitlistCount(waitlistData.count);
             }
 
-            // Проверяем, находится ли пользователь в листе ожидания (в реальном приложении)
-            // В данном примере просто используем статус false
-            setInWaitlist(false);
+            // Проверяем, находится ли пользователь в листе ожидания
+            if (isLoggedIn && userId) {
+                const userWaitlistResponse = await fetch(`https://api.medscheduler.ru/get_patient_waitlist?patient_id=${userId}`);
+                const userWaitlistData = await userWaitlistResponse.json();
+
+                if (userWaitlistResponse.ok && userWaitlistData.success) {
+                    // Проверяем, есть ли этот врач в списке ожидания пациента
+                    const inWaitlistForThisDoctor = userWaitlistData.waitlist.some(
+                        item => item.doctor_id === parseInt(doctorId)
+                    );
+                    setInWaitlist(inWaitlistForThisDoctor);
+                }
+            }
 
         } catch (err) {
             console.error("Error fetching doctor info:", err);
