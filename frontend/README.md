@@ -1,8 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MedScheduler Frontend
 
-## Getting Started
+Это фронтенд-проект для MedScheduler, разработанный с использованием [Next.js](https://nextjs.org/) и TailwindCSS.
 
-First, run the development server:
+## План разработки
+
+### 1. Основная структура и аутентификация
+- [x] Настройка проекта Next.js + TailwindCSS
+- [ ] Главная страница (`/`)
+- [ ] Страница входа (`/login`)
+- [ ] Страница регистрации (`/registration`)
+- [x] Страница документации API (`/api-documentation`) - уже существует
+- [ ] Компоненты Header и Footer - уже существуют, доделать, особенно footer.
+
+### 2. Функционал для Пациента
+- [ ] Профиль пациента (`/patient/profile`)
+    - [ ] Просмотр и редактирование данных
+    - [ ] Удаление аккаунта
+- [ ] Поиск врачей (`/search`)
+    - [ ] Фильтры по региону, населенному пункту, специальности и т.д.
+    - [ ] Просмотр карточек врачей
+- [ ] Страница врача (`/doctor/[id]`)
+    - [ ] Просмотр информации о враче
+    - [ ] Просмотр расписания врача
+    - [ ] Запись на прием
+    - [ ] Просмотр отзывов
+    - [ ] Добавление/редактирование/удаление своего отзыва
+    - [ ] Добавление в лист ожидания
+- [ ] Мои записи (`/patient/appointments`)
+    - [ ] Просмотр активных записей
+    - [ ] Отмена записи
+- [ ] Лист ожидания (`/patient/waitlist`)
+    - [ ] Просмотр своих позиций в листах ожидания
+    - [ ] Отмена записи из листа ожидания
+
+### 3. Функционал для Врача
+- [ ] Профиль врача (`/doctor/profile`)
+    - [ ] Просмотр и редактирование данных (включая специальность, опыт, цену)
+    - [ ] Удаление аккаунта
+- [ ] Расписание врача (`/doctor/schedule`)
+    - [ ] Просмотр своего расписания
+    - [ ] Просмотр записей пациентов (без деталей пациента, если не разрешено)
+- [ ] Управление отзывами (если применимо, например, ответы на отзывы - не указано в API)
+
+### 4. Функционал для Младшего Администратора (Junior Admin)
+- [ ] Профиль младшего администратора (`/junior-admin/profile`)
+    - [ ] Просмотр и редактирование данных
+- [ ] Управление врачами (`/junior-admin/doctors`)
+    - [ ] Добавление нового врача
+    - [ ] Просмотр списка врачей
+    - [ ] Прикрепление/открепление врача к своей больнице
+- [ ] Управление расписанием (`/junior-admin/schedule`)
+    - [ ] Добавление слотов для записи к врачам своей больницы
+    - [ ] Просмотр расписания врачей своей больницы
+- [ ] Лист ожидания (`/junior-admin/waitlist`)
+    - [ ] Просмотр листа ожидания для врачей своей больницы
+- [ ] Статистика по врачам (`/junior-admin/doctor-stats`)
+
+### 5. Функционал для Старшего Администратора (Senior Admin)
+- [ ] Профиль старшего администратора (`/senior-admin/profile`)
+    - [ ] Просмотр и редактирование данных
+- [ ] Управление пользователями (`/senior-admin/users`)
+    - [ ] Просмотр списка всех пользователей
+    - [ ] Удаление пользователей по номеру телефона
+- [ ] Управление младшими администраторами (`/senior-admin/junior-admins`)
+    - [ ] Добавление нового младшего администратора
+- [ ] Управление больницами (`/senior-admin/hospitals`)
+    - [ ] Добавление новой больницы
+    - [ ] Просмотр списка больниц
+
+### 6. Общие улучшения
+- [ ] Улучшение дизайна и UX
+- [ ] Обработка ошибок и уведомления для пользователя
+- [ ] Адаптивность для мобильных устройств
+- [ ] Оптимизация производительности
+- [x] Написание тестов не надо!
+
+## Начало работы
+
+Сначала запустите сервер разработки:
 
 ```bash
 npm run dev
@@ -14,23 +89,23 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте [http://localhost:3000](http://localhost:3000) в вашем браузере, чтобы увидеть результат.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Вы можете начать редактирование страницы, изменив `app/page.js`. Страница автоматически обновляется при редактировании файла.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Этот проект использует [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) для автоматической оптимизации и загрузки [Geist](https://vercel.com/font), нового семейства шрифтов для Vercel.
 
-## Learn More
+## Узнать больше
 
-To learn more about Next.js, take a look at the following resources:
+Чтобы узнать больше о Next.js, ознакомьтесь со следующими ресурсами:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Документация Next.js](https://nextjs.org/docs) - узнайте о функциях и API Next.js.
+- [Изучите Next.js](https://nextjs.org/learn) - интерактивный учебник по Next.js.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Вы можете проверить [репозиторий Next.js на GitHub](https://github.com/vercel/next.js) - ваши отзывы и вклады приветствуются!
 
-## Deploy on Vercel
+## Развертывание на Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Самый простой способ развернуть ваше приложение Next.js - использовать [платформу Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) от создателей Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ознакомьтесь с нашей [документацией по развертыванию Next.js](https://nextjs.org/docs/app/building-your-application/deploying) для получения более подробной информации.
