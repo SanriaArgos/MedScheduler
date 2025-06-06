@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
 
-export default function PatientProfilePage() {
+export default function SeniorAdminProfilePage() {
     const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState(null);
     const [error, setError] = useState("");
@@ -21,27 +21,26 @@ export default function PatientProfilePage() {
     const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
     const [updateError, setUpdateError] = useState("");
     const [updateSuccess, setUpdateSuccess] = useState("");
-    const [deleteConfirm, setDeleteConfirm] = useState(false);
 
     useEffect(() => {
         // Проверка аутентификации
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'patient') {
+        if (!isLoggedIn || !userData.userId || userData.userType !== 'senior_admin') {
             router.push('/login');
             return;
         }
 
-        // Здесь будет загрузка данных профиля пациента
+        // Здесь будет загрузка данных профиля старшего администратора
         // В реальном приложении здесь будет API-запрос для получения данных
         // На данный момент, поскольку у нас нет API для получения полного профиля,
         // мы просто используем имитацию данных профиля
 
         const mockProfileData = {
             userId: userData.userId,
-            firstName: "Иван",
-            lastName: "Петров",
+            firstName: "Михаил",
+            lastName: "Николаев",
             patronymic: "Сергеевич",
             phone: userData.phone || "79001234567"
         };
@@ -83,7 +82,7 @@ export default function PatientProfilePage() {
 
         // Валидация телефона (11 цифр)
         if (phone && !/^\d{11}$/.test(phone)) {
-            setUpdateError("Ном��р телефона должен состоять из 11 цифр");
+            setUpdateError("Номер телефона должен состоять из 11 цифр");
             return;
         }
 
@@ -104,7 +103,7 @@ export default function PatientProfilePage() {
             }
 
             // API запрос на обновление профиля
-            const response = await fetch('https://api.medscheduler.ru/edit_patient_profile', {
+            const response = await fetch('https://api.medscheduler.ru/edit_senior_admin_profile', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updateData),
@@ -150,37 +149,6 @@ export default function PatientProfilePage() {
         }
     };
 
-    const handleDeleteAccount = async () => {
-        if (!deleteConfirm) {
-            setDeleteConfirm(true);
-            return;
-        }
-
-        try {
-            const response = await fetch(`https://api.medscheduler.ru/delete_self_account?user_id=${profile.userId}`, {
-                method: 'DELETE',
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                // Очищаем данные аутентификации
-                localStorage.removeItem('medSchedulerUser');
-                localStorage.removeItem('isLoggedIn');
-
-                alert("Аккаунт успешно удален");
-                router.push('/');
-            } else {
-                setError(data.error || "Ошибка удаления аккаунта");
-                setDeleteConfirm(false);
-            }
-        } catch (err) {
-            console.error("Account deletion error:", err);
-            setError("Не удалось подключиться к серверу");
-            setDeleteConfirm(false);
-        }
-    };
-
     if (loading) {
         return (
             <div className="min-h-[calc(80vh-theme(space.36))] flex items-center justify-center">
@@ -190,8 +158,8 @@ export default function PatientProfilePage() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto py-8 px-4">
-            <h1 className="text-3xl font-bold text-main2 mb-8">Профиль пациента</h1>
+        <div className="max-w-4xl mx-auto py-8 px-4">
+            <h1 className="text-3xl font-bold text-main2 mb-8">Профиль старшего администратора</h1>
 
             {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -200,62 +168,36 @@ export default function PatientProfilePage() {
             )}
 
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+                <div className="flex flex-col md:flex-row justify-between md:items-center mb-6">
+                    <h2 className="text-xl font-semibold text-main2">Личные данные</h2>
+                    {!isEditing && (
+                        <button
+                            onClick={handleEditToggle}
+                            className="mt-4 md:mt-0 px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors"
+                        >
+                            Редактировать профиль
+                        </button>
+                    )}
+                </div>
+
                 {!isEditing ? (
-                    <div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div>
-                                <p className="text-sm text-gray-500">Фамилия</p>
-                                <p className="text-lg">{profile.lastName}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-500">Имя</p>
-                                <p className="text-lg">{profile.firstName}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-500">Отчество</p>
-                                <p className="text-lg">{profile.patronymic || "—"}</p>
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-500">Телефон</p>
-                                <p className="text-lg">{profile.phone}</p>
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p className="text-sm text-gray-500">Фамилия</p>
+                            <p className="text-lg">{profile.lastName}</p>
                         </div>
-
-                        <div className="flex flex-wrap gap-3 mt-6">
-                            <button
-                                onClick={handleEditToggle}
-                                className="px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors"
-                            >
-                                Редактировать профиль
-                            </button>
-
-                            <button
-                                onClick={() => setDeleteConfirm(true)}
-                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-                            >
-                                Удалить аккаунт
-                            </button>
+                        <div>
+                            <p className="text-sm text-gray-500">Имя</p>
+                            <p className="text-lg">{profile.firstName}</p>
                         </div>
-
-                        {deleteConfirm && (
-                            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded">
-                                <p className="text-red-600 mb-3">Вы действительно хотите удалить свой аккаунт? Это действие необратимо.</p>
-                                <div className="flex gap-3">
-                                    <button
-                                        onClick={handleDeleteAccount}
-                                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-                                    >
-                                        Да, удалить
-                                    </button>
-                                    <button
-                                        onClick={() => setDeleteConfirm(false)}
-                                        className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
-                                    >
-                                        Отмена
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                        <div>
+                            <p className="text-sm text-gray-500">Отчество</p>
+                            <p className="text-lg">{profile.patronymic || "—"}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500">Телефон</p>
+                            <p className="text-lg">{profile.phone}</p>
+                        </div>
                     </div>
                 ) : (
                     <form onSubmit={handleUpdateProfile}>
@@ -265,78 +207,6 @@ export default function PatientProfilePage() {
                             </div>
                         )}
 
-                                <div className="md:col-span-2">
-                                    <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Новый пароль
-                                    </label>
-                                    <input
-                                        type="password"
-                                        id="newPassword"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                    />
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label htmlFor="newPasswordRepeat" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Повторите новый пароль
-                                    </label>
-                                    <input
-                                        type="password"
-                                        id="newPasswordRepeat"
-                                        value={newPasswordRepeat}
-                                        onChange={(e) => setNewPasswordRepeat(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="border-t pt-4">
-                            <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                                Текущий пароль (для подтверждения изменений)
-                            </label>
-                            <input
-                                type="password"
-                                id="currentPassword"
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                required
-                            />
-                        </div>
-
-                        <div className="flex gap-3 mt-6">
-                            <button
-                                type="submit"
-                                className="px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors"
-                            >
-                                Сохранить изменения
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleEditToggle}
-                                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
-                            >
-                                Отмена
-                            </button>
-                        </div>
-                    </form>
-                )}
-            </div>
-
-            <div className="flex justify-between mt-6">
-                <Link href="/" className="text-main hover:text-main2 transition-colors">
-                    ← Вернуться на главную
-                </Link>
-                <Link href="/patient/appointments" className="text-main hover:text-main2 transition-colors">
-                    Мои записи →
-                </Link>
-            </div>
-        </div>
-    );
-}
-/*
                         {updateSuccess && (
                             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                                 {updateSuccess}
@@ -400,4 +270,86 @@ export default function PatientProfilePage() {
                         <div className="mt-4 mb-6">
                             <h3 className="text-lg font-medium mb-2">Изменение пароля (необязательно)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-*/
+                                <div className="md:col-span-2">
+                                    <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Новый пароль
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="newPassword"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                    />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label htmlFor="newPasswordRepeat" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Повторите новый пароль
+                                    </label>
+                                    <input
+                                        type="password"
+                                        id="newPasswordRepeat"
+                                        value={newPasswordRepeat}
+                                        onChange={(e) => setNewPasswordRepeat(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t pt-4">
+                            <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                                Текущий пароль (для подтверждения изменений)
+                            </label>
+                            <input
+                                type="password"
+                                id="currentPassword"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                required
+                            />
+                        </div>
+
+                        <div className="flex gap-3 mt-6">
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors"
+                            >
+                                Сохранить изменения
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleEditToggle}
+                                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
+                            >
+                                Отмена
+                            </button>
+                        </div>
+                    </form>
+                )}
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Link href="/senior-admin/hospitals" className="bg-white p-4 shadow-md rounded-lg hover:shadow-lg transition-shadow text-center">
+                    <h3 className="text-lg font-semibold text-main2 mb-2">Больницы</h3>
+                    <p className="text-gray-600">Управление больницами</p>
+                </Link>
+                <Link href="/senior-admin/junior-admins" className="bg-white p-4 shadow-md rounded-lg hover:shadow-lg transition-shadow text-center">
+                    <h3 className="text-lg font-semibold text-main2 mb-2">Администраторы</h3>
+                    <p className="text-gray-600">Управление младшими администраторами</p>
+                </Link>
+                <Link href="/senior-admin/users" className="bg-white p-4 shadow-md rounded-lg hover:shadow-lg transition-shadow text-center">
+                    <h3 className="text-lg font-semibold text-main2 mb-2">Пользователи</h3>
+                    <p className="text-gray-600">Просмотр и управление пользователями</p>
+                </Link>
+            </div>
+
+            <div className="flex justify-between mt-8">
+                <Link href="/" className="text-main hover:text-main2 transition-colors">
+                    ← Вернуться на главную
+                </Link>
+            </div>
+        </div>
+    );
+}
