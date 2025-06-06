@@ -31,66 +31,7 @@ void search_doctors(
                   << "sort_by_rating=" << (sort_by_rating ? "true" : "false") 
                   << std::endl;
 
-        // 2) Строим WHERE-условия и параметры
-        std::vector<std::string> clauses;
-        // Сохраняем копии строк параметров, чтобы избежать проблем с указателями
-        std::vector<std::string> paramStrings;
-        std::vector<const char *> paramValues;
-        int idx = 1;
-
-        // Изменим условия для hospital_ids, чтобы обрабатывать NULL значения и пустые массивы
-        if (region != "-") {
-            clauses.push_back(
-                "EXISTS (SELECT 1 FROM hospitals h "
-                " WHERE h.hospital_id = ANY(COALESCE(d.hospital_ids, ARRAY[]::integer[])) "
-                "   AND h.region = $" +
-                std::to_string(idx) + "::text)"
-            );
-            paramStrings.push_back(region);
-            paramValues.push_back(paramStrings.back().c_str());
-            idx++;
-        }
-        if (settlement_type != "-") {
-            clauses.push_back(
-                "EXISTS (SELECT 1 FROM hospitals h "
-                " WHERE h.hospital_id = ANY(COALESCE(d.hospital_ids, ARRAY[]::integer[])) "
-                "   AND h.settlement_type = $" +
-                std::to_string(idx) + "::text)"
-            );
-            paramStrings.push_back(settlement_type);
-            paramValues.push_back(paramStrings.back().c_str());
-            idx++;
-        }
-        if (settlement_name != "-") {
-            clauses.push_back(
-                "EXISTS (SELECT 1 FROM hospitals h "
-                " WHERE h.hospital_id = ANY(COALESCE(d.hospital_ids, ARRAY[]::integer[])) "
-                "   AND h.settlement_name = $" +
-                std::to_string(idx) + "::text)"
-            );
-            paramStrings.push_back(settlement_name);
-            paramValues.push_back(paramStrings.back().c_str());
-            idx++;
-        }
-        if (full_name != "-") {
-            clauses.push_back(
-                "EXISTS (SELECT 1 FROM hospitals h "
-                " WHERE h.hospital_id = ANY(COALESCE(d.hospital_ids, ARRAY[]::integer[])) "
-                "   AND h.full_name = $" +
-                std::to_string(idx) + "::text)"
-            );
-            paramStrings.push_back(full_name);
-            paramValues.push_back(paramStrings.back().c_str());
-            idx++;
-        }
-        if (specialty != "-") {
-            clauses.push_back("d.specialty = $" + std::to_string(idx) + "::text");
-            paramStrings.push_back(specialty);
-            paramValues.push_back(paramStrings.back().c_str());
-            idx++;
-        }
-
-        // 3) Собираем SQL
+        // 2) Строим базовый SQL запрос без сложных условий
         std::ostringstream sql;
         sql << "SELECT "
                "d.doctor_id, "
@@ -105,11 +46,24 @@ void search_doctors(
                "FROM rating GROUP BY doctor_ref_id"
                ") avg_r ON avg_r.doctor_ref_id = d.doctor_id";
 
-        if (!clauses.empty()) {
-            sql << " WHERE " << clauses[0];
-            for (size_t i = 1; i < clauses.size(); ++i) {
-                sql << " AND " << clauses[i];
+        // Сохраняем копии строк параметров
+        std::vector<std::string> paramStrings;
+        std::vector<const char *> paramValues;
+        int idx = 1;
+        bool hasWhere = false;
+
+        // 3) Добавляем простые условия WHERE без вложенных подзапросов
+        if (specialty != "-") {
+            if (!hasWhere) {
+                sql << " WHERE ";
+                hasWhere = true;
+            } else {
+                sql << " AND ";
             }
+            sql << "d.specialty = $" << idx << "::text";
+            paramStrings.push_back(specialty);
+            paramValues.push_back(paramStrings.back().c_str());
+            idx++;
         }
 
         // 4) Добавляем ORDER BY
@@ -118,6 +72,9 @@ void search_doctors(
         } else {
             sql << " ORDER BY fio";
         }
+
+        // Ограничиваем количество результатов для безопасности
+        sql << " LIMIT 100";
 
         std::string sqlQuery = sql.str();
         std::cerr << "SQL запрос: " << sqlQuery << std::endl;
@@ -151,7 +108,7 @@ void search_doctors(
         for (int i = 0; i < rows; ++i) {
             json doc;
             
-            // Добавляем проверки на NULL и безопасное преобразование
+            // Безопасная обработка данных
             try {
                 doc["doctor_id"] = PQgetisnull(pgres, i, 0) ? 0 : std::stoi(PQgetvalue(pgres, i, 0));
                 doc["fio"] = PQgetisnull(pgres, i, 1) ? "" : PQgetvalue(pgres, i, 1);
