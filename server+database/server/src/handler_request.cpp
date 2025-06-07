@@ -29,23 +29,23 @@
 #include "../include/handlers/doctor_exists.hpp"
 #include "../include/handlers/doctor_schedule.hpp"
 #include "../include/handlers/edit_doctor_feedback.hpp"
-#include "../include/handlers/get_admin_hospital.hpp"
+#include "../include/handlers/edit_doctor_profile.hpp"
+#include "../include/handlers/edit_junior_admin_profile.hpp"
+#include "../include/handlers/edit_patient_profile.hpp"
+#include "../include/handlers/edit_senior_admin_profile.hpp"
 #include "../include/handlers/get_cancelled_slots.hpp"
 #include "../include/handlers/get_doctor_average_ratings.hpp"
 #include "../include/handlers/get_doctor_feedback_calculated.hpp"
 #include "../include/handlers/get_doctor_feedback_items.hpp"
 #include "../include/handlers/get_doctor_hospitals.hpp"
-#include "../include/handlers/get_doctor_profile.hpp"
 #include "../include/handlers/get_doctor_schedule_for_patient.hpp"
+#include "../include/handlers/get_doctor_statistics.hpp"
 #include "../include/handlers/get_doctors.hpp"
 #include "../include/handlers/get_doctors_for_patient.hpp"
 #include "../include/handlers/get_hospital_full_names.hpp"
 #include "../include/handlers/get_hospitals.hpp"
-#include "../include/handlers/get_junior_admin_profile.hpp"
-#include "../include/handlers/get_patient_profile.hpp"
-#include "../include/handlers/get_patient_waitlist.hpp"
+#include "../include/handlers/get_patient_appointments.hpp"
 #include "../include/handlers/get_regions.hpp"
-#include "../include/handlers/get_senior_admin_profile.hpp"
 #include "../include/handlers/get_settlement_names.hpp"
 #include "../include/handlers/get_settlement_types.hpp"
 #include "../include/handlers/get_specialties.hpp"
@@ -55,17 +55,11 @@
 #include "../include/handlers/hospital_exists.hpp"
 #include "../include/handlers/junior_admin_schedule.hpp"
 #include "../include/handlers/login.hpp"
-#include "../include/handlers/patient_appointments.hpp"
 #include "../include/handlers/post_doctor_feedback.hpp"
 #include "../include/handlers/registration.hpp"
 #include "../include/handlers/search_doctors.hpp"
-#include "../include/handlers/edit_patient_profile.hpp"
-#include "../include/handlers/edit_doctor_profile.hpp"
-#include "../include/handlers/edit_senior_admin_profile.hpp"
-#include "../include/handlers/edit_junior_admin_profile.hpp"
-#include "../include/handlers/get_doctor_statistics.hpp"
 #include "../include/handlers/send_notification.hpp"
-#include "../include/cors_handler.hpp"
+#include "../include/handlers/get_profile_by_id.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -110,8 +104,7 @@ void handle_error(
     res.result(http::status::internal_server_error);
     res.set(http::field::content_type, "application/json");
     res.body() = R"({"error": "Internal server error", "details": ")" +
-                std::string(e.what()) + R"("})";
-    add_cors_headers(res);
+                 std::string(e.what()) + R"("})";
     std::cerr << "Exception: " << e.what() << std::endl;
 }
 
@@ -139,120 +132,72 @@ void handle_request(
     database_handler &db_handler
 ) {
     try {
-         // Обрабатываем OPTIONS запросы (preflight)
-        if (req.method() == http::verb::options) {
-            res.result(http::status::no_content);
-            res.set(http::field::content_type, "text/plain");
-            res.body() = "";
-            add_cors_headers(res);
-            res.prepare_payload();
-            return; // Важно: выходим после обработки OPTIONS
-        }
-
-        // Удалите эту строку, чтобы избежать добавления заголовков дважды
-        // add_cors_headers(res);
-
         if (req.method() == http::verb::post) {
             try {
-                // Проверяем, что body не пустое
-                if (req.body().empty()) {
-                    res.result(http::status::bad_request);
-                    res.set(http::field::content_type, "application/json");
-                    res.body() = R"({"error": "Empty request body", "success": false})";
-                    return;
-                }
-
-                json body;
-                try {
-                    body = json::parse(req.body());
-                } catch (const json::parse_error& e) {
-                    std::cerr << "JSON parse error: " << e.what() << std::endl;
-                    std::cerr << "Request body: " << req.body() << std::endl;
-                    res.result(http::status::bad_request);
-                    res.set(http::field::content_type, "application/json");
-                    res.body() = R"({"error": "Invalid JSON format", "success": false})";
-                    return;
-                }
+                json body = json::parse(req.body());
 
                 if (req.target() == "/login") {
                     login(body, res, db_handler);
-                }
-                else if (req.target() == "/registration") {
+                } else if (req.target() == "/registration") {
                     registration(body, res, db_handler);
-                }
-                else if (req.target() == "/attach_doctor_to_hospital") {
+                } else if (req.target() == "/attach_doctor_to_hospital") {
                     attach_doctor_to_hospital(body, res, db_handler);
-                }
-                else if (req.target() == "/add_doctor") {
+                } else if (req.target() == "/add_doctor") {
                     add_doctor(body, res, db_handler);
-                }
-                else if (req.target() == "/add_hospital") {
+                } else if (req.target() == "/add_hospital") {
                     add_hospital(body, res, db_handler);
-                }
-                else if (req.target() == "/add_junior_admin") {
+                } else if (req.target() == "/add_junior_admin") {
                     add_junior_admin(body, res, db_handler);
-                }
-                else if (req.target() == "/add_record_slot") {
+                } else if (req.target() == "/add_record_slot") {
                     add_record_slot(body, res, db_handler);
-                }
-                else if (req.target() == "/detach_doctor_from_hospital") {
+                } else if (req.target() == "/detach_doctor_from_hospital") {
                     detach_doctor_from_hospital(body, res, db_handler);
-                }
-                else if (req.target() == "/post_doctor_feedback") {
+                } else if (req.target() == "/post_doctor_feedback") {
                     post_doctor_rating(body, res, db_handler);
-                }
-                else if (req.target() == "/book_appointment") {
+                } else if (req.target() == "/book_appointment") {
                     book_appointment(body, res, db_handler);
-                }
-                else if (req.target() == "/search_doctors") {
+                } else if (req.target() == "/search_doctors") {
                     search_doctors(body, res, db_handler);
-                }
-                else if (req.target() == "/add_patient_to_waitlist") {
+                } else if (req.target() == "/add_patient_to_waitlist") {
                     add_patient_to_waitlist(body, res, db_handler);
-                }
-                else if (req.target() == "/cancel_appointment_from_waitlist") {
+                } else if (req.target() == "/cancel_appointment_from_waitlist") {
                     cancel_waitlist(body, res, db_handler);
-                }
-                else if (req.target() == "/get_doctor_statistics") {
+                } else if (req.target() == "/get_doctor_statistics") {
                     get_doctor_statistics(body, res, db_handler);
-                }
-                else if (req.target() == "/send_notification") {
+                } else if (req.target() == "/send_notification") {
                     send_notification_handler(body, res, db_handler);
-                }
-                else {
+                } else {
                     handle_not_found(res);
                 }
-            } catch (const json::parse_error& e) {
+            } catch (const json::parse_error &e) {
                 res.result(http::status::bad_request);
                 res.set(http::field::content_type, "application/json");
-                res.body() = R"({"error": "Invalid JSON format", "success": false})";
+                res.body() = R"({"error": "Invalid JSON format"})";
             } catch (const std::exception &e) {
                 handle_error(e, res);
             }
-        }
-        else if (req.method() == http::verb::get) {
+        } else if (req.method() == http::verb::get) {
             if (req.target() == "/get_doctors") {
                 try {
                     get_doctors_table(json::object(), res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target() == "/get_hospitals") {
+            } else if (req.target() == "/get_hospitals") {
                 try {
                     get_hospitals_table(json::object(), res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target() == "/get_users") {
+            } else if (req.target() == "/get_users") {
                 try {
                     get_users_table(json::object(), res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target().starts_with("/get_doctor_schedule_for_patient")) {
+            } else if (req.target().starts_with(
+                           "/get_doctor_schedule_for_patient"
+                       )) {
                 try {
                     std::string url = std::string(req.target());
                     size_t doctor_pos = url.find("doctor_id=");
@@ -269,22 +214,26 @@ void handle_request(
                     res.set(http::field::content_type, "application/json");
                     res.body() = json{
                         {"success", false},
-                        {"error", std::string("Invalid request: ") + e.what()}}.dump();
+                        {"error",
+                         std::string("Invalid request: ") +
+                             e.what(
+                             )}}.dump();
                 }
-            }
-            else if (req.target().starts_with("/get_patient_appointments")) {
+            } else if (req.target().starts_with("/get_patient_appointments")) {
                 try {
                     std::string url = std::string(req.target());
                     size_t pid_pos = url.find("patient_id=");
                     if (pid_pos == std::string::npos) {
-                        throw std::runtime_error("Missing patient_id parameter");
+                        throw std::runtime_error("Missing patient_id parameter"
+                        );
                     }
 
                     pid_pos += 10;
                     size_t pid_end = url.find('&', pid_pos);
                     std::string pid_str = url.substr(
-                        pid_pos, 
-                        (pid_end == std::string::npos) ? std::string::npos : pid_end - pid_pos
+                        pid_pos, (pid_end == std::string::npos)
+                                     ? std::string::npos
+                                     : pid_end - pid_pos
                     );
 
                     pid_str.erase(
@@ -300,7 +249,7 @@ void handle_request(
                     }
 
                     int patient_id = std::stoi(pid_str);
-                    patient_appointments(patient_id, res, db_handler);
+                    get_patient_appointments(patient_id, res, db_handler);
 
                 } catch (const std::invalid_argument &) {
                     json error = {
@@ -315,8 +264,61 @@ void handle_request(
                     res.set(http::field::content_type, "application/json");
                     res.body() = error.dump();
                 }
-            } 
-            else if (req.target().starts_with("/get_doctor_hospitals")) {
+            }
+
+            else if (req.target().starts_with("/get_profile_by_id")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t uid_pos = url.find("user_id=");
+
+                    if (uid_pos == std::string::npos) {
+                        throw std::runtime_error("Missing user_id parameter");
+                    }
+
+                    uid_pos += 8;  // Длина "user_id="
+                    size_t uid_end = url.find('&', uid_pos);
+                    std::string uid_str = url.substr(
+                        uid_pos, (uid_end == std::string::npos)
+                                     ? std::string::npos
+                                     : uid_end - uid_pos
+                    );
+
+                    // Удаляем все нецифровые символы (для безопасности)
+                    uid_str.erase(
+                        std::remove_if(
+                            uid_str.begin(), uid_str.end(),
+                            [](char c) { return !std::isdigit(c); }
+                        ),
+                        uid_str.end()
+                    );
+
+                    if (uid_str.empty()) {
+                        throw std::invalid_argument("Empty user_id");
+                    }
+
+                    int user_id = std::stoi(uid_str);
+
+                    // Получаем профиль и сразу отправляем как ответ
+                    json profile = get_profile_by_id(user_id, res, db_handler);
+
+                    res.result(http::status::ok);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = profile.dump();
+
+                } catch (const std::invalid_argument &) {
+                    json error = {
+                        {"success", false},
+                        {"error", "User ID must be a number"}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error.dump();
+                } catch (const std::exception &e) {
+                    json error = {{"success", false}, {"error", e.what()}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error.dump();
+                }
+            } else if (req.target().starts_with("/get_doctor_hospitals")) {
                 try {
                     std::string url = std::string(req.target());
                     size_t param_pos = url.find("doctor_id=");
@@ -326,9 +328,10 @@ void handle_request(
 
                     size_t value_start = param_pos + 10;
                     size_t value_end = url.find('&', value_start);
-                    std::string id_str = (value_end == std::string::npos)
-                        ? url.substr(value_start)
-                        : url.substr(value_start, value_end - value_start);
+                    std::string id_str =
+                        (value_end == std::string::npos)
+                            ? url.substr(value_start)
+                            : url.substr(value_start, value_end - value_start);
 
                     int doctor_id = std::stoi(id_str);
                     get_doctor_hospitals(doctor_id, res, db_handler);
@@ -336,26 +339,19 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target() == "/get_regions") {
+            } else if (req.target() == "/get_regions") {
                 get_regions(res, db_handler);
-            }
-            else if (req.target() == "/get_doctor_average_ratings") {
+            } else if (req.target() == "/get_doctor_average_ratings") {
                 get_doctor_average_ratings(res, db_handler);
-            }
-            else if (req.target() == "/get_settlement_types") {
+            } else if (req.target() == "/get_settlement_types") {
                 get_settlement_types(res, db_handler);
-            }
-            else if (req.target() == "/get_settlement_names") {
+            } else if (req.target() == "/get_settlement_names") {
                 get_settlement_names(res, db_handler);
-            }
-            else if (req.target() == "/get_hospital_full_names") {
+            } else if (req.target() == "/get_hospital_full_names") {
                 get_hospital_full_names(res, db_handler);
-            }
-            else if (req.target() == "/get_specialties") {
+            } else if (req.target() == "/get_specialties") {
                 get_specialties(res, db_handler);
-            }
-            else if (req.target().starts_with("/get_doctor_feedback_items")) {
+            } else if (req.target().starts_with("/get_doctor_feedback_items")) {
                 try {
                     std::string url = std::string(req.target());
                     size_t param_pos = url.find("?doctor_id=");
@@ -376,8 +372,9 @@ void handle_request(
                     res.set(http::field::content_type, "application/json");
                     res.body() = error_response.dump();
                 }
-            }
-            else if (req.target().starts_with("/get_doctor_feedback_calculated")) {
+            } else if (req.target().starts_with(
+                           "/get_doctor_feedback_calculated"
+                       )) {
                 try {
                     std::string url = std::string(req.target());
                     size_t param_pos = url.find("?doctor_id=");
@@ -398,8 +395,7 @@ void handle_request(
                     res.set(http::field::content_type, "application/json");
                     res.body() = error_response.dump();
                 }
-            } 
-            else if (req.target().starts_with("/doctors_exist/")) {
+            } else if (req.target().starts_with("/doctors_exist/")) {
                 try {
                     std::string target = std::string(req.target());
                     int doctor_id = std::stoi(target.substr(16));
@@ -407,8 +403,7 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target().starts_with("/hospitals_exist/")) {
+            } else if (req.target().starts_with("/hospitals_exist/")) {
                 try {
                     std::string target = std::string(req.target());
                     int hospital_id = std::stoi(target.substr(17));
@@ -416,8 +411,7 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target().starts_with("/get_doctor_schedule")) {
+            } else if (req.target().starts_with("/get_doctor_schedule")) {
                 try {
                     std::string target = std::string(req.target());
                     size_t pos = target.find("doctor_id=");
@@ -429,29 +423,34 @@ void handle_request(
                     } else {
                         res.result(http::status::bad_request);
                         res.set(http::field::content_type, "application/json");
-                        res.body() = R"({"success": false, "error": "Missing doctor_id"})";
+                        res.body() =
+                            R"({"success": false, "error": "Missing doctor_id"})";
                     }
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target().starts_with("/get_doctors_for_patient")) {
+            } else if (req.target().starts_with("/get_doctors_for_patient")) {
                 try {
                     std::string url = std::string(req.target());
-                    auto parse_param = [&](const std::string &key) -> std::string {
+                    auto parse_param = [&](const std::string &key
+                                       ) -> std::string {
                         size_t start = url.find(key + "=");
-                        if (start == std::string::npos) return "";
+                        if (start == std::string::npos) {
+                            return "";
+                        }
                         start += key.length() + 1;
                         size_t end = url.find('&', start);
                         return end == std::string::npos
-                                ? url.substr(start)
-                                : url.substr(start, end - start);
+                                   ? url.substr(start)
+                                   : url.substr(start, end - start);
                     };
 
                     json request_data;
                     request_data["region"] = parse_param("region");
-                    request_data["settlement_type"] = parse_param("settlement_type");
-                    request_data["settlement_name"] = parse_param("settlement_name");
+                    request_data["settlement_type"] =
+                        parse_param("settlement_type");
+                    request_data["settlement_name"] =
+                        parse_param("settlement_name");
                     request_data["specialty"] = parse_param("specialty");
                     request_data["hospital"] = parse_param("hospital");
                     request_data["doctor"] = parse_param("doctor");
@@ -460,27 +459,32 @@ void handle_request(
                 } catch (const std::exception &e) {
                     json error;
                     error["success"] = false;
-                    error["error"] = std::string("Failed to process request: ") + e.what();
+                    error["error"] =
+                        std::string("Failed to process request: ") + e.what();
                     res.result(http::status::bad_request);
                     res.set(http::field::content_type, "application/json");
                     res.body() = error.dump();
                 }
-            }
-            else if (req.target().starts_with("/check_doctor_admin_hospital")) {
+            } else if (req.target().starts_with("/check_doctor_admin_hospital"
+                       )) {
                 try {
                     std::string url = std::string(req.target());
                     auto doc_pos = url.find("doctor_id=");
                     auto adm_pos = url.find("&admin_id=");
 
-                    if (doc_pos == std::string::npos || adm_pos == std::string::npos) {
+                    if (doc_pos == std::string::npos ||
+                        adm_pos == std::string::npos) {
                         throw std::runtime_error("Missing required parameters");
                     }
 
-                    int doctor_id = std::stoi(url.substr(doc_pos + 10, adm_pos - doc_pos - 10));
+                    int doctor_id = std::stoi(
+                        url.substr(doc_pos + 10, adm_pos - doc_pos - 10)
+                    );
                     int admin_id = std::stoi(url.substr(adm_pos + 10));
 
                     int hospital_id_admin = get_hospital_id_admin(admin_id);
-                    bool is_valid = check_doctor_hospital(doctor_id, hospital_id_admin);
+                    bool is_valid =
+                        check_doctor_hospital(doctor_id, hospital_id_admin);
 
                     json response = {
                         {"is_valid", is_valid},
@@ -500,15 +504,13 @@ void handle_request(
                     res.body() = error.dump();
                     res.prepare_payload();
                 }
-            }
-            else if (req.target() == "/junior_admin_schedule") {
+            } else if (req.target() == "/junior_admin_schedule") {
                 try {
                     junior_admin_schedule(json::object(), res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target().starts_with("/get_user_id")) {
+            } else if (req.target().starts_with("/get_user_id")) {
                 try {
                     json out;
                     std::string target = std::string(req.target());
@@ -532,8 +534,7 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target().starts_with("/get_user_type")) {
+            } else if (req.target().starts_with("/get_user_type")) {
                 try {
                     json out;
                     std::string target = std::string(req.target());
@@ -543,7 +544,8 @@ void handle_request(
                         out["error"] = "Missing phone parameter";
                     } else {
                         std::string phone = target.substr(pos + 6);
-                        std::string type = get_user_type_by_phone(db_handler, phone);
+                        std::string type =
+                            get_user_type_by_phone(db_handler, phone);
                         if (type.empty()) {
                             res.result(http::status::not_found);
                             out["error"] = "User not found";
@@ -557,8 +559,7 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target().starts_with("/get_cancelled_slots")) {
+            } else if (req.target().starts_with("/get_cancelled_slots")) {
                 try {
                     std::string url = std::string(req.target());
                     size_t param_pos = url.find("doctor_id=");
@@ -577,15 +578,19 @@ void handle_request(
                     try {
                         size_t value_start = param_pos + 10;
                         size_t value_end = url.find('&', value_start);
-                        std::string id_str = (value_end == std::string::npos)
-                            ? url.substr(value_start)
-                            : url.substr(value_start, value_end - value_start);
+                        std::string id_str =
+                            (value_end == std::string::npos)
+                                ? url.substr(value_start)
+                                : url.substr(
+                                      value_start, value_end - value_start
+                                  );
 
                         doctor_id = std::stoi(id_str);
                     } catch (const std::exception &e) {
                         json error_response = {
                             {"success", false},
-                            {"error", "Invalid doctor_id format - must be integer"}};
+                            {"error",
+                             "Invalid doctor_id format - must be integer"}};
                         res.result(http::status::bad_request);
                         res.set(http::field::content_type, "application/json");
                         res.body() = error_response.dump();
@@ -596,23 +601,26 @@ void handle_request(
                 } catch (const std::exception &e) {
                     json error_response = {
                         {"success", false},
-                        {"error", std::string("Internal server error: ") + e.what()}};
+                        {"error",
+                         std::string("Internal server error: ") + e.what()}};
                     res.result(http::status::internal_server_error);
                     res.set(http::field::content_type, "application/json");
                     res.body() = error_response.dump();
                 }
-            }
-            else if (req.target().starts_with("/get_waitlist_count")) {
+            } else if (req.target().starts_with("/get_waitlist_count")) {
                 try {
                     std::string url = std::string(req.target());
                     auto parse_param = [&](const std::string &key) -> int {
                         size_t start = url.find(key + "=");
                         if (start == std::string::npos) {
-                            throw std::runtime_error("Missing parameter: " + key);
+                            throw std::runtime_error(
+                                "Missing parameter: " + key
+                            );
                         }
                         start += key.length() + 1;
                         size_t end = url.find('&', start);
-                        std::string value = (end == std::string::npos)
+                        std::string value =
+                            (end == std::string::npos)
                                 ? url.substr(start)
                                 : url.substr(start, end - start);
                         return std::stoi(value);
@@ -623,23 +631,26 @@ void handle_request(
                 } catch (const std::exception &e) {
                     json error;
                     error["success"] = false;
-                    error["error"] = std::string("Failed to process request: ") + e.what();
+                    error["error"] =
+                        std::string("Failed to process request: ") + e.what();
                     res.result(http::status::bad_request);
                     res.set(http::field::content_type, "application/json");
                     res.body() = error.dump();
                 }
-            }
-            else if (req.target().starts_with("/get_waitlist")) {
+            } else if (req.target().starts_with("/get_waitlist")) {
                 try {
                     std::string url = std::string(req.target());
                     auto parse_param = [&](const std::string &key) -> int {
                         size_t start = url.find(key + "=");
                         if (start == std::string::npos) {
-                            throw std::runtime_error("Missing parameter: " + key);
+                            throw std::runtime_error(
+                                "Missing parameter: " + key
+                            );
                         }
                         start += key.length() + 1;
                         size_t end = url.find('&', start);
-                        std::string value = (end == std::string::npos)
+                        std::string value =
+                            (end == std::string::npos)
                                 ? url.substr(start)
                                 : url.substr(start, end - start);
                         return std::stoi(value);
@@ -651,143 +662,16 @@ void handle_request(
                 } catch (const std::exception &e) {
                     json error;
                     error["success"] = false;
-                    error["error"] = std::string("Failed to process request: ") + e.what();
+                    error["error"] =
+                        std::string("Failed to process request: ") + e.what();
                     res.result(http::status::bad_request);
                     res.set(http::field::content_type, "application/json");
                     res.body() = error.dump();
                 }
-            }
-            else if (req.target().starts_with("/get_patient_profile")) {
-                try {
-                    std::string url = std::string(req.target());
-                    size_t param_pos = url.find("user_id=");
-
-                    if (param_pos == std::string::npos) {
-                        throw std::runtime_error("Missing user_id parameter");
-                    }
-
-                    int user_id = std::stoi(url.substr(param_pos + 8));
-                    get_patient_profile(user_id, res, db_handler);
-
-                } catch (const std::exception &e) {
-                    json error_response = {
-                        {"success", false},
-                        {"error", std::string("Bad request: ") + e.what()}};
-                    res.result(http::status::bad_request);
-                    res.set(http::field::content_type, "application/json");
-                    res.body() = error_response.dump();
-                }
-            }
-            else if (req.target().starts_with("/get_doctor_profile")) {
-                try {
-                    std::string url = std::string(req.target());
-                    size_t param_pos = url.find("doctor_id=");
-
-                    if (param_pos == std::string::npos) {
-                        throw std::runtime_error("Missing doctor_id parameter");
-                    }
-
-                    int doctor_id = std::stoi(url.substr(param_pos + 10));
-                    get_doctor_profile(doctor_id, res, db_handler);
-
-                } catch (const std::exception &e) {
-                    json error_response = {
-                        {"success", false},
-                        {"error", std::string("Bad request: ") + e.what()}};
-                    res.result(http::status::bad_request);
-                    res.set(http::field::content_type, "application/json");
-                    res.body() = error_response.dump();
-                }
-            }
-            else if (req.target().starts_with("/get_junior_admin_profile")) {
-                try {
-                    std::string url = std::string(req.target());
-                    size_t param_pos = url.find("user_id=");
-
-                    if (param_pos == std::string::npos) {
-                        throw std::runtime_error("Missing user_id parameter");
-                    }
-
-                    int user_id = std::stoi(url.substr(param_pos + 8));
-                    get_junior_admin_profile(user_id, res, db_handler);
-
-                } catch (const std::exception &e) {
-                    json error_response = {
-                        {"success", false},
-                        {"error", std::string("Bad request: ") + e.what()}};
-                    res.result(http::status::bad_request);
-                    res.set(http::field::content_type, "application/json");
-                    res.body() = error_response.dump();
-                }
-            }
-            else if (req.target().starts_with("/get_senior_admin_profile")) {
-                try {
-                    std::string url = std::string(req.target());
-                    size_t param_pos = url.find("user_id=");
-
-                    if (param_pos == std::string::npos) {
-                        throw std::runtime_error("Missing user_id parameter");
-                    }
-
-                    int user_id = std::stoi(url.substr(param_pos + 8));
-                    get_senior_admin_profile(user_id, res, db_handler);
-
-                } catch (const std::exception &e) {
-                    json error_response = {
-                        {"success", false},
-                        {"error", std::string("Bad request: ") + e.what()}};
-                    res.result(http::status::bad_request);
-                    res.set(http::field::content_type, "application/json");
-                    res.body() = error_response.dump();
-                }
-            }
-            else if (req.target().starts_with("/get_patient_waitlist")) {
-                try {
-                    std::string url = std::string(req.target());
-                    size_t param_pos = url.find("patient_id=");
-
-                    if (param_pos == std::string::npos) {
-                        throw std::runtime_error("Missing patient_id parameter");
-                    }
-
-                    int patient_id = std::stoi(url.substr(param_pos + 11));
-                    get_patient_waitlist(patient_id, res, db_handler);
-
-                } catch (const std::exception &e) {
-                    json error_response = {
-                        {"success", false},
-                        {"error", std::string("Bad request: ") + e.what()}};
-                    res.result(http::status::bad_request);
-                    res.set(http::field::content_type, "application/json");
-                    res.body() = error_response.dump();
-                }
-            }
-            else if (req.target().starts_with("/get_admin_hospital")) {
-                try {
-                    std::string url = std::string(req.target());
-                    size_t param_pos = url.find("admin_id=");
-
-                    if (param_pos == std::string::npos) {
-                        throw std::runtime_error("Missing admin_id parameter");
-                    }
-
-                    int admin_id = std::stoi(url.substr(param_pos + 9));
-                    get_admin_hospital(admin_id, res, db_handler);
-
-                } catch (const std::exception &e) {
-                    json error_response = {
-                        {"success", false},
-                        {"error", std::string("Bad request: ") + e.what()}};
-                    res.result(http::status::bad_request);
-                    res.set(http::field::content_type, "application/json");
-                    res.body() = error_response.dump();
-                }
-            }
-            else {
+            } else {
                 handle_not_found(res);
             }
-        }
-        else if (req.method() == http::verb::delete_) {
+        } else if (req.method() == http::verb::delete_) {
             if (req.target() == "/delete_doctor_feedback") {
                 try {
                     json body = json::parse(req.body());
@@ -795,8 +679,7 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target().starts_with("/delete_self_account")) {
+            } else if (req.target().starts_with("/delete_self_account")) {
                 try {
                     std::string url = std::string(req.target());
                     size_t param_pos = url.find("user_id=");
@@ -819,28 +702,37 @@ void handle_request(
                     res.result(http::status::bad_request);
                     res.body() = error.dump();
                 }
-            }
-            else if (req.target().starts_with("/delete_user_by_phone")) {
+            } else if (req.target().starts_with("/delete_user_by_phone")) {
                 try {
                     std::string url = std::string(req.target());
-                    auto parse_string_param = [&](const std::string &key) -> std::string {
+                    auto parse_string_param = [&](const std::string &key
+                                              ) -> std::string {
                         size_t start = url.find(key + "=");
                         if (start == std::string::npos) {
-                            throw std::runtime_error("Missing parameter: " + key);
+                            throw std::runtime_error(
+                                "Missing parameter: " + key
+                            );
                         }
                         start += key.length() + 1;
                         size_t end = url.find('&', start);
                         return (end == std::string::npos)
-                                ? url.substr(start)
-                                : url.substr(start, end - start);
+                                   ? url.substr(start)
+                                   : url.substr(start, end - start);
                     };
 
                     std::string phone = parse_string_param("phone");
-                    phone.erase(std::remove(phone.begin(), phone.end(), '"'), phone.end());
-                    phone.erase(std::remove(phone.begin(), phone.end(), ' '), phone.end());
+                    phone.erase(
+                        std::remove(phone.begin(), phone.end(), '"'),
+                        phone.end()
+                    );
+                    phone.erase(
+                        std::remove(phone.begin(), phone.end(), ' '),
+                        phone.end()
+                    );
 
                     if (phone.empty()) {
-                        throw std::runtime_error("Phone number cannot be empty");
+                        throw std::runtime_error("Phone number cannot be empty"
+                        );
                     }
 
                     delete_user_by_phone(phone, res, db_handler);
@@ -852,12 +744,10 @@ void handle_request(
                     res.set(http::field::content_type, "application/json");
                     res.body() = error_response.dump();
                 }
-            }
-            else {
+            } else {
                 handle_not_found(res);
             }
-        }
-        else if (req.method() == http::verb::patch) {
+        } else if (req.method() == http::verb::patch) {
             if (req.target() == "/edit_doctor_feedback") {
                 try {
                     json body = json::parse(req.body());
@@ -865,52 +755,45 @@ void handle_request(
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target() == "/edit_doctor_profile") {
+            } else if (req.target() == "/edit_doctor_profile") {
                 try {
                     json body = json::parse(req.body());
                     edit_doctor_profile(body, res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target() == "/edit_junior_admin_profile") {
+            } else if (req.target() == "/edit_junior_admin_profile") {
                 try {
                     json body = json::parse(req.body());
                     edit_junior_admin_profile(body, res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target() == "/edit_senior_admin_profile") {
+            } else if (req.target() == "/edit_senior_admin_profile") {
                 try {
                     json body = json::parse(req.body());
                     edit_senior_admin_profile(body, res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target() == "/edit_patient_profile") {
+            } else if (req.target() == "/edit_patient_profile") {
                 try {
                     json body = json::parse(req.body());
                     edit_patient_profile(body, res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else if (req.target() == "/cancel_appointment") {
+            } else if (req.target() == "/cancel_appointment") {
                 try {
                     json body = json::parse(req.body());
                     cancel_appointment(body, res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
                 }
-            }
-            else {
+            } else {
                 handle_not_found(res);
             }
-        }
-        else {
+        } else {
             res.result(http::status::method_not_allowed);
             res.set(http::field::content_type, "application/json");
             res.body() = R"({"error": "Method not allowed"})";
@@ -918,8 +801,5 @@ void handle_request(
     } catch (const std::exception &e) {
         handle_error(e, res);
     }
-    
-    // Добавляем CORS-заголовки только один раз в конце функции
-    add_cors_headers(res);
     res.prepare_payload();
 }
