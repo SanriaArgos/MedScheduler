@@ -1,9 +1,9 @@
 #ifndef EDIT_SENIOR_ADMIN_PROFILE_HPP_
 #define EDIT_SENIOR_ADMIN_PROFILE_HPP_
 
-#include "../database.hpp"
-#include <nlohmann/json.hpp>
 #include <boost/beast/http.hpp>
+#include <nlohmann/json.hpp>
+#include "../database.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -23,7 +23,8 @@ using json = nlohmann::json;
 //   "new_password_repeat":"<string>"
 // }
 //
-// ✎ Старший админ может менять: last_name, first_name, patronymic, phone, пароль.
+// ✎ Старший админ может менять: last_name, first_name, patronymic, phone,
+// пароль.
 void edit_senior_admin_profile(
     const json &data,
     http::response<http::string_body> &res,

@@ -1,11 +1,11 @@
 #ifndef HOMEPAGE_H
 #define HOMEPAGE_H
 
-#include <QMainWindow>
-#include "qboxlayout.h"
-#include <QString>
 #include <QDate>
+#include <QMainWindow>
+#include <QString>
 #include <QTime>
+#include "qboxlayout.h"
 
 namespace Ui {
 class homepage;
@@ -20,7 +20,7 @@ struct Doctor {
     double rating = 0.0;
 };
 
-struct Record{
+struct Record {
     QString admin_phone;
     QDate appointment_date;
     QTime appointment_time;
@@ -74,9 +74,10 @@ private slots:
 
     void on_completed_button_clicked();
 
-    void fill_appointments_scroll(const std::vector<Record>& records);
+    void fill_appointments_scroll(const std::vector<Record> &records);
 
-    void sort_records(std::vector<Record>& recs, bool newestFirst);
+    void sort_records(std::vector<Record> &recs, bool newestFirst);
+
 private:
     void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout);
     Ui::homepage *ui;

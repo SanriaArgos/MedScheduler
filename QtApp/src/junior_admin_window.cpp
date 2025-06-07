@@ -338,7 +338,7 @@ void JuniorAdminWindow::on_get_doctors_table_button_clicked() {
             QLabel *label = new QLabel(contentWidget);
             label->setText(
                 id + ", " + fullName + ", " + phoneNumber + ", " + education +
-                    ", " + specialty + ", " + experience+", "+price
+                ", " + specialty + ", " + experience + ", " + price
             );
             label->setStyleSheet("border: 1px solid black; padding: 5px;");
 
@@ -351,6 +351,7 @@ void JuniorAdminWindow::on_get_doctors_table_button_clicked() {
     // Устанавливаем contentWidget в QScrollArea
     ui->doctors_scroll->setWidget(contentWidget);
 }
+
 void JuniorAdminWindow::make_all_basic() {
     const QString baseStyle =
         "QPushButton {"
@@ -373,8 +374,8 @@ void JuniorAdminWindow::make_all_basic() {
     ui->button_get_schedule->setStyleSheet(baseStyle);
     ui->button_get_doctors->setStyleSheet(baseStyle);
 }
-void JuniorAdminWindow::on_button_get_users_clicked()
-{
+
+void JuniorAdminWindow::on_button_get_users_clicked() {
     on_get_users_table_button_clicked();
     ui->stackedWidget->setCurrentWidget(ui->page_get_users);
     make_all_basic();
@@ -391,12 +392,10 @@ void JuniorAdminWindow::on_button_get_users_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
 
-
-void JuniorAdminWindow::on_button_get_doctors_clicked()
-{
+void JuniorAdminWindow::on_button_get_doctors_clicked() {
     on_get_doctors_table_button_clicked();
     ui->stackedWidget->setCurrentWidget(ui->page_get_doctors);
     make_all_basic();
@@ -413,12 +412,10 @@ void JuniorAdminWindow::on_button_get_doctors_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
 
-
-void JuniorAdminWindow::on_button_add_doctor_clicked()
-{
+void JuniorAdminWindow::on_button_add_doctor_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_add_doctor);
     make_all_basic();
     ui->button_add_doctor->setStyleSheet(
@@ -434,12 +431,10 @@ void JuniorAdminWindow::on_button_add_doctor_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
 
-
-void JuniorAdminWindow::on_button_attach_doctor_clicked()
-{
+void JuniorAdminWindow::on_button_attach_doctor_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_attach_doctor);
     make_all_basic();
     ui->button_attach_doctor->setStyleSheet(
@@ -455,12 +450,10 @@ void JuniorAdminWindow::on_button_attach_doctor_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
 
-
-void JuniorAdminWindow::on_button_add_appointment_clicked()
-{
+void JuniorAdminWindow::on_button_add_appointment_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_add_appointment);
     make_all_basic();
     ui->button_add_appointment->setStyleSheet(
@@ -476,12 +469,10 @@ void JuniorAdminWindow::on_button_add_appointment_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
 
-
-void JuniorAdminWindow::on_button_get_schedule_clicked()
-{
+void JuniorAdminWindow::on_button_get_schedule_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_get_schedule);
     make_all_basic();
     ui->button_get_schedule->setStyleSheet(
@@ -497,6 +488,5 @@ void JuniorAdminWindow::on_button_get_schedule_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
-

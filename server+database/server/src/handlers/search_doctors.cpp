@@ -120,8 +120,9 @@ void search_doctors(
     json doctors = json::array();
     for (int i = 0; i < rows; ++i) {
         json doc;
-        doc["doctor_id"] = std::stoi(PQgetvalue(pgres, i, 0));  // doctor_id теперь первый столбецAdd commentMore actions
-        doc["fio"] = PQgetvalue(pgres, i, 1);           // смещение остальных полей +1
+        doc["doctor_id"] = std::stoi(PQgetvalue(pgres, i, 0)
+        );  // doctor_id теперь первый столбецAdd commentMore actions
+        doc["fio"] = PQgetvalue(pgres, i, 1);  // смещение остальных полей +1
         doc["specialty"] = PQgetvalue(pgres, i, 2);
         doc["experience"] = std::stoi(PQgetvalue(pgres, i, 3));
         doc["price"] = std::stoi(PQgetvalue(pgres, i, 4));

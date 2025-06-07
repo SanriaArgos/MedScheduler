@@ -21,6 +21,8 @@ public:
 
     json edit_senior_admin_profile(const json &request_data);
 
+    json get_senior_admin_profile_by_id(int user_id);
+
 private:
     int admin_id;
 };

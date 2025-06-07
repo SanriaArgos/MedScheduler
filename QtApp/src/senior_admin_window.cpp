@@ -225,6 +225,7 @@ void SeniorAdminWindow::on_get_hospitals_table_button_clicked() {
     // Устанавливаем contentWidget в QScrollArea
     ui->hospitals_table_scroll->setWidget(contentWidget);
 }
+
 void SeniorAdminWindow::make_all_basic() {
     const QString baseStyle =
         "QPushButton {"
@@ -245,8 +246,8 @@ void SeniorAdminWindow::make_all_basic() {
     ui->button_add_hospital->setStyleSheet(baseStyle);
     ui->button_add_junior_admin->setStyleSheet(baseStyle);
 }
-void SeniorAdminWindow::on_button_get_hospitals_clicked()
-{
+
+void SeniorAdminWindow::on_button_get_hospitals_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_get_hospitals);
     make_all_basic();
     ui->button_get_hospitals->setStyleSheet(
@@ -262,13 +263,10 @@ void SeniorAdminWindow::on_button_get_hospitals_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
-
+    );
 }
 
-
-void SeniorAdminWindow::on_button_get_users_clicked()
-{
+void SeniorAdminWindow::on_button_get_users_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_get_users);
     make_all_basic();
     ui->button_get_users->setStyleSheet(
@@ -284,12 +282,10 @@ void SeniorAdminWindow::on_button_get_users_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
 
-
-void SeniorAdminWindow::on_button_add_hospital_clicked()
-{
+void SeniorAdminWindow::on_button_add_hospital_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_add_hospital);
     make_all_basic();
     ui->button_add_hospital->setStyleSheet(
@@ -305,12 +301,10 @@ void SeniorAdminWindow::on_button_add_hospital_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
 
-
-void SeniorAdminWindow::on_button_add_junior_admin_clicked()
-{
+void SeniorAdminWindow::on_button_add_junior_admin_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_add_junior_admin);
     make_all_basic();
     ui->button_add_junior_admin->setStyleSheet(
@@ -326,6 +320,5 @@ void SeniorAdminWindow::on_button_add_junior_admin_clicked()
         "   background-color: rgb(64, 64, 100);"
         "   border-radius: 10px;"
         "}"
-        );
+    );
 }
-

@@ -1,16 +1,19 @@
 #include "../../include/handlers/send_notification.hpp"
-#include "../../include/notification.hpp"
 #include <iostream>
+#include "../../include/notification.hpp"
 
-void send_notification_handler(const json& body,
-                             http::response<http::string_body>& res,
-                             database_handler& db_handler) {
+void send_notification_handler(
+    const json &body,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+) {
     try {
         // Проверяем наличие необходимых полей в запросе
         if (!body.contains("phone_number") || !body.contains("message")) {
             res.result(http::status::bad_request);
             res.set(http::field::content_type, "application/json");
-            res.body() = R"({"success": false, "error": "Отсутствуют обязательные поля: phone_number и message"})";
+            res.body() =
+                R"({"success": false, "error": "Отсутствуют обязательные поля: phone_number и message"})";
             return;
         }
 
@@ -22,7 +25,8 @@ void send_notification_handler(const json& body,
         if (phoneNumber.empty()) {
             res.result(http::status::bad_request);
             res.set(http::field::content_type, "application/json");
-            res.body() = R"({"success": false, "error": "Номер телефона не может быть пустым"})";
+            res.body() =
+                R"({"success": false, "error": "Номер телефона не может быть пустым"})";
             return;
         }
 
@@ -30,7 +34,8 @@ void send_notification_handler(const json& body,
         if (message.empty()) {
             res.result(http::status::bad_request);
             res.set(http::field::content_type, "application/json");
-            res.body() = R"({"success": false, "error": "Текст сообщения не может быть пустым"})";
+            res.body() =
+                R"({"success": false, "error": "Текст сообщения не может быть пустым"})";
             return;
         }
 
@@ -47,7 +52,7 @@ void send_notification_handler(const json& body,
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
 
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         // Обрабатываем любые ошибки, которые могут возникнуть
         res.result(http::status::internal_server_error);
         res.set(http::field::content_type, "application/json");

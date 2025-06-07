@@ -53,6 +53,8 @@ public:
 
     json edit_patient_profile(const json &request_data);
 
+    json get_patient_profile_by_id(int user_id);
+
 private:
     int user_id_;
 };
