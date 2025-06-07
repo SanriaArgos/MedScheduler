@@ -13,6 +13,7 @@ void get_patient_appointments(
     sql << R"(
       SELECT
         r.record_id,
+        r.doctor_id,
         r.appointment_date,
         r.appointment_time,
         h.region,
@@ -57,18 +58,19 @@ void get_patient_appointments(
     for (int i = 0; i < PQntuples(pgres); ++i) {
         json record;
         record["record_id"] = std::stoi(PQgetvalue(pgres, i, 0));
-        record["appointment_date"] = PQgetvalue(pgres, i, 1);
-        record["appointment_time"] = PQgetvalue(pgres, i, 2);
-        record["region"] = PQgetvalue(pgres, i, 3);
-        record["settlement_type"] = PQgetvalue(pgres, i, 4);
-        record["settlement_name"] = PQgetvalue(pgres, i, 5);
-        record["street"] = PQgetvalue(pgres, i, 6);
-        record["house"] = PQgetvalue(pgres, i, 7);
-        record["hospital_name"] = PQgetvalue(pgres, i, 8);
-        record["admin_phone"] = PQgetvalue(pgres, i, 9);
-        record["specialty"] = PQgetvalue(pgres, i, 10);
-        record["price"] = PQgetvalue(pgres, i, 11);
-        record["doctor_name"] = PQgetvalue(pgres, i, 12);
+        record["doctor_id"] = std::stoi(PQgetvalue(pgres, i, 1));
+        record["appointment_date"] = PQgetvalue(pgres, i, 2);
+        record["appointment_time"] = PQgetvalue(pgres, i, 3);
+        record["region"] = PQgetvalue(pgres, i, 4);
+        record["settlement_type"] = PQgetvalue(pgres, i, 5);
+        record["settlement_name"] = PQgetvalue(pgres, i, 6);
+        record["street"] = PQgetvalue(pgres, i, 7);
+        record["house"] = PQgetvalue(pgres, i, 8);
+        record["hospital_name"] = PQgetvalue(pgres, i, 9);
+        record["admin_phone"] = PQgetvalue(pgres, i, 10);
+        record["specialty"] = PQgetvalue(pgres, i, 11);
+        record["price"] = PQgetvalue(pgres, i, 12);
+        record["doctor_name"] = PQgetvalue(pgres, i, 13);
 
         appointments.push_back(std::move(record));
     }
