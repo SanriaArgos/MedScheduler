@@ -49,7 +49,7 @@
 #include "../include/handlers/hospital_exists.hpp"
 #include "../include/handlers/junior_admin_schedule.hpp"
 #include "../include/handlers/login.hpp"
-#include "../include/handlers/patient_appointments.hpp"
+#include "../include/handlers/get_patient_appointments.hpp"
 #include "../include/handlers/post_doctor_feedback.hpp"
 #include "../include/handlers/registration.hpp"
 #include "../include/handlers/search_doctors.hpp"
@@ -261,7 +261,7 @@ void handle_request(
                     }
 
                     int patient_id = std::stoi(pid_str);
-                    patient_appointments(patient_id, res, db_handler);
+                    get_patient_appointments(patient_id, res, db_handler);
 
                 } catch (const std::invalid_argument &) {
                     json error = {

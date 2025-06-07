@@ -1,8 +1,8 @@
-#include "../../include/handlers/patient_appointments.hpp"
+#include "../../include/handlers/get_patient_appointments.hpp"
 #include <libpq-fe.h>
 #include <sstream>
 
-void patient_appointments(
+void get_patient_appointments(
     int patient_id,
     http::response<http::string_body> &res,
     database_handler &db_handler
@@ -12,6 +12,7 @@ void patient_appointments(
     std::ostringstream sql;
     sql << R"(
       SELECT
+        r.record_id,
         r.appointment_date,
         r.appointment_time,
         h.region,
@@ -55,18 +56,19 @@ void patient_appointments(
     json appointments = json::array();
     for (int i = 0; i < PQntuples(pgres); ++i) {
         json record;
-        record["appointment_date"] = PQgetvalue(pgres, i, 0);
-        record["appointment_time"] = PQgetvalue(pgres, i, 1);
-        record["region"] = PQgetvalue(pgres, i, 2);
-        record["settlement_type"] = PQgetvalue(pgres, i, 3);
-        record["settlement_name"] = PQgetvalue(pgres, i, 4);
-        record["street"] = PQgetvalue(pgres, i, 5);
-        record["house"] = PQgetvalue(pgres, i, 6);
-        record["hospital_name"] = PQgetvalue(pgres, i, 7);
-        record["admin_phone"] = PQgetvalue(pgres, i, 8);
-        record["specialty"] = PQgetvalue(pgres, i, 9);
-        record["price"] = PQgetvalue(pgres, i, 10);
-        record["doctor_name"] = PQgetvalue(pgres, i, 11);
+        record["record_id"] = std::stoi(PQgetvalue(pgres, i, 0));
+        record["appointment_date"] = PQgetvalue(pgres, i, 1);
+        record["appointment_time"] = PQgetvalue(pgres, i, 2);
+        record["region"] = PQgetvalue(pgres, i, 3);
+        record["settlement_type"] = PQgetvalue(pgres, i, 4);
+        record["settlement_name"] = PQgetvalue(pgres, i, 5);
+        record["street"] = PQgetvalue(pgres, i, 6);
+        record["house"] = PQgetvalue(pgres, i, 7);
+        record["hospital_name"] = PQgetvalue(pgres, i, 8);
+        record["admin_phone"] = PQgetvalue(pgres, i, 9);
+        record["specialty"] = PQgetvalue(pgres, i, 10);
+        record["price"] = PQgetvalue(pgres, i, 11);
+        record["doctor_name"] = PQgetvalue(pgres, i, 12);
 
         appointments.push_back(std::move(record));
     }

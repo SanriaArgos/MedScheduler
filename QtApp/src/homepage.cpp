@@ -90,7 +90,7 @@ void homepage::on_appointments_button_clicked() {
     );
     patient::patient_client client(get_user_id());
     nlohmann::json appointments_json =
-        client.patient_appointments(get_user_id());
+        client.get_patient_appointments(get_user_id());
 
     // сохраняем в векторе
     auto appointments_array = appointments_json["appointments"];
