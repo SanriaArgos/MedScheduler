@@ -143,7 +143,7 @@ void edit_junior_admin_profile(
     };
 
     // Добавление бинарных параметров
-    auto add_binary_param = [&](const std::string& field, const std::string& hex_value) {
+    auto add_text_param = [&](const std::string& field, const std::string& hex_value) {
         clauses.push_back(field + " = decode($" + std::to_string(param_index) + ", 'hex')");
         params.push_back(strdup(hex_value.c_str())); // Копируем строку
         param_index++;
@@ -195,8 +195,8 @@ void edit_junior_admin_profile(
         unsigned char new_hash[SHA256_DIGEST_LENGTH];
         SHA256(reinterpret_cast<const unsigned char*>(to_hash.c_str()), to_hash.size(), new_hash);
 
-        add_binary_param("hashed_password", bytes_to_hex_junior(new_hash, SHA256_DIGEST_LENGTH));
-        add_binary_param("salt", bytes_to_hex_junior(reinterpret_cast<const unsigned char*>(new_salt.data()), new_salt.size()));
+        add_text_param("hashed_password", bytes_to_hex_junior(new_hash, SHA256_DIGEST_LENGTH));
+        add_text_param("salt", bytes_to_hex_junior(reinterpret_cast<const unsigned char*>(new_salt.data()), new_salt.size()));
     }
 
     if (clauses.empty()) {

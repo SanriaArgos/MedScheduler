@@ -1,6 +1,6 @@
 #include "common_for_all.hpp"
 
-const std::string base_url = "http://localhost:8080";
+const std::string base_url = "https://api.medscheduler.ru";
 
 size_t
 write_callback(void *contents, size_t size, size_t nmemb, std::string *s) {

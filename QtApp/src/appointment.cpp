@@ -14,8 +14,8 @@
 #include "ui_appointment.h"
 QDate today = QDate::currentDate();
 
-Appointment::Appointment(QWidget *parent)
-    : QWidget(parent), ui(new Ui::Appointment) {
+Appointment::Appointment(int doc_id, QWidget *parent)
+    : QWidget(parent), doctor_id(doc_id), ui(new Ui::Appointment) {
     ui->setupUi(this);
     ui->date0->setText(today.addDays(0).toString("dd.MM"));
     ui->date1->setText(today.addDays(1).toString("dd.MM"));
