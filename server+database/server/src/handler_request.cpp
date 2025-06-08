@@ -60,6 +60,7 @@
 #include "../include/handlers/search_doctors.hpp"
 #include "../include/handlers/send_notification.hpp"
 #include "../include/handlers/get_profile_by_id.hpp"
+#include "../include/cors_handler.hpp"
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
@@ -105,6 +106,7 @@ void handle_error(
     res.set(http::field::content_type, "application/json");
     res.body() = R"({"error": "Internal server error", "details": ")" +
                  std::string(e.what()) + R"("})";
+    add_cors_headers(res);
     std::cerr << "Exception: " << e.what() << std::endl;
 }
 
