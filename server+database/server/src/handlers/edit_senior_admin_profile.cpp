@@ -19,7 +19,6 @@ static bool phone_is_unique(int user_id, const std::string &phone, PGconn *conn)
     if (r) PQclear(r);
     return ok;
 }
-
 void edit_senior_admin_profile(
     const json &data,
     http::response<http::string_body> &res,

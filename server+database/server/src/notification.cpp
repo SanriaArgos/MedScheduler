@@ -1,4 +1,6 @@
+#include <curl/curl.h>  // Заголовочный файл libcurl
 #include <iostream>
+#include <stdexcept>  // Для std::runtime_error
 #include <string>
 #include <stdexcept>
 #include <curl/curl.h>

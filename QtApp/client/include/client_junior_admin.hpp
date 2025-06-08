@@ -32,6 +32,8 @@ public:
 
     json get_doctor_statistics(const json &data);
 
+    json get_junior_admin_profile_by_id(int user_id);
+
 private:
     int admin_id;
 };

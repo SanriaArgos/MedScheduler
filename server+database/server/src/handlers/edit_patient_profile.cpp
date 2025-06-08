@@ -8,12 +8,12 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-static bool phone_is_unique(int user_id, const std::string &phone, PGconn *conn) {
-    const char *params[2] = { phone.c_str(), std::to_string(user_id).c_str() };
+static bool
+phone_is_unique(int user_id, const std::string &phone, PGconn *conn) {
+    const char *params[2] = {phone.c_str(), std::to_string(user_id).c_str()};
     PGresult *r = PQexecParams(
-        conn,
-        "SELECT 1 FROM users WHERE phone = $1 AND id <> $2 LIMIT 1",
-        2, nullptr, params, nullptr, nullptr, 0
+        conn, "SELECT 1 FROM users WHERE phone = $1 AND id <> $2 LIMIT 1", 2,
+        nullptr, params, nullptr, nullptr, 0
     );
     bool ok = (r && PQresultStatus(r) == PGRES_TUPLES_OK && PQntuples(r) == 0);
     if (r) PQclear(r);
@@ -98,7 +98,7 @@ void edit_patient_profile(
         add_param("patronymic", data["patronymic"]);
 
     if (data.contains("phone")) {
-        std::string phone = data["phone"];
+        std::string phone = data["phone"].get<std::string>();
         if (!phone_is_unique(user_id, phone, conn)) {
             response["success"] = false;
             response["error"] = "Phone already in use";

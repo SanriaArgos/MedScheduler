@@ -12,8 +12,9 @@ junior_admin_client::junior_admin_client(int admin_id) : admin_id(admin_id) {
 
 json junior_admin_client::get_doctor_schedule(int doctor_id) {
     std::string check_url =
-        base_url+"/check_doctor_admin_hospital?doctor_id=" +
-        std::to_string(doctor_id) + "&admin_id=" + std::to_string(admin_id);
+        base_url +
+        "/check_doctor_admin_hospital?doctor_id=" + std::to_string(doctor_id) +
+        "&admin_id=" + std::to_string(admin_id);
     std::string check_response = send_get_request(check_url);
     try {
         std::cerr << "Raw response: " << check_response << std::endl;
@@ -31,9 +32,8 @@ json junior_admin_client::get_doctor_schedule(int doctor_id) {
         return json();
     }
 
-    std::string schedule_url =
-        base_url+"/get_doctor_schedule?doctor_id=" +
-        std::to_string(doctor_id);
+    std::string schedule_url = base_url + "/get_doctor_schedule?doctor_id=" +
+                               std::to_string(doctor_id);
     std::string schedule_response = send_get_request(schedule_url);
 
     try {
@@ -48,7 +48,7 @@ json junior_admin_client::get_doctor_schedule(int doctor_id) {
 }
 
 void junior_admin_client::add_doctor(const json &data) {
-    std::string url = base_url+"/add_doctor";
+    std::string url = base_url + "/add_doctor";
     std::string response = send_post_request(url, data);
 }
 
@@ -69,19 +69,18 @@ void junior_admin_client::attach_doctor_to_hospital_class(const json &data) {
         {"hospital_id", hospital_id},
         {"junior_admin_id", admin_id}};
 
-    std::string url = base_url+"/attach_doctor_to_hospital";
+    std::string url = base_url + "/attach_doctor_to_hospital";
     std::string response = send_post_request(url, payload);
     std::cerr << "attach response: " << response << std::endl;
 }
 
 void junior_admin_client::add_record_slot(const json &data) {
-    std::string url = base_url+"/add_record_slot";
+    std::string url = base_url + "/add_record_slot";
     std::string response = send_post_request(url, data);
 }
 
 bool junior_admin_client::check_doctor_exists(int doctor_id) {
-    std::string url =
-        base_url+"/doctors_exist/" + std::to_string(doctor_id);
+    std::string url = base_url + "/doctors_exist/" + std::to_string(doctor_id);
     std::string response = send_get_request(url);
 
     if (response.empty()) {
@@ -105,7 +104,7 @@ bool junior_admin_client::check_doctor_exists(int doctor_id) {
 
 bool junior_admin_client::check_hospital_exists(int hospital_id) {
     std::string url =
-        base_url+"/hospitals_exist/" + std::to_string(hospital_id);
+        base_url + "/hospitals_exist/" + std::to_string(hospital_id);
     std::string response = send_get_request(url);
 
     if (response.empty()) {
@@ -131,8 +130,8 @@ bool junior_admin_client::is_doctor_attached_to_hospital(
     int doctor_id,
     int hospital_id
 ) {
-    std::string url = base_url+"/doctors/" +
-                      std::to_string(doctor_id) + "/hospitals";
+    std::string url =
+        base_url + "/doctors/" + std::to_string(doctor_id) + "/hospitals";
     std::string response = send_get_request(url);
 
     try {
@@ -175,13 +174,13 @@ void junior_admin_client::detach_doctor_from_hospital(const json &data) {
         {"junior_admin_id", admin_id}  // <— make sure the server sees it!
     };
 
-    std::string url = base_url+"/detach_doctor_from_hospital";
+    std::string url = base_url + "/detach_doctor_from_hospital";
     std::string response = send_post_request(url, payload);
     std::cerr << "detach response: " << response << std::endl;
 }
 
 json junior_admin_client::get_doctors_table() {
-    std::string url = base_url+"/get_doctors";
+    std::string url = base_url + "/get_doctors";
     std::string response = send_get_request(url);
 
     try {
@@ -194,7 +193,7 @@ json junior_admin_client::get_doctors_table() {
 }
 
 json junior_admin_client::get_users_table() {
-    std::string url = base_url+"/get_users";
+    std::string url = base_url + "/get_users";
     std::string response = send_get_request(url);
 
     try {
@@ -206,23 +205,8 @@ json junior_admin_client::get_users_table() {
     }
 }
 
-// json junior_admin_client::get_waitlist(int doctor_id, int junior_admin_id) {
-//     std::string url = base_url+"/get_waitlist?doctor_id" +
-//                       std::to_string(doctor_id) +
-//                       "&junior_admin_id=" + std::to_string(junior_admin_id);
-//     std::string response = send_get_request(url);
-
-//     try {
-//         json users = json::parse(response);
-//         return users;
-//     } catch (const std::exception &e) {
-//         std::cerr << "Error fetching waitlist: " << e.what() << std::endl;
-//         return json();
-//     }
-// }
-
 json junior_admin_client::delete_doctor_feedback(const json &data) {
-    std::string url = base_url+"/delete_doctor_feedback";
+    std::string url = base_url + "/delete_doctor_feedback";
     std::string response = send_delete_request(url, data);
 
     try {
@@ -235,7 +219,7 @@ json junior_admin_client::delete_doctor_feedback(const json &data) {
 }
 
 json junior_admin_client::edit_junior_admin_profile(const json &data) {
-    std::string url = base_url+"/edit_junior_admin_profile";
+    std::string url = base_url + "/edit_junior_admin_profile";
     std::string response = send_patch_request(url, data);
 
     try {
@@ -248,9 +232,9 @@ json junior_admin_client::edit_junior_admin_profile(const json &data) {
 }
 
 json junior_admin_client::get_waitlist(int doctor_id, int junior_admin_id) {
-    std::string url = base_url+"/get_waitlist?doctor_id=" +
-                      std::to_string(doctor_id) + "&junior_admin_id" +
-                      std::to_string(junior_admin_id);
+    std::string url = base_url +
+                      "/get_waitlist?doctor_id=" + std::to_string(doctor_id) +
+                      "&junior_admin_id" + std::to_string(junior_admin_id);
     std::string response = send_get_request(url);
 
     try {
@@ -263,7 +247,7 @@ json junior_admin_client::get_waitlist(int doctor_id, int junior_admin_id) {
 }
 
 json junior_admin_client::get_doctor_statistics(const json &data) {
-    std::string url = base_url+"/get_doctor_statistics";
+    std::string url = base_url + "/get_doctor_statistics";
     std::string response = send_post_request(url, data);
 
     try {
@@ -272,6 +256,19 @@ json junior_admin_client::get_doctor_statistics(const json &data) {
     } catch (const std::exception &e) {
         std::cerr << "Error with feedback: " << e.what() << std::endl;
         return json();
+    }
+}
+
+json junior_admin_client::get_junior_admin_profile_by_id(int user_id) {
+    std::string url = base_url + "/get_profile_by_id" + std::to_string(user_id);
+    std::string response = send_get_request(url);
+
+    try {
+        return json::parse(response);
+    } catch (const std::exception &e) {
+        return {
+            {"success", false},
+            {"error", std::string("Invalid JSON from server: ") + e.what()}};
     }
 }
 

@@ -14,7 +14,7 @@ class Appointment : public QWidget {
     Q_OBJECT
 
 public:
-    explicit Appointment(QWidget *parent = nullptr);
+    explicit Appointment(int doc_id, QWidget *parent = nullptr);
     ~Appointment();
     int doctor_id;
     int user_id;

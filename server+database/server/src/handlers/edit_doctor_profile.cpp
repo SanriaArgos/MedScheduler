@@ -6,12 +6,12 @@
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-static bool phone_is_unique(int user_id, const std::string &phone, PGconn *conn) {
-    const char *params[2] = { phone.c_str(), std::to_string(user_id).c_str() };
+static bool
+phone_is_unique(int user_id, const std::string &phone, PGconn *conn) {
+    const char *params[2] = {phone.c_str(), std::to_string(user_id).c_str()};
     PGresult *r = PQexecParams(
-        conn,
-        "SELECT 1 FROM users WHERE phone = $1 AND id <> $2 LIMIT 1",
-        2, nullptr, params, nullptr, nullptr, 0
+        conn, "SELECT 1 FROM users WHERE phone = $1 AND id <> $2 LIMIT 1", 2,
+        nullptr, params, nullptr, nullptr, 0
     );
     bool ok = (r && PQresultStatus(r) == PGRES_TUPLES_OK && PQntuples(r) == 0);
     if (r) PQclear(r);
@@ -78,7 +78,7 @@ void edit_doctor_profile(
     }
 
     std::vector<std::string> clauses;
-    std::vector<const char*> params;
+    std::vector<const char *> params;
     int param_index = 1;
     std::vector<std::string> string_storage; // для хранения строк, чтобы указатели не ломались
 
@@ -107,7 +107,8 @@ void edit_doctor_profile(
 
     // Обновление пароля
     if (data.contains("new_password") || data.contains("new_password_repeat")) {
-        if (!data.contains("new_password") || !data.contains("new_password_repeat")) {
+        if (!data.contains("new_password") ||
+            !data.contains("new_password_repeat")) {
             response["success"] = false;
             response["error"] = "Both new_password and new_password_repeat must be provided";
             res.result(http::status::bad_request);

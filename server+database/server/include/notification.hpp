@@ -7,7 +7,8 @@
 // - phoneNumber: Номер телефона получателя
 // - textMessage: Текст сообщения
 // Возвращает: Строку с ответом от сервера
-std::string sendSms(const std::string& phoneNumber, const std::string& textMessage);
+std::string
+sendSms(const std::string &phoneNumber, const std::string &textMessage);
 
 // Функция для отправки SMS с указанными учетными данными
 // Принимает:
@@ -16,5 +17,9 @@ std::string sendSms(const std::string& phoneNumber, const std::string& textMessa
 // - phoneNumber: Номер телефона получателя
 // - textMessage: Текст сообщения
 // Возвращает: Строку с ответом от сервера
-std::string sendSmsWithAuth(const std::string& login, const std::string& password,
-                          const std::string& phoneNumber, const std::string& textMessage);
+std::string sendSmsWithAuth(
+    const std::string &login,
+    const std::string &password,
+    const std::string &phoneNumber,
+    const std::string &textMessage
+);

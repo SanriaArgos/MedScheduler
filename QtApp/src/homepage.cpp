@@ -1,27 +1,38 @@
 #include "homepage.h"
 #include <curl/curl.h>
+#include <QDate>
 #include <QDebug>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QString>
+#include <QTime>
+#include <algorithm>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
+#include "appointment.h"
 #include "client_patient.hpp"
 #include "common_for_all.hpp"
-#include "appointment.h"
 #include "ui_homepage.h"
+#include "utils.h"
 int patient_id = 0;
 
 homepage::homepage(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::homepage) {
     ui->setupUi(this);
-    on_appointments_button_clicked();
     patient_id = get_user_id();
+    ui->profile_parametrs_box->hide();
+    ui->appointments_container = new QWidget();
+    auto *layout = new QVBoxLayout(ui->appointments_container);
+    ui->appointments_container->setLayout(layout);
+    ui->appointments_scroll->setWidget(ui->appointments_container);
+    ui->appointments_scroll->setWidgetResizable(true);
+    on_appointments_button_clicked();
 }
 
 void homepage::set_user_id(int id) {
@@ -79,79 +90,43 @@ void homepage::on_appointments_button_clicked() {
     );
     patient::patient_client client(get_user_id());
     nlohmann::json appointments_json =
-        client.patient_appointments(get_user_id());
+        client.get_patient_appointments(get_user_id());
 
-    QWidget *container = new QWidget();
-    QVBoxLayout *mainLayout = new QVBoxLayout(container);
-    mainLayout->setAlignment(Qt::AlignTop);
-    mainLayout->setSpacing(10);
-    mainLayout->setContentsMargins(5, 5, 5, 5);
-
-    // Обработка записей (как в вашем коде)
+    // сохраняем в векторе
     auto appointments_array = appointments_json["appointments"];
-    if (appointments_array.empty()) {
-        QLabel *noAppointmentsLabel =
-            new QLabel("You don't have any appointments");
-        noAppointmentsLabel->setAlignment(Qt::AlignCenter);
-        mainLayout->addWidget(noAppointmentsLabel);
-    } else {
-        for (const auto &appt : appointments_array) {
-            QWidget *apptWidget = new QWidget();
-            apptWidget->setStyleSheet(
-                "border: 1px solid #ddd; border-radius: 5px; padding: 10px;"
-                "background-color: #f9f9f9; margin-bottom: 10px;"
-            );
-
-            QVBoxLayout *apptLayout = new QVBoxLayout(apptWidget);
-            apptLayout->setSpacing(5);
-
-            // Форматируем дату и время
-            QDate date = QDate::fromString(
-                QString::fromStdString(appt["appointment_date"]), "yyyy-MM-dd"
-            );
-            QTime time = QTime::fromString(
-                QString::fromStdString(appt["appointment_time"]), "HH:mm:ss"
-            );
-
-            // Основная информация
-            QLabel *header =
-                new QLabel(QString("<b>%1 %2</b> from %3 ₽.")
-                               .arg(date.toString("dd.MM.yyyy"))
-                               .arg(time.toString("HH:mm"))
-                               .arg(QString::fromStdString(appt["price"])));
-            header->setStyleSheet("font-size: 14px;");
-
-            QLabel *doctorInfo =
-                new QLabel(QString("<b>%1</b> (%2)")
-                               .arg(QString::fromStdString(appt["doctor_name"]))
-                               .arg(QString::fromStdString(appt["specialty"])));
-            doctorInfo->setStyleSheet("font-size: 13px;");
-
-            QLabel *hospitalInfo = new QLabel(
-                QString("%1, %2 %3, %4")
-                    .arg(QString::fromStdString(appt["hospital_name"]))
-                    .arg(QString::fromStdString(appt["street"]))
-                    .arg(QString::fromStdString(appt["house"]))
-                    .arg(QString::fromStdString(appt["settlement_name"]))
-            );
-            hospitalInfo->setStyleSheet("font-size: 12px; color: #555;");
-
-            QLabel *contactLabel =
-                new QLabel(QString("Phone number: %1")
-                               .arg(QString::fromStdString(appt["admin_phone"]))
-                );
-            contactLabel->setStyleSheet("font-size: 12px;");
-            apptLayout->addWidget(header);
-            apptLayout->addWidget(doctorInfo);
-            apptLayout->addWidget(hospitalInfo);
-            apptLayout->addWidget(contactLabel);
-            mainLayout->addWidget(apptWidget);
-        }
+    all_records.clear();
+    for (const auto &appt : appointments_array) {
+        Record record;
+        record.admin_phone =
+            QString::fromStdString(appt["admin_phone"].get<std::string>());
+        record.appointment_date = QDate::fromString(
+            QString::fromStdString(appt["appointment_date"].get<std::string>()),
+            "yyyy-MM-dd"
+        );
+        record.appointment_time = QTime::fromString(
+            QString::fromStdString(appt["appointment_time"].get<std::string>()),
+            "hh:mm:ss"
+        );
+        record.doctor_name =
+            QString::fromStdString(appt["doctor_name"].get<std::string>());
+        record.hospital_name =
+            QString::fromStdString(appt["hospital_name"].get<std::string>());
+        record.house = QString::fromStdString(appt["house"].get<std::string>());
+        record.price = QString::fromStdString(appt["price"].get<std::string>());
+        record.region =
+            QString::fromStdString(appt["region"].get<std::string>());
+        record.settlement_name =
+            QString::fromStdString(appt["settlement_name"].get<std::string>());
+        record.settlement_type =
+            QString::fromStdString(appt["settlement_type"].get<std::string>());
+        record.specialty =
+            QString::fromStdString(appt["specialty"].get<std::string>());
+        record.street =
+            QString::fromStdString(appt["street"].get<std::string>());
+        // record.record_id=appt["record_id"].get<int>();
+        all_records.push_back(record);
     }
-
-    // Устанавливаем новый виджет в scroll area
-    ui->appointments_scroll->setWidget(container);
-    ui->appointments_scroll->setWidgetResizable(true);
+    fill_appointments_scroll(all_records);
 }
 
 void homepage::on_profile_button_clicked() {
@@ -171,7 +146,6 @@ void homepage::on_profile_button_clicked() {
         "   border-radius: 10px;"
         "}"
     );
-    ui->label_5->setText("Your id: " + QString::number(get_user_id()));
 }
 
 void homepage::on_doctors_button_clicked() {
@@ -316,6 +290,9 @@ void homepage::on_apply_filtres_button_clicked() {
             QString::fromStdString(doctor_json["specialty"].get<std::string>());
         doctor_array.push_back(doc);
     }
+    if (ui->doctor_schedule->widget()) {
+        delete ui->doctor_schedule->widget();
+    }
     QWidget *scrollContent = new QWidget();
     QVBoxLayout *scrollLayout = new QVBoxLayout(scrollContent);
     scrollLayout->setAlignment(Qt::AlignTop);
@@ -376,13 +353,288 @@ void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
         "}"
     );
     patient_id = get_user_id();
-    QAbstractButton::connect(appointmentBtn, &QPushButton::clicked, [&]() {
-        Appointment *appointmentWindow = new Appointment();  // Создаем окно
-        appointmentWindow->show();
-        appointmentWindow->doctor_id = doctor.doctor_id;
-        appointmentWindow->user_id = patient_id;
-    });
+    int local_patient_id = patient_id;
+    QAbstractButton::connect(
+        appointmentBtn, &QPushButton::clicked,
+        [doctor, local_patient_id]() {
+            Appointment *appointmentWindow = new Appointment(doctor.doctor_id);
+            appointmentWindow->show();
+            // appointmentWindow->doctor_id = doctor.doctor_id;
+            appointmentWindow->user_id = local_patient_id;
+        }
+    );
 
     cardLayout->addWidget(appointmentBtn);
     layout->addWidget(card);
+}
+
+void homepage::on_edit_profile_button_clicked() {
+    if (ui->profile_parametrs_box->isVisible()) {
+        ui->profile_parametrs_box->hide();
+        ui->label_for_enter_data->setText("");
+    } else {
+        ui->profile_parametrs_box->show();
+        ui->label_for_enter_data->setText("Enter data you want to change");
+    }
+}
+
+void homepage::on_apply_changes_edit_clicked() {
+    ui->edit_error_label->setText("");
+    QString first_name = ui->first_name_line_edit->text();
+    QString last_name = ui->last_name_line_edit->text();
+    QString middle_name = ui->middle_name_line_edit->text();
+    QString new_password = ui->new_password_line_edit->text();
+    QString new_password_again = ui->new_password_again_edit->text();
+    QString current_password = ui->confirm_changes_line_edit->text();
+    QString phone = ui->phone_number_line_edit->text();
+    if (phone != "" && !is_validated_phone(phone)) {
+        ui->edit_error_label->setText("Incorrect formar for phone number");
+        return;
+    }
+    if (first_name != "" && !is_latin_or_dash(first_name)) {
+        ui->edit_error_label->setText("Incorrect formar for first name");
+        return;
+    }
+    if (last_name != "" && !is_latin_or_dash(last_name)) {
+        ui->edit_error_label->setText("Incorrect formar for last name");
+        return;
+    }
+    if (middle_name != "" && !is_latin_or_dash(middle_name)) {
+        ui->edit_error_label->setText("Incorrect formar for middle name");
+        return;
+    }
+    if (new_password != "" && !is_valid_password(new_password)) {
+        ui->edit_error_label->setText("Incorrect formar for new password");
+        return;
+    }
+    if (new_password != "" && new_password_again == "") {
+        ui->edit_error_label->setText("Enter your new password again");
+        return;
+    }
+    if (new_password != "" && new_password != new_password_again) {
+        ui->edit_error_label->setText("New passwords do not match");
+        return;
+    }
+    if (current_password == "") {
+        ui->edit_error_label->setText("Enter your current password");
+        return;
+    }
+    if (!is_valid_password(current_password)) {
+        ui->edit_error_label->setText("Incorrect format for current password");
+        return;
+    }
+    QJsonObject json;
+    json["user_id"] = get_user_id();
+    json["current_password"] = current_password;
+    if (middle_name != "") {
+        json["patronymic"] = middle_name;
+    }
+    if (first_name != "") {
+        json["first_name"] = first_name;
+    }
+    if (last_name != "") {
+        json["last_name"] = last_name;
+    }
+    if (phone != "") {
+        json["phone"] = phone;
+    }
+    if (new_password != "") {
+        json["new_password"] = new_password;
+        json["new_password_repeat"] = new_password_again;
+    }
+    QJsonDocument doc(json);
+    QString jsonString = doc.toJson(QJsonDocument::Compact);
+    nlohmann::json edit_data = nlohmann::json::parse(jsonString.toStdString());
+    patient::patient_client client(get_user_id());
+    nlohmann::json response = client.edit_patient_profile(edit_data);
+    if (response.contains("error")) {
+        ui->edit_error_label->setText(QString::fromStdString(response["error"])
+        );
+    } else if (response.contains("message")) {
+        ui->edit_error_label->setText(QString::fromStdString(response["message"]
+        ));
+    }
+}
+
+void homepage::on_delete_account_button_clicked() {
+    QMessageBox::StandardButton reply = QMessageBox::question(
+        this, "Confirm",
+        "Are you sure you want to delete account? You cannot revert this "
+        "action.",
+        static_cast<QMessageBox::StandardButtons>(
+            QMessageBox::No | QMessageBox::Yes
+        )
+    );
+
+    if (reply == QMessageBox::Yes) {
+        patient::patient_client client(get_user_id());
+        nlohmann::json response = client.delete_self_account(get_user_id());
+        if (response.contains("error")) {
+            QString errorText = QString::fromStdString(response["error"]);
+            std::cerr << "Error: " << errorText.toStdString() << std::endl;
+            QMessageBox::warning(
+                this, "Error", "Failed to delete account:\n" + errorText
+            );
+        } else {
+            QMessageBox::information(
+                this, "Account deleted", "Your account was deleted."
+            );
+            this->close();
+        }
+    }
+}
+
+void homepage::sort_records(std::vector<Record> &recs, bool newestFirst) {
+    std::sort(
+        recs.begin(), recs.end(),
+        [newestFirst](const Record &a, const Record &b) {
+            if (a.appointment_date != b.appointment_date) {
+                if (newestFirst) {
+                    return a.appointment_date > b.appointment_date;
+                } else {
+                    return a.appointment_date < b.appointment_date;
+                }
+            }
+            if (newestFirst) {
+                return a.appointment_time > b.appointment_time;
+            } else {
+                return a.appointment_time < b.appointment_time;
+            }
+        }
+    );
+}
+
+void homepage::on_all_button_clicked() {
+    // Сначала берём копию всех записей
+    std::vector<Record> filtered = all_records;
+
+    // Определяем порядок сортировки: currentIndex() == 0 — "Сначала новые"
+    bool newestFirst = (ui->sortCombo->currentIndex() == 0);
+    sort_records(filtered, newestFirst);
+
+    fill_appointments_scroll(filtered);
+}
+
+void homepage::on_upcoming_button_clicked() {
+    QDate today = QDate::currentDate();
+    QTime now = QTime::currentTime();
+    std::vector<Record> upcoming;
+    for (const auto &r : all_records) {
+        if (r.appointment_date > today ||
+            (r.appointment_date == today && r.appointment_time >= now)) {
+            upcoming.push_back(r);
+        }
+    }
+
+    bool newestFirst = (ui->sortCombo->currentIndex() == 0);
+    sort_records(upcoming, newestFirst);
+
+    fill_appointments_scroll(upcoming);
+}
+
+void homepage::on_completed_button_clicked() {
+    QDate today = QDate::currentDate();
+    QTime now = QTime::currentTime();
+    std::vector<Record> completed;
+    for (const auto &r : all_records) {
+        if (r.appointment_date < today ||
+            (r.appointment_date == today && r.appointment_time < now)) {
+            completed.push_back(r);
+        }
+    }
+
+    bool newestFirst = (ui->sortCombo->currentIndex() == 0);
+    sort_records(completed, newestFirst);
+
+    fill_appointments_scroll(completed);
+}
+
+void homepage::fill_appointments_scroll(const std::vector<Record> &records) {
+    // 1) Берём layout внутри appointments_container и полностью очищаем его:
+    auto layout =
+        qobject_cast<QVBoxLayout *>(ui->appointments_container->layout());
+    if (!layout) {
+        return;
+    }
+
+    QLayoutItem *item;
+    while ((item = layout->takeAt(0)) != nullptr) {
+        // удаляем вложенные виджеты
+        if (auto w = item->widget()) {
+            w->deleteLater();
+        }
+        delete item;
+    }
+
+    QDate today = QDate::currentDate();
+
+    // 2) Для каждой записи создаём «карточку»
+    for (const auto &r : records) {
+        QWidget *card = new QWidget();
+        card->setStyleSheet(
+            "background-color: white;"
+            "border: 1px solid #888;"
+            "border-radius: 8px;"
+        );
+
+        QVBoxLayout *cardLayout = new QVBoxLayout(card);
+        cardLayout->setContentsMargins(14, 12, 14, 12);  // внутренние отступы
+        cardLayout->setSpacing(6);
+
+        // 1-я строка: дата и время
+        QLabel *dateTime = new QLabel(
+            r.appointment_date.toString("dd.MM.yyyy") + " " +
+            r.appointment_time.toString("hh:mm")
+        );
+        dateTime->setStyleSheet(
+            "font-size: 13pt; font-weight: bold; border: none;"
+        );
+        cardLayout->addWidget(dateTime);
+
+        // 2-я строка: ФИО врача
+        QLabel *name = new QLabel(r.doctor_name);
+        name->setStyleSheet("font-size: 12.5pt; border: none;");
+        cardLayout->addWidget(name);
+
+        // 3-я строка: специальность и цена
+        QLabel *specialty =
+            new QLabel(r.specialty + " price from " + r.price + " rub.");
+        specialty->setStyleSheet("font-size: 12pt; color: #444; border: none;");
+        cardLayout->addWidget(specialty);
+
+        // 4-я строка: адрес (посёлок, улица, дом)
+        QLabel *address =
+            new QLabel(r.settlement_name + ", " + r.street + ", " + r.house);
+        address->setStyleSheet("font-size: 12pt; color: #555; border: none;");
+        cardLayout->addWidget(address);
+
+        // 5-я строка: кнопка на всю ширину
+        QPushButton *action = new QPushButton();
+        action->setMinimumHeight(36);
+        action->setCursor(Qt::PointingHandCursor);
+        action->setStyleSheet(
+            "font-size: 12pt; color: white; border: none; border-radius: 5px; "
+            "margin-top: 8px;"
+        );
+
+        if (r.appointment_date > today) {
+            action->setText("Cancel appointment");
+            action->setStyleSheet(
+                action->styleSheet() + "background-color: #D32F2F;"
+            );
+        } else if (r.appointment_date < today) {
+            action->setText("Leave feedback");
+            action->setStyleSheet(
+                action->styleSheet() + "background-color: #1976D2;"
+            );
+        } else {
+            action->setVisible(false);
+        }
+
+        cardLayout->addWidget(action);
+        layout->addWidget(card);
+    }
+
+    // 3) Опционально: «раздвинуть» карточки и не прижимать к низу
+    layout->addStretch();
 }

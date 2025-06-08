@@ -11,6 +11,8 @@ using json = nlohmann::json;
 // Принимает JSON с полями:
 // - phone_number: номер телефона получателя
 // - message: текст сообщения
-void send_notification_handler(const json& body,
-                              http::response<http::string_body>& res,
-                              database_handler& db_handler);
+void send_notification_handler(
+    const json &body,
+    http::response<http::string_body> &res,
+    database_handler &db_handler
+);

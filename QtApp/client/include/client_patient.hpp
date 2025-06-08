@@ -31,9 +31,9 @@ public:
     json book_appointment(const json &request_data);
     json search_doctors(const json &request_data);
 
-    json patient_appointments(int patient_id);
+    json get_patient_appointments(int patient_id);
 
-    json patient_appointments(const json &request_data);
+    json get_patient_appointments(const json &request_data);
 
     json get_doctor_average_ratings();
     json get_doctor_feedback_items(int doctor_id);
@@ -52,6 +52,8 @@ public:
     json get_waitlist_count(int doctor_id);
 
     json edit_patient_profile(const json &request_data);
+
+    json get_patient_profile_by_id(int user_id);
 
 private:
     int user_id_;
