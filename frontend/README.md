@@ -1,8 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MedScheduler Frontend
 
-## Getting Started
+Это фронтенд-проект для MedScheduler, разработанный с использованием [Next.js](https://nextjs.org/) и TailwindCSS.
 
-First, run the development server:
+## План разработки
+
+### 1. Основная структура и аутентификация
+- [x] Настройка проекта Next.js + TailwindCSS
+- [x] Главная страница (`/`) - реализована основная структура
+- [x] Страница входа (`/login`) - интегрирована с API
+- [x] Страница регистрации (`/registration`) - создана базовая форма с API
+- [x] Страница документации API (`/api-documentation`) - уже существует
+- [x] Компоненты Header и Footer - реализованы
+
+### 2. Функционал для Пациента
+- [x] Профиль пациента (`/patient/profile`)
+    - [x] Просмотр и редактирование данных
+    - [x] Удаление аккаунта
+- [x] Поиск врачей (`/search`)
+    - [x] Фильтры по региону, населенному пункту, специальности и т.д.
+    - [x] Просмотр карточек врачей
+- [x] Страница врача (`/doctor/[id]`)
+    - [x] Просмотр информации о враче
+    - [x] Просмотр расписания врача
+    - [x] Запись на прием
+    - [x] Просмотр отзывов
+    - [x] Добавление/редактирование/удаление своего отзыва
+    - [x] Добавление в лист ожидания
+- [x] Мои записи (`/patient/appointments`)
+    - [x] Просмотр активных записей
+    - [x] Отмена записи
+- [x] Лист ожидания (`/patient/waitlist`)
+    - [x] Просмотр своих позиций в листах ожидания
+    - [x] Отмена записи из листа ожидания
+
+### 3. Функционал для Врача
+- [x] Профиль врача (`/doctor/profile`)
+    - [x] Просмотр и редактирование данных (включая специальность, опыт, цену)
+    - [x] Удаление аккаунта
+- [x] Расписание врача (`/doctor/schedule`)
+    - [x] Просмотр своего расписания
+    - [x] Просмотр записей пациентов
+
+### 4. Функционал для Младшего Администратора (Junior Admin)
+- [x] Профиль младшего администратора (`/junior-admin/profile`)
+    - [x] Просмотр и редактирование данных
+- [x] Управление врачами (`/junior-admin/doctors`)
+    - [x] Добавление нового врача
+    - [x] Просмотр списка врачей
+    - [x] Прикрепление/открепление врача к своей больнице
+- [x] Управление расписанием (`/junior-admin/schedule`)
+    - [x] Добавление слотов для записи к врачам своей больницы
+    - [x] Просмотр расписания врачей своей больницы
+- [x] Лист ожидания (`/junior-admin/waitlist`)
+    - [x] Просмотр листа ожидания для врачей своей больницы
+- [x] Статистика по врачам (`/junior-admin/doctor-stats`)
+    - [x] Просмотр статистики по врачам больницы
+
+### 5. Функционал для Старшего Администратора (Senior Admin)
+- [x] Профиль старшего администратора (`/senior-admin/profile`)
+    - [x] Просмотр и редактирование данных
+- [x] Управление пользователями (`/senior-admin/users`)
+    - [x] Просмотр списка всех пользователей
+    - [x] Удаление пользователей по номеру телефона
+- [x] Управление младшими администраторами (`/senior-admin/junior-admins`)
+    - [x] Добавление нового младшего администратора
+- [x] Управление больницами (`/senior-admin/hospitals`)
+    - [x] Добавление новой больницы
+    - [x] Просмотр списка больниц
+
+### 6. Дополнительные задачи
+- [x] Улучшение дизайна и UX
+- [x] Обработка ошибок и уведомления для пользователя
+- [x] Адаптивность для мобильных устройств
+- [x] Интеграция с API-методами
+- [x] Мок-данные для случаев недоступности сервера
+
+## Недостающие API-роуты
+
+Для полной функциональности веб-приложения необходимо реализовать следующие API-роуты:
+
+1. **Профиль пациента**:
+   - Добавить метод для получения профиля пациента по ID (`GET /get_patient_profile?user_id=<id>`)
+
+2. **Профиль врача**:
+   - Добавить метод для получения полного профиля врача по ID (`GET /get_doctor_profile?user_id=<id>`)
+
+3. **Профиль администраторов**:
+   - Добавить методы для получения профилей админов (`GET /get_junior_admin_profile?user_id=<id>`, `GET /get_senior_admin_profile?user_id=<id>`)
+
+4. **Лист ожидания**:
+   - Добавить метод для получения записей в листе ожидания для конкретного пациента (`GET /get_patient_waitlist?patient_id=<id>`)
+
+5. **Больницы**:
+   - Добавить метод для получения информации о больнице младшего администратора (`GET /get_admin_hospital?admin_id=<id>`)
+
+## Начало работы
+
+Сначала запустите сервер разработки:
 
 ```bash
 npm run dev
@@ -14,23 +108,23 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте [http://localhost:3000](http://localhost:3000) в вашем браузере, чтобы увидеть результат.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Вы можете начать редактирование страницы, изменив `app/page.js`. Страница автоматически обновляется при редактировании файла.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Этот проект использует [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) для автоматической оптимизации и загрузки [Geist](https://vercel.com/font), нового семейства шрифтов для Vercel.
 
-## Learn More
+## Узнать больше
 
-To learn more about Next.js, take a look at the following resources:
+Чтобы узнать больше о Next.js, ознакомьтесь со следующими ресурсами:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Документация Next.js](https://nextjs.org/docs) - узнайте о функциях и API Next.js.
+- [Изучите Next.js](https://nextjs.org/learn) - интерактивный учебник по Next.js.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Вы можете проверить [репозиторий Next.js на GitHub](https://github.com/vercel/next.js) - ваши отзывы и вклады приветствуются!
 
-## Deploy on Vercel
+## Развертывание на Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Самый простой способ развернуть ваше приложение Next.js - использовать [платформу Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) от создателей Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ознакомьтесь с нашей [документацией по развертыванию Next.js](https://nextjs.org/docs/app/building-your-application/deploying) для получения более подробной информации.

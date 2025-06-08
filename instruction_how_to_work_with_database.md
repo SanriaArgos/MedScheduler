@@ -89,3 +89,21 @@ docker-compose down -v
 ```
 docker-compose up --build
 ```
+
+# 5. Для удаленного сервера
+
+Скачиваем Termius, заходим там в наш host
+
+Просмотр удаленной базы данных
+
+```
+sudo docker ps //смотрим имя нужного контейнера
+docker exec -it <name> psql -U meduser -d medscheduler
+
+```
+
+Просмотр логов удаленного докера
+```
+docker ps //смотрим имя нужного контейнера
+docker logs <name>
+```

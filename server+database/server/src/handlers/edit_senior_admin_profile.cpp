@@ -1,24 +1,23 @@
 #include "../../include/handlers/edit_senior_admin_profile.hpp"
 #include <libpq-fe.h>
 #include <openssl/sha.h>
-#include <cstdio>
-#include <cstring>
-#include <iomanip>
-#include <iostream>
+#include <vector>
 #include <sstream>
+#include <memory>
 
 namespace http = boost::beast::http;
 using json = nlohmann::json;
 
-std::string bytes_to_hex_senior(const unsigned char *data, size_t len) {
-    std::string hex;
-    hex.reserve(len * 2);
-    static const char hex_digits[] = "0123456789abcdef";
-    for (size_t i = 0; i < len; ++i) {
-        hex.push_back(hex_digits[(data[i] >> 4) & 0xF]);
-        hex.push_back(hex_digits[data[i] & 0xF]);
-    }
-    return hex;
+static bool phone_is_unique(int user_id, const std::string &phone, PGconn *conn) {
+    const char *params[2] = { phone.c_str(), std::to_string(user_id).c_str() };
+    PGresult *r = PQexecParams(
+        conn,
+        "SELECT 1 FROM users WHERE phone = $1 AND id <> $2 LIMIT 1",
+        2, nullptr, params, nullptr, nullptr, 0
+    );
+    bool ok = (r && PQresultStatus(r) == PGRES_TUPLES_OK && PQntuples(r) == 0);
+    if (r) PQclear(r);
+    return ok;
 }
 void edit_senior_admin_profile(
     const json &data,
@@ -26,244 +25,114 @@ void edit_senior_admin_profile(
     database_handler &db_handler
 ) {
     json response;
-
-    if (!data.contains("user_id") || !data.contains("current_password")) {
-        response["success"] = false;
-        response["error"] = "Missing 'user_id' or 'current_password'";
-        res.result(http::status::bad_request);
+    auto send_response = [&](http::status status, const std::string &error = "", bool success = false) {
+        response["success"] = success;
+        if (!success) response["error"] = error;
+        res.result(status);
         res.set(http::field::content_type, "application/json");
         res.body() = response.dump();
-        return;
+    };
+
+    if (!data.contains("user_id") || !data.contains("current_password")) {
+        return send_response(http::status::bad_request, "Missing user_id or current_password");
+    }
+
+    int user_id = data["user_id"];
+    std::string current_password = data["current_password"];
+
+    // Получение информации о пользователе
+    const char *p1[1] = { std::to_string(user_id).c_str() };
+    PGresult *creds = PQexecParams(
+        db_handler.get_connection(),
+        "SELECT user_type, hashed_password, salt FROM users WHERE id = $1",
+        1, nullptr, p1, nullptr, nullptr, 0
+    );
+
+    if (!creds || PQresultStatus(creds) != PGRES_TUPLES_OK || PQntuples(creds) == 0) {
+        if (creds) PQclear(creds);
+        return send_response(http::status::not_found, "User not found");
+    }
+
+    std::string user_type = PQgetvalue(creds, 0, 0);
+    std::string db_hashed = PQgetvalue(creds, 0, 1);
+    std::string db_salt   = PQgetvalue(creds, 0, 2);
+    PQclear(creds);
+
+    if (user_type != "senior administrator") {
+        return send_response(http::status::forbidden, "User is not a senior administrator");
+    }
+
+    // Проверка текущего пароля
+    if (db_handler.hash_password(current_password, db_salt) != db_hashed) {
+        return send_response(http::status::unauthorized, "Invalid current_password");
     }
 
     PGconn *conn = db_handler.get_connection();
-    if (PQstatus(conn) != CONNECTION_OK) {
-        response["success"] = false;
-        response["error"] = "Database connection failed";
-        res.result(http::status::internal_server_error);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
-
-    int user_id = 0;
-    try {
-        user_id = data["user_id"].get<int>();
-    } catch (...) {
-        response["success"] = false;
-        response["error"] = "Invalid user_id format";
-        res.result(http::status::bad_request);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
-
-    std::string current_password = data["current_password"].get<std::string>();
-
-    const char *uid_param = std::to_string(user_id).c_str();
-    PGresult *type_result = PQexecParams(
-        conn, "SELECT user_type FROM users WHERE id = $1", 1, nullptr,
-        &uid_param, nullptr, nullptr, 0
-    );
-
-    if (PQresultStatus(type_result) != PGRES_TUPLES_OK || PQntuples(type_result) == 0) {
-        PQclear(type_result);
-        response["success"] = false;
-        response["error"] = "User not found";
-        res.result(http::status::not_found);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
-
-    std::string user_type = PQgetvalue(type_result, 0, 0);
-    PQclear(type_result);
-
-    if (user_type != "senior administrator") {
-        response["success"] = false;
-        response["error"] = "Not a senior administrator";
-        res.result(http::status::forbidden);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
-
-    PGresult *creds_result = PQexecParams(
-        conn, "SELECT hashed_password, salt FROM users WHERE id = $1", 1,
-        nullptr, &uid_param, nullptr, nullptr, 0
-    );
-
-    if (PQresultStatus(creds_result) != PGRES_TUPLES_OK) {
-        PQclear(creds_result);
-        response["success"] = false;
-        response["error"] = "Database error";
-        res.result(http::status::internal_server_error);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
-
-    std::string db_hashed = PQgetvalue(creds_result, 0, 0);
-    std::string db_salt = PQgetvalue(creds_result, 0, 1);
-    PQclear(creds_result);
-
-    std::string to_hash = current_password + db_salt;
-    unsigned char hbuf[SHA256_DIGEST_LENGTH];
-    SHA256(reinterpret_cast<const unsigned char *>(to_hash.c_str()), to_hash.size(), hbuf);
-    std::string current_hash = bytes_to_hex_senior(hbuf, SHA256_DIGEST_LENGTH);
-
-    if (current_hash != db_hashed) {
-        response["success"] = false;
-        response["error"] = "Current password is incorrect";
-        res.result(http::status::unauthorized);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
-
     std::vector<std::string> clauses;
-    std::vector<const char *> params;
-    int param_index = 1;
+    std::vector<std::string> raw_params;
 
-    // Лямбда для добавления текстовых параметров
-    auto add_text_param = [&](const std::string &field, const std::string &value) {
-        clauses.push_back(field + " = $" + std::to_string(param_index) + "::text");
-        params.push_back(strdup(value.c_str()));
-        param_index++;
+    auto add_param = [&](const std::string &field, const std::string &value) {
+        clauses.push_back(field + " = $" + std::to_string(raw_params.size() + 1));
+        raw_params.push_back(value);
     };
 
-    // Лямбда для добавления бинарных параметров (hex)
-    auto add_binary_param = [&](const std::string &field, const std::string &hex_value) {
-        clauses.push_back(field + " = decode($" + std::to_string(param_index) + ", 'hex')");
-        params.push_back(strdup(hex_value.c_str()));
-        param_index++;
-    };
-
-    if (data.contains("last_name")) {
-        add_text_param("last_name", data["last_name"]);
-    }
-    if (data.contains("first_name")) {
-        add_text_param("first_name", data["first_name"]);
-    }
-    if (data.contains("patronymic")) {
-        add_text_param("patronymic", data["patronymic"]);
-    }
+    if (data.contains("last_name"))   add_param("last_name",   data["last_name"]);
+    if (data.contains("first_name"))  add_param("first_name",  data["first_name"]);
+    if (data.contains("patronymic"))  add_param("patronymic",  data["patronymic"]);
 
     if (data.contains("phone")) {
         std::string phone = data["phone"];
-        const char *phone_params[2] = { phone.c_str(), std::to_string(user_id).c_str() };
-        PGresult *phone_check = PQexecParams(
-            conn,
-            "SELECT 1 FROM users WHERE phone = $1 AND id <> $2 LIMIT 1",
-            2, nullptr, phone_params, nullptr, nullptr, 0
-        );
-        bool phone_exists = (phone_check && PQntuples(phone_check) > 0);
-        if (phone_check) {
-            PQclear(phone_check);
+        if (!phone_is_unique(user_id, phone, conn)) {
+            return send_response(http::status::conflict, "Phone already in use");
         }
-        if (phone_exists) {
-            for (const char *p : params) free((void *)p);
-            response["success"] = false;
-            response["error"] = "Phone already in use";
-            res.result(http::status::conflict);
-            res.set(http::field::content_type, "application/json");
-            res.body() = response.dump();
-            return;
-        }
-        add_text_param("phone", phone);
+        add_param("phone", phone);
     }
 
-    if (data.contains("new_password")) {
-        if (!data.contains("new_password_repeat")) {
-            for (const char *p : params) free((void *)p);
-            response["success"] = false;
-            response["error"] = "Both 'new_password' and 'new_password_repeat' must be present";
-            res.result(http::status::bad_request);
-            res.set(http::field::content_type, "application/json");
-            res.body() = response.dump();
-            return;
+    // Обновление пароля
+    if (data.contains("new_password") || data.contains("new_password_repeat")) {
+        if (!data.contains("new_password") || !data.contains("new_password_repeat")) {
+            return send_response(http::status::bad_request, "Both new_password and new_password_repeat must be provided");
         }
-
-        std::string new_pass = data["new_password"];
-        std::string repeat_pass = data["new_password_repeat"];
-
-        if (new_pass != repeat_pass) {
-            for (const char *p : params) free((void *)p);
-            response["success"] = false;
-            response["error"] = "New passwords do not match";
-            res.result(http::status::bad_request);
-            res.set(http::field::content_type, "application/json");
-            res.body() = response.dump();
-            return;
+        std::string np1 = data["new_password"];
+        std::string np2 = data["new_password_repeat"];
+        if (np1 != np2) {
+            return send_response(http::status::bad_request, "New passwords do not match");
         }
-
         std::string new_salt = db_handler.generate_salt(16);
-        if (new_salt.empty()) {
-            for (const char *p : params) free((void *)p);
-            response["success"] = false;
-            response["error"] = "Failed to generate salt";
-            res.result(http::status::internal_server_error);
-            res.set(http::field::content_type, "application/json");
-            res.body() = response.dump();
-            return;
-        }
-
-        std::string to_hash = new_pass + new_salt;
-        unsigned char new_hash[SHA256_DIGEST_LENGTH];
-        SHA256(reinterpret_cast<const unsigned char *>(to_hash.c_str()), to_hash.size(), new_hash);
-
-        add_binary_param("hashed_password", bytes_to_hex_senior(new_hash, SHA256_DIGEST_LENGTH));
-        add_binary_param("salt", bytes_to_hex_senior(reinterpret_cast<const unsigned char *>(new_salt.data()), new_salt.size()));
+        std::string new_hash = db_handler.hash_password(np1, new_salt);
+        add_param("hashed_password", new_hash);
+        add_param("salt", new_salt);
     }
 
     if (clauses.empty()) {
-        for (const char *p : params) free((void *)p);
-        response["success"] = false;
-        response["error"] = "No fields to update";
-        res.result(http::status::bad_request);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
+        return send_response(http::status::bad_request, "No fields to update");
     }
 
-    std::string sql = "UPDATE users SET ";
+    std::ostringstream query;
+    query << "UPDATE users SET ";
     for (size_t i = 0; i < clauses.size(); ++i) {
-        if (i > 0) sql += ", ";
-        sql += clauses[i];
+        if (i > 0) query << ", ";
+        query << clauses[i];
     }
-    sql += " WHERE id = $" + std::to_string(param_index) + "::int";
-    params.push_back(strdup(std::to_string(user_id).c_str()));
+    query << " WHERE id = $" << raw_params.size() + 1;
+    raw_params.push_back(std::to_string(user_id));
 
-    if (PQstatus(conn) != CONNECTION_OK) {
-        for (const char *p : params) free((void *)p);
-        response["success"] = false;
-        response["error"] = "Database connection lost";
-        res.result(http::status::internal_server_error);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
-    }
+    std::vector<const char*> param_ptrs;
+    for (auto &s : raw_params) param_ptrs.push_back(s.c_str());
 
-    PGresult *update_result = PQexecParams(conn, sql.c_str(), params.size(), nullptr, params.data(), nullptr, nullptr, 0);
+    PGresult *upd = PQexecParams(
+        conn,
+        query.str().c_str(),
+        (int)param_ptrs.size(), nullptr,
+        param_ptrs.data(), nullptr, nullptr, 0
+    );
 
-    for (const char *p : params) free((void *)p);
-
-    if (!update_result || PQresultStatus(update_result) != PGRES_COMMAND_OK) {
-        std::string error_msg = update_result ? PQerrorMessage(conn) : "Unknown error";
-        if (update_result) PQclear(update_result);
-        response["success"] = false;
-        response["error"] = "Failed to update user data. DB error: " + error_msg;
-        res.result(http::status::internal_server_error);
-        res.set(http::field::content_type, "application/json");
-        res.body() = response.dump();
-        return;
+    if (!upd || PQresultStatus(upd) != PGRES_COMMAND_OK) {
+        std::string err = PQerrorMessage(conn);
+        if (upd) PQclear(upd);
+        return send_response(http::status::internal_server_error, "Database error: " + err);
     }
 
-    PQclear(update_result);
-
-    response["success"] = true;
-    response["message"] = "Senior admin profile updated successfully";
-    res.result(http::status::ok);
-    res.set(http::field::content_type, "application/json");
-    res.body() = response.dump();
+    PQclear(upd);
+    return send_response(http::status::ok, "", true);
 }
