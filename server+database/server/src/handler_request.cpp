@@ -134,6 +134,14 @@ void handle_request(
     database_handler &db_handler
 ) {
     try {
+        if (req.method() == http::verb::options) {
+            res.result(http::status::no_content);
+            res.set(http::field::content_type, "text/plain");
+            res.body() = "";
+            add_cors_headers(res);
+            res.prepare_payload();
+            return; // Важно: выходим после обработки OPTIONS
+        }
         if (req.method() == http::verb::post) {
             try {
                 json body = json::parse(req.body());
@@ -803,5 +811,6 @@ void handle_request(
     } catch (const std::exception &e) {
         handle_error(e, res);
     }
+    add_cors_headers(res);
     res.prepare_payload();
 }
