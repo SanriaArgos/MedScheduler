@@ -35,6 +35,7 @@ HEADERS += \
     include/registration_window.h \
     include/senior_admin_window.h \
     include/utils.h \
+    include/nlohmann/json.hpp \
     client/include/client_auth.hpp \
     client/include/client_doctor.hpp \
     client/include/client_junior_admin.hpp \

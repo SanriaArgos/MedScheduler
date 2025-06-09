@@ -733,6 +733,9 @@ if (reply == QMessageBox::Yes) {
             action->setStyleSheet(
                 action->styleSheet() + "background-color: #1976D2;"
             );
+            connect(action, &QPushButton::clicked, this, [this,r,user_id=get_user_id()](){
+                
+            });
         } else {
             action->setVisible(false);
         }
