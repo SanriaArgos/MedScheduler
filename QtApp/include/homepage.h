@@ -78,6 +78,8 @@ private slots:
 
     void sort_records(std::vector<Record> &recs, bool newestFirst);
 
+    void on_back_to_doctors_clicked();
+
 private:
     void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout);
     Ui::homepage *ui;

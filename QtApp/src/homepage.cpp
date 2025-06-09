@@ -311,7 +311,6 @@ void homepage::on_apply_filtres_button_clicked() {
 }
 
 void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
-    // Создаем контейнер для карточки
     QWidget *card = new QWidget();
     card->setStyleSheet(
         "border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: "
@@ -365,6 +364,102 @@ void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
     );
 
     cardLayout->addWidget(appointmentBtn);
+    //Отзыв
+    QPushButton *feedbackBtn = new QPushButton("View feedbacks");
+    feedbackBtn->setStyleSheet(
+        "QPushButton {background-color:rgb(18, 97, 109); color: white; border: "
+        "none; padding: 8px; border-radius: 4px;}"
+        "QPushButton:hover {"
+        "   background-color: rgb(32, 90, 140);"
+        "}"
+    );
+    QAbstractButton::connect(
+    feedbackBtn, &QPushButton::clicked,
+    [this, doctor, user_id = get_user_id()]() {
+        patient::patient_client client(user_id);
+        nlohmann::json response = client.get_doctor_feedback_items(doctor.doctor_id);
+
+        if (!response["success"].get<bool>()) return;
+        const auto &ratings = response["ratings"];
+
+        // Очистка предыдущих отзывов
+        QWidget *oldWidget = ui->feedbacks_scroll->widget();
+        if (oldWidget) oldWidget->deleteLater();
+        int sortIndex = ui->feedbacks_sort->currentIndex();
+
+std::vector<nlohmann::json> sortedRatings = ratings;
+
+std::sort(sortedRatings.begin(), sortedRatings.end(), [sortIndex](const nlohmann::json &a, const nlohmann::json &b) {
+    if (sortIndex == 0) // Highest rating
+        return a["rate"].get<int>() > b["rate"].get<int>();
+    if (sortIndex == 1) // Lowest rating
+        return a["rate"].get<int>() < b["rate"].get<int>();
+    if (sortIndex == 2) // Newest
+        return a["date"].get<std::string>() > b["date"].get<std::string>();
+    if (sortIndex == 3) // Oldest
+        return a["date"].get<std::string>() < b["date"].get<std::string>();
+    return false;
+});
+        QWidget *container = new QWidget;
+        QVBoxLayout *layout = new QVBoxLayout(container);
+
+        for (const auto &item : sortedRatings) {
+            QString name = QString::fromStdString(item["name"]);
+            QString date = QString::fromStdString(item["date"]);
+            QString text = QString::fromStdString(item["text"]);
+            int rate = item["rate"];
+
+            QWidget *feedbackWidget = new QWidget;
+            QVBoxLayout *feedbackLayout = new QVBoxLayout(feedbackWidget);
+
+            QLabel *nameLabel = new QLabel(name);
+            QLabel *dateLabel = new QLabel(date);
+            QLabel *textLabel = new QLabel(text);
+            textLabel->setWordWrap(true);
+            QString stars;
+            for (int i = 0; i < 5; ++i)
+                stars += (i < rate) ? "★" : "☆";
+            QLabel *rateLabel = new QLabel(stars);
+            rateLabel->setStyleSheet("color: orange; font-size: 20px; border:none;");
+            nameLabel->setStyleSheet("border:none;font-size: 18px;");
+            dateLabel->setStyleSheet("border:none;color: rgb(122, 123, 123);");
+            textLabel->setStyleSheet("border:none;");
+            feedbackLayout->setSpacing(2);
+
+nameLabel->setContentsMargins(0, 0, 0, 0);
+dateLabel->setContentsMargins(0, 0, 0, 0);
+rateLabel->setContentsMargins(0, 0, 0, 0);
+textLabel->setContentsMargins(0, 0, 0, 0);
+
+nameLabel->setMargin(0);
+dateLabel->setMargin(0);
+rateLabel->setMargin(0);
+textLabel->setMargin(0);
+            feedbackLayout->addWidget(nameLabel);
+            feedbackLayout->addWidget(dateLabel);
+            feedbackLayout->addWidget(rateLabel);
+            feedbackLayout->addWidget(textLabel);
+
+            feedbackWidget->setLayout(feedbackLayout);
+            feedbackWidget->setStyleSheet("border: 1px solid #ccc;border-radius: 4px;");
+
+            layout->addWidget(feedbackWidget);
+        }
+
+        layout->addStretch();
+        container->setLayout(layout);
+
+        ui->feedbacks_scroll->setWidget(container);
+        ui->feedbacks_scroll->setWidgetResizable(true);
+
+        ui->stackedWidget->setCurrentWidget(ui->feedbacks_page);
+    }
+);
+
+
+
+    cardLayout->addWidget(feedbackBtn);
+
     layout->addWidget(card);
 }
 
@@ -638,3 +733,9 @@ void homepage::fill_appointments_scroll(const std::vector<Record> &records) {
     // 3) Опционально: «раздвинуть» карточки и не прижимать к низу
     layout->addStretch();
 }
+
+void homepage::on_back_to_doctors_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->doctors_page);
+}
+
