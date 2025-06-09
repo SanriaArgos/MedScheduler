@@ -123,7 +123,8 @@ void homepage::on_appointments_button_clicked() {
             QString::fromStdString(appt["specialty"].get<std::string>());
         record.street =
             QString::fromStdString(appt["street"].get<std::string>());
-        // record.record_id=appt["record_id"].get<int>();
+        record.record_id=appt["record_id"].get<int>();
+        record.doctor_id=appt["doctor_id"].get<int>();
         all_records.push_back(record);
     }
     fill_appointments_scroll(all_records);
@@ -378,32 +379,18 @@ void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
     [this, doctor, user_id = get_user_id()]() {
         patient::patient_client client(user_id);
         nlohmann::json response = client.get_doctor_feedback_items(doctor.doctor_id);
-
+        ui->doctor_info_in_feedback->setText("Doctor: "+doctor.name+" Rating: "+ QString::number(doctor.rating));
         if (!response["success"].get<bool>()) return;
         const auto &ratings = response["ratings"];
 
         // Очистка предыдущих отзывов
         QWidget *oldWidget = ui->feedbacks_scroll->widget();
         if (oldWidget) oldWidget->deleteLater();
-        int sortIndex = ui->feedbacks_sort->currentIndex();
-
-std::vector<nlohmann::json> sortedRatings = ratings;
-
-std::sort(sortedRatings.begin(), sortedRatings.end(), [sortIndex](const nlohmann::json &a, const nlohmann::json &b) {
-    if (sortIndex == 0) // Highest rating
-        return a["rate"].get<int>() > b["rate"].get<int>();
-    if (sortIndex == 1) // Lowest rating
-        return a["rate"].get<int>() < b["rate"].get<int>();
-    if (sortIndex == 2) // Newest
-        return a["date"].get<std::string>() > b["date"].get<std::string>();
-    if (sortIndex == 3) // Oldest
-        return a["date"].get<std::string>() < b["date"].get<std::string>();
-    return false;
-});
+        
         QWidget *container = new QWidget;
         QVBoxLayout *layout = new QVBoxLayout(container);
 
-        for (const auto &item : sortedRatings) {
+        for (const auto &item : ratings) {
             QString name = QString::fromStdString(item["name"]);
             QString date = QString::fromStdString(item["date"]);
             QString text = QString::fromStdString(item["text"]);
@@ -717,6 +704,30 @@ void homepage::fill_appointments_scroll(const std::vector<Record> &records) {
             action->setStyleSheet(
                 action->styleSheet() + "background-color: #D32F2F;"
             );
+            connect(action, &QPushButton::clicked, this, [this,r,user_id=get_user_id()]() {
+                QMessageBox::StandardButton reply = QMessageBox::question(
+    this,
+    "Attention",
+    "Are you sure you want to cancel appointment?",
+    QMessageBox::Yes | QMessageBox::No,
+    QMessageBox::No // <-- по умолчанию подсвечивается "Нет"
+);
+if (reply == QMessageBox::Yes) {
+    nlohmann::json json;
+    json["record_id"]=r.record_id;
+    json["patient_id"]=user_id;
+    patient::patient_client client(user_id);
+    nlohmann::json response = client.cancel_appointment(json);
+    std::cerr<<r.record_id<<" "<<user_id;
+    if (response.contains("success") && response["success"].get<bool>()) {
+        QMessageBox::information(this, "Information", "Appointment cancelled successfully!");
+    }
+    else {
+        QMessageBox::critical(this, "Error", "Something went wrong!");
+    }
+}
+
+            });
         } else if (r.appointment_date < today) {
             action->setText("Leave feedback");
             action->setStyleSheet(

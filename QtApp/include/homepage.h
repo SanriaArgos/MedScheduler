@@ -34,6 +34,7 @@ struct Record {
     QString specialty;
     QString street;
     int record_id;
+    int doctor_id;
 };
 
 class homepage : public QMainWindow {

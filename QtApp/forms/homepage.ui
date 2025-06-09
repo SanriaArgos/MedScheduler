@@ -515,33 +515,10 @@ font: 9pt &quot;Arial&quot;;</string>
             </spacer>
            </item>
            <item>
-            <widget class="QComboBox" name="feedbacks_sort">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+            <widget class="QLabel" name="doctor_info_in_feedback">
+             <property name="text">
+              <string/>
              </property>
-             <item>
-              <property name="text">
-               <string>Highest rating</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Lowest rating</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Newest</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Oldest</string>
-              </property>
-             </item>
             </widget>
            </item>
           </layout>
