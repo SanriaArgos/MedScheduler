@@ -1,5 +1,4 @@
 #include "homepage.h"
-#include <curl/curl.h>
 #include <QDate>
 #include <QDebug>
 #include <QFile>

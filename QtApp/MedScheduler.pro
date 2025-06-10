@@ -61,7 +61,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     res.qrc
 
-LIBS += -lcurl
-
 INCLUDEPATH += $$PWD/include
 INCLUDEPATH += $$PWD/client/include
+
+QT += network

@@ -1,11 +1,16 @@
 #ifndef COMMON_FOR_ALL_HPP_
 #define COMMON_FOR_ALL_HPP_
 
-#include <curl/curl.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
-
+#include <QNetworkAccessManager>
+#include <QString>
+#include <QEventLoop>
+#include <QNetworkReply>
+#include <QtNetwork>
+#include <QtGui>
+#include <QtCore>
 extern const std::string base_url;
 
 size_t
