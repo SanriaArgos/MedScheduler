@@ -25,6 +25,11 @@ Appointment::Appointment(int doc_id, QWidget *parent)
     ui->date5->setText(today.addDays(5).toString("dd.MM"));
     ui->date6->setText(today.addDays(6).toString("dd.MM"));
     make_all_basic();
+    patient::patient_client client(user_id);
+    nlohmann::json response= client.get_waitlist_count(doctor_id);
+    int count = response.at("count").get<int>();
+    QString num = QString::number(count);
+    ui->label->setText("Available slots not suitable? People in waitlist: "+ num);
 }
 
 Appointment::~Appointment() {
@@ -185,11 +190,13 @@ void Appointment::handle_day_clicked(QPushButton *clicked_button, int days) {
                                 "\n" +
                                 "Time: " + s.appointment_time.toString("HH:mm")
                         );
+
                     } else {
                         QMessageBox::warning(
                             this, "Error", "Failed to book an appointment!"
                         );
                     }
+                    this->close();
                 }
             );
             slotLayout->addWidget(bookBtn);
@@ -229,3 +236,19 @@ void Appointment::on_date5_clicked() {
 void Appointment::on_date6_clicked() {
     handle_day_clicked(ui->date6, 6);
 }
+
+void Appointment::on_add_to_waitlist_button_clicked()
+{
+    patient::patient_client client(user_id);
+    nlohmann::json j;
+    j["doctor_id"] = doctor_id;
+    j["patient_id"] = user_id;
+    nlohmann::json response = client.add_patient_to_waitlist(j);
+    if (response.contains("success") && response["success"]==true){
+        QMessageBox::information(this, "Success", "You were added to waitlist.");
+    }
+    else{
+        QMessageBox::critical(this, "Error", QString::fromStdString(response.at("error")));
+    }
+}
+

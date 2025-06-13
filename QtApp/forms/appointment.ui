@@ -114,10 +114,53 @@ color: rgb(255, 255, 255);</string>
         <x>0</x>
         <y>0</y>
         <width>781</width>
-        <height>541</height>
+        <height>515</height>
        </rect>
       </property>
      </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Available slots not suitable?</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="add_to_waitlist_button">
+        <property name="styleSheet">
+         <string notr="true">color: rgb(0, 85, 255);
+text-decoration: underline;
+font: 9pt &quot;Segoe UI&quot;; border: none;</string>
+        </property>
+        <property name="text">
+         <string>Apply for booked slots</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

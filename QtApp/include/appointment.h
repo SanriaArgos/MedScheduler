@@ -37,6 +37,8 @@ private slots:
 
     void make_all_basic();
 
+    void on_add_to_waitlist_button_clicked();
+
 private:
     Ui::Appointment *ui;
     void handle_day_clicked(QPushButton *clicked_button, int days);

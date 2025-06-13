@@ -330,7 +330,7 @@ font: 9pt &quot;Arial&quot;;</string>
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="appointments_page">
        <property name="styleSheet">
@@ -368,9 +368,7 @@ font: 9pt &quot;Arial&quot;;</string>
     border: 1px solid gray;
     color: #333;
     padding: 5px 10px;
-    padding-right: 25px;
     border-radius: 4px;
-    min-width: 100px;
 }
 
 QComboBox::drop-down {
@@ -381,12 +379,6 @@ QComboBox::drop-down {
     background: #f0f0f0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-}
-
-QComboBox::down-arrow {
-    width: 12px;
-    height: 12px;
-    image: url(&quot;&quot;);
 }
 
 QComboBox:hover {
@@ -664,9 +656,7 @@ QPushButton:pressed {
     border: 1px solid gray;
     color: #333;
     padding: 5px 10px;
-    padding-right: 25px;
     border-radius: 4px;
-    min-width: 100px;
 }
 
 QComboBox::drop-down {
@@ -677,12 +667,6 @@ QComboBox::drop-down {
     background: #f0f0f0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-}
-
-QComboBox::down-arrow {
-    width: 12px;
-    height: 12px;
-    image: url(&quot;&quot;);
 }
 
 QComboBox:hover {
@@ -713,9 +697,7 @@ QComboBox:pressed, QComboBox:on {
     border: 1px solid gray;
     color: #333;
     padding: 5px 10px;
-    padding-right: 25px;
     border-radius: 4px;
-    min-width: 100px;
 }
 
 QComboBox::drop-down {
@@ -726,12 +708,6 @@ QComboBox::drop-down {
     background: #f0f0f0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-}
-
-QComboBox::down-arrow {
-    width: 12px;
-    height: 12px;
-    image: url(&quot;&quot;);
 }
 
 QComboBox:hover {
@@ -762,9 +738,7 @@ QComboBox:pressed, QComboBox:on {
     border: 1px solid gray;
     color: #333;
     padding: 5px 10px;
-    padding-right: 25px;
     border-radius: 4px;
-    min-width: 100px;
 }
 
 QComboBox::drop-down {
@@ -775,12 +749,6 @@ QComboBox::drop-down {
     background: #f0f0f0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-}
-
-QComboBox::down-arrow {
-    width: 12px;
-    height: 12px;
-    image: url(&quot;&quot;);
 }
 
 QComboBox:hover {
@@ -811,9 +779,7 @@ QComboBox:pressed, QComboBox:on {
     border: 1px solid gray;
     color: #333;
     padding: 5px 10px;
-    padding-right: 25px;
     border-radius: 4px;
-    min-width: 100px;
 }
 
 QComboBox::drop-down {
@@ -824,12 +790,6 @@ QComboBox::drop-down {
     background: #f0f0f0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-}
-
-QComboBox::down-arrow {
-    width: 12px;
-    height: 12px;
-    image: url(&quot;&quot;);
 }
 
 QComboBox:hover {
@@ -860,9 +820,7 @@ QComboBox:pressed, QComboBox:on {
     border: 1px solid gray;
     color: #333;
     padding: 5px 10px;
-    padding-right: 25px;
     border-radius: 4px;
-    min-width: 100px;
 }
 
 QComboBox::drop-down {
@@ -873,12 +831,6 @@ QComboBox::drop-down {
     background: #f0f0f0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-}
-
-QComboBox::down-arrow {
-    width: 12px;
-    height: 12px;
-    image: url(&quot;&quot;);
 }
 
 QComboBox:hover {
@@ -1014,6 +966,9 @@ QPushButton:pressed {
             <verstretch>10</verstretch>
            </sizepolicy>
           </property>
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid black;</string>
+          </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
           </property>
@@ -1054,12 +1009,6 @@ QComboBox::drop-down {
     background: #f0f0f0;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-}
-
-QComboBox::down-arrow {
-    width: 12px;
-    height: 12px;
-    image: url(&quot;&quot;);
 }
 
 QComboBox:hover {
