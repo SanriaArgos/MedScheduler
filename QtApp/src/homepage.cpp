@@ -648,6 +648,7 @@ void homepage::fill_appointments_scroll(const std::vector<Record> &records) {
     }
 
     QDate today = QDate::currentDate();
+    QTime now = QTime::currentTime();
 
     // 2) Для каждой записи создаём «карточку»
     for (const auto &r : records) {
@@ -698,7 +699,7 @@ void homepage::fill_appointments_scroll(const std::vector<Record> &records) {
             "margin-top: 8px;"
         );
 
-        if (r.appointment_date > today) {
+        if (r.appointment_date > today || (r.appointment_date == today && r.appointment_time>now)) {
             action->setText("Cancel appointment");
             action->setStyleSheet(
                 action->styleSheet() + "background-color: #D32F2F;"
@@ -727,16 +728,15 @@ if (reply == QMessageBox::Yes) {
 }
 
             });
-        } else if (r.appointment_date < today) {
+        } else {
             action->setText("Leave feedback");
             action->setStyleSheet(
                 action->styleSheet() + "background-color: #1976D2;"
             );
             connect(action, &QPushButton::clicked, this, [this,r,user_id=get_user_id()](){
-                
+                ui->stackedWidget->setCurrentWidget(ui->leave_feedback_page);
+                least_doctor_id=r.doctor_id;
             });
-        } else {
-            action->setVisible(false);
         }
 
         cardLayout->addWidget(action);
@@ -750,5 +750,33 @@ if (reply == QMessageBox::Yes) {
 void homepage::on_back_to_doctors_clicked()
 {
     ui->stackedWidget->setCurrentWidget(ui->doctors_page);
+}
+
+
+void homepage::on_back_to_appointments_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->appointments_page);
+}
+
+
+void homepage::on_leave_feedback_button_clicked()
+{
+    QString feedback_text=ui->feedback_lineedit->text();
+    int rate = ui->rate_combo_box->currentText().toInt();
+    int doc_id=least_doctor_id;
+    nlohmann::json json;
+    json["rate"]=rate;
+    json["text"]=feedback_text.toStdString();
+    json["user_id"]=get_user_id();
+    json["doctor_ref_id"]=doc_id;
+    json["address"]="";
+    patient::patient_client client(user_id);
+    nlohmann::json response = client.post_doctor_feedback_client(json);
+    if (response.contains("success") && response["success"]==true){
+        QMessageBox::information(this, "Success", "You left feedback successfully.");
+    }
+    else{
+        QMessageBox::critical(this, "Error", "Something went wrong.");
+    }
 }
 

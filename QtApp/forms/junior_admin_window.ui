@@ -17,6 +17,10 @@
    <iconset resource="../res.qrc">
     <normaloff>:/images/icon-512.png</normaloff>:/images/icon-512.png</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);
+ color: rgb(0, 0, 0);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
@@ -259,7 +263,7 @@ color: rgb(255, 255, 255);</string>
       <property name="currentIndex">
        <number>2</number>
       </property>
-      <widget class="QWidget" name="page_get_users" native="true">
+      <widget class="QWidget" name="page_get_users">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QPushButton" name="get_users_table_button">
@@ -278,8 +282,8 @@ color: rgb(255, 255, 255);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>842</width>
-             <height>594</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
           </widget>
@@ -287,7 +291,7 @@ color: rgb(255, 255, 255);</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_get_doctors" native="true">
+      <widget class="QWidget" name="page_get_doctors">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QPushButton" name="get_doctors_table_button">
@@ -306,8 +310,8 @@ color: rgb(255, 255, 255);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>842</width>
-             <height>594</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
           </widget>
@@ -315,7 +319,7 @@ color: rgb(255, 255, 255);</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_add_doctor" native="true">
+      <widget class="QWidget" name="page_add_doctor">
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0">
          <widget class="QLabel" name="last_name_label">
@@ -416,7 +420,7 @@ color: rgb(255, 255, 255);</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_attach_doctor" native="true">
+      <widget class="QWidget" name="page_attach_doctor">
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
          <widget class="QGroupBox" name="groupBox_3">
@@ -536,7 +540,7 @@ color: rgb(255, 255, 255);</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_add_appointment" native="true">
+      <widget class="QWidget" name="page_add_appointment">
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QGroupBox" name="groupBox">
@@ -619,7 +623,7 @@ color: rgb(255, 255, 255);</string>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page_get_schedule" native="true">
+      <widget class="QWidget" name="page_get_schedule">
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <widget class="QGroupBox" name="groupBox_2">
@@ -667,8 +671,8 @@ color: rgb(255, 255, 255);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>842</width>
-             <height>481</height>
+             <width>98</width>
+             <height>28</height>
             </rect>
            </property>
           </widget>

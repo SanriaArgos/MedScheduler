@@ -18,7 +18,8 @@
     <normaloff>:/images/icon-512.png</normaloff>:/images/icon-512.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true">background-color: rgb(255, 255, 255);
+ color: rgb(0, 0, 0);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -113,7 +114,7 @@ color: rgb(255, 255, 255);</string>
         <x>0</x>
         <y>0</y>
         <width>781</width>
-        <height>533</height>
+        <height>541</height>
        </rect>
       </property>
      </widget>
