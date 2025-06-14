@@ -234,7 +234,7 @@ json junior_admin_client::edit_junior_admin_profile(const json &data) {
 json junior_admin_client::get_waitlist(int doctor_id, int junior_admin_id) {
     std::string url = base_url +
                       "/get_waitlist?doctor_id=" + std::to_string(doctor_id) +
-                      "&junior_admin_id" + std::to_string(junior_admin_id);
+                      "&junior_admin_id=" + std::to_string(junior_admin_id);
     std::string response = send_get_request(url);
 
     try {

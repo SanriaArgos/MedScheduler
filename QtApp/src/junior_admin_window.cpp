@@ -119,7 +119,7 @@ void JuniorAdminWindow::on_add_doctor_to_hospital_button_clicked() {
 void JuniorAdminWindow::on_remove_doctor_button_clicked() {
     ui->error_label_add_remove->setText("");
     QString doctor_id = ui->doctor_id_form->text();
-    QString hospital_id = ui->hospital_id_form->text();  // 🛠 Исправлено здесь
+    QString hospital_id = ui->hospital_id_form->text();
 
     if (!is_number(doctor_id)) {
         ui->error_label_add_remove->setText("Incorrect format for doctor id.");
@@ -375,6 +375,7 @@ void JuniorAdminWindow::make_all_basic() {
     ui->button_get_doctors->setStyleSheet(baseStyle);
     ui->button_edit_profile->setStyleSheet(baseStyle);
     ui->button_get_statistics->setStyleSheet(baseStyle);
+    ui->button_get_waitlist->setStyleSheet(baseStyle);
 }
 
 void JuniorAdminWindow::on_button_get_users_clicked() {
@@ -624,5 +625,78 @@ void JuniorAdminWindow::on_submit_stats_clicked()
     ui->rating_label->setText(QString::number(response["average_rating"].get<double>()));
     ui->count_label->setText(QString::number(response["patients_count"].get<int>()));
     }
+}
+
+
+void JuniorAdminWindow::on_get_waitlist_button_clicked()
+{
+    bool ok; // Флаг успешности преобразования
+    int doctor_id = ui->doctor_id_for_waitlist_edit->text().toInt(&ok);
+    if (!ok) {
+        return;
+    }
+    junior_admin::junior_admin_client client(get_user_id());
+    nlohmann::json response = client.get_waitlist(doctor_id,get_user_id());
+    if (ui->scrollArea->widget()) {
+        delete ui->scrollArea->widget();
+    }
+
+    // Создаем контейнер для элементов
+    QWidget *container = new QWidget();
+    QVBoxLayout *layout = new QVBoxLayout(container);
+    container->setLayout(layout);
+
+    // Проходим по всем элементам waitlist
+    for (const auto& patient : response["waitlist"]) {
+        // Создаем виджет для одного пациента
+        QFrame *patientFrame = new QFrame();
+        patientFrame->setFrameShape(QFrame::StyledPanel);
+        patientFrame->setStyleSheet("padding: 10px; margin: 5px;");
+
+        QVBoxLayout *patientLayout = new QVBoxLayout(patientFrame);
+
+                // Добавляем данные пациента
+        QString patientInfo = QString("%1 %2 %3\nID: %4\nPhone: %5\nDate: %6")
+                                  .arg(QString::fromStdString(patient["last_name"]))
+                                  .arg(QString::fromStdString(patient["first_name"]))
+                                  .arg(QString::fromStdString(patient["patronymic"]))
+                                  .arg(patient["patient_id"].get<int>())
+                                  .arg(QString::fromStdString(patient["phone"]))
+                                  .arg(QString::fromStdString(patient["request_date"]));
+
+        QLabel *infoLabel = new QLabel(patientInfo);
+        patientLayout->addWidget(infoLabel);
+
+                // Добавляем виджет пациента в общий layout
+        layout->addWidget(patientFrame);
+    }
+
+    // Добавляем растягивающий элемент, чтобы виджеты не растягивались на всю высоту
+    layout->addStretch();
+
+    // Устанавливаем контейнер в ScrollArea
+    ui->scrollArea->setWidget(container);
+    ui->scrollArea->setWidgetResizable(true);
+}
+
+
+void JuniorAdminWindow::on_button_get_waitlist_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_waitlist);
+    make_all_basic();
+    ui->button_get_waitlist->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
 }
 

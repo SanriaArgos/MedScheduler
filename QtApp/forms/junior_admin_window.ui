@@ -291,11 +291,38 @@ color: rgb(255, 255, 255);</string>
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="button_get_waitlist">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>10</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+           color: rgb(255, 255, 255);
+         font: 15pt 'Arial';
+         text-align: left;
+          padding-left: 10%;
+        background-color: transparent;
+        border: none;
+        }
+        QPushButton:hover {
+          background-color: rgba(64, 64, 80, 100);
+          border-radius: 10px;
+        }</string>
+         </property>
+         <property name="text">
+          <string>Get waitlist</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
-           <verstretch>40</verstretch>
+           <verstretch>30</verstretch>
           </sizepolicy>
          </property>
          <property name="text">
@@ -315,7 +342,7 @@ color: rgb(255, 255, 255);</string>
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_get_users">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -363,6 +390,44 @@ QPushButton:pressed {
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="page_waitlist">
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <item>
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Enter doctor id</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="doctor_id_for_waitlist_edit"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="get_waitlist_button">
+          <property name="text">
+           <string>Get waitlist</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>885</width>
+             <height>552</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="page_get_doctors">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
@@ -400,8 +465,8 @@ QPushButton:pressed {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>885</width>
-             <height>600</height>
+             <width>66</width>
+             <height>16</height>
             </rect>
            </property>
           </widget>
@@ -1131,8 +1196,8 @@ QPushButton:pressed {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>885</width>
-             <height>509</height>
+             <width>66</width>
+             <height>16</height>
             </rect>
            </property>
           </widget>

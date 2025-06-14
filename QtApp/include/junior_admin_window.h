@@ -52,6 +52,10 @@ private slots:
 
     void on_submit_stats_clicked();
 
+    void on_get_waitlist_button_clicked();
+
+    void on_button_get_waitlist_clicked();
+
 private:
     Ui::JuniorAdminWindow *ui;
     int user_id = 0;
