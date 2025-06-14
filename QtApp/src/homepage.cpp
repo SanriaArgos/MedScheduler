@@ -130,6 +130,17 @@ void homepage::on_appointments_button_clicked() {
 }
 
 void homepage::on_profile_button_clicked() {
+    patient::patient_client client(get_user_id());
+    nlohmann::json response = client.get_patient_profile_by_id(get_user_id());
+    if (response.contains("success")&& response["success"]==true){
+        const auto& user = response["user"];
+        QString first_name = QString::fromStdString(user["first_name"].get<std::string>());
+        QString last_name = QString::fromStdString(user["last_name"].get<std::string>());
+        QString patronymic = QString::fromStdString(user["patronymic"].get<std::string>());
+        QString phone = QString::fromStdString(user["phone"].get<std::string>());
+        ui->hello_label->setText("Hello, "+last_name+" "+first_name+" "+patronymic);
+        ui->you_phone_number->setText("Your phone number: "+phone);
+    }
     ui->stackedWidget->setCurrentWidget(ui->profile_page);
     make_all_basic();
     ui->profile_button->setStyleSheet(
@@ -146,6 +157,8 @@ void homepage::on_profile_button_clicked() {
         "   border-radius: 10px;"
         "}"
     );
+
+
 }
 
 void homepage::on_doctors_button_clicked() {

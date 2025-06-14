@@ -330,7 +330,7 @@ font: 9pt &quot;Arial&quot;;</string>
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="appointments_page">
        <property name="styleSheet">

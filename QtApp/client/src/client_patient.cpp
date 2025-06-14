@@ -385,7 +385,7 @@ json patient_client::edit_patient_profile(const json &request_data) {
 }
 
 json patient_client::get_patient_profile_by_id(int user_id) {
-    std::string url = base_url + "/get_profile_by_id" + std::to_string(user_id);
+    std::string url = base_url + "/get_profile_by_id?user_id=" + std::to_string(user_id);
     std::string response = send_get_request(url);
 
     try {
