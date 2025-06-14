@@ -245,6 +245,7 @@ void SeniorAdminWindow::make_all_basic() {
     ui->button_get_users->setStyleSheet(baseStyle);
     ui->button_add_hospital->setStyleSheet(baseStyle);
     ui->button_add_junior_admin->setStyleSheet(baseStyle);
+    ui->page_edit_profile->setStyleSheet(baseStyle);
 }
 
 void SeniorAdminWindow::on_button_get_hospitals_clicked() {
@@ -322,3 +323,104 @@ void SeniorAdminWindow::on_button_add_junior_admin_clicked() {
         "}"
     );
 }
+
+void SeniorAdminWindow::on_submit_button_clicked()
+{
+    ui->edit_error_label->setText("");
+    QString first_name = ui->first_name_line_edit->text();
+    QString last_name = ui->last_name_line_edit->text();
+    QString middle_name = ui->middle_name_line_edit->text();
+    QString new_password = ui->new_password_line_edit->text();
+    QString new_password_again = ui->new_password_again_line_edit->text();
+    QString current_password = ui->current_password_line_edit->text();
+    QString phone = ui->phone_line_edit->text();
+    if (phone != "" && !is_validated_phone(phone)) {
+        ui->edit_error_label->setText("Incorrect formar for phone number");
+        return;
+    }
+    if (first_name != "" && !is_latin_or_dash(first_name)) {
+        ui->edit_error_label->setText("Incorrect formar for first name");
+        return;
+    }
+    if (last_name != "" && !is_latin_or_dash(last_name)) {
+        ui->edit_error_label->setText("Incorrect formar for last name");
+        return;
+    }
+    if (middle_name != "" && !is_latin_or_dash(middle_name)) {
+        ui->edit_error_label->setText("Incorrect formar for middle name");
+        return;
+    }
+    if (new_password != "" && !is_valid_password(new_password)) {
+        ui->edit_error_label->setText("Incorrect formar for new password");
+        return;
+    }
+    if (new_password != "" && new_password_again == "") {
+        ui->edit_error_label->setText("Enter your new password again");
+        return;
+    }
+    if (new_password != "" && new_password != new_password_again) {
+        ui->edit_error_label->setText("New passwords do not match");
+        return;
+    }
+    if (current_password == "") {
+        ui->edit_error_label->setText("Enter your current password");
+        return;
+    }
+    if (!is_valid_password(current_password)) {
+        ui->edit_error_label->setText("Incorrect format for current password");
+        return;
+    }
+    QJsonObject json;
+    json["user_id"] = get_user_id();
+    json["current_password"] = current_password;
+    if (middle_name != "") {
+        json["patronymic"] = middle_name;
+    }
+    if (first_name != "") {
+        json["first_name"] = first_name;
+    }
+    if (last_name != "") {
+        json["last_name"] = last_name;
+    }
+    if (phone != "") {
+        json["phone"] = phone;
+    }
+    if (new_password != "") {
+        json["new_password"] = new_password;
+        json["new_password_repeat"] = new_password_again;
+    }
+    QJsonDocument doc(json);
+    QString jsonString = doc.toJson(QJsonDocument::Compact);
+    nlohmann::json edit_data = nlohmann::json::parse(jsonString.toStdString());
+    senior_admin::senior_admin_client client(get_user_id());
+    nlohmann::json response = client.edit_senior_admin_profile(edit_data);
+    if (response.contains("error")) {
+        ui->edit_error_label->setText(QString::fromStdString(response["error"])
+                                      );
+    } else if (response.contains("message")) {
+        ui->edit_error_label->setText(QString::fromStdString(response["message"]
+                                                             ));
+    }
+}
+
+
+void SeniorAdminWindow::on_pushButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_edit_profile);
+    make_all_basic();
+    ui->page_edit_profile->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+

@@ -34,6 +34,10 @@ private slots:
 
     void on_button_add_junior_admin_clicked();
 
+    void on_submit_button_clicked();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::SeniorAdminWindow *ui;
     int user_id = 0;
