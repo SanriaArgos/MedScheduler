@@ -651,7 +651,7 @@ void JuniorAdminWindow::on_get_waitlist_button_clicked()
         // Создаем виджет для одного пациента
         QFrame *patientFrame = new QFrame();
         patientFrame->setFrameShape(QFrame::StyledPanel);
-        patientFrame->setStyleSheet("padding: 10px; margin: 5px;");
+
 
         QVBoxLayout *patientLayout = new QVBoxLayout(patientFrame);
 
