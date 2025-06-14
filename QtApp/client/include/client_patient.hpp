@@ -40,6 +40,8 @@ public:
     json get_doctor_feedback_calculated(int doctor_id);
     json get_doctor_hospitals(int doctor_id);
 
+    json add_patient_to_waitlist(const json &request_data);
+
     json edit_doctor_feedback(const json &request_data);
 
     json cancel_appointment(const json &data);

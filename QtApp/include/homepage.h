@@ -34,6 +34,7 @@ struct Record {
     QString specialty;
     QString street;
     int record_id;
+    int doctor_id;
 };
 
 class homepage : public QMainWindow {
@@ -45,6 +46,7 @@ public:
     void set_user_id(int id);
     int get_user_id();
     std::vector<Record> all_records;
+    int least_doctor_id;
 private slots:
     void on_appointments_button_clicked();
 
@@ -77,6 +79,12 @@ private slots:
     void fill_appointments_scroll(const std::vector<Record> &records);
 
     void sort_records(std::vector<Record> &recs, bool newestFirst);
+
+    void on_back_to_doctors_clicked();
+
+    void on_back_to_appointments_clicked();
+
+    void on_leave_feedback_button_clicked();
 
 private:
     void create_doctor_card(const Doctor &doctor, QVBoxLayout *layout);

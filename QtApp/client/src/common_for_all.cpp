@@ -1,163 +1,119 @@
 #include "common_for_all.hpp"
-
+#include <QNetworkAccessManager>
+#include <string>
+#include <QString>
+#include <QEventLoop>
+#include <QNetworkReply>
+#include <QtNetwork>
+#include <QtGui>
+#include <QtCore>
+#include <QAbstractEventDispatcher>
 const std::string base_url = "https://api.medscheduler.ru";
 
-size_t
-write_callback(void *contents, size_t size, size_t nmemb, std::string *s) {
-    size_t new_length = size * nmemb;
-    try {
-        s->append((char *)contents, new_length);
-    } catch (std::bad_alloc &e) {
-        return 0;
-    }
-    return new_length;
-}
-
 std::string send_get_request(const std::string &url) {
-    CURL *curl;
-    CURLcode res;
-    std::string response;
-
-    curl = curl_easy_init();
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            std::cerr << "Ошибка cURL: " << curl_easy_strerror(res)
-                      << std::endl;
-        }
-        curl_easy_cleanup(curl);
+    QNetworkAccessManager Manager;
+    QUrl api_url(QString::fromStdString(url));
+    QNetworkRequest request(api_url);
+    request.setTransferTimeout(10000);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QNetworkReply *reply = Manager.get(request);
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop,&QEventLoop::quit);
+    loop.exec();
+    if (reply->error() != QNetworkReply::NoError) {
+        std::string error = "HTTP Error: " + reply->errorString().toStdString();
+        reply->deleteLater();
+        std::cerr<<error<<std::endl;
     }
-    return response;
+    QString Response = reply->readAll();
+    return Response.toStdString();
 }
 
-std::string
-send_post_request(const std::string &url, const nlohmann::json &json_data) {
-    CURL *curl;
-    CURLcode res;
-    std::string response;
-
-    curl = curl_easy_init();
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-        std::string post_data = json_data.dump();
-
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
-
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-        struct curl_slist *headers = nullptr;
-        headers = curl_slist_append(headers, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            std::cerr << "Ошибка cURL: " << curl_easy_strerror(res)
-                      << std::endl;
-        }
-
-        curl_easy_cleanup(curl);
-        curl_slist_free_all(headers);
+std::string send_post_request(const std::string &url, const nlohmann::json &json_data) {
+    QNetworkAccessManager Manager;
+    QUrl api_url(QString::fromStdString(url));
+    QNetworkRequest request(api_url);
+    request.setTransferTimeout(10000);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray post_data = QByteArray::fromStdString(json_data.dump());
+    QNetworkReply *reply = Manager.post(request,post_data);
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop,&QEventLoop::quit);
+    loop.exec();
+    if (reply->error() != QNetworkReply::NoError) {
+        std::string error = "HTTP Error: " + reply->errorString().toStdString();
+        reply->deleteLater();
+        std::cerr<<error<<std::endl;
     }
-    return response;
+    QString Response = reply->readAll();
+    return Response.toStdString();
 }
 
 std::string send_delete_request(const std::string &url) {
-    CURL *curl;
-    CURLcode res;
-    std::string response;
-
-    curl = curl_easy_init();
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-        struct curl_slist *headers = nullptr;
-        headers = curl_slist_append(headers, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            std::cerr << "Ошибка cURL: " << curl_easy_strerror(res)
-                      << std::endl;
-        }
-
-        curl_easy_cleanup(curl);
-        curl_slist_free_all(headers);
+    QNetworkAccessManager Manager;
+    QUrl api_url(QString::fromStdString(url));
+    QNetworkRequest request(api_url);
+    request.setTransferTimeout(10000);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QNetworkReply *reply = Manager.deleteResource(request);
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop,&QEventLoop::quit);
+    loop.exec();
+    if (reply->error() != QNetworkReply::NoError) {
+        std::string error = "HTTP Error: " + reply->errorString().toStdString();
+        reply->deleteLater();
+        std::cerr<<error<<std::endl;
     }
-    return response;
+    QString Response = reply->readAll();
+    return Response.toStdString();
 }
 
 std::string
 send_delete_request(const std::string &url, const nlohmann::json &json_data) {
-    CURL *curl;
-    CURLcode res;
-    std::string response;
-
-    curl = curl_easy_init();
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-
-        std::string post_data = json_data.dump();
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
-
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-        struct curl_slist *headers = nullptr;
-        headers = curl_slist_append(headers, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            std::cerr << "Ошибка cURL: " << curl_easy_strerror(res)
-                      << std::endl;
-        }
-
-        curl_easy_cleanup(curl);
-        curl_slist_free_all(headers);
+    QNetworkAccessManager Manager;
+    QUrl api_url(QString::fromStdString(url));
+    QNetworkRequest request(api_url);
+    request.setTransferTimeout(10000);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray patch_data = QByteArray::fromStdString(json_data.dump());
+    QBuffer *buffer = new QBuffer;
+    buffer->setData(patch_data);
+    buffer->open(QIODevice::ReadOnly);
+    QNetworkReply *reply = Manager.sendCustomRequest(request, "DELETE", buffer);
+    buffer->setParent(reply);
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop,&QEventLoop::quit);
+    loop.exec();
+    if (reply->error() != QNetworkReply::NoError) {
+        std::string error = "HTTP Error: " + reply->errorString().toStdString();
+        reply->deleteLater();
+        std::cerr<<error<<std::endl;
     }
-    return response;
+    QString Response = reply->readAll();
+    return Response.toStdString();
 }
 
 std::string
 send_patch_request(const std::string &url, const nlohmann::json &json_data) {
-    CURL *curl;
-    CURLcode res;
-    std::string response;
-
-    curl = curl_easy_init();
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PATCH");
-
-        std::string patch_data = json_data.dump();
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, patch_data.c_str());
-
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-        struct curl_slist *headers = nullptr;
-        headers = curl_slist_append(headers, "Content-Type: application/json");
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            std::cerr << "cURL error: " << curl_easy_strerror(res) << std::endl;
-        }
-
-        curl_easy_cleanup(curl);
-        curl_slist_free_all(headers);
+    QNetworkAccessManager Manager;
+    QUrl api_url(QString::fromStdString(url));
+    QNetworkRequest request(api_url);
+    request.setTransferTimeout(10000);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QByteArray patch_data = QByteArray::fromStdString(json_data.dump());
+    QBuffer *buffer = new QBuffer;
+    buffer->setData(patch_data);
+    buffer->open(QIODevice::ReadOnly);
+    QNetworkReply *reply = Manager.sendCustomRequest(request, "PATCH", buffer);
+    buffer->setParent(reply);
+    QEventLoop loop;
+    QObject::connect(reply, &QNetworkReply::finished, &loop,&QEventLoop::quit);
+    loop.exec();
+    if (reply->error() != QNetworkReply::NoError) {
+        std::string error = "HTTP Error: " + reply->errorString().toStdString();
+        reply->deleteLater();
+        std::cerr<<error<<std::endl;
     }
-    return response;
+    QString Response = reply->readAll();
+    return Response.toStdString();
 }

@@ -1,5 +1,4 @@
 #include "homepage.h"
-#include <curl/curl.h>
 #include <QDate>
 #include <QDebug>
 #include <QFile>
@@ -123,13 +122,25 @@ void homepage::on_appointments_button_clicked() {
             QString::fromStdString(appt["specialty"].get<std::string>());
         record.street =
             QString::fromStdString(appt["street"].get<std::string>());
-        // record.record_id=appt["record_id"].get<int>();
+        record.record_id=appt["record_id"].get<int>();
+        record.doctor_id=appt["doctor_id"].get<int>();
         all_records.push_back(record);
     }
     fill_appointments_scroll(all_records);
 }
 
 void homepage::on_profile_button_clicked() {
+    patient::patient_client client(get_user_id());
+    nlohmann::json response = client.get_patient_profile_by_id(get_user_id());
+    if (response.contains("success")&& response["success"]==true){
+        const auto& user = response["user"];
+        QString first_name = QString::fromStdString(user["first_name"].get<std::string>());
+        QString last_name = QString::fromStdString(user["last_name"].get<std::string>());
+        QString patronymic = QString::fromStdString(user["patronymic"].get<std::string>());
+        QString phone = QString::fromStdString(user["phone"].get<std::string>());
+        ui->hello_label->setText("Hello, "+last_name+" "+first_name+" "+patronymic);
+        ui->you_phone_number->setText("Your phone number: "+phone);
+    }
     ui->stackedWidget->setCurrentWidget(ui->profile_page);
     make_all_basic();
     ui->profile_button->setStyleSheet(
@@ -146,6 +157,8 @@ void homepage::on_profile_button_clicked() {
         "   border-radius: 10px;"
         "}"
     );
+
+
 }
 
 void homepage::on_doctors_button_clicked() {
@@ -311,7 +324,6 @@ void homepage::on_apply_filtres_button_clicked() {
 }
 
 void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
-    // Создаем контейнер для карточки
     QWidget *card = new QWidget();
     card->setStyleSheet(
         "border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: "
@@ -365,6 +377,88 @@ void homepage::create_doctor_card(const Doctor &doctor, QVBoxLayout *layout) {
     );
 
     cardLayout->addWidget(appointmentBtn);
+    //Отзыв
+    QPushButton *feedbackBtn = new QPushButton("View feedbacks");
+    feedbackBtn->setStyleSheet(
+        "QPushButton {background-color:rgb(18, 97, 109); color: white; border: "
+        "none; padding: 8px; border-radius: 4px;}"
+        "QPushButton:hover {"
+        "   background-color: rgb(32, 90, 140);"
+        "}"
+    );
+    QAbstractButton::connect(
+    feedbackBtn, &QPushButton::clicked,
+    [this, doctor, user_id = get_user_id()]() {
+        patient::patient_client client(user_id);
+        nlohmann::json response = client.get_doctor_feedback_items(doctor.doctor_id);
+        ui->doctor_info_in_feedback->setText("Doctor: "+doctor.name+" Rating: "+ QString::number(doctor.rating));
+        if (!response["success"].get<bool>()) return;
+        const auto &ratings = response["ratings"];
+
+        // Очистка предыдущих отзывов
+        QWidget *oldWidget = ui->feedbacks_scroll->widget();
+        if (oldWidget) oldWidget->deleteLater();
+        
+        QWidget *container = new QWidget;
+        QVBoxLayout *layout = new QVBoxLayout(container);
+
+        for (const auto &item : ratings) {
+            QString name = QString::fromStdString(item["name"]);
+            QString date = QString::fromStdString(item["date"]);
+            QString text = QString::fromStdString(item["text"]);
+            int rate = item["rate"];
+
+            QWidget *feedbackWidget = new QWidget;
+            QVBoxLayout *feedbackLayout = new QVBoxLayout(feedbackWidget);
+
+            QLabel *nameLabel = new QLabel(name);
+            QLabel *dateLabel = new QLabel(date);
+            QLabel *textLabel = new QLabel(text);
+            textLabel->setWordWrap(true);
+            QString stars;
+            for (int i = 0; i < 5; ++i)
+                stars += (i < rate) ? "★" : "☆";
+            QLabel *rateLabel = new QLabel(stars);
+            rateLabel->setStyleSheet("color: orange; font-size: 20px; border:none;");
+            nameLabel->setStyleSheet("border:none;font-size: 18px;");
+            dateLabel->setStyleSheet("border:none;color: rgb(122, 123, 123);");
+            textLabel->setStyleSheet("border:none;");
+            feedbackLayout->setSpacing(2);
+
+nameLabel->setContentsMargins(0, 0, 0, 0);
+dateLabel->setContentsMargins(0, 0, 0, 0);
+rateLabel->setContentsMargins(0, 0, 0, 0);
+textLabel->setContentsMargins(0, 0, 0, 0);
+
+nameLabel->setMargin(0);
+dateLabel->setMargin(0);
+rateLabel->setMargin(0);
+textLabel->setMargin(0);
+            feedbackLayout->addWidget(nameLabel);
+            feedbackLayout->addWidget(dateLabel);
+            feedbackLayout->addWidget(rateLabel);
+            feedbackLayout->addWidget(textLabel);
+
+            feedbackWidget->setLayout(feedbackLayout);
+            feedbackWidget->setStyleSheet("border: 1px solid #ccc;border-radius: 4px;");
+
+            layout->addWidget(feedbackWidget);
+        }
+
+        layout->addStretch();
+        container->setLayout(layout);
+
+        ui->feedbacks_scroll->setWidget(container);
+        ui->feedbacks_scroll->setWidgetResizable(true);
+
+        ui->stackedWidget->setCurrentWidget(ui->feedbacks_page);
+    }
+);
+
+
+
+    cardLayout->addWidget(feedbackBtn);
+
     layout->addWidget(card);
 }
 
@@ -567,6 +661,7 @@ void homepage::fill_appointments_scroll(const std::vector<Record> &records) {
     }
 
     QDate today = QDate::currentDate();
+    QTime now = QTime::currentTime();
 
     // 2) Для каждой записи создаём «карточку»
     for (const auto &r : records) {
@@ -617,18 +712,44 @@ void homepage::fill_appointments_scroll(const std::vector<Record> &records) {
             "margin-top: 8px;"
         );
 
-        if (r.appointment_date > today) {
+        if (r.appointment_date > today || (r.appointment_date == today && r.appointment_time>now)) {
             action->setText("Cancel appointment");
             action->setStyleSheet(
                 action->styleSheet() + "background-color: #D32F2F;"
             );
-        } else if (r.appointment_date < today) {
+            connect(action, &QPushButton::clicked, this, [this,r,user_id=get_user_id()]() {
+                QMessageBox::StandardButton reply = QMessageBox::question(
+    this,
+    "Attention",
+    "Are you sure you want to cancel appointment?",
+    QMessageBox::Yes | QMessageBox::No,
+    QMessageBox::No // <-- по умолчанию подсвечивается "Нет"
+);
+if (reply == QMessageBox::Yes) {
+    nlohmann::json json;
+    json["record_id"]=r.record_id;
+    json["patient_id"]=user_id;
+    patient::patient_client client(user_id);
+    nlohmann::json response = client.cancel_appointment(json);
+    std::cerr<<r.record_id<<" "<<user_id;
+    if (response.contains("success") && response["success"].get<bool>()) {
+        QMessageBox::information(this, "Information", "Appointment cancelled successfully!");
+    }
+    else {
+        QMessageBox::critical(this, "Error", "Something went wrong!");
+    }
+}
+
+            });
+        } else {
             action->setText("Leave feedback");
             action->setStyleSheet(
                 action->styleSheet() + "background-color: #1976D2;"
             );
-        } else {
-            action->setVisible(false);
+            connect(action, &QPushButton::clicked, this, [this,r,user_id=get_user_id()](){
+                ui->stackedWidget->setCurrentWidget(ui->leave_feedback_page);
+                least_doctor_id=r.doctor_id;
+            });
         }
 
         cardLayout->addWidget(action);
@@ -638,3 +759,37 @@ void homepage::fill_appointments_scroll(const std::vector<Record> &records) {
     // 3) Опционально: «раздвинуть» карточки и не прижимать к низу
     layout->addStretch();
 }
+
+void homepage::on_back_to_doctors_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->doctors_page);
+}
+
+
+void homepage::on_back_to_appointments_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->appointments_page);
+}
+
+
+void homepage::on_leave_feedback_button_clicked()
+{
+    QString feedback_text=ui->feedback_lineedit->text();
+    int rate = ui->rate_combo_box->currentText().toInt();
+    int doc_id=least_doctor_id;
+    nlohmann::json json;
+    json["rate"]=rate;
+    json["text"]=feedback_text.toStdString();
+    json["user_id"]=get_user_id();
+    json["doctor_ref_id"]=doc_id;
+    json["address"]="";
+    patient::patient_client client(user_id);
+    nlohmann::json response = client.post_doctor_feedback_client(json);
+    if (response.contains("success") && response["success"]==true){
+        QMessageBox::information(this, "Success", "You left feedback successfully.");
+    }
+    else{
+        QMessageBox::critical(this, "Error", "Something went wrong.");
+    }
+}
+
