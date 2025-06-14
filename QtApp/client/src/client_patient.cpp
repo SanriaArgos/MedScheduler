@@ -206,7 +206,7 @@ json patient_client::get_patient_appointments(int patient_id) {
     }
 }
 
-json get_patient_appointments(const json &request_data) {
+json patient_client::add_patient_to_waitlist(const json &request_data) {
     std::string url = base_url + "/add_patient_to_waitlist";
     std::string response = send_post_request(url, request_data);
 
@@ -385,7 +385,7 @@ json patient_client::edit_patient_profile(const json &request_data) {
 }
 
 json patient_client::get_patient_profile_by_id(int user_id) {
-    std::string url = base_url + "/get_profile_by_id" + std::to_string(user_id);
+    std::string url = base_url + "/get_profile_by_id?user_id=" + std::to_string(user_id);
     std::string response = send_get_request(url);
 
     try {

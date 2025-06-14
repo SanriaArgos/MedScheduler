@@ -44,6 +44,14 @@ private slots:
 
     void on_button_get_schedule_clicked();
 
+    void on_edit_profile_button_clicked();
+
+    void on_button_edit_profile_clicked();
+
+    void on_button_get_statistics_clicked();
+
+    void on_submit_stats_clicked();
+
 private:
     Ui::JuniorAdminWindow *ui;
     int user_id = 0;
