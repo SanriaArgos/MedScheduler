@@ -373,6 +373,8 @@ void JuniorAdminWindow::make_all_basic() {
     ui->button_get_users->setStyleSheet(baseStyle);
     ui->button_get_schedule->setStyleSheet(baseStyle);
     ui->button_get_doctors->setStyleSheet(baseStyle);
+    ui->button_edit_profile->setStyleSheet(baseStyle);
+    ui->button_get_statistics->setStyleSheet(baseStyle);
 }
 
 void JuniorAdminWindow::on_button_get_users_clicked() {
@@ -490,3 +492,137 @@ void JuniorAdminWindow::on_button_get_schedule_clicked() {
         "}"
     );
 }
+
+void JuniorAdminWindow::on_edit_profile_button_clicked()
+{
+    ui->profile_edit_error->setText("");
+    QString first_name = ui->edit_first_name->text();
+    QString last_name = ui->edit_last_name->text();
+    QString middle_name = ui->edit_middle_name->text();
+    QString new_password = ui->edit_new_password->text();
+    QString new_password_again = ui->edit_new_password_again->text();
+    QString current_password = ui->current_password->text();
+    if (first_name != "" && !is_latin_or_dash(first_name)) {
+        ui->profile_edit_error->setText("Incorrect formar for first name");
+        return;
+    }
+    if (last_name != "" && !is_latin_or_dash(last_name)) {
+        ui->profile_edit_error->setText("Incorrect formar for last name");
+        return;
+    }
+    if (middle_name != "" && !is_latin_or_dash(middle_name)) {
+        ui->profile_edit_error->setText("Incorrect formar for middle name");
+        return;
+    }
+    if (new_password != "" && !is_valid_password(new_password)) {
+        ui->profile_edit_error->setText("Incorrect formar for new password");
+        return;
+    }
+    if (new_password != "" && new_password_again == "") {
+        ui->profile_edit_error->setText("Enter your new password again");
+        return;
+    }
+    if (new_password != "" && new_password != new_password_again) {
+        ui->profile_edit_error->setText("New passwords do not match");
+        return;
+    }
+    if (current_password == "") {
+        ui->profile_edit_error->setText("Enter your current password");
+        return;
+    }
+    if (!is_valid_password(current_password)) {
+        ui->profile_edit_error->setText("Incorrect format for current password");
+        return;
+    }
+    QJsonObject json;
+    json["user_id"] = get_user_id();
+    json["current_password"] = current_password;
+    if (middle_name != "") {
+        json["patronymic"] = middle_name;
+    }
+    if (first_name != "") {
+        json["first_name"] = first_name;
+    }
+    if (last_name != "") {
+        json["last_name"] = last_name;
+    }
+    if (new_password != "") {
+        json["new_password"] = new_password;
+        json["new_password_repeat"] = new_password_again;
+    }
+    QJsonDocument doc(json);
+    QString jsonString = doc.toJson(QJsonDocument::Compact);
+    nlohmann::json edit_data = nlohmann::json::parse(jsonString.toStdString());
+    junior_admin::junior_admin_client client(get_user_id());
+    nlohmann::json response = client.edit_junior_admin_profile(edit_data);
+    if (response.contains("error")) {
+        ui->profile_edit_error->setText(QString::fromStdString(response["error"])
+                                      );
+    } else if (response.contains("message")) {
+        ui->profile_edit_error->setText(QString::fromStdString(response["message"]
+                                                             ));
+    }
+}
+
+
+void JuniorAdminWindow::on_button_edit_profile_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_edit_profile);
+    make_all_basic();
+    ui->button_edit_profile->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void JuniorAdminWindow::on_button_get_statistics_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_get_statistics);
+    make_all_basic();
+    ui->button_get_statistics->setStyleSheet(
+        "QPushButton {"
+        "   color: rgb(255, 255, 255);"
+        "   font: 15pt 'Arial';"
+        "   text-align: left;"
+        "   padding-left: 10%;"
+        "   background-color: rgb(64, 64, 80);"
+        "   border-radius: 10px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: rgb(64, 64, 100);"
+        "   border-radius: 10px;"
+        "}"
+        );
+}
+
+
+void JuniorAdminWindow::on_submit_stats_clicked()
+{
+    QString phone = ui->doctor_phone_lineedit->text();
+    if (!is_validated_phone(phone)) {
+        ui->rating_label->setText("Incorrect format for the phone number.");
+        return;
+    }
+    nlohmann::json j;
+    j["doctor_phone"]=phone.toStdString();
+    j["junior_admin_id"]=get_user_id();
+    junior_admin::junior_admin_client client(get_user_id());
+    nlohmann::json response = client.get_doctor_statistics(j);
+    if (response.contains("success") && response["success"]==true){
+    ui->price_doctor_label->setText(QString::number(response["price"].get<double>()));
+    ui->rating_label->setText(QString::number(response["average_rating"].get<double>()));
+    ui->count_label->setText(QString::number(response["patients_count"].get<int>()));
+    }
+}
+

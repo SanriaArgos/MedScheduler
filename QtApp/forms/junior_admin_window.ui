@@ -237,6 +237,60 @@ color: rgb(255, 255, 255);</string>
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="button_get_statistics">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>10</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+           color: rgb(255, 255, 255);
+         font: 15pt 'Arial';
+         text-align: left;
+          padding-left: 10%;
+        background-color: transparent;
+        border: none;
+        }
+        QPushButton:hover {
+          background-color: rgba(64, 64, 80, 100);
+          border-radius: 10px;
+        }</string>
+         </property>
+         <property name="text">
+          <string>Get statistics</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="button_edit_profile">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>10</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+           color: rgb(255, 255, 255);
+         font: 15pt 'Arial';
+         text-align: left;
+          padding-left: 10%;
+        background-color: transparent;
+        border: none;
+        }
+        QPushButton:hover {
+          background-color: rgba(64, 64, 80, 100);
+          border-radius: 10px;
+        }</string>
+         </property>
+         <property name="text">
+          <string>Edit profile</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -261,12 +315,30 @@ color: rgb(255, 255, 255);</string>
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_get_users">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QPushButton" name="get_users_table_button">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
+          </property>
           <property name="text">
            <string>Get users table</string>
           </property>
@@ -282,8 +354,8 @@ color: rgb(255, 255, 255);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>885</width>
+             <height>600</height>
             </rect>
            </property>
           </widget>
@@ -295,6 +367,24 @@ color: rgb(255, 255, 255);</string>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QPushButton" name="get_doctors_table_button">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
+          </property>
           <property name="text">
            <string>Get doctors table</string>
           </property>
@@ -310,8 +400,8 @@ color: rgb(255, 255, 255);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>885</width>
+             <height>600</height>
             </rect>
            </property>
           </widget>
@@ -329,7 +419,11 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="last_name_form"/>
+         <widget class="QLineEdit" name="last_name_form">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="first_name_label">
@@ -339,7 +433,11 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="first_name_form"/>
+         <widget class="QLineEdit" name="first_name_form">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="middle_name_label">
@@ -349,7 +447,11 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QLineEdit" name="middle_name_form"/>
+         <widget class="QLineEdit" name="middle_name_form">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="phone_number_label">
@@ -359,7 +461,11 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QLineEdit" name="phone_number_form"/>
+         <widget class="QLineEdit" name="phone_number_form">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
         </item>
         <item row="4" column="0">
          <widget class="QLabel" name="education_label">
@@ -369,7 +475,11 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="4" column="1">
-         <widget class="QLineEdit" name="education_form"/>
+         <widget class="QLineEdit" name="education_form">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
         </item>
         <item row="5" column="0">
          <widget class="QLabel" name="specialt_label">
@@ -379,7 +489,11 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="5" column="1">
-         <widget class="QLineEdit" name="specialty_form"/>
+         <widget class="QLineEdit" name="specialty_form">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
         </item>
         <item row="6" column="0">
          <widget class="QLabel" name="experience_label">
@@ -389,10 +503,32 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="6" column="1">
-         <widget class="QLineEdit" name="experience_form"/>
+         <widget class="QLineEdit" name="experience_form">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
         </item>
         <item row="8" column="0">
          <widget class="QPushButton" name="add_doctor_button">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
+          </property>
           <property name="text">
            <string>Add doctor</string>
           </property>
@@ -409,12 +545,136 @@ color: rgb(255, 255, 255);</string>
          </widget>
         </item>
         <item row="7" column="1">
-         <widget class="QLineEdit" name="price_form"/>
+         <widget class="QLineEdit" name="price_form">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
         </item>
         <item row="7" column="0">
          <widget class="QLabel" name="price_label">
           <property name="text">
            <string>Price</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_edit_profile">
+       <layout class="QFormLayout" name="formLayout_5">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>New last name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="edit_last_name">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>New first name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="edit_first_name">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>New middle name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="edit_middle_name">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>New password</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="edit_new_password">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>New password again</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="edit_new_password_again">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Current password</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="current_password">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QPushButton" name="edit_profile_button">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
+          </property>
+          <property name="text">
+           <string>Edit profile </string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLabel" name="profile_edit_error">
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -442,6 +702,9 @@ color: rgb(255, 255, 255);</string>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid gray;</string>
+             </property>
             </widget>
            </item>
            <item row="1" column="1">
@@ -451,6 +714,9 @@ color: rgb(255, 255, 255);</string>
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid gray;</string>
              </property>
             </widget>
            </item>
@@ -513,6 +779,24 @@ color: rgb(255, 255, 255);</string>
             <verstretch>30</verstretch>
            </sizepolicy>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
+          </property>
           <property name="text">
            <string>Add doctor</string>
           </property>
@@ -525,6 +809,24 @@ color: rgb(255, 255, 255);</string>
             <horstretch>0</horstretch>
             <verstretch>30</verstretch>
            </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
           </property>
           <property name="text">
            <string>Remove doctor</string>
@@ -556,7 +858,11 @@ color: rgb(255, 255, 255);</string>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="doctor_id_form_from_appointment"/>
+            <widget class="QLineEdit" name="doctor_id_form_from_appointment">
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid gray;</string>
+             </property>
+            </widget>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="date_label">
@@ -566,7 +872,11 @@ color: rgb(255, 255, 255);</string>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="date_form"/>
+            <widget class="QLineEdit" name="date_form">
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid gray;</string>
+             </property>
+            </widget>
            </item>
            <item row="2" column="0">
             <widget class="QLabel" name="time_label">
@@ -576,7 +886,11 @@ color: rgb(255, 255, 255);</string>
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QLineEdit" name="time_form"/>
+            <widget class="QLineEdit" name="time_form">
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid gray;</string>
+             </property>
+            </widget>
            </item>
            <item row="3" column="0">
             <widget class="QLabel" name="hospital_id_label">
@@ -586,7 +900,11 @@ color: rgb(255, 255, 255);</string>
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QLineEdit" name="hospital_id_form_from_appointment"/>
+            <widget class="QLineEdit" name="hospital_id_form_from_appointment">
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid gray;</string>
+             </property>
+            </widget>
            </item>
            <item row="4" column="0">
             <widget class="QLabel" name="cabinet_label">
@@ -596,7 +914,11 @@ color: rgb(255, 255, 255);</string>
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QLineEdit" name="cabinet_form"/>
+            <widget class="QLineEdit" name="cabinet_form">
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid gray;</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -616,10 +938,126 @@ color: rgb(255, 255, 255);</string>
         </item>
         <item>
          <widget class="QPushButton" name="add_appointment_button">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
+          </property>
           <property name="text">
            <string>Add an appointment</string>
           </property>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_get_statistics">
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Enter doctor's phone</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="doctor_phone_lineedit">
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid gray;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="submit_stats">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
+          </property>
+          <property name="text">
+           <string>Submit</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Average rating:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="rating_label">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Patients count</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="count_label">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>Price</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="price_doctor_label">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -639,7 +1077,11 @@ color: rgb(255, 255, 255);</string>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="doctor_id_schedule_form"/>
+            <widget class="QLineEdit" name="doctor_id_schedule_form">
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid gray;</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -656,6 +1098,24 @@ color: rgb(255, 255, 255);</string>
         </item>
         <item>
          <widget class="QPushButton" name="get_schedule_button">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+     background-color: white;
+    border: 1px solid gray;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+QPushButton:hover {
+   background-color: #f0f0f0;
+    color: #000;
+}
+
+QPushButton:pressed {
+    background-color: #e0e0e0;
+}</string>
+          </property>
           <property name="text">
            <string>Get schedule</string>
           </property>
@@ -671,8 +1131,8 @@ color: rgb(255, 255, 255);</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>98</width>
-             <height>28</height>
+             <width>885</width>
+             <height>509</height>
             </rect>
            </property>
           </widget>
