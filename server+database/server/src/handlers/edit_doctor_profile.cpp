@@ -35,15 +35,16 @@ void edit_doctor_profile(
     }
 
     int doctor_id = data["user_id"];
-    std::string query = "SELECT user_id FROM doctors WHERE doctor_id = " + doctor_id;
-PGresult* res = PQexec(conn, query.c_str());
+    std::string query = "SELECT user_id FROM doctors WHERE doctor_id = $1";
+    const char* params[1] = { std::to_string(doctor_id).c_str() };
+    PGresult* ress = PQexecParams(db_handler.get_connection(), query.c_str(), 1, nullptr, params, nullptr, nullptr, 0);
 
-if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
-    if (res) PQclear(res);
-    return; 
-}
-    std::string user_id_str = PQgetvalue(res, 0, 0);
-PQclear(res);
+    if (!ress || PQresultStatus(ress) != PGRES_TUPLES_OK || PQntuples(ress) == 0) {
+        if (ress) PQclear(ress);
+        return; 
+    }
+    std::string user_id_str = PQgetvalue(ress, 0, 0);
+    PQclear(ress);
     int user_id=std::stoi(user_id_str);
     std::string current_password = data["current_password"];
 
