@@ -7,7 +7,8 @@ import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../.
 
 export default function JuniorAdminDoctorsPage() {
     const [loading, setLoading] = useState(true);
-    const [doctors, setDoctors] = useState([]);
+    const [doctors, setDoctors] = useState([]); // Все врачи
+    const [hospitalDoctors, setHospitalDoctors] = useState([]); // Врачи текущей больницы
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const router = useRouter();
@@ -15,19 +16,17 @@ export default function JuniorAdminDoctorsPage() {
     // Состояние для данных администратора
     const [adminId, setAdminId] = useState(null);
     const [hospitalId, setHospitalId] = useState(null);
-    const [hospitalName, setHospitalName] = useState("");
-
-    // Состояние для добавления нового врача
+    const [hospitalName, setHospitalName] = useState("");    // Состояние для добавления нового врача
     const [isAddingDoctor, setIsAddingDoctor] = useState(false);
     const [newDoctorData, setNewDoctorData] = useState({
         lastName: "",
         firstName: "",
         patronymic: "",
         phone: "",
-        password: "",
         specialty: "",
         experience: "",
-        description: "",
+        education: "",
+        price: "",
     });
 
     // Состояние для прикрепления/открепления врача
@@ -56,14 +55,12 @@ export default function JuniorAdminDoctorsPage() {
         const fetchHospitalInfo = async () => {
             try {
                 const response = await fetch(`https://api.medscheduler.ru/get_admin_hospital?admin_id=${userData.userId}`);
-                const data = await response.json();
-
-                if (response.ok && data.success && data.hospital) {
+                const data = await response.json();                if (response.ok && data.success && data.hospital) {
                     setHospitalId(data.hospital.hospital_id);
                     setHospitalName(data.hospital.full_name);
 
                     // После получения информации о больнице загружаем врачей
-                    fetchDoctors();
+                    fetchAllData();
                 } else {
                     setError("Не удалось получить информацию о больнице");
                     setLoading(false);
@@ -77,27 +74,31 @@ export default function JuniorAdminDoctorsPage() {
 
         fetchHospitalInfo();
     }, [router]);
-
-    useEffect(() => {
+      useEffect(() => {
         // Фильтрация врачей при изменении поискового запроса
         if (searchQuery) {
             const lowercaseQuery = searchQuery.toLowerCase();
             const filtered = doctors.filter(
                 doctor =>
-                    doctor.lastName.toLowerCase().includes(lowercaseQuery) ||
-                    doctor.firstName.toLowerCase().includes(lowercaseQuery) ||
+                    doctor.last_name.toLowerCase().includes(lowercaseQuery) ||
+                    doctor.first_name.toLowerCase().includes(lowercaseQuery) ||
                     (doctor.patronymic && doctor.patronymic.toLowerCase().includes(lowercaseQuery)) ||
                     doctor.specialty.toLowerCase().includes(lowercaseQuery) ||
+                    (doctor.education && doctor.education.toLowerCase().includes(lowercaseQuery)) ||
                     doctor.phone.toLowerCase().includes(lowercaseQuery)
             );
             setFilteredDoctors(filtered);
         } else {
             setFilteredDoctors(doctors);
-        }
-    }, [searchQuery, doctors]);
-
-    const fetchDoctors = async () => {
+        }    }, [searchQuery, doctors]);    // Функция для проверки, прикреплен ли врач к текущей больнице
+    // ВРЕМЕННО ОТКЛЮЧЕНО: API get_hospital_doctors не работает
+    const isDoctorAttachedToHospital = (doctorId) => {
+        // Возвращаем false, так как мы не можем получить актуальный статус
+        // Кнопки будут работать через API attach/detach, которые сами проверят статус
+        return false;
+    };const fetchDoctors = async () => {
         try {
+            // Получаем всех врачей
             const response = await fetch('https://api.medscheduler.ru/get_doctors');
             const data = await response.json();
 
@@ -110,9 +111,40 @@ export default function JuniorAdminDoctorsPage() {
         } catch (err) {
             console.error("Error fetching doctors:", err);
             setError("Не удалось подключиться к серверу");
-        } finally {
-            setLoading(false);
         }
+    };    const fetchHospitalDoctors = async () => {
+        if (!hospitalId) return;
+        
+        // ВРЕМЕННОЕ РЕШЕНИЕ: API get_hospital_doctors сломан
+        // Используем пустой массив и полагаемся на проверку через attach/detach API
+        console.log("Skipping get_hospital_doctors due to server error");
+        setHospitalDoctors([]);
+        
+        // TODO: Исправить get_hospital_doctors на сервере или изменить get_doctors
+        // чтобы он возвращал hospital_ids для каждого врача
+        
+        /*
+        try {
+            const response = await fetch(`https://api.medscheduler.ru/get_hospital_doctors?hospital_id=${hospitalId}`);
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setHospitalDoctors(data.doctors || []);
+            } else {
+                console.error("Error fetching hospital doctors:", data.error);
+                setHospitalDoctors([]);
+            }
+        } catch (err) {
+            console.error("Error fetching hospital doctors:", err);
+            setHospitalDoctors([]);
+        }
+        */
+    };
+
+    const fetchAllData = async () => {
+        setLoading(true);
+        await Promise.all([fetchDoctors(), fetchHospitalDoctors()]);
+        setLoading(false);
     };
 
     const handleNewDoctorChange = (e) => {
@@ -134,19 +166,19 @@ export default function JuniorAdminDoctorsPage() {
             setError("Введите корректный  номер телефона для нового врача.");
             setLoading(false);
             return;
-        }
-
-        const hospitalId = userData?.hospitalId;
-        if (!hospitalId) {
+        }        if (!hospitalId) {
             setError("Не удалось определить больницу для добавления врача. Пожалуйста, обновите страницу.");
             setLoading(false);
             return;
-        }
-
-        const payload = {
-            ...newDoctorData,
+        }        const payload = {
+            last_name: newDoctorData.lastName,
+            first_name: newDoctorData.firstName,
+            patronymic: newDoctorData.patronymic,
             phone: formatPhoneForAPI(newDoctorData.phone),
-            hospital_id: hospitalId,
+            specialty: newDoctorData.specialty,
+            experience: parseInt(newDoctorData.experience),
+            education: newDoctorData.education,
+            price: parseInt(newDoctorData.price),
         };
 
         try {
@@ -159,22 +191,18 @@ export default function JuniorAdminDoctorsPage() {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                setSuccess("Врач успешно добавлен");
-
-                // Сбрасываем форму
+                setSuccess("Врач успешно добавлен");                // Сбрасываем форму
                 setNewDoctorData({
                     lastName: "",
                     firstName: "",
                     patronymic: "",
                     phone: "",
-                    password: "",
                     specialty: "",
                     experience: "",
-                    description: "",
-                });
-
-                // Обновляем список врачей
-                fetchDoctors();
+                    education: "",
+                    price: "",
+                });                // Обновляем список врачей
+                fetchAllData();
 
                 // Скрываем форму через 2 секунды
                 setTimeout(() => {
@@ -216,13 +244,13 @@ export default function JuniorAdminDoctorsPage() {
                 }),
             });
 
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                setSuccess(selectedAction === "attach"
-                    ? `Врач ${selectedDoctorName} успешно прикреплен к больнице`
-                    : `Врач ${selectedDoctorName} успешно откреплен от больницы`
+            const data = await response.json();            if (response.ok && data.success) {                setSuccess(selectedAction === "attach"
+                    ? `Врач ${selectedDoctorName} добавлен в больницу`
+                    : `Врач ${selectedDoctorName} убран из больницы`
                 );
+
+                // Обновляем данные
+                fetchAllData();
 
                 // Сбрасываем форму
                 setSelectedDoctorId(null);
@@ -232,9 +260,19 @@ export default function JuniorAdminDoctorsPage() {
                 setTimeout(() => {
                     setIsAttaching(false);
                     setSuccess("");
-                }, 10000);
-            } else {
-                setError(data.error || `Ошибка при ${selectedAction === "attach" ? "прикреплении" : "откреплении"} врача`);
+                }, 10000);            } else {
+                // Более подробная обработка ошибок
+                let errorMessage = data.error || `Ошибка при ${selectedAction === "attach" ? "добавлении" : "удалении"} врача`;
+                
+                if (data.error && data.error.includes("already attached")) {
+                    errorMessage = "Врач уже работает в этой больнице";
+                } else if (data.error && data.error.includes("not found")) {
+                    errorMessage = "Врач не найден в системе";
+                } else if (selectedAction === "detach" && data.error) {
+                    errorMessage = "Врач не работает в этой больнице";
+                }
+                
+                setError(errorMessage);
             }
         } catch (err) {
             console.error(`Error ${selectedAction} doctor:`, err);
@@ -295,13 +333,12 @@ export default function JuniorAdminDoctorsPage() {
                 <div className="mb-6">
                     <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
                         Поиск врачей
-                    </label>
-                    <input
+                    </label>                    <input
                         type="text"
                         id="search"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Поиск по ФИО, специальности или телефону"
+                        placeholder="Поиск по ФИО, специальности, образованию или телефону"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                     />
                 </div>
@@ -393,19 +430,36 @@ export default function JuniorAdminDoctorsPage() {
                                         min="0"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                         required
+                                    />                                </div>
+                                <div>
+                                    <label htmlFor="education" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Образование *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="education"
+                                        name="education"
+                                        value={newDoctorData.education}
+                                        onChange={handleNewDoctorChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                        placeholder="Название учебного заведения"
+                                        required
                                     />
                                 </div>
-                                <div className="md:col-span-2">
-                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Описание
+                                <div>
+                                    <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Стоимость приёма (руб.) *
                                     </label>
-                                    <textarea
-                                        id="description"
-                                        name="description"
-                                        value={newDoctorData.description}
+                                    <input
+                                        type="number"
+                                        id="price"
+                                        name="price"
+                                        value={newDoctorData.price}
                                         onChange={handleNewDoctorChange}
-                                        rows="3"
+                                        min="0"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                        placeholder="1500"
+                                        required
                                     />
                                 </div>
                             </div>
@@ -430,9 +484,8 @@ export default function JuniorAdminDoctorsPage() {
                 )}
 
                 {isAttaching && (
-                    <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                        <h3 className="text-lg font-medium text-gray-800 mb-4">
-                            {selectedAction === "attach" ? "Прикрепить врача к больнице" : "Открепить врача от больницы"}
+                    <div className="mb-6 p-4 bg-gray-50 rounded-lg">                        <h3 className="text-lg font-medium text-gray-800 mb-4">
+                            {selectedAction === "attach" ? "Добавить врача в больницу" : "Убрать врача из больницы"}
                         </h3>
                         <div className="mb-4">
                             <p className="text-sm text-gray-700 mb-2">Врач:</p>
@@ -442,12 +495,11 @@ export default function JuniorAdminDoctorsPage() {
                             <p className="text-sm text-gray-700 mb-2">Больница:</p>
                             <p className="font-medium">{hospitalName}</p>
                         </div>
-                        <div className="flex gap-3">
-                            <button
+                        <div className="flex gap-3">                            <button
                                 onClick={handleAttachDoctor}
                                 className="px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors"
                             >
-                                {selectedAction === "attach" ? "Прикрепить" : "Открепить"}
+                                {selectedAction === "attach" ? "Добавить" : "Убрать"}
                             </button>
                             <button
                                 onClick={() => setIsAttaching(false)}
@@ -457,11 +509,13 @@ export default function JuniorAdminDoctorsPage() {
                             </button>
                         </div>
                     </div>
-                )}
-
-                {/* Список врачей */}
-                <div>
-                    <h3 className="text-lg font-medium text-gray-800 mb-4">Список врачей</h3>
+                )}                {/* Список врачей */}
+                <div>                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-medium text-gray-800">Список врачей</h3>
+                        <div className="text-sm text-gray-600 bg-orange-50 px-3 py-2 rounded border border-orange-200">
+                            ⚠️ Статус врачей временно недоступен (проблема с API). Кнопки работают.
+                        </div>
+                    </div>
 
                     {filteredDoctors.length === 0 ? (
                         <p className="text-gray-500 text-center py-4">Врачи не найдены</p>
@@ -480,7 +534,15 @@ export default function JuniorAdminDoctorsPage() {
                                             Опыт
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Образование
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Цена
+                                        </th>                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Телефон
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Статус
                                         </th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Действия
@@ -504,21 +566,32 @@ export default function JuniorAdminDoctorsPage() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-500">{doctor.phone}</div>
+                                                <div className="text-sm text-gray-500">{doctor.education || "Не указано"}</div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div className="flex space-x-2">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-500">
+                                                    {doctor.price ? `${doctor.price} ₽` : "Не указано"}
+                                                </div>
+                                            </td>                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-500">{doctor.phone}</div>
+                                            </td>                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    Статус неизвестен
+                                                </span>
+                                            </td><td className="px-6 py-4 whitespace-nowrap text-sm font-medium">                                                <div className="flex flex-col space-y-1">
                                                     <button
                                                         onClick={() => startAttach(doctor, "attach")}
-                                                        className="text-main hover:text-main2"
+                                                        className="text-main hover:text-main2 text-left text-sm"
+                                                        title="Попробовать добавить врача в нашу больницу"
                                                     >
-                                                        Прикрепить
+                                                        ➕ Добавить
                                                     </button>
                                                     <button
                                                         onClick={() => startAttach(doctor, "detach")}
-                                                        className="text-red-600 hover:text-red-800"
+                                                        className="text-red-600 hover:text-red-800 text-left text-sm"
+                                                        title="Попробовать убрать врача из нашей больницы"
                                                     >
-                                                        Открепить
+                                                        ➖ Убрать
                                                     </button>
                                                 </div>
                                             </td>

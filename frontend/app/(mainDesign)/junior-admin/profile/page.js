@@ -210,36 +210,39 @@ export default function JuniorAdminProfilePage() {
             setError("Введите корректный  номер телефона.");
             setLoading(false);
             return;
-        }
-
-        if (editData.newPassword && editData.newPassword !== editData.confirmNewPassword) {
+        }        if (editData.newPassword && editData.newPassword !== editData.confirmNewPassword) {
             setError('Новые пароли не совпадают.');
             setLoading(false);
             return;
         }
 
-        const payload = {
-            userId: userData.userId,
-            lastName: editData.lastName,
-            firstName: editData.firstName,
+        // Проверяем, что введен текущий пароль для любых изменений
+        if (!editData.currentPassword) {
+            setError("Введите текущий пароль для подтверждения изменений.");
+            setLoading(false);
+            return;
+        }const payload = {
+            user_id: userData.userId,
+            current_password: editData.currentPassword,
+            last_name: editData.lastName,
+            first_name: editData.firstName,
             patronymic: editData.patronymic,
             phone: editData.phone ? formatPhoneForAPI(editData.phone) : undefined,
         };
 
         if (editData.newPassword) {
-            payload.newPassword = editData.newPassword;
+            payload.new_password = editData.newPassword;
+            payload.new_password_repeat = editData.newPassword; // Assuming repeat should be the same
         }
 
         try {
-            const response = await fetch('https://api.medscheduler.ru/update_profile', {
+            const response = await fetch('https://api.medscheduler.ru/edit_junior_admin_profile', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
 
-            const data = await response.json();
-
-            if (response.ok && data.success) {
+            const data = await response.json();            if (response.ok && data.success) {
                 setSuccessMessage("Профиль успешно обновлен");
                 setLoading(false);
 
@@ -251,6 +254,13 @@ export default function JuniorAdminProfilePage() {
                     patronymic: editData.patronymic,
                     phone: editData.phone ? formatPhoneForAPI(editData.phone) : prev.phone,
                 }));
+
+                // Обновляем в localStorage, если телефон изменился
+                if (editData.phone && editData.phone !== userData.phone) {
+                    const userDataFromStorage = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
+                    userDataFromStorage.phone = editData.phone;
+                    localStorage.setItem('medSchedulerUser', JSON.stringify(userDataFromStorage));
+                }
 
                 // Сбрасываем поля паролей
                 setEditData((prev) => ({ ...prev, newPassword: '', confirmNewPassword: '' }));

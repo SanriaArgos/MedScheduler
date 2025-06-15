@@ -30,13 +30,18 @@ function SearchContent() {
 
     const [sortByRating, setSortByRating] = useState(false);
 
+    // Добавляем состояние для текстового поиска
+    const [searchText, setSearchText] = useState("");
+
     // Состояние для загрузки врачей
     const [loadingDoctors, setLoadingDoctors] = useState(false);
     const [initialQueryApplied, setInitialQueryApplied] = useState(false);
 
-    useEffect(() => {
-        // Получение query параметра из URL
+    useEffect(() => {        // Получение query параметра из URL
         const query = searchParams.get('query');
+        if (query) {
+            setSearchText(query);
+        }
 
         // Загрузка фильтров при первом рендере
         const fetchFilters = async () => {
@@ -164,28 +169,26 @@ function SearchContent() {
         } finally {
             setLoadingDoctors(false);
         }
-    };
-
-    const handleSearch = () => {
+    };    const handleSearch = () => {
         const filters = {
             region: selectedRegion,
             settlement_type: selectedSettlementType,
             settlement_name: selectedSettlementName,
             full_name: selectedHospital,
             specialty: selectedSpecialty,
-            sort_by_rating: sortByRating
+            sort_by_rating: sortByRating,
+            search_text: searchText.trim() // Добавляем текстовый поиск
         };
 
         searchDoctors(filters);
-    };
-
-    const handleReset = () => {
+    };    const handleReset = () => {
         setSelectedRegion("-");
         setSelectedSettlementType("-");
         setSelectedSettlementName("-");
         setSelectedHospital("-");
         setSelectedSpecialty("-");
         setSortByRating(false);
+        setSearchText(""); // Сбрасываем текстовый поиск
 
         setDoctors([]);
         setError("");
@@ -223,11 +226,25 @@ function SearchContent() {
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* Фильтры - боковая панель */}
-                <div className="lg:col-span-1">
-                    <div className="bg-white shadow-md rounded-lg p-6">
+                <div className="lg:col-span-1">                    <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-semibold text-main2 mb-4">Фильтры</h2>
 
                         <div className="space-y-4">
+                            {/* Поле для текстового поиска */}
+                            <div>
+                                <label htmlFor="searchText" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Поиск по тексту
+                                </label>
+                                <input
+                                    type="text"
+                                    id="searchText"
+                                    value={searchText}
+                                    onChange={(e) => setSearchText(e.target.value)}
+                                    placeholder="ФИО врача, специальность, больница..."
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                />
+                            </div>
+
                             <div>
                                 <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-1">
                                     Регион
@@ -357,9 +374,20 @@ function SearchContent() {
                             <p className="text-lg text-gray-600 mb-4">По вашему запросу врачи не найдены</p>
                             <p className="text-gray-500">Попробуйте изменить параметры поиска</p>
                         </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {doctors.map((doctor) => (
+                    ) : (                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {doctors
+                                .filter(doctor => {
+                                    if (!searchText.trim()) return true;
+                                    const searchLower = searchText.toLowerCase().trim();
+                                    const fullName = `${doctor.last_name} ${doctor.first_name} ${doctor.patronymic}`.toLowerCase();
+                                    const specialty = (doctor.specialty || '').toLowerCase();
+                                    const hospitalName = (doctor.hospitals?.[0]?.full_name || '').toLowerCase();
+                                    
+                                    return fullName.includes(searchLower) || 
+                                           specialty.includes(searchLower) || 
+                                           hospitalName.includes(searchLower);
+                                })
+                                .map((doctor) => (
                                 <div key={doctor.doctor_id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
                                     <div className="p-5">
                                         <Link href={`/doctor/${doctor.doctor_id}`} className="block">

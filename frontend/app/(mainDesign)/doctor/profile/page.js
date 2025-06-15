@@ -8,12 +8,12 @@ export default function DoctorProfile() {
     const [doctorData, setDoctorData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [editData, setEditData] = useState({
+    const [successMessage, setSuccessMessage] = useState(null);    const [editData, setEditData] = useState({
         lastName: "",
         firstName: "",
         patronymic: "",
         phone: "",
+        currentPassword: "",
         newPassword: "",
         confirmNewPassword: "",
         specialty: "",
@@ -85,17 +85,22 @@ export default function DoctorProfile() {
             setError("Введите корректный  номер телефона.");
             setLoading(false);
             return;
-        }
-        if (editData.newPassword && editData.newPassword !== editData.confirmNewPassword) {
+        }        if (editData.newPassword && editData.newPassword !== editData.confirmNewPassword) {
             setError("Новые пароли не совпадают.");
             setLoading(false);
             return;
         }
 
-        const payload = {
-            userId: doctorData.userId,
-            lastName: editData.lastName,
-            firstName: editData.firstName,
+        // Проверяем, что введен текущий пароль для любых изменений
+        if (!editData.currentPassword) {
+            setError("Введите текущий пароль для подтверждения изменений.");
+            setLoading(false);
+            return;
+        }const payload = {
+            user_id: doctorData.userId,
+            current_password: editData.currentPassword,
+            last_name: editData.lastName,
+            first_name: editData.firstName,
             patronymic: editData.patronymic,
             phone: editData.phone ? formatPhoneForAPI(editData.phone) : undefined,
             specialty: editData.specialty,
@@ -103,21 +108,20 @@ export default function DoctorProfile() {
             description: editData.description,
         };
         if (editData.newPassword) {
-            payload.newPassword = editData.newPassword;
+            payload.new_password = editData.newPassword;
+            payload.new_password_repeat = editData.newPassword;
         }
 
         try {
-            const response = await fetch("https://api.medscheduler.ru/update_doctor_profile", {
-                method: "POST",
+            const response = await fetch("https://api.medscheduler.ru/edit_doctor_profile", {
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(payload),
             });
 
-            const data = await response.json();
-
-            if (data.success) {
+            const data = await response.json();            if (data.success) {
                 setSuccessMessage("Данные профиля успешно обновлены.");
                 // Обновление данных врача в состоянии
                 setDoctorData((prev) => ({
@@ -130,6 +134,13 @@ export default function DoctorProfile() {
                     experience: editData.experience,
                     description: editData.description,
                 }));
+
+                // Обновляем в localStorage, если телефон изменился
+                if (editData.phone !== doctorData.phone) {
+                    const userDataFromStorage = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
+                    userDataFromStorage.phone = editData.phone;
+                    localStorage.setItem('medSchedulerUser', JSON.stringify(userDataFromStorage));
+                }
             } else {
                 setError(data.message || "Не удалось обновить данные профиля.");
             }
@@ -247,14 +258,26 @@ export default function DoctorProfile() {
                             required
                         />
                     </div>
-                </div>
-
-                <div className="mt-4 mb-6">
-                    <h3 className="text-lg font-medium mb-2">Изменение пароля (необязательно)</h3>
+                </div>                <div className="mt-4 mb-6">
+                    <h3 className="text-lg font-medium mb-2">Подтверждение и изменение пароля</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="md:col-span-2">
+                            <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                                Текущий пароль *
+                            </label>
+                            <input
+                                type="password"
+                                name="currentPassword"
+                                id="currentPassword"
+                                value={editData.currentPassword}
+                                onChange={handleEditChange}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                required
+                            />
+                        </div>
+                        <div className="md:col-span-2">
                             <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                                Новый пароль
+                                Новый пароль (необязательно)
                             </label>
                             <input
                                 type="password"

@@ -4,11 +4,13 @@ import { useRouter } from 'next/navigation';
 export const MainSearch = () => {
     const [inputState, setInputState] = useState("")
     const router = useRouter();
-
     const handleSearch = () => {
-        if (inputState.trim()) {
-            // Перенаправляем на страницу поиска с поисковым запросом
-            router.push(`/search?query=${encodeURIComponent(inputState.trim())}`);
+        // Перенаправляем на страницу поиска с поисковым запросом (даже если пустой)
+        const query = inputState.trim();
+        if (query) {
+            router.push(`/search?query=${encodeURIComponent(query)}`);
+        } else {
+            router.push('/search');
         }
     }
 

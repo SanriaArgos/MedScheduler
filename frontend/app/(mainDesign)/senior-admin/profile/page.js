@@ -116,9 +116,7 @@ export default function SeniorAdminProfile() {
             ...prevData,
             [name]: value
         }));
-    };
-
-    const handleSave = async () => {
+    };    const handleSave = async () => {
         setLoading(true);
         setError(null);
         setUpdateSuccess(null);
@@ -129,17 +127,25 @@ export default function SeniorAdminProfile() {
             return;
         }
 
+        // Проверяем, что введен текущий пароль для любых изменений
+        if (!formData.currentPassword) {
+            setError("Введите текущий пароль для подтверждения изменений.");
+            setLoading(false);
+            return;
+        }
+
         const payload = {
-            userId: profile.userId,
-            lastName: formData.lastName,
-            firstName: formData.firstName,
+            user_id: profile.userId,
+            current_password: formData.currentPassword,
+            last_name: formData.lastName,
+            first_name: formData.firstName,
             patronymic: formData.patronymic,
             phone: formData.phone ? formatPhoneForAPI(formData.phone) : undefined,
         };
 
         if (formData.newPassword) {
-            payload.newPassword = formData.newPassword;
-            payload.newPasswordRepeat = formData.newPasswordRepeat;
+            payload.new_password = formData.newPassword;
+            payload.new_password_repeat = formData.newPasswordRepeat;
         }
 
         try {

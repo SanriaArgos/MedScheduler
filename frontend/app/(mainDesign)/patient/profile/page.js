@@ -9,22 +9,22 @@ export default function PatientProfile() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [editData, setEditData] = useState({
+    const [successMessage, setSuccessMessage] = useState(null);    const [editData, setEditData] = useState({
         lastName: "",
         firstName: "",
         patronymic: "",
         phone: "",
+        currentPassword: "",
         newPassword: "",
         confirmNewPassword: "",
     });
     const router = useRouter();
 
-    useEffect(() => {
-        const fetchUserData = async () => {
+    useEffect(() => {        const fetchUserData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://api.medscheduler.ru/get_profile", {
+                const storedUser = JSON.parse(localStorage.getItem("medSchedulerUser") || "{}");
+                const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${storedUser.userId}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -34,18 +34,23 @@ export default function PatientProfile() {
 
                 if (!response.ok) {
                     throw new Error("Ошибка при получении данных профиля");
-                }
-
-                const data = await response.json();
-                const userDataToSet = data.user;
-
-                if (userDataToSet) {
+                }                const data = await response.json();
+                
+                if (data.success) {
+                    const userDataToSet = {
+                        userId: storedUser.userId,
+                        lastName: data.last_name || "",
+                        firstName: data.first_name || "",
+                        patronymic: data.patronymic || "",
+                        phone: data.phone || "",
+                    };                if (userDataToSet) {
                     setUserData(userDataToSet);
                     setEditData({
                         lastName: userDataToSet.lastName || "",
                         firstName: userDataToSet.firstName || "",
                         patronymic: userDataToSet.patronymic || "",
                         phone: userDataToSet.phone || "",
+                        currentPassword: "",
                         newPassword: "",
                         confirmNewPassword: "",
                     });
@@ -81,40 +86,51 @@ export default function PatientProfile() {
             setError("Введите корректный  номер телефона.");
             setLoading(false);
             return;
-        }
-        if (editData.newPassword && editData.newPassword !== editData.confirmNewPassword) {
+        }        if (editData.newPassword && editData.newPassword !== editData.confirmNewPassword) {
             setError("Новые пароли не совпадают.");
             setLoading(false);
             return;
         }
 
-        const payload = {
-            userId: userData.userId,
-            lastName: editData.lastName,
-            firstName: editData.firstName,
+        // Проверяем, что введен текущий пароль для любых изменений
+        if (!editData.currentPassword) {
+            setError("Введите текущий пароль для подтверждения изменений.");
+            setLoading(false);
+            return;
+        }const payload = {
+            user_id: userData.userId,
+            current_password: editData.currentPassword,
+            last_name: editData.lastName,
+            first_name: editData.firstName,
             patronymic: editData.patronymic,
             phone: editData.phone ? formatPhoneForAPI(editData.phone) : undefined,
         };
         if (editData.newPassword) {
-            payload.newPassword = editData.newPassword;
+            payload.new_password = editData.newPassword;
+            payload.new_password_repeat = editData.newPassword;
         }
 
         try {
-            const response = await fetch("https://api.medscheduler.ru/update_profile", {
+            const response = await fetch("https://api.medscheduler.ru/edit_patient_profile", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
+            });            if (!response.ok) {
                 throw new Error("Ошибка при обновлении профиля");
             }
 
             setSuccessMessage("Данные профиля успешно обновлены");
             setUserData((prev) => ({ ...prev, ...editData }));
+
+            // Обновляем в localStorage, если телефон изменился
+            if (editData.phone !== userData.phone) {
+                const userDataFromStorage = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
+                userDataFromStorage.phone = editData.phone;
+                localStorage.setItem('medSchedulerUser', JSON.stringify(userDataFromStorage));
+            }
         } catch (err) {
             console.error(err);
             setError("Ошибка при обновлении профиля");
@@ -205,9 +221,7 @@ export default function PatientProfile() {
                                 placeholder="+7 (999) 123-45-67"
                             />
                         </div>
-                    </div>
-
-                    <div className="mt-4 mb-6">
+                    </div>                    <div className="mt-4 mb-6">
                         <h3 className="text-lg font-medium mb-2">Изменение пароля (необязательно)</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="md:col-span-2">
@@ -237,6 +251,21 @@ export default function PatientProfile() {
                                 />
                             </div>
                         </div>
+                    </div>
+
+                    <div className="border-t pt-4">
+                        <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                            Текущий пароль (для подтверждения изменений)
+                        </label>
+                        <input
+                            type="password"
+                            name="currentPassword"
+                            id="currentPassword"
+                            value={editData.currentPassword}
+                            onChange={handleEditChange}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                            required
+                        />
                     </div>
 
                     <div className="flex gap-3 mt-6">
