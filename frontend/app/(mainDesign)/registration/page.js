@@ -55,7 +55,7 @@ export default function RegistrationPage() {
         const formattedPhoneForAPI = formatPhoneForAPI(formData.phone);
 
         try {
-            const response = await fetch("https://api.medscheduler.ru/register", {
+            const response = await fetch("https://api.medscheduler.ru/registration", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

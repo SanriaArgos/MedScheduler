@@ -1,7 +1,7 @@
 import Image from 'next/image';
 export const AppPromoter = () => {
     return <div
-        className="mt-10 xl:mt-14 rounded-[30px] flex flex-col xl:flex-row xl:justify-between xl:gap-x-32 overflow-hidden w-full h-fit bg-linear-65 from-main to-main2 min-h-40 px-4 xl:px-10 py-4 xl:py-10">
+        className="mt-10 mb-10 xl:mt-14 rounded-[30px] flex flex-col xl:flex-row xl:justify-between xl:gap-x-32 overflow-hidden w-full h-fit bg-linear-65 from-main to-main2 min-h-40 px-4 xl:px-10 py-4 xl:py-10">
         <div className="xl:ml-4">
             <h3 className="font-bold text-[24px] xl:text-[32px] text-[white]">Заботимся о вашем времени</h3>
             <p className="mt-4 font-medium text-[16px] xl:text-[18px] text-[white]">
