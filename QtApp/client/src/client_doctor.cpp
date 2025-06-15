@@ -13,6 +13,7 @@ doctor_client::doctor_client(int doctor_id) : doctor_id(doctor_id) {
 json doctor_client::get_schedule() {
     std::string url = base_url + "/get_doctor_schedule?doctor_id=" +
                       std::to_string(doctor_id);
+    std::cerr<<doctor_id<<"!!!";
     std::string response = send_get_request(url);
 
     try {

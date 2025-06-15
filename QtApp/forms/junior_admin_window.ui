@@ -342,7 +342,7 @@ color: rgb(255, 255, 255);</string>
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="page_get_users">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -381,8 +381,8 @@ QPushButton:pressed {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>885</width>
-             <height>600</height>
+             <width>59</width>
+             <height>16</height>
             </rect>
            </property>
           </widget>
@@ -447,8 +447,8 @@ QPushButton:pressed {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>885</width>
-             <height>552</height>
+             <width>836</width>
+             <height>533</height>
             </rect>
            </property>
           </widget>
@@ -493,7 +493,7 @@ QPushButton:pressed {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>66</width>
+             <width>59</width>
              <height>16</height>
             </rect>
            </property>
@@ -1224,8 +1224,8 @@ QPushButton:pressed {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>885</width>
-             <height>509</height>
+             <width>59</width>
+             <height>16</height>
             </rect>
            </property>
           </widget>

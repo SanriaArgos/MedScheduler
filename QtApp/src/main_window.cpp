@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QPixmap>
 #include <QString>
+#include <iostream>
 #include "client_auth.hpp"
 #include "client_doctor.hpp"
 #include "client_junior_admin.hpp"
@@ -51,6 +52,7 @@ void MainWindow::on_enter_clicked() {
         if (user.user_type == "doctor") {
             DoctorWindow *w = new DoctorWindow;
             w->set_user_id(user.id);
+            std::cerr<<user.id;
             w->setAttribute(Qt::WA_DeleteOnClose);
             w->show();
             this->close();

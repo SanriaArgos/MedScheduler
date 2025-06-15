@@ -34,7 +34,17 @@ void edit_doctor_profile(
         return;
     }
 
-    int user_id = data["user_id"];
+    int doctor_id = data["user_id"];
+    std::string query = "SELECT user_id FROM doctors WHERE doctor_id = " + doctor_id;
+PGresult* res = PQexec(conn, query.c_str());
+
+if (!res || PQresultStatus(res) != PGRES_TUPLES_OK || PQntuples(res) == 0) {
+    if (res) PQclear(res);
+    return; 
+}
+    std::string user_id_str = PQgetvalue(res, 0, 0);
+PQclear(res);
+    int user_id=std::stoi(user_id_str);
     std::string current_password = data["current_password"];
 
     // Проверяем user_type, hashed_password и salt

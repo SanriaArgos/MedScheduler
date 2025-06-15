@@ -18,6 +18,8 @@ public:
 private slots:
     void on_view_schedule_button_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::DoctorWindow *ui;
     int user_id = 0;
