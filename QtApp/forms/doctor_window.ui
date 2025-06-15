@@ -41,7 +41,7 @@
       </property>
       <widget class="QWidget" name="schedule">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Schedule</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -70,9 +70,9 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="Edit_profile">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>Edit profile</string>
        </attribute>
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0">
