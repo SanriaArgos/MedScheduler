@@ -22,8 +22,7 @@ void get_hospital_doctors(int hospital_id, http::response<http::string_body> &re
                         "d.price "
                         "FROM doctors d "
                         "JOIN users u ON d.user_id = u.id "
-                        "JOIN doctor_hospitals dh ON d.doctor_id = dh.doctor_id "
-                        "WHERE dh.hospital_id = $1 "
+                        "WHERE $1 = ANY(d.hospital_ids) "
                         "ORDER BY d.doctor_id";
 
     const char* param_values[1];
