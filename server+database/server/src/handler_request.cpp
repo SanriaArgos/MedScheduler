@@ -44,6 +44,7 @@
 #include "../include/handlers/get_doctors_for_patient.hpp"
 #include "../include/handlers/get_hospital_full_names.hpp"
 #include "../include/handlers/get_hospitals.hpp"
+#include "../include/handlers/get_hospital_doctors.hpp"
 #include "../include/handlers/get_patient_appointments.hpp"
 #include "../include/handlers/get_regions.hpp"
 #include "../include/handlers/get_settlement_names.hpp"
@@ -392,6 +393,27 @@ void handle_request(
 
                     int doctor_id = std::stoi(id_str);
                     get_doctor_hospitals(doctor_id, res, db_handler);
+
+                } catch (const std::exception &e) {
+                    handle_error(e, res);
+                }
+            } else if (req.target().starts_with("/get_hospital_doctors")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t param_pos = url.find("hospital_id=");
+                    if (param_pos == std::string::npos) {
+                        throw std::runtime_error("Missing hospital_id parameter");
+                    }
+
+                    size_t value_start = param_pos + 12;  // Длина "hospital_id="
+                    size_t value_end = url.find('&', value_start);
+                    std::string id_str =
+                        (value_end == std::string::npos)
+                            ? url.substr(value_start)
+                            : url.substr(value_start, value_end - value_start);
+
+                    int hospital_id = std::stoi(id_str);
+                    get_hospital_doctors(hospital_id, res, db_handler);
 
                 } catch (const std::exception &e) {
                     handle_error(e, res);
