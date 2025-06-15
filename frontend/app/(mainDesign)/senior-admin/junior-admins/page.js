@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
 
 export default function SeniorAdminJuniorAdminsPage() {
     const [loading, setLoading] = useState(true);
@@ -18,11 +18,13 @@ export default function SeniorAdminJuniorAdminsPage() {
 
     // Состояние для добавления нового администратора
     const [isAddingAdmin, setIsAddingAdmin] = useState(false);
-    const [newAdmin, setNewAdmin] = useState({
+    const [newAdminData, setNewAdminData] = useState({
         lastName: "",
         firstName: "",
         patronymic: "",
-        phone: ""
+        phone: "",
+        password: "",
+        hospitalId: "",
     });
 
     // Поиск администраторов
@@ -90,39 +92,41 @@ export default function SeniorAdminJuniorAdminsPage() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewAdmin({
-            ...newAdmin,
-            [name]: value
-        });
+        setNewAdminData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleNewAdminPhoneChange = (e) => {
+        setNewAdminData((prev) => ({ ...prev, phone: e.target.value }));
     };
 
     const handleAddAdmin = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setError("");
         setSuccess("");
 
-        // Валидация данных
-        if (!newAdmin.lastName || !newAdmin.firstName || !newAdmin.phone) {
-            setError("Пожалуйста, заполните все обязательные поля");
+        if (!validatePhone(newAdminData.phone)) {
+            setError("Введите корректный российский номер телефона для нового администратора.");
+            setLoading(false);
+            return;
+        }
+        if (!newAdminData.hospitalId) {
+            setError("Необходимо выбрать больницу для нового администратора.");
+            setLoading(false);
             return;
         }
 
-        // Валидация номера телефона (11 цифр)
-        if (!/^\d{11}$/.test(newAdmin.phone)) {
-            setError("Номер телефона должен состоять из 11 цифр");
-            return;
-        }
+
+        const payload = {
+            ...newAdminData,
+            phone: formatPhoneForAPI(newAdminData.phone),
+        };
 
         try {
-            const response = await fetch('https://api.medscheduler.ru/add_junior_admin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    last_name: newAdmin.lastName,
-                    first_name: newAdmin.firstName,
-                    patronymic: newAdmin.patronymic || undefined,
-                    phone: newAdmin.phone
-                }),
+            const response = await fetch("https://api.medscheduler.ru/add_junior_admin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             });
 
             const data = await response.json();
@@ -130,12 +134,14 @@ export default function SeniorAdminJuniorAdminsPage() {
             if (response.ok && data.success) {
                 setSuccess("Младший администратор успешно добавлен");
 
-                // Сбрасываем форм��
-                setNewAdmin({
+                // Сбрасываем форму
+                setNewAdminData({
                     lastName: "",
                     firstName: "",
                     patronymic: "",
-                    phone: ""
+                    phone: "",
+                    password: "",
+                    hospitalId: "",
                 });
 
                 // Обновляем список администраторов
@@ -152,6 +158,8 @@ export default function SeniorAdminJuniorAdminsPage() {
         } catch (err) {
             console.error("Error adding junior admin:", err);
             setError("Не удалось подключиться к серверу");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -220,7 +228,7 @@ export default function SeniorAdminJuniorAdminsPage() {
                                         type="text"
                                         id="lastName"
                                         name="lastName"
-                                        value={newAdmin.lastName}
+                                        value={newAdminData.lastName}
                                         onChange={handleInputChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                         required
@@ -234,7 +242,7 @@ export default function SeniorAdminJuniorAdminsPage() {
                                         type="text"
                                         id="firstName"
                                         name="firstName"
-                                        value={newAdmin.firstName}
+                                        value={newAdminData.firstName}
                                         onChange={handleInputChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                         required
@@ -248,7 +256,7 @@ export default function SeniorAdminJuniorAdminsPage() {
                                         type="text"
                                         id="patronymic"
                                         name="patronymic"
-                                        value={newAdmin.patronymic}
+                                        value={newAdminData.patronymic}
                                         onChange={handleInputChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                     />
@@ -258,13 +266,12 @@ export default function SeniorAdminJuniorAdminsPage() {
                                         Телефон * (11 цифр)
                                     </label>
                                     <input
-                                        type="text"
-                                        id="phone"
+                                        type="tel"
                                         name="phone"
-                                        value={newAdmin.phone}
-                                        onChange={handleInputChange}
-                                        placeholder="79001234567"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                        value={formatPhoneDisplay(newAdminData.phone)}
+                                        onChange={handleNewAdminPhoneChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                        placeholder="+7 (999) 123-45-67"
                                         required
                                     />
                                 </div>

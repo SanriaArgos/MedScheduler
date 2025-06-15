@@ -1,32 +1,62 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from 'next/navigation'; // Импорт useRouter
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
 
 export default function LoginPage() {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const router = useRouter(); // Инициализация router
+    const router = useRouter();
+
+    useEffect(() => {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (isLoggedIn) {
+            const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
+            redirectToDashboard(userData.userType);
+        }
+    }, [router]);
+
+    const redirectToDashboard = (userType) => {
+        switch (userType) {
+            case "patient":
+                router.push("/patient/profile");
+                break;
+            case "doctor":
+                router.push("/doctor/profile");
+                break;
+            case "junior_admin":
+                router.push("/junior-admin/profile");
+                break;
+            case "senior_admin":
+                router.push("/senior-admin/profile");
+                break;
+            default:
+                router.push("/"); // Fallback
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
         setLoading(true);
+        setError("");
 
-        if (!phone || !password) {
-            setError("Номер телефона и пароль обязательны.");
+        if (!validatePhone(phone)) {
+            setError("Введите корректный российский номер телефона.");
             setLoading(false);
             return;
         }
 
+        const formattedPhoneForAPI = formatPhoneForAPI(phone);
+
         try {
-            const response = await fetch('https://api.medscheduler.ru/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone, password }),
+            const response = await fetch("https://api.medscheduler.ru/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone: formattedPhoneForAPI, password }),
             })
 
             const data = await response.json();
@@ -58,55 +88,56 @@ export default function LoginPage() {
         }
     };
 
+    const handlePhoneChange = (e) => {
+        setPhone(e.target.value);
+    };
+
     return (
-        <div className="lg:min-h-[calc(90vh-theme(space.36))] flex flex-col items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-main2">
-                        Вход в аккаунт
-                    </h2>
-                </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <input type="hidden" name="remember" defaultValue="true" />
-                    <div className="rounded-md shadow-sm -space-y-px">
-                        <div>
-                            <label htmlFor="phone" className="sr-only">
-                                Номер телефона
-                            </label>
-                            <input
-                                id="phone"
-                                name="phone"
-                                type="tel"
-                                autoComplete="tel"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-main focus:border-main focus:z-10 sm:text-sm"
-                                placeholder="Номер телефона"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">
-                                Пароль
-                            </label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                autoComplete="current-password"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-main focus:border-main focus:z-10 sm:text-sm"
-                                placeholder="Пароль"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-main via-main2 to-main">
+            <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+                <h1 className="text-3xl font-bold text-center text-main2 mb-8">
+                    Вход в систему
+                </h1>
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                        {error}
                     </div>
-
-                    {error && (
-                        <p className="text-sm text-red-600 text-center py-2">{error}</p>
-                    )}
-
+                )}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                        <label
+                            htmlFor="phone"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Номер телефона
+                        </label>
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            value={formatPhoneDisplay(phone)}
+                            onChange={handlePhoneChange}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-main2 focus:border-main2"
+                            placeholder="+7 (999) 000-00-00"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password" className="sr-only">
+                            Пароль
+                        </label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autoComplete="current-password"
+                            required
+                            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-main focus:border-main focus:z-10 sm:text-sm"
+                            placeholder="Пароль"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
                     <div>
                         <button
                             type="submit"

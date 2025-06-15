@@ -1,89 +1,83 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
 
 export default function RegistrationPage() {
-    const [lastName, setLastName] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [patronymic, setPatronymic] = useState("");
-    const [phone, setPhone] = useState("");
-    const [password, setPassword] = useState("");
-    const [repeatPassword, setRepeatPassword] = useState("");
+    const [formData, setFormData] = useState({
+        lastName: "",
+        firstName: "",
+        patronymic: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+        userType: "patient", // Default to patient
+    });
     const [error, setError] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handlePhoneChange = (e) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            phone: e.target.value, 
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
-        setSuccessMessage("");
         setLoading(true);
+        setError("");
 
-        if (!lastName || !firstName || !phone || !password || !repeatPassword) {
-            setError("Все поля, кроме отчества, обязательны для заполнения.");
-            setLoading(false);
-            return;
-        }
-
-        if (password !== repeatPassword) {
+        if (formData.password !== formData.confirmPassword) {
             setError("Пароли не совпадают.");
             setLoading(false);
             return;
         }
 
-        // Валидация номера телефона (простой пример: 11 цифр)
-        if (!/^\d{11}$/.test(phone)) {
-            setError("Номер телефона должен состоять из 11 цифр.");
+        if (!validatePhone(formData.phone)) {
+            setError("Введите корректный российский номер телефона.");
             setLoading(false);
             return;
         }
-
-        // Валидация пароля (простой пример: минимум 6 символов)
-        if (password.length < 6) {
-            setError("Пароль должен содержать не менее 6 символов.");
-            setLoading(false);
-            return;
-        }
-
+        
+        const formattedPhoneForAPI = formatPhoneForAPI(formData.phone);
 
         try {
-            const registrationData = {
-                last_name: lastName,
-                first_name: firstName,
-                phone: phone,
-                password: password,
-            };
-
-            // Добавляем patronymic только если оно не пустое
-            if (patronymic && patronymic.trim() !== "") {
-                registrationData.patronymic = patronymic;
-            }
-
-            console.log("Отправляемые данные:", JSON.stringify(registrationData));
-
-            const response = await fetch('https://api.medscheduler.ru/registration', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(registrationData),
+            const response = await fetch("https://api.medscheduler.ru/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    last_name: formData.lastName,
+                    first_name: formData.firstName,
+                    patronymic: formData.patronymic,
+                    phone: formattedPhoneForAPI,
+                    password: formData.password,
+                    user_type: formData.userType,
+                }),
             });
 
             const data = await response.json();
 
             if (response.ok && data.success) {
-                setSuccessMessage("Регистрация прошла успешно! Теперь вы можете войти.");
-                // Очистка формы или редирект через несколько секунд
-                setTimeout(() => {
-                    router.push('/login');
-                }, 3000);
+                // Регистрация успешна, перенаправляем на страницу входа
+                router.push("/login");
             } else {
-                setError(data.error || "Ошибка регистрации. Пользователь уже существует или произошла ошибка.");
+                setError(data.message || "Ошибка регистрации. Пожалуйста, попробуйте еще раз.");
             }
         } catch (err) {
-            console.error("Registration API error:", err);
-            setError("Не удалось подключиться к серверу. Пожалуйста, проверьте ваше соединение.");
+            console.error("Registration error:", err);
+            setError("Ошибка подключения. Пожалуйста, проверьте ваше интернет-соединение.");
         } finally {
             setLoading(false);
         }
@@ -101,35 +95,41 @@ export default function RegistrationPage() {
                     <div className="rounded-md shadow-sm -space-y-px">
                         <div>
                             <label htmlFor="lastName" className="sr-only">Фамилия</label>
-                            <input id="lastName" name="lastName" type="text" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                            <input id="lastName" name="lastName" type="text" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Фамилия" value={formData.lastName} onChange={handleChange} />
                         </div>
                         <div>
                             <label htmlFor="firstName" className="sr-only">Имя</label>
-                            <input id="firstName" name="firstName" type="text" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Имя" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                            <input id="firstName" name="firstName" type="text" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Имя" value={formData.firstName} onChange={handleChange} />
                         </div>
                         <div>
                             <label htmlFor="patronymic" className="sr-only">Отчество (необязательно)</label>
-                            <input id="patronymic" name="patronymic" type="text" className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Отчество (необязательно)" value={patronymic} onChange={(e) => setPatronymic(e.target.value)} />
+                            <input id="patronymic" name="patronymic" type="text" className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Отчество (необязательно)" value={formData.patronymic} onChange={handleChange} />
                         </div>
                         <div>
                             <label htmlFor="phone" className="sr-only">Номер телефона</label>
-                            <input id="phone" name="phone" type="tel" autoComplete="tel" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Номер телефона (11 цифр, например 79001234567)" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                value={formatPhoneDisplay(formData.phone)}
+                                onChange={handlePhoneChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-main2 focus:border-main2"
+                                placeholder="+7 (999) 000-00-00"
+                                required
+                            />
                         </div>
                         <div>
                             <label htmlFor="password" className="sr-only">Пароль</label>
-                            <input id="password" name="password" type="password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Пароль (минимум 6 символов)" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <input id="password" name="password" type="password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Пароль (минимум 6 символов)" value={formData.password} onChange={handleChange} />
                         </div>
                         <div>
-                            <label htmlFor="repeatPassword" className="sr-only">Повторите пароль</label>
-                            <input id="repeatPassword" name="repeatPassword" type="password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Повторите пароль" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} />
+                            <label htmlFor="confirmPassword" className="sr-only">Повторите пароль</label>
+                            <input id="confirmPassword" name="confirmPassword" type="password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-main focus:border-main sm:text-sm" placeholder="Повторите пароль" value={formData.confirmPassword} onChange={handleChange} />
                         </div>
                     </div>
 
                     {error && (
                         <p className="text-sm text-red-600 text-center py-2">{error}</p>
-                    )}
-                    {successMessage && (
-                        <p className="text-sm text-green-600 text-center py-2">{successMessage}</p>
                     )}
 
                     <div>

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
 
 export default function JuniorAdminDoctorsPage() {
     const [loading, setLoading] = useState(true);
@@ -18,15 +19,15 @@ export default function JuniorAdminDoctorsPage() {
 
     // Состояние для добавления нового врача
     const [isAddingDoctor, setIsAddingDoctor] = useState(false);
-    const [newDoctor, setNewDoctor] = useState({
+    const [newDoctorData, setNewDoctorData] = useState({
         lastName: "",
         firstName: "",
         patronymic: "",
         phone: "",
-        education: "",
+        password: "",
         specialty: "",
-        experience: 1,
-        price: 1000
+        experience: "",
+        description: "",
     });
 
     // Состояние для прикрепления/открепления врача
@@ -114,46 +115,45 @@ export default function JuniorAdminDoctorsPage() {
         }
     };
 
-    const handleInputChange = (e) => {
+    const handleNewDoctorChange = (e) => {
         const { name, value } = e.target;
-        setNewDoctor({
-            ...newDoctor,
-            [name]: value
-        });
+        setNewDoctorData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleNewDoctorPhoneChange = (e) => {
+        setNewDoctorData((prev) => ({ ...prev, phone: e.target.value }));
     };
 
     const handleAddDoctor = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setError("");
         setSuccess("");
 
-        // Валидация данных
-        if (!newDoctor.lastName || !newDoctor.firstName || !newDoctor.phone ||
-            !newDoctor.education || !newDoctor.specialty) {
-            setError("Пожалуйста, заполните все обязательные поля");
+        if (!validatePhone(newDoctorData.phone)) {
+            setError("Введите корректный российский номер телефона для нового врача.");
+            setLoading(false);
             return;
         }
 
-        // Валидация номера телефона (11 цифр)
-        if (!/^\d{11}$/.test(newDoctor.phone)) {
-            setError("Номер телефона должен состоять из 11 цифр");
+        const hospitalId = userData?.hospitalId;
+        if (!hospitalId) {
+            setError("Не удалось определить больницу для добавления врача. Пожалуйста, обновите страницу.");
+            setLoading(false);
             return;
         }
+
+        const payload = {
+            ...newDoctorData,
+            phone: formatPhoneForAPI(newDoctorData.phone),
+            hospital_id: hospitalId,
+        };
 
         try {
-            const response = await fetch('https://api.medscheduler.ru/add_doctor', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    last_name: newDoctor.lastName,
-                    first_name: newDoctor.firstName,
-                    patronymic: newDoctor.patronymic || undefined,
-                    phone: newDoctor.phone,
-                    education: newDoctor.education,
-                    specialty: newDoctor.specialty,
-                    experience: parseInt(newDoctor.experience),
-                    price: parseInt(newDoctor.price)
-                }),
+            const response = await fetch("https://api.medscheduler.ru/add_doctor", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             });
 
             const data = await response.json();
@@ -162,15 +162,15 @@ export default function JuniorAdminDoctorsPage() {
                 setSuccess("Врач успешно добавлен");
 
                 // Сбрасываем форму
-                setNewDoctor({
+                setNewDoctorData({
                     lastName: "",
                     firstName: "",
                     patronymic: "",
                     phone: "",
-                    education: "",
+                    password: "",
                     specialty: "",
-                    experience: 1,
-                    price: 1000
+                    experience: "",
+                    description: "",
                 });
 
                 // Обновляем список врачей
@@ -187,6 +187,8 @@ export default function JuniorAdminDoctorsPage() {
         } catch (err) {
             console.error("Error adding doctor:", err);
             setError("Не удалось подключиться к серверу");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -317,8 +319,8 @@ export default function JuniorAdminDoctorsPage() {
                                         type="text"
                                         id="lastName"
                                         name="lastName"
-                                        value={newDoctor.lastName}
-                                        onChange={handleInputChange}
+                                        value={newDoctorData.lastName}
+                                        onChange={handleNewDoctorChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                         required
                                     />
@@ -331,8 +333,8 @@ export default function JuniorAdminDoctorsPage() {
                                         type="text"
                                         id="firstName"
                                         name="firstName"
-                                        value={newDoctor.firstName}
-                                        onChange={handleInputChange}
+                                        value={newDoctorData.firstName}
+                                        onChange={handleNewDoctorChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                         required
                                     />
@@ -345,8 +347,8 @@ export default function JuniorAdminDoctorsPage() {
                                         type="text"
                                         id="patronymic"
                                         name="patronymic"
-                                        value={newDoctor.patronymic}
-                                        onChange={handleInputChange}
+                                        value={newDoctorData.patronymic}
+                                        onChange={handleNewDoctorChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                     />
                                 </div>
@@ -355,12 +357,12 @@ export default function JuniorAdminDoctorsPage() {
                                         Телефон * (11 цифр)
                                     </label>
                                     <input
-                                        type="text"
-                                        id="phone"
+                                        type="tel"
                                         name="phone"
-                                        value={newDoctor.phone}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                        value={formatPhoneDisplay(newDoctorData.phone)}
+                                        onChange={handleNewDoctorPhoneChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                        placeholder="+7 (999) 123-45-67"
                                         required
                                     />
                                 </div>
@@ -372,8 +374,8 @@ export default function JuniorAdminDoctorsPage() {
                                         type="text"
                                         id="specialty"
                                         name="specialty"
-                                        value={newDoctor.specialty}
-                                        onChange={handleInputChange}
+                                        value={newDoctorData.specialty}
+                                        onChange={handleNewDoctorChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                         required
                                     />
@@ -386,40 +388,24 @@ export default function JuniorAdminDoctorsPage() {
                                         type="number"
                                         id="experience"
                                         name="experience"
-                                        value={newDoctor.experience}
-                                        onChange={handleInputChange}
-                                        min="0"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Цена приема (₽) *
-                                    </label>
-                                    <input
-                                        type="number"
-                                        id="price"
-                                        name="price"
-                                        value={newDoctor.price}
-                                        onChange={handleInputChange}
+                                        value={newDoctorData.experience}
+                                        onChange={handleNewDoctorChange}
                                         min="0"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                         required
                                     />
                                 </div>
                                 <div className="md:col-span-2">
-                                    <label htmlFor="education" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Образование *
+                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Описание
                                     </label>
                                     <textarea
-                                        id="education"
-                                        name="education"
-                                        value={newDoctor.education}
-                                        onChange={handleInputChange}
+                                        id="description"
+                                        name="description"
+                                        value={newDoctorData.description}
+                                        onChange={handleNewDoctorChange}
                                         rows="3"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
                                     />
                                 </div>
                             </div>

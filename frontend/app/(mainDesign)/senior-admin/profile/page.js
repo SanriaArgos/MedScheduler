@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from "next/link";
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
 
-export default function SeniorAdminProfilePage() {
+export default function SeniorAdminProfile() {
     const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState(null);
     const [error, setError] = useState("");
@@ -12,13 +12,15 @@ export default function SeniorAdminProfilePage() {
 
     // Состояние для формы редактирования
     const [isEditing, setIsEditing] = useState(false);
-    const [lastName, setLastName] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [patronymic, setPatronymic] = useState("");
-    const [phone, setPhone] = useState("");
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [newPasswordRepeat, setNewPasswordRepeat] = useState("");
+    const [formData, setFormData] = useState({
+        lastName: "",
+        firstName: "",
+        patronymic: "",
+        phone: "",
+        currentPassword: "",
+        newPassword: "",
+        newPasswordRepeat: ""
+    });
     const [updateError, setUpdateError] = useState("");
     const [updateSuccess, setUpdateSuccess] = useState("");
 
@@ -51,10 +53,15 @@ export default function SeniorAdminProfilePage() {
                     setProfile(profileData);
 
                     // Инициализация полей формы редактирования
-                    setLastName(profileData.lastName);
-                    setFirstName(profileData.firstName);
-                    setPatronymic(profileData.patronymic);
-                    setPhone(profileData.phone);
+                    setFormData({
+                        lastName: profileData.lastName,
+                        firstName: profileData.firstName,
+                        patronymic: profileData.patronymic,
+                        phone: profileData.phone,
+                        currentPassword: "",
+                        newPassword: "",
+                        newPasswordRepeat: ""
+                    });
                 } else {
                     throw new Error(data.error || "Не удалось получить данные профиля");
                 }
@@ -70,10 +77,15 @@ export default function SeniorAdminProfilePage() {
                 };
 
                 setProfile(profileData);
-                setLastName(profileData.lastName);
-                setFirstName(profileData.firstName);
-                setPatronymic(profileData.patronymic);
-                setPhone(profileData.phone);
+                setFormData({
+                    lastName: profileData.lastName,
+                    firstName: profileData.firstName,
+                    patronymic: profileData.patronymic,
+                    phone: profileData.phone,
+                    currentPassword: "",
+                    newPassword: "",
+                    newPasswordRepeat: ""
+                });
 
                 setError("Не удалось загрузить полные данные профиля. Показана базовая информация.");
             } finally {
@@ -86,55 +98,56 @@ export default function SeniorAdminProfilePage() {
 
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
-        setCurrentPassword("");
-        setNewPassword("");
-        setNewPasswordRepeat("");
+        setFormData({
+            lastName: profile.lastName,
+            firstName: profile.firstName,
+            patronymic: profile.patronymic,
+            phone: profile.phone,
+            currentPassword: "",
+            newPassword: "",
+            newPasswordRepeat: ""
+        });
         setUpdateError("");
         setUpdateSuccess("");
     };
 
-    const handleUpdateProfile = async (e) => {
-        e.preventDefault();
-        setUpdateError("");
-        setUpdateSuccess("");
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
+    };
 
-        if (!currentPassword) {
-            setUpdateError("Введите текущий пароль для подтверждения изменений");
+    const handleSave = async () => {
+        setLoading(true);
+        setError(null);
+        setUpdateSuccess(null);
+
+        if (formData.phone && !validatePhone(formData.phone)) {
+            setError("Введите корректный номер телефона.");
+            setLoading(false);
             return;
         }
 
-        if (newPassword && newPassword !== newPasswordRepeat) {
-            setUpdateError("Новые пароли не совпадают");
-            return;
-        }
+        const payload = {
+            userId: profile.userId,
+            lastName: formData.lastName,
+            firstName: formData.firstName,
+            patronymic: formData.patronymic,
+            phone: formData.phone ? formatPhoneForAPI(formData.phone) : undefined,
+        };
 
-        // Валидация телефона (11 цифр)
-        if (phone && !/^\d{11}$/.test(phone)) {
-            setUpdateError("Номер телефона должен состоять из 11 цифр");
-            return;
+        if (formData.newPassword) {
+            payload.newPassword = formData.newPassword;
+            payload.newPasswordRepeat = formData.newPasswordRepeat;
         }
 
         try {
-            const updateData = {
-                user_id: profile.userId,
-                current_password: currentPassword,
-            };
-
-            // Добавляем только измененные поля
-            if (lastName !== profile.lastName) updateData.last_name = lastName;
-            if (firstName !== profile.firstName) updateData.first_name = firstName;
-            if (patronymic !== profile.patronymic) updateData.patronymic = patronymic;
-            if (phone !== profile.phone) updateData.phone = phone;
-            if (newPassword) {
-                updateData.new_password = newPassword;
-                updateData.new_password_repeat = newPasswordRepeat;
-            }
-
-            // API запрос на обновление профиля
             const response = await fetch('https://api.medscheduler.ru/edit_senior_admin_profile', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updateData),
+                body: JSON.stringify(payload),
             });
 
             const data = await response.json();
@@ -145,23 +158,26 @@ export default function SeniorAdminProfilePage() {
                 // Обновляем данные профиля локально
                 setProfile({
                     ...profile,
-                    lastName: lastName,
-                    firstName: firstName,
-                    patronymic: patronymic,
-                    phone: phone
+                    lastName: formData.lastName,
+                    firstName: formData.firstName,
+                    patronymic: formData.patronymic,
+                    phone: formData.phone
                 });
 
                 // Обновляем в localStorage, если телефон изменился
-                if (phone !== profile.phone) {
+                if (formData.phone !== profile.phone) {
                     const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
-                    userData.phone = phone;
+                    userData.phone = formData.phone;
                     localStorage.setItem('medSchedulerUser', JSON.stringify(userData));
                 }
 
                 // Сбрасываем поля паролей
-                setCurrentPassword("");
-                setNewPassword("");
-                setNewPasswordRepeat("");
+                setFormData((prevData) => ({
+                    ...prevData,
+                    currentPassword: "",
+                    newPassword: "",
+                    newPasswordRepeat: ""
+                }));
 
                 // Выходим из режима редактирования через 2 секунды
                 setTimeout(() => {
@@ -174,6 +190,8 @@ export default function SeniorAdminProfilePage() {
         } catch (err) {
             console.error("Profile update error:", err);
             setUpdateError("Не удалось подключиться к серверу");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -228,7 +246,7 @@ export default function SeniorAdminProfilePage() {
                         </div>
                     </div>
                 ) : (
-                    <form onSubmit={handleUpdateProfile}>
+                    <form onSubmit={handleSave}>
                         {updateError && (
                             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                                 {updateError}
@@ -248,9 +266,10 @@ export default function SeniorAdminProfilePage() {
                                 </label>
                                 <input
                                     type="text"
+                                    name="lastName"
                                     id="lastName"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
+                                    value={formData.lastName}
+                                    onChange={handleChange}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                     required
                                 />
@@ -261,9 +280,10 @@ export default function SeniorAdminProfilePage() {
                                 </label>
                                 <input
                                     type="text"
+                                    name="firstName"
                                     id="firstName"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
+                                    value={formData.firstName}
+                                    onChange={handleChange}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                     required
                                 />
@@ -274,23 +294,25 @@ export default function SeniorAdminProfilePage() {
                                 </label>
                                 <input
                                     type="text"
+                                    name="patronymic"
                                     id="patronymic"
-                                    value={patronymic}
-                                    onChange={(e) => setPatronymic(e.target.value)}
+                                    value={formData.patronymic}
+                                    onChange={handleChange}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                 />
                             </div>
                             <div>
                                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Телефон
+                                    Номер телефона
                                 </label>
                                 <input
-                                    type="text"
+                                    type="tel"
+                                    name="phone"
                                     id="phone"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                    required
+                                    value={formatPhoneDisplay(formData.phone)}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="+7 (999) 123-45-67"
                                 />
                             </div>
                         </div>
@@ -304,9 +326,10 @@ export default function SeniorAdminProfilePage() {
                                     </label>
                                     <input
                                         type="password"
+                                        name="newPassword"
                                         id="newPassword"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        value={formData.newPassword}
+                                        onChange={handleChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                     />
                                 </div>
@@ -316,9 +339,10 @@ export default function SeniorAdminProfilePage() {
                                     </label>
                                     <input
                                         type="password"
+                                        name="newPasswordRepeat"
                                         id="newPasswordRepeat"
-                                        value={newPasswordRepeat}
-                                        onChange={(e) => setNewPasswordRepeat(e.target.value)}
+                                        value={formData.newPasswordRepeat}
+                                        onChange={handleChange}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                     />
                                 </div>
@@ -331,9 +355,10 @@ export default function SeniorAdminProfilePage() {
                             </label>
                             <input
                                 type="password"
+                                name="currentPassword"
                                 id="currentPassword"
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                value={formData.currentPassword}
+                                onChange={handleChange}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                                 required
                             />

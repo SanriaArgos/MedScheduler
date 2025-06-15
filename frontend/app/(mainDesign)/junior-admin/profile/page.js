@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
 
 export default function JuniorAdminProfilePage() {
     const [loading, setLoading] = useState(true);
@@ -24,30 +25,45 @@ export default function JuniorAdminProfilePage() {
     // Информация о больнице
     const [hospital, setHospital] = useState(null);
 
+    // Данные пользователя
+    const [userData, setUserData] = useState(null);
+
+    // Данные для редактирования
+    const [editData, setEditData] = useState({
+        lastName: '',
+        firstName: '',
+        patronymic: '',
+        phone: '',
+        newPassword: '',
+        confirmNewPassword: '',
+    });
+
     useEffect(() => {
         // Проверка аутентификации
         const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const userData = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
+        const storedUser = JSON.parse(localStorage.getItem('medSchedulerUser') || '{}');
 
-        if (!isLoggedIn || !userData.userId || userData.userType !== 'junior') {
+        if (!isLoggedIn || !storedUser.userId || storedUser.userType !== 'junior') {
             router.push('/login');
             return;
         }
+
+        setUserData(storedUser);
 
         // Загрузка данных профиля младшего администратора
         const fetchProfile = async () => {
             try {
                 // Получаем данные профиля
-                const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${userData.userId}`);
+                const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${storedUser.userId}`);
                 const data = await response.json();
 
                 if (response.ok && data.success) {
                     const profileData = {
-                        userId: userData.userId,
+                        userId: storedUser.userId,
                         firstName: data.first_name || "",
                         lastName: data.last_name || "",
                         patronymic: data.patronymic || "",
-                        phone: data.phone || userData.phone || ""
+                        phone: data.phone || storedUser.phone || ""
                     };
 
                     setProfile(profileData);
@@ -58,7 +74,7 @@ export default function JuniorAdminProfilePage() {
                     setPatronymic(profileData.patronymic);
 
                     // Получаем информацию о больнице
-                    fetchHospitalInfo(userData.userId);
+                    fetchHospitalInfo(storedUser.userId);
                 } else {
                     throw new Error(data.error || "Не удалось получить данные профиля");
                 }
@@ -66,11 +82,11 @@ export default function JuniorAdminProfilePage() {
                 console.error("Error fetching profile:", err);
                 // Используем данные из localStorage для базовой информации
                 const profileData = {
-                    userId: userData.userId,
+                    userId: storedUser.userId,
                     firstName: "",
                     lastName: "",
                     patronymic: "",
-                    phone: userData.phone || ""
+                    phone: storedUser.phone || ""
                 };
                 setProfile(profileData);
                 setLastName(profileData.lastName);
@@ -175,6 +191,85 @@ export default function JuniorAdminProfilePage() {
         } catch (err) {
             console.error("Profile update error:", err);
             setUpdateError("Не удалось подключиться к серверу");
+        }
+    };
+
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+        setEditData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handlePhoneChange = (e) => {
+        setEditData((prev) => ({ ...prev, phone: e.target.value }));
+    };
+
+    const handleSaveChanges = async () => {
+        setLoading(true);
+        setError(null);
+        setSuccessMessage(null);
+
+        if (editData.phone && !validatePhone(editData.phone)) {
+            setError("Введите корректный российский номер телефона.");
+            setLoading(false);
+            return;
+        }
+
+        if (editData.newPassword && editData.newPassword !== editData.confirmNewPassword) {
+            setError('Новые пароли не совпадают.');
+            setLoading(false);
+            return;
+        }
+
+        const payload = {
+            userId: userData.userId,
+            lastName: editData.lastName,
+            firstName: editData.firstName,
+            patronymic: editData.patronymic,
+            phone: editData.phone ? formatPhoneForAPI(editData.phone) : undefined,
+        };
+
+        if (editData.newPassword) {
+            payload.newPassword = editData.newPassword;
+        }
+
+        try {
+            const response = await fetch('https://api.medscheduler.ru/update_profile', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setSuccessMessage("Профиль успешно обновлен");
+                setLoading(false);
+
+                // Обновляем данные профиля локально
+                setProfile((prev) => ({
+                    ...prev,
+                    lastName: editData.lastName,
+                    firstName: editData.firstName,
+                    patronymic: editData.patronymic,
+                    phone: editData.phone ? formatPhoneForAPI(editData.phone) : prev.phone,
+                }));
+
+                // Сбрасываем поля паролей
+                setEditData((prev) => ({ ...prev, newPassword: '', confirmNewPassword: '' }));
+
+                // Выходим из режима редактирования через 2 секунды
+                setTimeout(() => {
+                    setIsEditing(false);
+                    setSuccessMessage(null);
+                }, 2000);
+            } else {
+                setError(data.error || "Ошибка обновления профиля");
+                setLoading(false);
+            }
+        } catch (err) {
+            console.error("Profile update error:", err);
+            setError("Не удалось подключиться к серверу");
+            setLoading(false);
         }
     };
 
@@ -283,16 +378,17 @@ export default function JuniorAdminProfilePage() {
                                 </div>
                                 <div>
                                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Телефон
+                                        Номер телефона
                                     </label>
                                     <input
-                                        type="text"
+                                        type="tel"
+                                        name="phone"
                                         id="phone"
-                                        value={profile.phone}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
-                                        disabled
+                                        value={formatPhoneDisplay(editData.phone)}
+                                        onChange={handlePhoneChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="+7 (999) 123-45-67"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Телефон изменить нельзя</p>
                                 </div>
                             </div>
 
@@ -392,6 +488,10 @@ export default function JuniorAdminProfilePage() {
                 <Link href="/junior-admin/doctors" className="bg-white p-4 shadow-md rounded-lg hover:shadow-lg transition-shadow text-center">
                     <h3 className="text-lg font-semibold text-main2 mb-2">Управление врачами</h3>
                     <p className="text-gray-600">Добавление и управление врачами</p>
+                </Link>
+                <Link href="/junior-admin/users" className="bg-white p-4 shadow-md rounded-lg hover:shadow-lg transition-shadow text-center">
+                    <h3 className="text-lg font-semibold text-main2 mb-2">Управление пациентами</h3>
+                    <p className="text-gray-600">Добавление и управление пациентами</p>
                 </Link>
                 <Link href="/junior-admin/schedule" className="bg-white p-4 shadow-md rounded-lg hover:shadow-lg transition-shadow text-center">
                     <h3 className="text-lg font-semibold text-main2 mb-2">Управление расписанием</h3>

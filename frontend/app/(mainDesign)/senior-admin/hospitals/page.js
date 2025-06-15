@@ -25,13 +25,14 @@ export default function SeniorAdminHospitalsPage() {
         street: "",
         house: "",
         fullName: "",
-        adminId: ""
+        adminId: "" // Оставляем adminId для выбора из списка
     });
 
     // Списки для выбора
-    const [regions, setRegions] = useState([]);
-    const [settlementTypes, setSettlementTypes] = useState([]);
-    const [settlementNames, setSettlementNames] = useState([]);
+    // Удаляем regions, settlementTypes, settlementNames состояния, так как они будут текстовыми инпутами
+    // const [regions, setRegions] = useState([]); 
+    // const [settlementTypes, setSettlementTypes] = useState([]);
+    // const [settlementNames, setSettlementNames] = useState([]);
     const [juniorAdmins, setJuniorAdmins] = useState([]);
 
     // Поиск больниц
@@ -51,9 +52,10 @@ export default function SeniorAdminHospitalsPage() {
         setAdminId(userData.userId);
 
         // Загружаем списки для выбора и список больниц
-        fetchRegions();
-        fetchSettlementTypes();
-        fetchSettlementNames();
+        // Удаляем вызовы fetchRegions, fetchSettlementTypes, fetchSettlementNames
+        // fetchRegions();
+        // fetchSettlementTypes();
+        // fetchSettlementNames();
         fetchJuniorAdmins();
         fetchHospitals();
     }, [router]);
@@ -75,51 +77,6 @@ export default function SeniorAdminHospitalsPage() {
             setFilteredHospitals(hospitals);
         }
     }, [searchQuery, hospitals]);
-
-    const fetchRegions = async () => {
-        try {
-            const response = await fetch('https://api.medscheduler.ru/get_regions');
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                // Удаляем "-" из списка и сортируем
-                const filteredRegions = data.regions.filter(region => region !== "-").sort();
-                setRegions(filteredRegions);
-            }
-        } catch (err) {
-            console.error("Error fetching regions:", err);
-        }
-    };
-
-    const fetchSettlementTypes = async () => {
-        try {
-            const response = await fetch('https://api.medscheduler.ru/get_settlement_types');
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                // Удаляем "-" из списка и сортируем
-                const filteredTypes = data.settlement_types.filter(type => type !== "-").sort();
-                setSettlementTypes(filteredTypes);
-            }
-        } catch (err) {
-            console.error("Error fetching settlement types:", err);
-        }
-    };
-
-    const fetchSettlementNames = async () => {
-        try {
-            const response = await fetch('https://api.medscheduler.ru/get_settlement_names');
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                // Удаляем "-" из списка и сортируем
-                const filteredNames = data.settlement_names.filter(name => name !== "-").sort();
-                setSettlementNames(filteredNames);
-            }
-        } catch (err) {
-            console.error("Error fetching settlement names:", err);
-        }
-    };
 
     const fetchJuniorAdmins = async () => {
         try {
@@ -288,125 +245,97 @@ export default function SeniorAdminHospitalsPage() {
 
                 {isAddingHospital && (
                     <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                        <h3 className="text-lg font-medium text-gray-800 mb-4">Добавить новую больницу</h3>
-                        <form onSubmit={handleAddHospital}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label htmlFor="region" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Регион *
-                                    </label>
-                                    <select
-                                        id="region"
-                                        name="region"
-                                        value={newHospital.region}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
-                                    >
-                                        <option value="">Выберите регион</option>
-                                        {regions.map((region, index) => (
-                                            <option key={index} value={region}>{region}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="settlementType" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Тип населенного пункта *
-                                    </label>
-                                    <select
-                                        id="settlementType"
-                                        name="settlementType"
-                                        value={newHospital.settlementType}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
-                                    >
-                                        <option value="">Выберите тип</option>
-                                        {settlementTypes.map((type, index) => (
-                                            <option key={index} value={type}>{type}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="settlementName" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Название населенного пункта *
-                                    </label>
-                                    <select
-                                        id="settlementName"
-                                        name="settlementName"
-                                        value={newHospital.settlementName}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
-                                    >
-                                        <option value="">Выберите название</option>
-                                        {settlementNames.map((name, index) => (
-                                            <option key={index} value={name}>{name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="street" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Улица *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="street"
-                                        name="street"
-                                        value={newHospital.street}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="house" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Номер дома *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="house"
-                                        name="house"
-                                        value={newHospital.house}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
-                                    />
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Полное название больницы *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="fullName"
-                                        name="fullName"
-                                        value={newHospital.fullName}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
-                                    />
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label htmlFor="adminId" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Младший администратор *
-                                    </label>
-                                    <select
-                                        id="adminId"
-                                        name="adminId"
-                                        value={newHospital.adminId}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
-                                        required
-                                    >
-                                        <option value="">Выберите администратора</option>
-                                        {juniorAdmins.map((admin) => (
-                                            <option key={admin.user_id} value={admin.user_id}>
-                                                {admin.full_name} (тел: {admin.phone})
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                        <h2 className="text-2xl font-semibold text-main2 mb-6">Добавить новую больницу</h2>
+                        <form onSubmit={handleAddHospital} className="space-y-4">
+                            <div>
+                                <label htmlFor="region" className="block text-sm font-medium text-gray-700">Регион</label>
+                                <input
+                                    type="text"
+                                    name="region"
+                                    id="region"
+                                    value={newHospital.region}
+                                    onChange={handleInputChange}
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="settlementType" className="block text-sm font-medium text-gray-700">Тип населенного пункта</label>
+                                <input
+                                    type="text"
+                                    name="settlementType"
+                                    id="settlementType"
+                                    value={newHospital.settlementType}
+                                    onChange={handleInputChange}
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="settlementName" className="block text-sm font-medium text-gray-700">Наименование населенного пункта</label>
+                                <input
+                                    type="text"
+                                    name="settlementName"
+                                    id="settlementName"
+                                    value={newHospital.settlementName}
+                                    onChange={handleInputChange}
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="street" className="block text-sm font-medium text-gray-700">Улица *</label>
+                                <input
+                                    type="text"
+                                    id="street"
+                                    name="street"
+                                    value={newHospital.street}
+                                    onChange={handleInputChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="house" className="block text-sm font-medium text-gray-700">Номер дома *</label>
+                                <input
+                                    type="text"
+                                    id="house"
+                                    name="house"
+                                    value={newHospital.house}
+                                    onChange={handleInputChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                    required
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Полное название больницы *</label>
+                                <input
+                                    type="text"
+                                    id="fullName"
+                                    name="fullName"
+                                    value={newHospital.fullName}
+                                    onChange={handleInputChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                    required
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label htmlFor="adminId" className="block text-sm font-medium text-gray-700">Младший администратор *</label>
+                                <select
+                                    id="adminId"
+                                    name="adminId"
+                                    value={newHospital.adminId}
+                                    onChange={handleInputChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
+                                    required
+                                >
+                                    <option value="">Выберите администратора</option>
+                                    {juniorAdmins.map((admin) => (
+                                        <option key={admin.user_id} value={admin.user_id}>
+                                            {admin.full_name} (тел: {admin.phone})
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div className="flex gap-3">
