@@ -75,11 +75,11 @@ export default function Home() {
                         
                         {/* Site Map Card */}
                         <Link href="/site-map" className="group">
-                            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white p-8 h-64 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-white p-8 pb-10 h-fit  min-h-64 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
                                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
                                 
-                                <div className="relative z-10 h-full flex flex-col justify-between">
+                                <div className="relative z-10 h-fit flex flex-col justify-between min-h-48">
                                     <div>
                                         <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-lg mb-4">
                                             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
@@ -93,7 +93,7 @@ export default function Home() {
                                         </p>
                                     </div>
                                     
-                                    <div className="flex items-center text-white/90 group-hover:text-white transition-colors">
+                                    <div className="flex items-center text-white/90 group-hover:text-white transition-colors mt-6">
                                         <span className="font-medium">Изучить структуру</span>
                                         <svg className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -105,11 +105,11 @@ export default function Home() {
 
                         {/* API Documentation Card */}
                         <Link href="/api-documentation" className="group">
-                            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 text-white p-8 h-64 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-500 to-purple-700 text-white p-8 pb-10 h-fit  min-h-64 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
                                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
                                 
-                                <div className="relative z-10 h-full flex flex-col justify-between">
+                                <div className="relative z-10 h-fit flex flex-col justify-between min-h-48">
                                     <div>
                                         <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-lg mb-4">
                                             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
@@ -123,7 +123,7 @@ export default function Home() {
                                         </p>
                                     </div>
                                     
-                                    <div className="flex items-center text-white/90 group-hover:text-white transition-colors">
+                                    <div className="flex items-center text-white/90 group-hover:text-white transition-colors mt-6">
                                         <span className="font-medium">Изучить API</span>
                                         <svg className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -138,11 +138,11 @@ export default function Home() {
                     {/* GitHub Card - Centered */}
                     <div className="flex justify-center">
                         <a href="https://github.com/SanriaArgos/MedScheduler" target="_blank" rel="noopener noreferrer" className="group md:w-1/2">
-                            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 text-white p-8 h-64 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 text-white p-8 pb-10 h-fit  min-h-64 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
                                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
                                 
-                                <div className="relative z-10 h-full flex flex-col justify-between">
+                                <div className="relative z-10 h-fit flex flex-col justify-between min-h-48">
                                     <div>
                                         <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-lg mb-4">
                                             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
@@ -156,7 +156,7 @@ export default function Home() {
                                         </p>
                                     </div>
                                     
-                                    <div className="flex items-center text-white/90 group-hover:text-white transition-colors">
+                                    <div className="flex items-center text-white/90 group-hover:text-white transition-colors mt-6">
                                         <span className="font-medium">Посмотреть на GitHub</span>
                                         <svg className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
