@@ -36,8 +36,8 @@ void edit_doctor_profile(
 
     int doctor_id = data["user_id"];
     std::string query = "SELECT user_id FROM doctors WHERE doctor_id = $1";
-    const char* params[1] = { std::to_string(doctor_id).c_str() };
-    PGresult* ress = PQexecParams(db_handler.get_connection(), query.c_str(), 1, nullptr, params, nullptr, nullptr, 0);
+    const char* paramsforid[1] = { std::to_string(doctor_id).c_str() };
+    PGresult* ress = PQexecParams(db_handler.get_connection(), query.c_str(), 1, nullptr, paramsforid, nullptr, nullptr, 0);
 
     if (!ress || PQresultStatus(ress) != PGRES_TUPLES_OK || PQntuples(ress) == 0) {
         if (ress) PQclear(ress);
