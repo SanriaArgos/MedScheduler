@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '@/utils/phoneFormatter';
+import Link from "next/link";
 
 export default function PatientProfile() {
     const [userData, setUserData] = useState(null);
@@ -77,7 +78,7 @@ export default function PatientProfile() {
         setSuccessMessage(null);
 
         if (editData.phone && !validatePhone(editData.phone)) {
-            setError("Введите корректный российский номер телефона.");
+            setError("Введите корректный  номер телефона.");
             setLoading(false);
             return;
         }

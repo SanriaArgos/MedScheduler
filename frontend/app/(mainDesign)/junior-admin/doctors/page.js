@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../../utils/phoneFormatter';
 
 export default function JuniorAdminDoctorsPage() {
     const [loading, setLoading] = useState(true);
@@ -131,7 +131,7 @@ export default function JuniorAdminDoctorsPage() {
         setSuccess("");
 
         if (!validatePhone(newDoctorData.phone)) {
-            setError("Введите корректный российский номер телефона для нового врача.");
+            setError("Введите корректный  номер телефона для нового врача.");
             setLoading(false);
             return;
         }
@@ -180,7 +180,7 @@ export default function JuniorAdminDoctorsPage() {
                 setTimeout(() => {
                     setIsAddingDoctor(false);
                     setSuccess("");
-                }, 2000);
+                }, 10000);
             } else {
                 setError(data.error || "Ошибка при добавлении врача");
             }
@@ -232,7 +232,7 @@ export default function JuniorAdminDoctorsPage() {
                 setTimeout(() => {
                     setIsAttaching(false);
                     setSuccess("");
-                }, 2000);
+                }, 10000);
             } else {
                 setError(data.error || `Ошибка при ${selectedAction === "attach" ? "прикреплении" : "откреплении"} врача`);
             }

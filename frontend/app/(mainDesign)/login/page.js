@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '@/utils/phoneFormatter';
 
 export default function LoginPage() {
     const [phone, setPhone] = useState("");
@@ -45,7 +45,7 @@ export default function LoginPage() {
         setError("");
 
         if (!validatePhone(phone)) {
-            setError("Введите корректный российский номер телефона.");
+            setError("Введите корректный  номер телефона.");
             setLoading(false);
             return;
         }
@@ -89,11 +89,13 @@ export default function LoginPage() {
     };
 
     const handlePhoneChange = (e) => {
-        setPhone(e.target.value);
+        // Сразу форматируем для отображения
+        setPhone(formatPhoneDisplay(e.target.value));
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-main via-main2 to-main">
+        // Убираем градиент, возвращаем более простой фон, например, светло-серый
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
                 <h1 className="text-3xl font-bold text-center text-main2 mb-8">
                     Вход в систему
@@ -115,15 +117,16 @@ export default function LoginPage() {
                             type="tel"
                             id="phone"
                             name="phone"
-                            value={formatPhoneDisplay(phone)}
+                            value={phone} // Используем уже отформатированное значение из состояния
                             onChange={handlePhoneChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-main2 focus:border-main2"
+                            // Применяем стили, аналогичные другим полям ввода
+                            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-main focus:border-main sm:text-sm"
                             placeholder="+7 (999) 000-00-00"
                             required
                         />
                     </div>
                     <div>
-                        <label htmlFor="password" className="sr-only">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                             Пароль
                         </label>
                         <input

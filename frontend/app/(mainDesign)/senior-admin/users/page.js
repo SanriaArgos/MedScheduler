@@ -167,10 +167,10 @@ export default function SeniorAdminUsersPage() {
 
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <div className="flex flex-col md:flex-row justify-between md:items-center mb-6">
-                    <h2 className="text-xl font-semibold text-main2">Список пользователей</h2>
-                    <div className="mt-4 md:mt-0">
+                    <h2 className="text-xl font-semibold text-main2">Список пользователей</h2>                    <div className="mt-4 md:mt-0">
                         <div className="flex flex-wrap gap-2">
                             <button
+                                key="all"
                                 onClick={() => setUserTypeFilter("all")}
                                 className={`px-3 py-1 rounded-md ${
                                     userTypeFilter === "all"
@@ -181,6 +181,7 @@ export default function SeniorAdminUsersPage() {
                                 Все
                             </button>
                             <button
+                                key="patient"
                                 onClick={() => setUserTypeFilter("patient")}
                                 className={`px-3 py-1 rounded-md ${
                                     userTypeFilter === "patient"
@@ -191,6 +192,7 @@ export default function SeniorAdminUsersPage() {
                                 Пациенты
                             </button>
                             <button
+                                key="doctor"
                                 onClick={() => setUserTypeFilter("doctor")}
                                 className={`px-3 py-1 rounded-md ${
                                     userTypeFilter === "doctor"
@@ -201,6 +203,7 @@ export default function SeniorAdminUsersPage() {
                                 Врачи
                             </button>
                             <button
+                                key="junior"
                                 onClick={() => setUserTypeFilter("junior administrator")}
                                 className={`px-3 py-1 rounded-md ${
                                     userTypeFilter === "junior administrator"
@@ -211,6 +214,7 @@ export default function SeniorAdminUsersPage() {
                                 Мл. администраторы
                             </button>
                             <button
+                                key="senior"
                                 onClick={() => setUserTypeFilter("senior administrator")}
                                 className={`px-3 py-1 rounded-md ${
                                     userTypeFilter === "senior administrator"

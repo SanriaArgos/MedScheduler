@@ -1,7 +1,12 @@
 #include "../../include/handlers/get_admin_hospital.hpp"
 #include <libpq-fe.h>
+#include <boost/beast/http.hpp>
+#include <nlohmann/json.hpp>
 #include <iostream>
 #include <sstream>
+
+namespace http = boost::beast::http;
+using json = nlohmann::json;
 
 void get_admin_hospital(int admin_id, http::response<http::string_body> &res, database_handler &db_handler) {
     PGconn* conn = db_handler.get_connection();
@@ -38,10 +43,8 @@ void get_admin_hospital(int admin_id, http::response<http::string_body> &res, da
         res.set(http::field::content_type, "application/json");
         res.body() = R"({"success": false, "error": "Hospital not found for this administrator"})";
         return;
-    }
-
+    }    json response;
     json hospital;
-    hospital["success"] = true;
     hospital["hospital_id"] = std::stoi(PQgetvalue(result, 0, 0));
     hospital["full_name"] = PQgetvalue(result, 0, 1);
     hospital["region"] = PQgetvalue(result, 0, 2);
@@ -62,9 +65,12 @@ void get_admin_hospital(int admin_id, http::response<http::string_body> &res, da
         hospital["junior_admin_phone"] = "";
     }
 
+    response["success"] = true;
+    response["hospital"] = hospital;
+
     PQclear(result);
 
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");
-    res.body() = hospital.dump();
+    res.body() = response.dump();
 }

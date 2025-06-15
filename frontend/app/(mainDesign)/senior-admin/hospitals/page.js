@@ -76,18 +76,17 @@ export default function SeniorAdminHospitalsPage() {
         } else {
             setFilteredHospitals(hospitals);
         }
-    }, [searchQuery, hospitals]);
-
-    const fetchJuniorAdmins = async () => {
+    }, [searchQuery, hospitals]);    const fetchJuniorAdmins = async () => {
         try {
-            // Запрос к API для получения списка младших администраторов
-            const response = await fetch('https://api.medscheduler.ru/get_junior_admins');
+            // Запрос к API для получения списка всех пользователей
+            const response = await fetch('https://api.medscheduler.ru/get_users');
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Форматируем данные для использования в форме выбора
-                const formattedAdmins = data.junior_admins.map(admin => ({
-                    user_id: admin.user_id,
+                // Фильтруем только младших администраторов и форматируем данные
+                const juniorAdmins = data.users.filter(user => user.user_type === 'junior administrator');
+                const formattedAdmins = juniorAdmins.map(admin => ({
+                    user_id: admin.id, // Используем id вместо user_id
                     full_name: `${admin.last_name} ${admin.first_name} ${admin.patronymic || ""}`,
                     phone: admin.phone
                 }));
@@ -102,19 +101,41 @@ export default function SeniorAdminHospitalsPage() {
             setError("Не удалось загрузить список младших администраторов");
             setJuniorAdmins([]);
         }
-    };
-
-    const fetchHospitals = async () => {
+    };    const fetchHospitals = async () => {
         try {
-            const response = await fetch('https://api.medscheduler.ru/get_hospitals');
-            const data = await response.json();
+            // Запрос к API для получения списка больниц
+            const hospitalsResponse = await fetch('https://api.medscheduler.ru/get_hospitals');
+            const hospitalsData = await hospitalsResponse.json();
 
-            if (response.ok && data.success) {
-                setHospitals(data.hospitals);
-                setFilteredHospitals(data.hospitals);
-            } else {
-                setError(data.error || "Ошибка при получении списка больниц");
+            if (!hospitalsResponse.ok || !hospitalsData.success) {
+                setError(hospitalsData.error || "Ошибка при получении списка больниц");
+                return;
             }
+
+            // Запрос к API для получения списка пользователей
+            const usersResponse = await fetch('https://api.medscheduler.ru/get_users');
+            const usersData = await usersResponse.json();
+            
+            let adminsMap = {};            if (usersResponse.ok && usersData.success) {
+                // Создаем карту администраторов по id
+                usersData.users
+                    .filter(user => user.user_type === 'junior administrator')                    .forEach(admin => {
+                        adminsMap[String(admin.id)] = `${admin.last_name} ${admin.first_name} ${admin.patronymic || ""}`.trim();
+                    });
+            }
+
+            // Обогащаем данные больниц именами администраторов            
+            const enrichedHospitals = hospitalsData.hospitals.map(hospital => {
+                const adminId = String(hospital.administrator_id);
+                const adminName = adminsMap[adminId] || null;
+                return {
+                    ...hospital,
+                    admin_name: adminName
+                };
+            });
+
+            setHospitals(enrichedHospitals);
+            setFilteredHospitals(enrichedHospitals);
         } catch (err) {
             console.error("Error fetching hospitals:", err);
             setError("Не удалось подключиться к серверу");
@@ -181,7 +202,7 @@ export default function SeniorAdminHospitalsPage() {
                 setTimeout(() => {
                     setIsAddingHospital(false);
                     setSuccess("");
-                }, 2000);
+                }, 10000);
             } else {
                 setError(data.error || "Ошибка при добавлении больницы");
             }
@@ -207,24 +228,47 @@ export default function SeniorAdminHospitalsPage() {
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                     {error}
                 </div>
-            )}
-
-            {success && (
+            )}            {success && (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                     {success}
                 </div>
             )}
 
-            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-                <div className="flex flex-col md:flex-row justify-between md:items-center mb-6">
+            {/* DEBUG INFO */}
+            <div className="hidden bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded mb-4">
+                <h3 className="font-bold">Debug Info:</h3>
+                <p>Total hospitals: {hospitals.length}</p>
+                <p>Hospitals with admins: {hospitals.filter(h => h.admin_name).length}</p>
+                <div className="mt-2">
+                    {hospitals.slice(0, 3).map(hospital => (
+                        <div key={hospital.hospital_id}>
+                            ID: {hospital.hospital_id}, Name: {hospital.full_name}, Admin ID: {hospital.administrator_id}, Admin: {hospital.admin_name || 'null'}
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="bg-white shadow-md rounded-lg p-6 mb-6">                <div className="flex flex-col md:flex-row justify-between md:items-center mb-6">
                     <h2 className="text-xl font-semibold text-main2">Список больниц</h2>
                     <div className="mt-4 md:mt-0">
-                        <button
-                            onClick={() => setIsAddingHospital(true)}
-                            className="px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors"
-                        >
-                            Добавить новую больницу
-                        </button>
+                        {juniorAdmins.length > 0 ? (
+                            <button
+                                onClick={() => setIsAddingHospital(true)}
+                                className="px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors"
+                            >
+                                Добавить новую больницу
+                            </button>
+                        ) : (
+                            <div className="text-sm text-gray-500">
+                                <p>Сначала создайте младшего администратора</p>
+                                <Link 
+                                    href="/senior-admin/junior-admins" 
+                                    className="text-main hover:text-main2 underline"
+                                >
+                                    Управление администраторами →
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -241,11 +285,19 @@ export default function SeniorAdminHospitalsPage() {
                         placeholder="Поиск по названию, региону или адресу"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-main"
                     />
-                </div>
-
-                {isAddingHospital && (
+                </div>                {isAddingHospital && (
                     <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                        <h2 className="text-2xl font-semibold text-main2 mb-6">Добавить новую больницу</h2>
+                        <h2 className="text-2xl font-semibold text-main2 mb-4">Добавить новую больницу</h2>
+                        
+                        {juniorAdmins.length === 0 && (
+                            <div className="mb-4 p-3 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
+                                <p className="text-sm">
+                                    <strong>Внимание:</strong> Для создания больницы необходим младший администратор. 
+                                    Сначала создайте администратора в разделе "Управление администраторами".
+                                </p>
+                            </div>
+                        )}
+                        
                         <form onSubmit={handleAddHospital} className="space-y-4">
                             <div>
                                 <label htmlFor="region" className="block text-sm font-medium text-gray-700">Регион</label>
@@ -336,12 +388,15 @@ export default function SeniorAdminHospitalsPage() {
                                         </option>
                                     ))}
                                 </select>
-                            </div>
-
-                            <div className="flex gap-3">
+                            </div>                            <div className="flex gap-3">
                                 <button
                                     type="submit"
-                                    className="px-4 py-2 bg-main text-white rounded hover:bg-main2 transition-colors"
+                                    disabled={juniorAdmins.length === 0}
+                                    className={`px-4 py-2 text-white rounded transition-colors ${
+                                        juniorAdmins.length === 0 
+                                            ? 'bg-gray-400 cursor-not-allowed' 
+                                            : 'bg-main hover:bg-main2'
+                                    }`}
                                 >
                                     Добавить больницу
                                 </button>

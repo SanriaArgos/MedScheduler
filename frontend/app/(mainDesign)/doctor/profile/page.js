@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '@/utils/phoneFormatter';
 
 export default function DoctorProfile() {
     const [doctorData, setDoctorData] = useState(null);
@@ -20,33 +20,24 @@ export default function DoctorProfile() {
         experience: "",
         description: "",
     });
-    const router = useRouter();
-
-    useEffect(() => {
+    const router = useRouter();    useEffect(() => {
         const fetchDoctorData = async () => {
             setLoading(true);
             try {
-                const response = await fetch("https://api.medscheduler.ru/get_doctor_profile", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ userId: localStorage.getItem("userId") }),
-                });
+                const userId = localStorage.getItem("userId");
+                const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${userId}`);
 
-                const data = await response.json();
-
-                if (data.success) {
-                    const userData = data.data;
+                const data = await response.json();                if (data.success) {
+                    const userData = data.user;
                     const userDataToSet = {
-                        userId: userData.user_id,
+                        userId: userData.user_id || userId,
                         lastName: userData.last_name,
                         firstName: userData.first_name,
                         patronymic: userData.patronymic,
                         phone: userData.phone,
-                        specialty: userData.specialty,
-                        experience: userData.experience,
-                        description: userData.description,
+                        specialty: "", // Будет загружено отдельно
+                        experience: "", // Будет загружено отдельно
+                        description: "", // Будет загружено отдельно
                     };
 
                     // Установка данных врача в состояние
@@ -91,7 +82,7 @@ export default function DoctorProfile() {
         setSuccessMessage(null);
 
         if (editData.phone && !validatePhone(editData.phone)) {
-            setError("Введите корректный российский номер телефона.");
+            setError("Введите корректный  номер телефона.");
             setLoading(false);
             return;
         }

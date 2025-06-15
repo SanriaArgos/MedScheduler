@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '@/utils/phoneFormatter';
+import Link from "next/link";
 
 export default function SeniorAdminProfile() {
     const [loading, setLoading] = useState(true);
@@ -38,16 +39,14 @@ export default function SeniorAdminProfile() {
         const fetchProfile = async () => {
             try {
                 const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${userData.userId}`);
-                const data = await response.json();
-
-                if (response.ok && data.success) {
+                const data = await response.json();                if (response.ok && data.success) {
                     // Устанавливаем данные профиля
                     const profileData = {
                         userId: userData.userId,
-                        firstName: data.first_name || "",
-                        lastName: data.last_name || "",
-                        patronymic: data.patronymic || "",
-                        phone: data.phone || userData.phone
+                        firstName: data.user.first_name || "",
+                        lastName: data.user.last_name || "",
+                        patronymic: data.user.patronymic || "",
+                        phone: data.user.phone || userData.phone
                     };
 
                     setProfile(profileData);
@@ -183,7 +182,7 @@ export default function SeniorAdminProfile() {
                 setTimeout(() => {
                     setIsEditing(false);
                     setUpdateSuccess("");
-                }, 2000);
+                }, 10000);
             } else {
                 setUpdateError(data.error || "Ошибка обновления профиля");
             }

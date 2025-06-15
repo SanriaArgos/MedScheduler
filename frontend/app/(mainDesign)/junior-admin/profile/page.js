@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
-import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../../utils/phoneFormatter';
 
 export default function JuniorAdminProfilePage() {
     const [loading, setLoading] = useState(true);
@@ -55,15 +55,13 @@ export default function JuniorAdminProfilePage() {
             try {
                 // Получаем данные профиля
                 const response = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${storedUser.userId}`);
-                const data = await response.json();
-
-                if (response.ok && data.success) {
+                const data = await response.json();                if (response.ok && data.success) {
                     const profileData = {
                         userId: storedUser.userId,
-                        firstName: data.first_name || "",
-                        lastName: data.last_name || "",
-                        patronymic: data.patronymic || "",
-                        phone: data.phone || storedUser.phone || ""
+                        firstName: data.user.first_name || "",
+                        lastName: data.user.last_name || "",
+                        patronymic: data.user.patronymic || "",
+                        phone: data.user.phone || storedUser.phone || ""
                     };
 
                     setProfile(profileData);
@@ -184,7 +182,7 @@ export default function JuniorAdminProfilePage() {
                 setTimeout(() => {
                     setIsEditing(false);
                     setUpdateSuccess("");
-                }, 2000);
+                }, 10000);
             } else {
                 setUpdateError(data.error || "Ошибка обновления профиля");
             }
@@ -209,7 +207,7 @@ export default function JuniorAdminProfilePage() {
         setSuccessMessage(null);
 
         if (editData.phone && !validatePhone(editData.phone)) {
-            setError("Введите корректный российский номер телефона.");
+            setError("Введите корректный  номер телефона.");
             setLoading(false);
             return;
         }
@@ -261,7 +259,7 @@ export default function JuniorAdminProfilePage() {
                 setTimeout(() => {
                     setIsEditing(false);
                     setSuccessMessage(null);
-                }, 2000);
+                }, 10000);
             } else {
                 setError(data.error || "Ошибка обновления профиля");
                 setLoading(false);

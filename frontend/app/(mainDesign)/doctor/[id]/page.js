@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
 
 export default function DoctorPage({ params }) {
-    const doctorId = params.id;
+    const resolvedParams = use(params);
+    const doctorId = resolvedParams.id;
     const router = useRouter();
 
     const [doctor, setDoctor] = useState(null);
@@ -57,12 +58,10 @@ export default function DoctorPage({ params }) {
 
         // Загрузка информации о враче через API
         fetchDoctorInfo();
-    }, [doctorId]);
-
-    const fetchDoctorInfo = async () => {
+    }, [doctorId]);    const fetchDoctorInfo = async () => {
         try {
             // Получаем данные о враче
-            const doctorResponse = await fetch(`https://api.medscheduler.ru/get_doctor_profile?user_id=${doctorId}`);
+            const doctorResponse = await fetch(`https://api.medscheduler.ru/get_profile_by_id?user_id=${doctorId}`);
 
             if (!doctorResponse.ok) {
                 throw new Error("Не удалось получить информацию о враче");

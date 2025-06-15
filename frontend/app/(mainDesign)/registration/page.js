@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '@/utils/phoneFormatter';
 
 export default function RegistrationPage() {
     const [formData, setFormData] = useState({
@@ -30,7 +30,8 @@ export default function RegistrationPage() {
     const handlePhoneChange = (e) => {
         setFormData((prevData) => ({
             ...prevData,
-            phone: e.target.value, 
+            // Сразу форматируем для отображения
+            phone: formatPhoneDisplay(e.target.value), 
         }));
     };
 
@@ -46,7 +47,7 @@ export default function RegistrationPage() {
         }
 
         if (!validatePhone(formData.phone)) {
-            setError("Введите корректный российский номер телефона.");
+            setError("Введите корректный  номер телефона.");
             setLoading(false);
             return;
         }
@@ -111,9 +112,10 @@ export default function RegistrationPage() {
                                 type="tel"
                                 id="phone"
                                 name="phone"
-                                value={formatPhoneDisplay(formData.phone)}
+                                value={formData.phone} // Используем уже отформатированное значение из состояния
                                 onChange={handlePhoneChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-main2 focus:border-main2"
+                                // Применяем стили, аналогичные другим полям ввода
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-main focus:border-main sm:text-sm"
                                 placeholder="+7 (999) 000-00-00"
                                 required
                             />

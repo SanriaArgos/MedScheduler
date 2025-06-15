@@ -52,6 +52,7 @@
 #include "../include/handlers/get_users.hpp"
 #include "../include/handlers/get_waitlist.hpp"
 #include "../include/handlers/get_waitlist_count.hpp"
+#include "../include/handlers/get_admin_hospital.hpp"
 #include "../include/handlers/hospital_exists.hpp"
 #include "../include/handlers/junior_admin_schedule.hpp"
 #include "../include/handlers/login.hpp"
@@ -204,6 +205,52 @@ void handle_request(
                     get_users_table(json::object(), res, db_handler);
                 } catch (const std::exception &e) {
                     handle_error(e, res);
+                }
+            } else if (req.target().starts_with("/get_admin_hospital")) {
+                try {
+                    std::string url = std::string(req.target());
+                    size_t admin_pos = url.find("admin_id=");
+
+                    if (admin_pos == std::string::npos) {
+                        throw std::runtime_error("Missing admin_id parameter");
+                    }
+
+                    admin_pos += 9;  // Длина "admin_id="
+                    size_t admin_end = url.find('&', admin_pos);
+                    std::string admin_str = url.substr(
+                        admin_pos, (admin_end == std::string::npos)
+                                     ? std::string::npos
+                                     : admin_end - admin_pos
+                    );
+
+                    // Удаляем все нецифровые символы (для безопасности)
+                    admin_str.erase(
+                        std::remove_if(
+                            admin_str.begin(), admin_str.end(),
+                            [](char c) { return !std::isdigit(c); }
+                        ),
+                        admin_str.end()
+                    );
+
+                    if (admin_str.empty()) {
+                        throw std::invalid_argument("Empty admin_id");
+                    }
+
+                    int admin_id = std::stoi(admin_str);
+                    get_admin_hospital(admin_id, res, db_handler);
+
+                } catch (const std::invalid_argument &) {
+                    json error = {
+                        {"success", false},
+                        {"error", "Admin ID must be a number"}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error.dump();
+                } catch (const std::exception &e) {
+                    json error = {{"success", false}, {"error", e.what()}};
+                    res.result(http::status::bad_request);
+                    res.set(http::field::content_type, "application/json");
+                    res.body() = error.dump();
                 }
             } else if (req.target().starts_with(
                            "/get_doctor_schedule_for_patient"

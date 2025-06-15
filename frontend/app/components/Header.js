@@ -22,10 +22,10 @@ export const Header = () => {
         <div className="w-full h-full max-w-screen-2xl mx-auto flex items-center justify-between px-2.5">
             <Link href="/" className="flex items-center h-full">
                 <Image src="/icon-512.png" alt="MedScheduler Logo" width={48} height={48} className="h-10 w-10 xl:h-12 xl:w-12"/>
-                <span className="ml-2 text-xl xl:text-2xl font-bold text-white">MedScheduler</span>
+                <span className="ml-2 text-sm xl:text-2xl font-bold text-white">MedScheduler</span>
             </Link>
-            <nav className="w-fit h-full flex gap-3 xl:gap-6 font-medium text-[15px] xl:text-[20px] items-center leading-none text-white">
-                <Link href={"/"} className="hover:text-main2 transition-colors">Главная</Link>
+            <nav className="w-fit h-full flex gap-2 xl:gap-6 font-medium text-[15px] xl:text-[20px] items-center leading-none text-white">
+                <Link href={"/"} className="hidden lg:visible hover:text-main2 transition-colors">Главная</Link>
                 <Link href={"/#about"} className="hover:text-main2 transition-colors">О нас</Link>
                 <Link href={"/api-documentation"} className="hover:text-main2 transition-colors">API</Link>
 

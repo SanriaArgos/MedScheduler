@@ -1,42 +1,79 @@
-export const formatPhoneDisplay = (phone) => {
-  // Удаляем все нецифровые символы
-  const cleaned = phone.replace(/\D/g, '');
-  
-  // Если начинается с 8, заменяем на 7
-  const normalized = cleaned.startsWith('8') ? '7' + cleaned.slice(1) : cleaned;
-  
-  // Форматируем для отображения
-  if (normalized.length === 11 && normalized.startsWith('7')) {
-    return `+7 (${normalized.slice(1, 4)}) ${normalized.slice(4, 7)}-${normalized.slice(7, 9)}-${normalized.slice(9, 11)}`;
+export const formatPhoneDisplay = (phoneInput) => {
+  if (!phoneInput) return "";
+
+  // Очищаем от всех символов кроме цифр
+  let digits = phoneInput.replace(/\D/g, "");
+
+  // Заменяем 8 на 7 в начале
+  if (digits.startsWith("8")) {
+    digits = "7" + digits.substring(1);
   }
+
+  // Если ввели только +, оставляем как есть
+  if (phoneInput === "+") return "+";
   
-  return phone;
+  // Если нет цифр, возвращаем пустую строку
+  if (!digits) return "";
+
+  // Если не начинается с 7, добавляем 7
+  if (!digits.startsWith("7")) {
+    digits = "7" + digits;
+  }
+
+  // Ограничиваем длину
+  digits = digits.substring(0, 11);
+
+  // Форматируем по частям в зависимости от длины
+  let result = "+7";
+  
+  if (digits.length > 1) {
+    result += " (";
+    result += digits.substring(1, Math.min(4, digits.length));
+    
+    if (digits.length > 4) {
+      result += ") ";
+      result += digits.substring(4, Math.min(7, digits.length));
+      
+      if (digits.length > 7) {
+        result += "-";
+        result += digits.substring(7, Math.min(9, digits.length));
+        
+        if (digits.length > 9) {
+          result += "-";
+          result += digits.substring(9, 11);
+        }
+      }
+    }
+  }
+
+  return result;
 };
 
 export const formatPhoneForAPI = (phone) => {
-  // Удаляем все нецифровые символы, кроме возможного плюса в начале
-  const cleaned = phone.replace(/[^\\d+]/g, '');
+  if (!phone) return '';
   
-  // Если начинается с 8, заменяем на +7
-  if (cleaned.startsWith('8')) {
-    return '+7' + cleaned.slice(1);
+  // Очищаем от всех символов кроме цифр
+  const cleaned = phone.replace(/[^\d]/g, '');
+  
+  // Если начинается с 8, заменяем на 7
+  let digits = cleaned.startsWith('8') ? '7' + cleaned.slice(1) : cleaned;
+  
+  // Если не начинается с 7, добавляем 7
+  if (!digits.startsWith('7')) {
+    digits = '7' + digits;
   }
-  // Если не начинается с +, но это российский номер (после удаления нецифровых символов осталась корректная длина)
-  // и начинается с 7, добавляем +
-  if (!cleaned.startsWith('+') && cleaned.startsWith('7') && cleaned.length === 11) {
-    return '+' + cleaned;
-  }
-  // Если уже есть плюс и корректная длина (например, +79991234567)
-  if (cleaned.startsWith('+7') && cleaned.length === 12) {
-    return cleaned;
-  }
-  // Возвращаем "как есть", если формат уже с плюсом или не соответствует ожиданиям для автоматической коррекции
-  // Валидация должна отсеять некорректные номера до этого шага.
-  return cleaned; 
+  
+  // Ограничиваем длину до 11 цифр
+  digits = digits.substring(0, 11);
+  
+  // Возвращаем с плюсом
+  return '+' + digits;
 };
 
 export const validatePhone = (phone) => {
-  const forAPI = formatPhoneForAPI(phone); // Сначала приводим к формату API
-  // Проверяем формат +7 и 10 цифр после
-  return /^\\+7\\d{10}$/.test(forAPI);
+  if (!phone) return false;
+  
+  const forAPI = formatPhoneForAPI(phone);
+  // Проверяем формат +7 и ровно 10 цифр после
+  return /^\+7\d{10}$/.test(forAPI);
 };

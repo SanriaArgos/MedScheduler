@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '../../../utils/phoneFormatter';
+import { formatPhoneDisplay, formatPhoneForAPI, validatePhone } from '@/utils/phoneFormatter';
+import Link from "next/link";
 
 export default function SeniorAdminJuniorAdminsPage() {
     const [loading, setLoading] = useState(true);
@@ -11,20 +12,14 @@ export default function SeniorAdminJuniorAdminsPage() {
     const router = useRouter();
 
     // Данные администратора
-    const [adminId, setAdminId] = useState(null);
-
-    // Список младших администраторов
-    const [juniorAdmins, setJuniorAdmins] = useState([]);
-
-    // Состояние для добавления нового администратора
+    const [adminId, setAdminId] = useState(null);    // Список младших администраторов    // Список младших администраторов
+    const [juniorAdmins, setJuniorAdmins] = useState([]);// Состояние для добавления нового администратора
     const [isAddingAdmin, setIsAddingAdmin] = useState(false);
     const [newAdminData, setNewAdminData] = useState({
         lastName: "",
         firstName: "",
         patronymic: "",
         phone: "",
-        password: "",
-        hospitalId: "",
     });
 
     // Поиск администраторов
@@ -39,11 +34,7 @@ export default function SeniorAdminJuniorAdminsPage() {
         if (!isLoggedIn || !userData.userId || userData.userType !== 'senior') {
             router.push('/login');
             return;
-        }
-
-        setAdminId(userData.userId);
-
-        // Загружаем список младших администраторов
+        }        setAdminId(userData.userId);        // Загружаем список младших администраторов
         fetchJuniorAdmins();
     }, [router]);
 
@@ -52,34 +43,55 @@ export default function SeniorAdminJuniorAdminsPage() {
         if (searchQuery) {
             const lowercaseQuery = searchQuery.toLowerCase();
             const filtered = juniorAdmins.filter(
-                admin =>
-                    admin.last_name.toLowerCase().includes(lowercaseQuery) ||
+                admin =>                    admin.last_name.toLowerCase().includes(lowercaseQuery) ||
                     admin.first_name.toLowerCase().includes(lowercaseQuery) ||
                     (admin.patronymic && admin.patronymic.toLowerCase().includes(lowercaseQuery)) ||
                     admin.phone.toLowerCase().includes(lowercaseQuery) ||
-                    admin.hospital_name.toLowerCase().includes(lowercaseQuery)
+                    (admin.hospital_name && admin.hospital_name.toLowerCase().includes(lowercaseQuery))
             );
             setFilteredAdmins(filtered);
         } else {
             setFilteredAdmins(juniorAdmins);
         }
-    }, [searchQuery, juniorAdmins]);
-
-    const fetchJuniorAdmins = async () => {
+    }, [searchQuery, juniorAdmins]);    const fetchJuniorAdmins = async () => {
         try {
-            // Запрос к API для получения списка младших администраторов
-            const response = await fetch('https://api.medscheduler.ru/get_junior_admins');
-            const data = await response.json();
+            // Запрос к API для получения списка всех пользователей
+            const usersResponse = await fetch('https://api.medscheduler.ru/get_users');
+            const usersData = await usersResponse.json();
 
-            if (response.ok && data.success) {
-                setJuniorAdmins(data.junior_admins);
-                setFilteredAdmins(data.junior_admins);
-            } else {
-                console.error("API error:", data.error);
-                setError(data.error || "Ошибка при получении списка младших администраторов");
+            if (!usersResponse.ok || !usersData.success) {
+                console.error("API error:", usersData.error);
+                setError(usersData.error || "Ошибка при получении списка младших администраторов");
                 setJuniorAdmins([]);
                 setFilteredAdmins([]);
+                return;
             }
+
+            // Запрос к API для получения списка больниц
+            const hospitalsResponse = await fetch('https://api.medscheduler.ru/get_hospitals');
+            const hospitalsData = await hospitalsResponse.json();            let hospitalsMap = {};
+            if (hospitalsResponse.ok && hospitalsData.success) {
+                // Создаем карту больниц по administrator_id              
+                hospitalsData.hospitals.forEach(hospital => {
+                    if (hospital.administrator_id) {
+                        hospitalsMap[String(hospital.administrator_id)] = hospital.full_name;
+                    }
+                });
+            }
+
+            // Фильтруем только младших администраторов и обогащаем данными о больницах
+            const juniorAdmins = usersData.users
+                .filter(user => user.user_type === 'junior administrator').map(admin => {
+                    const adminId = String(admin.id);
+                    const hospitalName = hospitalsMap[adminId] || null;
+                    return {
+                        ...admin,
+                        hospital_name: hospitalName
+                    };
+                });
+
+            setJuniorAdmins(juniorAdmins);
+            setFilteredAdmins(juniorAdmins);
         } catch (err) {
             console.error("Error fetching junior admins:", err);
             setError("Не удалось загрузить список младших администраторов");
@@ -97,29 +109,25 @@ export default function SeniorAdminJuniorAdminsPage() {
 
     const handleNewAdminPhoneChange = (e) => {
         setNewAdminData((prev) => ({ ...prev, phone: e.target.value }));
-    };
-
-    const handleAddAdmin = async (e) => {
+    };    const handleAddAdmin = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError("");
         setSuccess("");
 
         if (!validatePhone(newAdminData.phone)) {
-            setError("Введите корректный российский номер телефона для нового администратора.");
+            setError("Введите корректный номер телефона для нового администратора.");
             setLoading(false);
             return;
         }
-        if (!newAdminData.hospitalId) {
-            setError("Необходимо выбрать больницу для нового администратора.");
-            setLoading(false);
-            return;
-        }
-
 
         const payload = {
-            ...newAdminData,
+            last_name: newAdminData.lastName,
+            first_name: newAdminData.firstName,
+            patronymic: newAdminData.patronymic,
             phone: formatPhoneForAPI(newAdminData.phone),
+            //hospital_id: 0 // ТАК НАДО, СДЕЛАНО ЧЕРЕЗ 0, чтобы не привязывать к больнице
+            // Пароль по умолчанию не передаем, он будет установлен на сервере
         };
 
         try {
@@ -132,16 +140,12 @@ export default function SeniorAdminJuniorAdminsPage() {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                setSuccess("Младший администратор успешно добавлен");
-
-                // Сбрасываем форму
+                setSuccess("Младший администратор успешно добавлен");                // Сбрасываем форму
                 setNewAdminData({
                     lastName: "",
                     firstName: "",
                     patronymic: "",
                     phone: "",
-                    password: "",
-                    hospitalId: "",
                 });
 
                 // Обновляем список администраторов
@@ -151,7 +155,7 @@ export default function SeniorAdminJuniorAdminsPage() {
                 setTimeout(() => {
                     setIsAddingAdmin(false);
                     setSuccess("");
-                }, 2000);
+                }, 10000);
             } else {
                 setError(data.error || "Ошибка при добавлении администратора");
             }
@@ -179,13 +183,25 @@ export default function SeniorAdminJuniorAdminsPage() {
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                     {error}
                 </div>
-            )}
-
-            {success && (
+            )}            {success && (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                     {success}
                 </div>
             )}
+
+            {/* DEBUG INFO */}
+            <div className="hidden bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded mb-4">
+                <h3 className="font-bold">Debug Info:</h3>
+                <p>Total admins: {juniorAdmins.length}</p>
+                <p>Admins with hospitals: {juniorAdmins.filter(a => a.hospital_name).length}</p>
+                <div className="mt-2">
+                    {juniorAdmins.slice(0, 3).map(admin => (
+                        <div key={admin.id}>
+                            ID: {admin.id}, Name: {admin.first_name} {admin.last_name}, Hospital: {admin.hospital_name || 'null'}
+                        </div>
+                    ))}
+                </div>
+            </div>
 
             <div className="bg-white shadow-md rounded-lg p-6 mb-6">
                 <div className="flex flex-col md:flex-row justify-between md:items-center mb-6">
@@ -327,7 +343,7 @@ export default function SeniorAdminJuniorAdminsPage() {
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {filteredAdmins.map((admin) => (
-                                        <tr key={admin.user_id}>
+                                        <tr key={admin.id}>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm font-medium text-gray-900">
                                                     {admin.last_name} {admin.first_name} {admin.patronymic || ""}
@@ -358,8 +374,12 @@ export default function SeniorAdminJuniorAdminsPage() {
                         Они могут добавлять врачей, прикреплять их к больнице, управлять расписанием и следить за листом ожидания.
                     </p>
                     <p>
-                        После создания младшего администратора вы можете прикрепить его к больнице при создании новой больницы
-                        или при редактировании существующей.
+                        <strong>Важно:</strong> Вновь созданные администраторы изначально не привязаны к больнице. 
+                        Привязка к больнице происходит при создании новой больницы или редактировании существующей.
+                    </p>
+                    <p>
+                        Процесс создания первой больницы: сначала создайте младшего администратора здесь, 
+                        затем перейдите в раздел "Управление больницами" и создайте больницу, указав этого администратора.
                     </p>
                 </div>
             </div>

@@ -195,7 +195,7 @@ export default function JuniorAdminSchedulePage() {
                 setTimeout(() => {
                     setIsAddingSlot(false);
                     setSuccess("");
-                }, 2000);
+                }, 10000);
             } else {
                 setError(data.error || "Ошибка при добавлении слота");
             }
