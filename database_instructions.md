@@ -77,7 +77,7 @@ psql -U meduser -d medscheduler -f create_tables.sql
 ```
 docker exec -it serverdatabase-db-1 psql -U meduser -d medscheduler
 ```
-Запускать команду из папки server+database
+Запускать команду из папки backend
 
 # 4. Как снести базу данных в контейнере?
 ```

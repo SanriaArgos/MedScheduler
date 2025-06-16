@@ -8,7 +8,7 @@ server/cmake_install.cmake
 # Игнорируем локальные конфигурационные файлы
 server/.vscode/
 server/.idea/
-QtApp/.vscode/
+desktop-client/.vscode/
 
 # Игнорируем временные файлы
 *.tmp

@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'server+database/**'
+      - 'backend/**'
       - '.github/workflows/server.yml'
   workflow_dispatch:
 
@@ -17,7 +17,7 @@ jobs:
 
       - name: Create archive
         run: |
-          tar -cvf deployServer.tar server+database/
+          tar -cvf deployServer.tar backend/
 
       - name: Copy archive via ssh
         uses: appleboy/scp-action@master
@@ -48,7 +48,7 @@ jobs:
             tar -xvf /home/githubuser/deployServer.tar -C /home/githubuser/medscheduler_app
 
             echo "Navigating to the application directory..."
-            cd /home/githubuser/medscheduler_app/server+database
+            cd /home/githubuser/medscheduler_app/backend
 
             echo "Stopping existing services (if any)..."
             docker-compose down || true
@@ -58,7 +58,7 @@ jobs:
 
             echo "Deployment complete. Services should be up and running."
             echo "To check logs, SSH into the server and run:"
-            echo "cd /home/githubuser/medscheduler_app/server+database"
+            echo "cd /home/githubuser/medscheduler_app/backend"
             echo "docker-compose logs -f server"
             echo "docker-compose logs -f db"
             
