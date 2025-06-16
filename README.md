@@ -27,9 +27,26 @@
   - Назначение администраторов медучреждений
 
 ## Познакомьтесь с нами ближе!
-| **Приложение**                                                                                     | **Веб-сервис**                                                      |
-|:---------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------:|
-| [Скачать MedScheduler](https://github.com/SanriaArgos/MedScheduler/releases) <br>&nbsp;&nbsp; Для запуска перейдите в MedScheduler.zip → release → exe                          | [Перейти на сайт MedScheduler](https://www.medscheduler.ru/)             |
+<table width="100%" style="table-layout: fixed;">
+  <colgroup>
+    <col width="60%" />
+    <col width="40%" />
+  </colgroup>
+  <tr>
+    <th align="center"><strong>Приложение</strong></th>
+    <th align="center"><strong>Веб-сервис</strong></th>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/SanriaArgos/MedScheduler/releases">Скачать MedScheduler</a><br/>
+      <em>Для запуска перейдите в MedScheduler.zip → release → exe</em>
+    </td>
+    <td align="center">
+      <a href="https://www.medscheduler.ru/">Перейти на сайт MedScheduler</a>
+    </td>
+  </tr>
+</table>
+
 
 ## Технологии
 
@@ -37,43 +54,41 @@
 
 <table>
   <tr>
-    <th colspan="2" align="center">Основные технологии и инструменты:</th>
+    <th colspan="2" align="center">Основные технологии и инструменты</th>
   </tr>
   <tr>
-    <th align="center">Компонент</th>
+    <th>Компонент</th>
     <th>Технологии / Инструменты</th>
   </tr>
   <tr>
-    <td align="center"><strong>Серверная часть (C++)</strong></td>
+    <td><strong>Серверная часть (C++)</strong></td>
     <td>Boost.Beast (HTTP сервер), libpq (работа с PostgreSQL)</td>
   </tr>
   <tr>
-    <td align="center"><strong>Клиент (C++)</strong></td>
-    <td>Qt5 (графический интерфейс), libcurl (HTTP клиент)</td>
+    <td><strong>Клиент (C++)</strong></td>
+    <td>Qt6.8.2 (графический интерфейс)</td>
   </tr>
   <tr>
-    <td align="center"><strong>Фронтенд</strong></td>
+    <td><strong>Фронтенд</strong></td>
     <td>Next.js (SSR и маршрутизация), React (компонентная архитектура), TailwindCSS (утилитарная стилизация)</td>
   </tr>
   <tr>
-    <td align="center"><strong>База данных</strong></td>
+    <td><strong>База данных</strong></td>
     <td>PostgreSQL</td>
   </tr>
   <tr>
-    <td align="center"><strong>Инфраструктура и DevOps</strong></td>
+    <td><strong>Инфраструктура и DevOps</strong></td>
     <td>Docker; Nginx (reverse proxy и SSL-терминация); Certbot; виртуальная машина в Yandex.Cloud</td>
   </tr>
   <tr>
-    <td align="center"><strong>CI/CD</strong></td>
+    <td><strong>CI/CD</strong></td>
     <td>GitHub Actions (автоматическая сборка, деплой и обновление)</td>
   </tr>
   <tr>
-    <td align="center"><strong>Тестирование</strong></td>
+    <td><strong>Тестирование</strong></td>
     <td>Postman (ручное тестирование API)</td>
   </tr>
 </table>
-
-
 
 
 ## Архитектура
