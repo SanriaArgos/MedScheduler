@@ -140,34 +140,24 @@
 
 ## Тестирование API
 
-Для верификации корректности работы API сервиса предусмотрена коллекция тестов для Postman. 
+Для верификации корректности работы API сервиса предусмотрена коллекция тестов в Postman. 
 
 ### 1. Предварительные требования
 
-- Установленный [Postman](https://www.postman.com/downloads/)
-- Доступ к серверу API (удаленному или локальному)
+- Установленный [Docker](https://www.docker.com/)
 
-### 2. Инструкция по запуску тестов
-
-
-#### 3. Импорт коллекции тестов
-
-1. Откройте интерфейс Postman
-2. Нажмите кнопку `Import` в левом верхнем углу
-3. Выберите файл `tests_for_MedScheduler.postman_collection.json`
-4. Подтвердите импорт коллекции
-
-#### 4. Настройка окружения
-
-1. Создайте новое окружение через меню `Environments` 
-2. Добавьте переменную окружения:
-   - Имя: `base_url`
-   - Значение: `https://api.medscheduler.ru` (или `http://localhost:[PORT]` для локального тестирования)
-3. Сохраните изменения
-
-#### 5. Выполнение тестов
-
-1. Откройте импортированную коллекцию
-2. Нажмите кнопку `Run collection`
-3. В диалоговом окне выберите созданное окружение
-4. Запустите выполнение тестов
+- Установленный Newman
+```
+npm install -g newman
+```
+### 2. Запуск Docker
+```
+cd backend
+docker system prune --volumes #если запускаем не в первый раз
+docker-compose down -v  #если запускаем не в первый раз
+docker-compose up --build
+```
+### 3. Запуск тестов
+```
+newman run tests_for_MedScheduler.postman_collection.json -e MedScheduler_environment.postman_environment.json
+```
