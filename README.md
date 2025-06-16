@@ -35,7 +35,7 @@
   <tr>
     <td align="center">
       <a href="https://github.com/SanriaArgos/MedScheduler/releases">Скачать MedScheduler</a><br/>
-      <em>Для запуска перейдите в MedScheduler.zip → release → MedScheduler.exe</em>
+      <em>Для запуска перейдите в MedSchedulerRelease.zip → release → MedScheduler.exe</em>
     </td>
     <td align="center">
       <a href="https://www.medscheduler.ru/">Перейти на сайт MedScheduler</a>
